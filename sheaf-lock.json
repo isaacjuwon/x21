@@ -1,0 +1,10 @@
+{
+    "files": [],
+    "helpers": [],
+    "internalDependencies": {
+        "icon": [
+            "button",
+            "radio"
+        ]
+    }
+}
