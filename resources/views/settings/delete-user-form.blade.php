@@ -1,0 +1,64 @@
+<?php
+
+use App\Livewire\Actions\Logout;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
+new class extends Component {
+    public string $password = "";
+
+    /**
+     * Delete the currently authenticated user.
+     */
+    public function deleteUser(Logout $logout): void
+    {
+        $this->validate([
+            "password" => ["required", "string", "current_password"],
+        ]);
+
+        tap(Auth::user(), $logout(...))->delete();
+
+        $this->redirect("/", navigate: true);
+    }
+};
+?>
+
+<section class="mt-10 space-y-6">
+    <div class="relative mb-5">
+        <x-ui.heading>{{ __('Delete account') }}</x-ui.heading>
+        <x-ui.description>{{ __('Delete your account and all of its resources') }}</x-ui.description>
+    </div>
+
+    <x-ui.modal.trigger id="confirm-user-deletion">
+        <x-ui.button variant="danger" x-data=""  data-test="delete-user-button">
+            {{ __('Delete account') }}
+        </x-ui.button>
+    </x-ui.modal.trigger>
+
+    <x-ui.modal id="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
+        <form method="POST" wire:submit="deleteUser" class="space-y-6">
+            <div>
+                <x-ui.heading size="lg">{{ __('Are you sure you want to delete your account?') }}</x-ui.heading>
+
+                <x-ui.description>
+                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                </x-ui.description>
+            </div>
+
+            <x-ui.field>
+                <x-ui.label>{{ __('Password') }}</x-ui.label>
+                <x-ui.input wire:model="password" type="password" />
+                <x-ui.error name="password" />
+            </x-ui.field>
+
+            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+               
+                <x-ui.button  wire:click="$dispatach('close-modal', 'confirm-user-deletion')" variant="filled">{{ __('Cancel') }}</x-ui.button>
+
+                <x-ui.button variant="danger" type="submit" data-test="confirm-delete-user-button">
+                    {{ __('Delete account') }}
+                </x-ui.button>
+            </div>
+        </form>
+    </x-ui.modal>
+</section>

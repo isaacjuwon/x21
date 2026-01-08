@@ -1,0 +1,122 @@
+/* By Sheaf.dev */
+@theme inline {
+    /* base color variables */
+    --color-purple-50: #f5f3ff;
+    --color-purple-100: #ede9fe;
+    --color-purple-200: #ddd6fe;
+    --color-purple-300: #c4b5fd;
+    --color-purple-400: #a78bfa;
+    --color-purple-500: #8b5cf6;
+    --color-purple-600: #7c3aed;
+    --color-purple-700: #6d28d9;
+    --color-purple-800: #5b21b6;
+    --color-purple-900: #4c1d95;
+    --color-purple-950: #2e1065;
+
+    /* primary color variables */
+    --color-primary: var(--color-purple-600);
+    --color-primary-content: var(--color-purple-600);
+    --color-primary-fg: var(--color-white);
+
+    /* secondary color variables */
+    --color-secondary: var(--color-purple-500);
+    --color-secondary-content: var(--color-purple-500);
+    --color-secondary-fg: var(--color-white);
+
+    /* accent color variables */
+    --color-accent: var(--color-purple-400);
+    --color-accent-content: var(--color-purple-400);
+    --color-accent-fg: var(--color-purple-950);
+
+    /* neutral color variables */
+    --color-neutral: var(--color-purple-900);
+    --color-neutral-content: var(--color-purple-900);
+    --color-neutral-fg: var(--color-white);
+
+    /* info color variables */
+    --color-info: var(--color-purple-300);
+    --color-info-content: var(--color-purple-300);
+    --color-info-fg: var(--color-purple-950);
+
+    /* success color variables */
+    --color-success: var(--color-purple-200);
+    --color-success-content: var(--color-purple-200);
+    --color-success-fg: var(--color-purple-900);
+
+    /* warning color variables */
+    --color-warning: var(--color-amber-400);
+    --color-warning-content: var(--color-amber-400);
+    --color-warning-fg: var(--color-amber-950);
+
+    /* error color variables */
+    --color-error: var(--color-rose-500);
+    --color-error-content: var(--color-rose-500);
+    --color-error-fg: var(--color-white);
+
+    /* radius variables */
+    --radius-field: 0.375rem;
+    --radius-box: 0.75rem;
+
+    /* shadow variables */
+    --shadow-base: 0 1px 3px 0 rgb(139 92 246 / 0.1), 0 1px 2px -1px rgb(139 92 246 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(139 92 246 / 0.1), 0 2px 4px -2px rgb(139 92 246 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(139 92 246 / 0.1), 0 4px 6px -4px rgb(139 92 246 / 0.1);
+}
+
+
+@layer theme {
+    .dark {
+        /* primary color variables */
+        --color-primary: var(--color-purple-500);
+        --color-primary-content: var(--color-purple-500);
+        --color-primary-fg: var(--color-white);
+
+        /* secondary color variables */
+        --color-secondary: var(--color-purple-400);
+        --color-secondary-content: var(--color-purple-400);
+        --color-secondary-fg: var(--color-purple-950);
+
+        /* accent color variables */
+        --color-accent: var(--color-purple-300);
+        --color-accent-content: var(--color-purple-300);
+        --color-accent-fg: var(--color-purple-950);
+
+        /* neutral color variables */
+        --color-neutral: var(--color-purple-100);
+        --color-neutral-content: var(--color-purple-100);
+        --color-neutral-fg: var(--color-purple-900);
+
+        /* info color variables */
+        --color-info: var(--color-purple-200);
+        --color-info-content: var(--color-purple-200);
+        --color-info-fg: var(--color-purple-900);
+
+        /* success color variables */
+        --color-success: var(--color-purple-300);
+        --color-success-content: var(--color-purple-300);
+        --color-success-fg: var(--color-purple-950);
+
+        /* background colors */
+        --color-background: var(--color-purple-950);
+        --color-background-content: var(--color-purple-900);
+
+        /* text colors */
+        --color-foreground: var(--color-purple-50);
+        --color-foreground-content: var(--color-purple-100);
+    }
+}
+
+/* Make all buttons extra rounded */
+[data-slot="button"] {
+    border-radius: var(--radius-box);
+}
+
+/* Give cards a custom border */
+[data-slot="card"] {
+    border: 2px solid var(--color-primary);
+}
+
+/* Style icons */
+[data-slot="icon"] {
+    @apply text-neutral-300;
+}

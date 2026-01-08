@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+    <head>
+        @include('partials.head')
+     
+    </head>
+     @livewireStyles
+    
+    <body class="min-h-screen bg-white dark:bg-zinc-800">
+       <x-ui.layout>
+            <x-ui.sidebar>
+                <x-slot:brand>
+                    <x-app-logo />
+                </x-slot:brand>
+                <x-ui.navlist>
+                    <x-ui.navlist.group label="Main">
+                        <x-ui.navlist.item 
+                            label="Dashboard"
+                            icon="home"
+                            :href="route('dashboard')"
+                            :active="request()->is('dashboard')"
+                        />
+                        <x-ui.navlist.item 
+                            label="Analytics"
+                            icon="chart-bar"
+                            href="/analytics"
+                        />
+                    </x-ui.navlist.group>
+
+                    <x-ui.navlist.group 
+                        label="Trade"
+                        collapsable
+                    >
+                            <x-ui.navlist.item 
+                                label="Airtime"
+                                icon="device-phone-mobile"
+                                :href="route('airtime')"
+                            />
+                            <x-ui.navlist.item 
+                                label="Internet Data"
+                                icon="wifi"
+                                :href="route('data')"
+                            />
+                            <x-ui.navlist.item 
+                                label="Electricity Bill"
+                                icon="light-bulb"
+                                :href="route('electricity')"
+                            />
+                            <x-ui.navlist.item 
+                                label="Cable TV"
+                                icon="tv"
+                                :href="route('cable')"
+                            />
+                            <x-ui.navlist.item 
+                                label="Education (Pins)"
+                                icon="academic-cap"
+                                :href="route('education')"
+                            />
+                            
+                    </x-ui.navlist.group>
+                    
+
+                    <x-ui.navlist.group 
+                        label="Management"
+                        collapsable
+                    >
+                        <x-ui.navlist.item 
+                            label="Transactions"
+                            icon="arrows-right-left"
+                            :href="route('transactions.index')"
+                        />
+                        <x-ui.navlist.item 
+                            label="Shares"
+                            icon="currency-dollar"
+                            :href="route('shares.index')"
+                        />
+
+                         <x-ui.navlist.item 
+                            label="Loans"
+                            icon="banknotes"
+                            :href="route('loan.index')"
+                        />
+                        
+                        <x-ui.navlist.item 
+                            label="Wallet"
+                            icon="credit-card"
+                            :href="route('wallet.index')"
+                        />
+                        
+                        <x-ui.navlist.item 
+                            label="Account"
+                            icon="user-circle"
+                            :href="route('account.index')"
+                        />
+                    </x-ui.navlist.group>
+                    
+                    <x-ui.navlist.group 
+                        label="Tools and Settings"
+                        collapsable
+                    >
+                        <x-ui.navlist.item 
+                            label="Settings"
+                            icon="cog"
+                            :href="route('profile.edit')"
+                            badge="12"
+                        />
+                        <x-ui.navlist.item 
+                            label="Developers"
+                            icon="code-bracket"
+                            href="/developers"
+                        />
+
+                    </x-ui.navlist.group>
+                
+                    
+                </x-ui.navlist>
+
+                <x-ui.sidebar.push />
+
+            <x-ui.dropdown portal>
+                    <x-slot:button>
+                        <x-ui.navlist.item 
+                            label="Profile Settings"
+                            icon="user"
+                            class="w-full"
+                        />
+                        <!-- or wrap it with navlist without w-full class -->
+                        {{-- <x-ui.navlist>
+                            <x-ui.navlist.item 
+                                label="Profile Settings"
+                                icon="user"
+                                class="w-full"
+                            />
+                        </x-ui.navlist> --}}
+                    </x-slot:button>
+                    
+                    <x-slot:menu class="!w-[14rem]">
+                        <x-ui.dropdown.item :href="route('profile.edit')" icon="adjustments-horizontal">
+                            Preference
+                        </x-ui.dropdown.item>
+                        
+                        <x-ui.dropdown.item :href="route('profile.edit')" icon="user-circle">
+                            Profile
+                        </x-ui.dropdown.item>
+                        
+                        <x-ui.dropdown.item :href="route('password.edit')" icon="lock-closed">
+                            Security
+                        </x-ui.dropdown.item>
+                        
+                        <x-ui.dropdown.item href="#" icon="bell" variant="danger">
+                            Notifications
+                        </x-ui.dropdown.item>
+                    </x-slot:menu>
+                </x-ui.dropdown>
+            </x-ui.sidebar>
+            <x-ui.layout.main>
+                <x-ui.layout.header>
+                    <x-ui.sidebar.toggle class="md:hidden"/>
+                    <x-ui.navbar class="flex-1 hidden lg:flex">
+                        <x-ui.navbar.item
+                            icon="home"
+                            label="Home" 
+                            :href="route('dashboard')"
+                        />
+                        <x-ui.navbar.item 
+                            icon="cog" 
+                            label="Settings" 
+                            badge="3"
+                            badge:color="orange"
+                            badge:variant="outline"
+                            :href="route('profile.edit')"
+                        />
+                        <x-ui.dropdown>
+                            <x-slot:button>
+                                <x-ui.navbar.item 
+                                    icon="shopping-bag"
+                                    icon:variant="min" 
+                                    label="Store" 
+                                />
+                            </x-slot:button>
+                            
+                            <x-slot:menu>
+                                <x-ui.dropdown.item icon="shopping-bag" :href="route('shares.index')">
+                                    Products
+                                </x-ui.dropdown.item>
+                                <x-ui.dropdown.item icon="receipt-percent" :href="route('transactions.index')">
+                                    Orders
+                                </x-ui.dropdown.item>
+                                <x-ui.dropdown.item icon="users" href="/customers">
+                                    Customers
+                                </x-ui.dropdown.item>
+                                <x-ui.dropdown.item icon="ticket" href="/discounts">
+                                    Discounts
+                                </x-ui.dropdown.item>
+                            </x-slot:menu>
+                        </x-ui.dropdown>
+                    </x-ui.navbar>
+
+                    <div class="flex ml-auto gap-x-3 items-center">
+                            <x-ui.dropdown position="bottom-end">
+                            <x-slot:button class="justify-center">
+                                <x-ui.avatar size="sm" src="/mohamed.png" circle alt="Profile Picture" />
+                            </x-slot:button>
+
+                            <x-slot:menu class="w-56">
+                                <x-ui.dropdown.group label="signed in as">
+                                    <x-ui.dropdown.item>
+                                        {{ Auth::user()->email }}
+                                    </x-ui.dropdown.item>
+                                </x-ui.dropdown.group>
+
+                                <x-ui.dropdown.separator />
+
+                                <x-ui.dropdown.item :href="route('profile.edit')" wire:navigate>
+                                    Account
+                                </x-ui.dropdown.item>
+
+                                <x-ui.dropdown.separator />
+
+                                <form
+                                    action="{{ route('logout') }}"
+                                    method="post"
+                                    class="contents"
+                                >
+                                    @csrf
+                                    <x-ui.dropdown.item as="button" type="submit">
+                                        Sign Out
+                                    </x-ui.dropdown.item>
+                                </form>
+
+                            </x-slot:menu>
+                        </x-ui.dropdown>
+
+                        <x-ui.theme-switcher variant="inline" />
+                    </div>
+                </x-ui.layout.header>
+                <!-- Your page content -->
+                <div class="p-6">
+                    {{ $slot }}
+                </div>
+            </x-ui.layout.main>
+        </x-ui.layout>
+         @livewireScripts
+        {{-- without this it cause flicker when multiple components changes in isolation in the  page --}}
+       
+    </body>
+</html>
