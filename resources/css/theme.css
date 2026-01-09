@@ -66,6 +66,10 @@
     --glass-background: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.2);
     --glass-blur: 12px;
+
+    /* background colors */
+    --color-background: var(--color-slate-50);
+    --color-background-content: var(--color-slate-900);
 }
 
 
