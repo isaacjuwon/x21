@@ -9,7 +9,8 @@
                  :class="loaded ? 'opacity-10 dark:opacity-20' : 'opacity-0'"></div>
         @endif
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/20 blur-[120px] rounded-full -z-10 animate-slow-ping"></div>
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 blur-[100px] rounded-full -z-10"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/10 blur-[100px] rounded-full -z-10"></div>
+        <div class="absolute top-1/2 left-0 w-[300px] h-[300px] bg-accent/10 blur-[80px] rounded-full -z-10"></div>
 
         <!-- Navbar (Minimal) -->
         <nav class="fixed top-0 w-full z-50 px-6 py-6 transition-all duration-500" :class="loaded ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'">
@@ -27,7 +28,7 @@
         <!-- Hero Section -->
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
             <div class="max-w-5xl mx-auto text-center">
-                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-8 reveal" 
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-500 to-accent mb-8 reveal" 
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.2s">
                     {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
                 </h1>
@@ -38,7 +39,7 @@
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal"
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.6s">
-                    <a href="{{ route('register') }}" class="group relative px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-2xl transition-all hover:glow hover:-translate-y-1">
+                    <a href="{{ route('register') }}" class="group relative px-8 py-4 bg-linear-to-r from-primary to-secondary text-white rounded-2xl font-bold shadow-2xl transition-all hover:glow hover:-translate-y-1 hover:to-primary">
                         Start Journey
                         <span class="ml-2 transition-transform group-hover:translate-x-1 inline-block">→</span>
                     </a>
