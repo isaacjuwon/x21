@@ -6,7 +6,7 @@
     </head>
      @livewireStyles
     
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen bg-slate-200 dark:bg-zinc-800">
        <x-ui.layout>
             <x-ui.sidebar>
                 <x-slot:brand>

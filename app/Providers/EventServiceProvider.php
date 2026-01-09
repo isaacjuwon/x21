@@ -19,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Loans\LoanPaymentMade::class => [
             \App\Listeners\CheckUserLoanLevelUpgrade::class,
         ],
+        \App\Events\Paystack\PaymentSuccessful::class => [
+            \App\Listeners\Paystack\ProcessWalletFunding::class,
+        ],
     ];
 
     /**
