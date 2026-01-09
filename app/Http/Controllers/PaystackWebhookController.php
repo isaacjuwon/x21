@@ -31,7 +31,7 @@ final class PaystackWebhookController
 
         // Dispatch events based on webhook type
         match ($payload->event) {
-            'charge.success' => event(new PaymentSuccessful($payload->data)),
+            'charge.success', 'paymentrequest.success' => event(new PaymentSuccessful($payload->data)),
             'charge.failed' => event(new PaymentFailed($payload->data)),
             'transfer.success' => event(new TransferSuccessful($payload->data)),
             'transfer.failed' => event(new TransferFailed($payload->data)),

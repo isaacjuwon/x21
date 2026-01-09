@@ -37,7 +37,7 @@ class FundWalletAction
                 email: $data['email'],
                 amount: $data['amount'],
                 reference: $data['reference'],
-                callbackUrl: route('wallet.fund'),
+                callbackUrl: route('wallet.callback'),
                 metadata: ['transaction_id' => $transaction->id, 'type' => 'wallet_funding'],
             );
 

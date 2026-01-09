@@ -6,7 +6,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
-new #[Layout('layouts.app')] class extends Component
+new #[Layout('layouts::app')] class extends Component
 {
     use HasToast;
 

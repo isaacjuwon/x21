@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/wallet/fund', 'pages::wallet.fund')->name('wallet.fund');
     Route::livewire('/wallet/withdraw', 'pages::wallet.withdraw')->name('wallet.withdraw');
     Route::livewire('/wallet/transfer', 'pages::wallet.transfer')->name('wallet.transfer');
+    Route::livewire('/wallet/callback', 'pages::wallet.callback')->name('wallet.callback');
 
     // Trransaction routes
     Route::livewire('/transactions', 'pages::transactions.index')->name('transactions.index');
