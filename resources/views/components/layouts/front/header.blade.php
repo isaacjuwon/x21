@@ -4,7 +4,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen bg-slate-100 dark:bg-zinc-800">
      <x-ui.layout.main>
             @if($header)
                 <x-ui.layout.header>

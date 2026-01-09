@@ -1,6 +1,6 @@
 @use('App\Settings\LayoutSettings')
 <x-layouts::front :header="false">
-    <div class="relative min-h-screen bg-slate-50 dark:bg-[#0a0515] overflow-x-hidden" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 100)">
+    <div class="relative min-h-screen  overflow-x-hidden" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 100)">
         
         <!-- Abstract Background Glows -->
         @if($layoutSettings->banner)
@@ -28,7 +28,7 @@
         <!-- Hero Section -->
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
             <div class="max-w-5xl mx-auto text-center">
-                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-500 to-accent mb-8 reveal" 
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text dark:text-white bg-linear-to-r from-primary via-purple-500 to-accent mb-8 reveal" 
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.2s">
                     {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
                 </h1>
@@ -39,10 +39,14 @@
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal"
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.6s">
-                    <a href="{{ route('register') }}" class="group relative px-8 py-4 bg-linear-to-r from-primary to-secondary text-white rounded-2xl font-bold shadow-2xl transition-all hover:glow hover:-translate-y-1 hover:to-primary">
+                    <x-ui.button 
+                        tag="a" 
+                        href="{{ route('register') }}" 
+                        class="px-8 py-4 bg-linear-to-r from-primary to-secondary text-white rounded-2xl font-bold shadow-2xl transition-all hover:glow hover:-translate-y-1 hover:to-primary"
+                    >
                         Start Journey
                         <span class="ml-2 transition-transform group-hover:translate-x-1 inline-block">→</span>
-                    </a>
+                    </x-ui.button>
                 </div>
             </div>
         </section>
