@@ -8,8 +8,8 @@ final readonly class PaymentResponse
 {
     public function __construct(
         public string $reference,
-        public string $status,
-        public int $amount,
+        //   public string $status,
+        // public int $amount,
         public string $authorizationUrl,
         public ?string $accessCode = null,
         public ?array $metadata = null,
@@ -19,8 +19,8 @@ final readonly class PaymentResponse
     {
         return new self(
             reference: $data['reference'],
-            status: $data['status'],
-            amount: $data['amount'],
+            //     status: $data['status'],
+            // amount: $data['amount'],
             authorizationUrl: $data['authorization_url'] ?? '',
             accessCode: $data['access_code'] ?? null,
             metadata: $data['metadata'] ?? null,
