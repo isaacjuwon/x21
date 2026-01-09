@@ -12,3 +12,5 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
     --default-border-width: 1px;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

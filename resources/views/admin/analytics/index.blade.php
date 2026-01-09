@@ -12,6 +12,7 @@ use App\Models\LoanPayment;
 use App\Models\Share;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Settings\ShareSettings;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -68,9 +69,10 @@ new class extends Component
             ->get();
 
         // Revenue breakdown
+        $shareSettings = app(ShareSettings::class);
         $revenueData = [
             'loan_interest' => LoanPayment::sum('amount') - Loan::sum('amount'),
-            'share_purchases' => Share::where('status', ShareStatus::APPROVED)->sum('amount'),
+            'share_purchases' => Share::where('status', ShareStatus::APPROVED)->sum('quantity') * $shareSettings->share_price,
             'transactions' => Transaction::where('status', TransactionStatus::Success)
                 ->whereIn('transactable_type', [
                     AirtimePlan::class,

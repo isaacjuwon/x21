@@ -61,6 +61,11 @@
     --shadow-base: 0 1px 3px 0 rgb(139 92 246 / 0.1), 0 1px 2px -1px rgb(139 92 246 / 0.1);
     --shadow-md: 0 4px 6px -1px rgb(139 92 246 / 0.1), 0 2px 4px -2px rgb(139 92 246 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(139 92 246 / 0.1), 0 4px 6px -4px rgb(139 92 246 / 0.1);
+
+    /* custom utilities */
+    --glass-background: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur: 12px;
 }
 
 
@@ -119,4 +124,43 @@
 /* Style icons */
 [data-slot="icon"] {
     @apply text-neutral-300;
+}
+
+@utility glass {
+    background: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+}
+
+@utility glow {
+    box-shadow: 0 0 20px -5px var(--color-primary);
+}
+
+@utility reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility reveal-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes slow-ping {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.2;
+    }
+}
+
+@utility animate-slow-ping {
+    animation: slow-ping 10s infinite alternate;
 }

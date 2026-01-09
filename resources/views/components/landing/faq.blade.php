@@ -4,28 +4,26 @@
     'items' => $layoutSettings->homepage_faq_items,
 ])
 
-<section class="py-12 bg-white dark:bg-zinc-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-extrabold text-zinc-900 dark:text-white sm:text-4xl">
+<section class="py-20 px-6" x-data="{ visible: false }" x-intersect.once="visible = true">
+    <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16 reveal" :class="visible && 'reveal-active'">
+            <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
                 {{ $title }}
             </h2>
-            <p class="mt-4 text-lg text-zinc-500 dark:text-zinc-400">
+            <p class="text-lg text-slate-500 dark:text-slate-400">
                 {{ $description }}
             </p>
         </div>
 
-        <div class="max-w-3xl mx-auto">
+        <div class="space-y-4 reveal" :class="visible && 'reveal-active'" style="transition-delay: 0.2s">
             <x-ui.accordion>
                 @foreach($items as $index => $item)
-                    <x-ui.accordion.item wire:key="faq-{{ $index }}">
-                        <x-ui.accordion.trigger>
+                    <x-ui.accordion.item wire:key="faq-{{ $index }}" class="glass border-white/5 rounded-2xl overflow-hidden mb-4">
+                        <x-ui.accordion.trigger class="px-6 py-4 text-left font-bold text-slate-900 dark:text-white hover:bg-white/5">
                             {{ $item['question'] }}
                         </x-ui.accordion.trigger>
-                        <x-ui.accordion.content>
-                            <p class="text-zinc-600 dark:text-zinc-300">
-                                {{ $item['answer'] }}
-                            </p>
+                        <x-ui.accordion.content class="px-6 pb-6 text-slate-600 dark:text-slate-400 font-medium">
+                            {{ $item['answer'] }}
                         </x-ui.accordion.content>
                     </x-ui.accordion.item>
                 @endforeach

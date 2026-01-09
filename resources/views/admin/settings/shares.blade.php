@@ -12,12 +12,15 @@ new class extends Component
 
     public float $share_price;
 
+    public float $share_interest_rate;
+
     public int $holding_period;
 
     public function mount(ShareSettings $settings): void
     {
         $this->require_admin_approval = $settings->require_admin_approval;
         $this->share_price = $settings->share_price;
+        $this->share_interest_rate = $settings->share_interest_rate;
         $this->holding_period = $settings->holding_period;
     }
 
@@ -25,6 +28,7 @@ new class extends Component
     {
         $settings->require_admin_approval = $this->require_admin_approval;
         $settings->share_price = $this->share_price;
+        $settings->share_interest_rate = $this->share_interest_rate;
         $settings->holding_period = $this->holding_period;
         $settings->save();
 
@@ -56,6 +60,12 @@ new class extends Component
                     <x-ui.label for="holding_period">Holding Period (Days)</x-ui.label>
                     <x-ui.input wire:model="holding_period" id="holding_period" type="number" min="0" />
                     <x-ui.error name="holding_period" />
+                </x-ui.field>
+
+                <x-ui.field>
+                    <x-ui.label for="share_interest_rate">Interest Rate (%)</x-ui.label>
+                    <x-ui.input wire:model="share_interest_rate" id="share_interest_rate" type="number" step="0.01" min="0" />
+                    <x-ui.error name="share_interest_rate" />
                 </x-ui.field>
             </div>
 

@@ -1,100 +1,89 @@
 @use('App\Settings\LayoutSettings')
-<x-layouts::front>
-    <div class="bg-white dark:bg-gray-900">
-        <!-- Hero Section -->
-        <div class="relative isolate px-6 pt-14 lg:px-8 overflow-hidden">
-            @if($layoutSettings->banner)
-                <div class="absolute inset-0 -z-10 h-full w-full bg-cover bg-center opacity-20" style="background-image: url('{{ $layoutSettings->banner }}')"></div>
-            @else
-                <div class="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-gray-950 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"></div>
-            @endif
-            
-            <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-                <div class="text-center">
-                    <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-                        {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
-                    </h1>
-                    <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
-                        {{ $layoutSettings->homepage_description ?? 'Manage your loans, shares, and dividends in one place. Secure, transparent, and easy to use cooperative management system.' }}
-                    </p>
-                    <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a href="{{ route('register') }}" class="rounded-md bg-primary text-primary-fg px-3.5 py-2.5 text-sm font-semibold shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Get started</a>
-                        <a href="{{ route('login') }}" class="text-sm font-semibold leading-6 text-gray-900 dark:text-white">Log in <span aria-hidden="true">→</span></a>
-                    </div>
+<x-layouts::front :header="false">
+    <div class="relative min-h-screen bg-slate-50 dark:bg-[#0a0515] overflow-x-hidden" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 100)">
+        
+        <!-- Abstract Background Glows -->
+        @if($layoutSettings->banner)
+            <div class="absolute inset-0 -z-10 h-full w-full bg-cover bg-fixed bg-center opacity-10 dark:opacity-20 transition-opacity duration-1000" 
+                 style="background-image: url('{{ Storage::url($layoutSettings->banner) }}')"
+                 :class="loaded ? 'opacity-10 dark:opacity-20' : 'opacity-0'"></div>
+        @endif
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/20 blur-[120px] rounded-full -z-10 animate-slow-ping"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 blur-[100px] rounded-full -z-10"></div>
+
+        <!-- Navbar (Minimal) -->
+        <nav class="fixed top-0 w-full z-50 px-6 py-6 transition-all duration-500" :class="loaded ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'">
+            <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-6 py-3 border-white/10">
+                <x-app-logo class="h-8" />
+                <div class="flex items-center gap-4">
+                    <x-ui.button variant="ghost" :href="route('login')" class="text-slate-600 dark:text-slate-400">Login</x-ui.button>
+                    <x-ui.button variant="primary" :href="route('register')" class="rounded-xl px-6">
+                        Get Started
+                    </x-ui.button>
                 </div>
             </div>
-        </div>
+        </nav>
 
-        <!-- Feature Section -->
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+            <div class="max-w-5xl mx-auto text-center">
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-8 reveal" 
+                    :class="loaded && 'reveal-active'" style="transition-delay: 0.2s">
+                    {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
+                </h1>
+                <p class="text-lg lg:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12 reveal"
+                    :class="loaded && 'reveal-active'" style="transition-delay: 0.4s">
+                    {{ $layoutSettings->homepage_description ?? 'Manage your loans, shares, and dividends in one place. Secure, transparent, and easy to use cooperative management system.' }}
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal"
+                    :class="loaded && 'reveal-active'" style="transition-delay: 0.6s">
+                    <a href="{{ route('register') }}" class="group relative px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-2xl transition-all hover:glow hover:-translate-y-1">
+                        Start Journey
+                        <span class="ml-2 transition-transform group-hover:translate-x-1 inline-block">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Dynamic -->
         <x-landing.features />
 
-        <!-- FAQ Section -->
+        <!-- FAQ Section Dynamic -->
         <x-landing.faq />
 
-        <!-- Footer -->
-        <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800" aria-labelledby="footer-heading">
-            <h2 id="footer-heading" class="sr-only">Footer</h2>
-            <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
-                <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-                    <div class="space-y-8">
-                        <x-app-logo class="h-7" />
-                        @if($layoutSettings->about)
-                            <p class="text-sm leading-6 text-gray-600 dark:text-gray-400">
-                                {{ $layoutSettings->about }}
-                            </p>
-                        @endif
-                        <div class="flex space-x-6">
-                            @if($layoutSettings->facebook)
-                                <a href="{{ $layoutSettings->facebook }}" class="text-gray-400 hover:text-gray-500">
-                                    <span class="sr-only">Facebook</span>
-                                    <x-ui.icon name="ps:facebook-logo" class="h-6 w-6" />
-                                </a>
-                            @endif
-                            @if($layoutSettings->instagram)
-                                <a href="{{ $layoutSettings->instagram }}" class="text-gray-400 hover:text-gray-500">
-                                    <span class="sr-only">Instagram</span>
-                                    <x-ui.icon name="ps:instagram-logo" class="h-6 w-6" />
-                                </a>
-                            @endif
-                            @if($layoutSettings->twitter)
-                                <a href="{{ $layoutSettings->twitter }}" class="text-gray-400 hover:text-gray-500">
-                                    <span class="sr-only">Twitter</span>
-                                    <x-ui.icon name="ps:twitter-logo" class="h-6 w-6" />
-                                </a>
-                            @endif
-                             @if($layoutSettings->email)
-                                <a href="mailto:{{ $layoutSettings->email }}" class="text-gray-400 hover:text-gray-500">
-                                    <span class="sr-only">Email</span>
-                                    <x-ui.icon name="heroicon-o-envelope" class="h-6 w-6" />
-                                </a>
-                            @endif
-                        </div>
+        <!-- Footer (Clean) -->
+        <footer class="py-12 border-t border-slate-200 dark:border-slate-800/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                    <x-app-logo class="h-6 opacity-60" />
+                    
+                    <div class="flex flex-col items-center md:items-start gap-4">
+                        @foreach(\App\Models\Page::all() as $page)
+                            <a href="{{ route('pages.show', $page) }}" class="text-sm font-medium text-slate-400 hover:text-primary transition-colors">{{ $page->title }}</a>
+                        @endforeach
                     </div>
-                    <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-                        <div class="md:grid md:grid-cols-2 md:gap-8">
-                            <div>
-                                <h3 class="text-sm font-semibold leading-6 text-gray-900 dark:text-white">Legal</h3>
-                                <ul role="list" class="mt-6 space-y-4">
-                                    @foreach(\App\Models\Page::all() as $page)
-                                        <li>
-                                            <a href="{{ route('pages.show', $page) }}" class="text-sm leading-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">{{ $page->title }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="mt-10 md:mt-0">
-                                @if($layoutSettings->address)
-                                    <h3 class="text-sm font-semibold leading-6 text-gray-900 dark:text-white">Contact Us</h3>
-                                    <p class="mt-6 text-sm leading-6 text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                        {{ $layoutSettings->address }}
-                                    </p>
-                                @endif
-                            </div>
-                        </div>
+
+                    <div class="flex items-center gap-6">
+                         @if($layoutSettings->facebook)
+                            <a href="{{ $layoutSettings->facebook }}" class="text-slate-400 hover:text-primary transition-colors">
+                                <x-ui.icon name="ps:facebook-logo" class="h-5 w-5" />
+                            </a>
+                        @endif
+                        @if($layoutSettings->twitter)
+                            <a href="{{ $layoutSettings->twitter }}" class="text-slate-400 hover:text-primary transition-colors">
+                                <x-ui.icon name="ps:twitter-logo" class="h-5 w-5" />
+                            </a>
+                        @endif
+                         @if($layoutSettings->email)
+                            <a href="mailto:{{ $layoutSettings->email }}" class="text-slate-400 hover:text-primary transition-colors">
+                                <x-ui.icon name="envelope" class="h-5 w-5" />
+                            </a>
+                        @endif
                     </div>
                 </div>
-                <div class="mt-16 border-t border-gray-900/10 dark:border-gray-100/10 pt-8 sm:mt-20 lg:mt-24">
-                    <p class="text-xs leading-5 text-gray-500">&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                <div class="mt-12 text-center">
+                    <p class="text-xs text-slate-500 font-medium opacity-50">&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
                 </div>
             </div>
         </footer>
