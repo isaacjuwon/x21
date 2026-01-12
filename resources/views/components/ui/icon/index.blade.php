@@ -33,4 +33,4 @@
     }
 @endphp
 
-<x-dynamic-component :component="$componentName" {{ $attributes->class(['text-neutral-800 dark:text-neutral-200']) }}  data-slot="icon" />
+<x-dynamic-component :component="$componentName" {{ $attributes }}  data-slot="icon" />

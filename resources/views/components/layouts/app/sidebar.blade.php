@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
      
     </head>
      @livewireStyles
     
-    <body class="min-h-screen bg-slate-200 dark:bg-zinc-800">
+    <body class="min-h-screen bg-background text-foreground">
        <x-ui.layout>
             <x-ui.sidebar>
                 <x-slot:brand>
@@ -123,13 +123,13 @@
 
             <x-ui.dropdown portal>
                     <x-slot:button>
-                        <div class="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-background-content transition-colors">
                             <x-ui.avatar size="sm" :src="auth()->user()->avatar_url" circle alt="Profile Picture" />
                             <div class="flex flex-col items-start min-w-0">
-                                <span class="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[150px]">
+                                <span class="text-sm font-medium text-foreground truncate max-w-[150px]">
                                     {{ auth()->user()->name }}
                                 </span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[150px]">
+                                <span class="text-xs text-foreground-content truncate max-w-[150px]">
                                     {{ auth()->user()->email }}
                                 </span>
                             </div>

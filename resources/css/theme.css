@@ -1,133 +1,155 @@
 /* By Sheaf.dev */
-@theme inline {
-    /* base color variables */
-    --color-purple-50: #f5f3ff;
-    --color-purple-100: #ede9fe;
-    --color-purple-200: #ddd6fe;
-    --color-purple-300: #c4b5fd;
-    --color-purple-400: #a78bfa;
-    --color-purple-500: #8b5cf6;
-    --color-purple-600: #7c3aed;
-    --color-purple-700: #6d28d9;
-    --color-purple-800: #5b21b6;
-    --color-purple-900: #4c1d95;
-    --color-purple-950: #2e1065;
 
-    /* primary color variables */
-    --color-primary: var(--color-purple-600);
-    --color-primary-content: var(--color-purple-600);
-    --color-primary-fg: var(--color-white);
+:root {
+    /* Base Variables - Light Mode */
+    --primary: #1d9bf0;
+    --primary-fg: #ffffff;
 
-    /* secondary color variables */
-    --color-secondary: var(--color-purple-500);
-    --color-secondary-content: var(--color-purple-500);
-    --color-secondary-fg: var(--color-white);
+    --accent: #00a2ff;
+    --accent-fg: #ffffff;
 
-    /* accent color variables */
-    --color-accent: var(--color-purple-400);
-    --color-accent-content: var(--color-purple-400);
-    --color-accent-fg: var(--color-purple-950);
+    --secondary: #64748b;
+    --secondary-fg: #ffffff;
 
-    /* neutral color variables */
-    --color-neutral: var(--color-purple-900);
-    --color-neutral-content: var(--color-purple-900);
-    --color-neutral-fg: var(--color-white);
+    --success: #00ba7c;
+    --success-fg: #ffffff;
 
-    /* info color variables */
-    --color-info: var(--color-purple-300);
-    --color-info-content: var(--color-purple-300);
-    --color-info-fg: var(--color-purple-950);
+    --warning: #ffd400;
+    --warning-fg: #000000;
 
-    /* success color variables */
-    --color-success: var(--color-purple-200);
-    --color-success-content: var(--color-purple-200);
-    --color-success-fg: var(--color-purple-900);
+    --error: #f4212e;
+    --error-fg: #ffffff;
 
-    /* warning color variables */
-    --color-warning: var(--color-amber-400);
-    --color-warning-content: var(--color-amber-400);
-    --color-warning-fg: var(--color-amber-950);
+    --info: #1d9bf0;
+    --info-fg: #ffffff;
 
-    /* error color variables */
-    --color-error: var(--color-rose-500);
-    --color-error-content: var(--color-rose-500);
-    --color-error-fg: var(--color-white);
+    --neutral: #0f172a;
+    --neutral-fg: #ffffff;
+
+    --background: #f8fafc;
+    --background-content: #ffffff;
+
+    --foreground: #0f1419;
+    --foreground-content: #536471;
+
+    --border: #eff3f4;
+}
+
+html.dark {
+    /* Base Variables - Dark Mode */
+    --primary: #1d9bf0;
+    /* Restored brand primary in dark mode */
+    --primary-fg: #ffffff;
+
+    --accent: #00a2ff;
+    --accent-fg: #ffffff;
+
+    --secondary: #71767b;
+    --secondary-fg: #ffffff;
+
+    --success: #00ba7c;
+    --success-fg: #ffffff;
+
+    --warning: #ffd400;
+    --warning-fg: #000000;
+
+    --error: #f4212e;
+    --error-fg: #ffffff;
+
+    --info: #1d9bf0;
+    --info-fg: #ffffff;
+
+    --neutral: #16181c;
+    --neutral-fg: #71767b;
+
+    --background: #000000;
+    --background-content: #16181c;
+
+    --foreground: #eff3f4;
+    --foreground-content: #71767b;
+
+    --border: #2f3336;
+}
+
+@theme {
+    /* Map Tailwind Theme to our Base Variables */
+    --color-primary: var(--primary);
+    --color-primary-content: var(--primary);
+    --color-primary-fg: var(--primary-fg);
+
+    --color-accent: var(--accent);
+    --color-accent-content: var(--accent);
+    --color-accent-fg: var(--accent-fg);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-content: var(--secondary);
+    --color-secondary-fg: var(--secondary-fg);
+
+    --color-success: var(--success);
+    --color-success-content: var(--success);
+    --color-success-fg: var(--success-fg);
+
+    --color-warning: var(--warning);
+    --color-warning-content: var(--warning);
+    --color-warning-fg: var(--warning-fg);
+
+    --color-error: var(--error);
+    --color-error-content: var(--error);
+    --color-error-fg: var(--error-fg);
+
+    --color-info: var(--info);
+    --color-info-content: var(--info);
+    --color-info-fg: var(--info-fg);
+
+    --color-neutral: var(--neutral);
+    --color-neutral-content: var(--neutral);
+    --color-neutral-fg: var(--neutral-fg);
+
+    --color-background: var(--background);
+    --color-background-content: var(--background-content);
+
+    --color-foreground: var(--foreground);
+    --color-foreground-content: var(--foreground-content);
+
+    --color-border: var(--border);
 
     /* radius variables */
     --radius-field: 0.375rem;
-    --radius-box: 0.75rem;
+    --radius-box: 1rem;
 
     /* shadow variables */
-    --shadow-base: 0 1px 3px 0 rgb(139 92 246 / 0.1), 0 1px 2px -1px rgb(139 92 246 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(139 92 246 / 0.1), 0 2px 4px -2px rgb(139 92 246 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(139 92 246 / 0.1), 0 4px 6px -4px rgb(139 92 246 / 0.1);
+    --shadow-base: 0 1px 3px 0 rgb(29 155 240 / 0.1), 0 1px 2px -1px rgb(29 155 240 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(29 155 240 / 0.1), 0 2px 4px -2px rgb(29 155 240 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(29 155 240 / 0.1), 0 4px 6px -4px rgb(29 155 240 / 0.1);
 
     /* custom utilities */
     --glass-background: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.2);
     --glass-blur: 12px;
-
-    /* background colors */
-    --color-background: var(--color-slate-50);
-    --color-background-content: var(--color-slate-900);
 }
 
-
-@layer theme {
-    .dark {
-        /* primary color variables */
-        --color-primary: var(--color-purple-500);
-        --color-primary-content: var(--color-purple-500);
-        --color-primary-fg: var(--color-white);
-
-        /* secondary color variables */
-        --color-secondary: var(--color-purple-400);
-        --color-secondary-content: var(--color-purple-400);
-        --color-secondary-fg: var(--color-purple-950);
-
-        /* accent color variables */
-        --color-accent: var(--color-purple-300);
-        --color-accent-content: var(--color-purple-300);
-        --color-accent-fg: var(--color-purple-950);
-
-        /* neutral color variables */
-        --color-neutral: var(--color-purple-100);
-        --color-neutral-content: var(--color-purple-100);
-        --color-neutral-fg: var(--color-purple-900);
-
-        /* info color variables */
-        --color-info: var(--color-purple-200);
-        --color-info-content: var(--color-purple-200);
-        --color-info-fg: var(--color-purple-900);
-
-        /* success color variables */
-        --color-success: var(--color-purple-300);
-        --color-success-content: var(--color-purple-300);
-        --color-success-fg: var(--color-purple-950);
-
-        /* background colors */
-        --color-background: var(--color-purple-950);
-        --color-background-content: var(--color-purple-900);
-
-        /* text colors */
-        --color-foreground: var(--color-purple-50);
-        --color-foreground-content: var(--color-purple-100);
-    }
-}
-
-/* Make all buttons extra rounded */
+/* Make all buttons extra rounded like Twitter */
 [data-slot="button"] {
-    border-radius: var(--radius-box);
+    border-radius: 9999px;
 }
 
-/* Give cards a custom border */
+/* Give cards a custom border and rounded corners */
 [data-slot="card"] {
-    border: 2px solid var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-box);
+    background-color: var(--color-background-content);
 }
 
-/* Style icons */
+/* Style icons with theme colors and smooth transitions */
 [data-slot="icon"] {
-    @apply text-neutral-300;
+    flex-shrink: 0;
+    color: var(--color-foreground-content);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effect for interactive elements containing icons */
+:where(a, button):hover [data-slot="icon"] {
+    color: var(--color-primary);
 }
 
 @utility glass {
