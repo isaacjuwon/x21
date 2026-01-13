@@ -83,12 +83,6 @@ class MakeLoanPaymentAction
         // Update loan balance
         $loan->updateBalance($amount);
 
-        // Update next payment date if not fully paid
-        if ($loan->status === LoanStatus::ACTIVE) {
-            $loan->update([
-                "next_payment_date" => now()->addMonth(),
-            ]);
-        }
 
         // Dispatch events
         event(new LoanPaymentMade($loan, $payment, $user));

@@ -150,9 +150,23 @@ class Loan extends Model
         if ($this->balance_remaining <= 0) {
             $this->balance_remaining = 0;
             $this->markAsPaid();
+        } else {
+            $this->syncNextPaymentDate();
         }
 
         $this->save();
+    }
+
+    /**
+     * Sync next payment date with fixed schedule
+     */
+    public function syncNextPaymentDate(): void
+    {
+        $calculator = new class {
+            use \App\Concerns\CalculatesLoanEligibility;
+        };
+
+        $this->next_payment_date = $calculator->calculateNextDueDate($this);
     }
 
     /**

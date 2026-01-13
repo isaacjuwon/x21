@@ -134,4 +134,25 @@ trait CalculatesLoanEligibility
         );
         return round($monthlyPayment * $months, 2);
     }
+
+    /**
+     * Calculate stable next due date based on payment progress
+     */
+    public function calculateNextDueDate(\App\Models\Loan $loan): ?Carbon
+    {
+        if ($loan->status === \App\Enums\LoanStatus::FULLY_PAID || $loan->balance_remaining <= 0) {
+            return null;
+        }
+
+        if (!$loan->disbursed_at) {
+            return null;
+        }
+
+        // Determine how many full installments have been paid
+        // We use monthly_payment as the baseline for a "month"
+        $installmentsPaid = floor($loan->amount_paid / $loan->monthly_payment);
+        
+        // The next due date is (installmentsPaid + 1) months after disbursement
+        return Carbon::parse($loan->disbursed_at)->addMonths((int) ($installmentsPaid + 1));
+    }
 }

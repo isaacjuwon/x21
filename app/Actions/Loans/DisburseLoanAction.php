@@ -28,8 +28,11 @@ class DisburseLoanAction
         $loan->update([
             "status" => LoanStatus::ACTIVE,
             "disbursed_at" => now(),
-            "next_payment_date" => now()->addMonth(),
         ]);
+
+        // Sync next payment date correctly based on disbursement
+        $loan->syncNextPaymentDate();
+        $loan->save();
 
         // Dispatch event
         event(new LoanDisbursed($loan, $user, $loan->amount));
