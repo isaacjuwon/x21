@@ -161,158 +161,160 @@ new class extends Component
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form Content -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- Step 1: Network Selection -->
-            <section class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Network</h3>
-                    @if($this->network_id)
-                        <span class="text-xs text-primary font-medium flex items-center">
-                            <x-ui.icon name="check-circle" class="size-4 mr-1" />
-                            {{ $this->selectedNetwork?->name }}
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    @foreach ($this->networks as $network)
-                        <button 
-                            type="button"
-                            wire:click="$set('network_id', {{ $network->id }})"
-                            @class([
-                                'relative flex flex-col items-center p-4 rounded-2xl border-2 transition-all group',
-                                'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->network_id == $network->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->network_id != $network->id
-                            ])
-                        >
-                            <div class="size-12 rounded-xl overflow-hidden mb-2 group-hover:scale-110 transition-transform">
-                                <img src="{{ $network->image_url }}" alt="{{ $network->name }}" class="size-full object-cover">
-                            </div>
-                            <span @class([
-                                'text-xs font-bold uppercase tracking-tight',
-                                'text-primary' => $this->network_id == $network->id,
-                                'text-foreground-content' => $this->network_id != $network->id
-                            ])>{{ $network->name }}</span>
-                            
-                            @if($this->network_id == $network->id)
-                                <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
-                                    <x-ui.icon name="check" class="size-4" />
-                                </div>
-                            @endif
-                        </button>
-                    @endforeach
-                </div>
-                @error('network_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 2: Data Type Selection -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->network_id])>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Type</h3>
-                    @if($this->data_type)
-                        <span class="text-xs text-primary font-medium uppercase">{{ $this->data_type }}</span>
-                    @endif
-                </div>
-
-                <div class="flex flex-wrap gap-2">
-                    @forelse ($this->dataTypes as $type)
-                        <button 
-                            type="button"
-                            wire:click="$set('data_type', '{{ $type }}')"
-                            @class([
-                                'px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border-2 transition-all',
-                                'border-primary bg-primary text-white shadow-md' => $this->data_type == $type,
-                                'border-border text-foreground-content hover:border-primary/50' => $this->data_type != $type
-                            ])
-                        >
-                            {{ $type }}
-                        </button>
-                    @empty
-                        <p class="text-xs text-foreground-content italic">Select a network first</p>
-                    @endforelse
-                </div>
-                @error('data_type')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 3: Plan Selection -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->data_type])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Select Plan</h3>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    @forelse ($this->plans as $p)
-                        <button 
-                            type="button"
-                            wire:click="$set('plan_id', {{ $p->id }})"
-                            @class([
-                                'flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all',
-                                'border-primary bg-primary/5 ring-2 ring-primary/5' => $this->plan_id == $p->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->plan_id != $p->id
-                            ])
-                        >
-                            <div class="space-y-1">
-                                <p @class([
-                                    'text-sm font-bold',
-                                    'text-primary' => $this->plan_id == $p->id,
-                                    'text-foreground' => $this->plan_id != $p->id
-                                ])>{{ $p->name }}</p>
-                                <p class="text-[10px] text-foreground-content font-medium uppercase">{{ $p->validity ?? '30 Days' }} • {{ $p->size }}</p>
-                            </div>
-                            <span @class([
-                                'text-sm font-black',
-                                'text-primary' => $this->plan_id == $p->id,
-                                'text-foreground-content' => $this->plan_id != $p->id
-                            ])>{{ Number::currency($p->price) }}</span>
-                        </button>
-                    @empty
-                        <div class="col-span-full py-8 text-center bg-background rounded-2xl border-2 border-dashed border-border">
-                            <x-ui.icon name="cube" class="size-8 mx-auto text-foreground-content/30 mb-2" />
-                            <p class="text-xs text-foreground-content">Choose a data type to view plans</p>
-                        </div>
-                    @endforelse
-                </div>
-                @error('plan_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 4: Phone Number -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->plan_id])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">4. Recipient details</h3>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-foreground-content">
-                        <x-ui.icon name="device-phone-mobile" class="size-5" />
+        <div class="lg:col-span-2">
+            <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border space-y-8">
+                <!-- Step 1: Network Selection -->
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Network</h3>
+                        @if($this->network_id)
+                            <span class="text-xs text-primary font-medium flex items-center">
+                                <x-ui.icon name="check-circle" class="size-4 mr-1" />
+                                {{ $this->selectedNetwork?->name }}
+                            </span>
+                        @endif
                     </div>
-                    <input 
-                        type="tel" 
-                        wire:model.live="phone"
-                        placeholder="Enter phone number" 
-                        @class([
-                            'w-full pl-12 pr-4 py-4 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold tracking-widest placeholder:text-foreground-content/50',
-                            'border-border focus:border-primary' => !$errors->has('phone'),
-                            'border-error focus:border-error' => $errors->has('phone'),
-                        ])
-                    >
-                </div>
-                @error('phone')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @foreach ($this->networks as $network)
+                            <button 
+                                type="button"
+                                wire:click="$set('network_id', {{ $network->id }})"
+                                @class([
+                                    'relative flex flex-col items-center p-4 rounded-2xl border-2 transition-all group',
+                                    'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->network_id == $network->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->network_id != $network->id
+                                ])
+                            >
+                                <div class="size-12 rounded-xl overflow-hidden mb-2 group-hover:scale-110 transition-transform">
+                                    <img src="{{ $network->image_url }}" alt="{{ $network->name }}" class="size-full object-cover">
+                                </div>
+                                <span @class([
+                                    'text-xs font-bold uppercase tracking-tight',
+                                    'text-primary' => $this->network_id == $network->id,
+                                    'text-foreground-content' => $this->network_id != $network->id
+                                ])>{{ $network->name }}</span>
+                                
+                                @if($this->network_id == $network->id)
+                                    <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
+                                        <x-ui.icon name="check" class="size-4" />
+                                    </div>
+                                @endif
+                            </button>
+                        @endforeach
+                    </div>
+                    @error('network_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 2: Data Type Selection -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->network_id])>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Type</h3>
+                        @if($this->data_type)
+                            <span class="text-xs text-primary font-bold uppercase">{{ $this->data_type }}</span>
+                        @endif
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        @forelse ($this->dataTypes as $type)
+                            <button 
+                                type="button"
+                                wire:click="$set('data_type', '{{ $type }}')"
+                                @class([
+                                    'px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border-2 transition-all',
+                                    'border-primary bg-primary text-white shadow-md' => $this->data_type == $type,
+                                    'border-border text-foreground-content bg-background hover:border-primary/50' => $this->data_type != $type
+                                ])
+                            >
+                                {{ $type }}
+                            </button>
+                        @empty
+                            <p class="text-xs text-foreground-content italic">Select a network first</p>
+                        @endforelse
+                    </div>
+                    @error('data_type')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 3: Plan Selection -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->data_type])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Select Plan</h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        @forelse ($this->plans as $p)
+                            <button 
+                                type="button"
+                                wire:click="$set('plan_id', {{ $p->id }})"
+                                @class([
+                                    'flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all',
+                                    'border-primary bg-primary/5 ring-2 ring-primary/5' => $this->plan_id == $p->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->plan_id != $p->id
+                                ])
+                            >
+                                <div class="space-y-1">
+                                    <p @class([
+                                        'text-sm font-bold',
+                                        'text-primary' => $this->plan_id == $p->id,
+                                        'text-foreground' => $this->plan_id != $p->id
+                                    ])>{{ $p->name }}</p>
+                                    <p class="text-[10px] text-foreground-content font-medium uppercase">{{ $p->validity ?? '30 Days' }} • {{ $p->size }}</p>
+                                </div>
+                                <span @class([
+                                    'text-sm font-black',
+                                    'text-primary' => $this->plan_id == $p->id,
+                                    'text-foreground-content' => $this->plan_id != $p->id
+                                ])>{{ Number::currency($p->price) }}</span>
+                            </button>
+                        @empty
+                            <div class="col-span-full py-8 text-center bg-background rounded-2xl border-2 border-dashed border-border">
+                                <x-ui.icon name="cube" class="size-8 mx-auto text-foreground-content/30 mb-2" />
+                                <p class="text-xs text-foreground-content">Choose a data type to view plans</p>
+                            </div>
+                        @endforelse
+                    </div>
+                    @error('plan_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 4: Phone Number -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->plan_id])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">4. Recipient details</h3>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-foreground-content">
+                            <x-ui.icon name="device-phone-mobile" class="size-5" />
+                        </div>
+                        <input 
+                            type="tel" 
+                            wire:model.live="phone"
+                            placeholder="Enter phone number" 
+                            @class([
+                                'w-full pl-12 pr-4 py-4 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold tracking-widest placeholder:text-foreground-content/50',
+                                'border-border focus:border-primary' => !$errors->has('phone'),
+                                'border-error focus:border-error' => $errors->has('phone'),
+                            ])
+                        >
+                    </div>
+                    @error('phone')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+            </div>
         </div>
 
         <!-- Sidebar Summary -->

@@ -91,7 +91,7 @@ new #[Layout('layouts::app')] class extends Component
         description="Transfer funds to another user via phone number"
     />
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border shadow-sm">
         <form wire:submit="openConfirmModal" class="space-y-6">
             <x-ui.field>
                 <x-ui.label>{{ __('Recipient Phone Number') }}</x-ui.label>
@@ -101,7 +101,7 @@ new #[Layout('layouts::app')] class extends Component
                         type="text"
                         autofocus
                         placeholder="08012345678"
-                        class="flex-1"
+                        class="flex-1 bg-background"
                      />
                     <x-ui.button 
                         type="button" 
@@ -113,7 +113,7 @@ new #[Layout('layouts::app')] class extends Component
                 </div>
                 <x-ui.error name="phone_number" />
                 @if($recipientData)
-                    <p class="text-sm text-green-600 dark:text-green-400 mt-1">
+                    <p class="text-sm text-success mt-1">
                         ✓ {{ $recipientData['name'] }}
                     </p>
                 @endif
@@ -126,9 +126,10 @@ new #[Layout('layouts::app')] class extends Component
                     type="number"
                     min="1"
                     placeholder="Enter amount to transfer"
+                    class="bg-background"
                  />
                 <x-ui.error name="amount" />
-                <p class="text-xs text-gray-500 mt-1">Minimum transfer amount is ₦1</p>
+                <p class="text-[10px] text-foreground-content mt-1 font-bold uppercase tracking-wider">Minimum transfer amount is ₦1</p>
             </x-ui.field>
 
             <x-ui.field>
@@ -137,6 +138,7 @@ new #[Layout('layouts::app')] class extends Component
                     wire:model="notes" 
                     placeholder="Add a note for this transfer"
                     rows="3"
+                    class="bg-background"
                  />
                 <x-ui.error name="notes" />
             </x-ui.field>
@@ -160,25 +162,25 @@ new #[Layout('layouts::app')] class extends Component
         width="md"
     >
         <div class="space-y-4">
-            <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-3">
+            <div class="bg-background rounded-2xl p-4 space-y-3 border border-border">
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600 dark:text-gray-400">Recipient:</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{ $recipientData['name'] ?? '' }}</span>
+                    <span class="text-foreground-content">Recipient:</span>
+                    <span class="font-bold text-foreground">{{ $recipientData['name'] ?? '' }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600 dark:text-gray-400">Phone:</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{ $phone_number }}</span>
+                    <span class="text-foreground-content">Phone:</span>
+                    <span class="font-bold text-foreground">{{ $phone_number }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Amount:</span>
-                    <span class="font-bold text-xl text-green-600 dark:text-green-400">
+                    <span class="text-sm text-foreground-content">Amount:</span>
+                    <span class="font-black text-xl text-success">
                         {{ Number::currency($amount) }}
                     </span>
                 </div>
                 @if($notes)
-                <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Notes:</p>
-                    <p class="text-sm text-gray-900 dark:text-white mt-1">{{ $notes }}</p>
+                <div class="pt-2 border-t border-border">
+                    <p class="text-[10px] text-foreground-content font-bold uppercase tracking-wider">Notes:</p>
+                    <p class="text-sm text-foreground mt-1">{{ $notes }}</p>
                 </div>
                 @endif
             </div>

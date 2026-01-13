@@ -120,121 +120,123 @@ new class extends Component
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form Content -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- Step 1: Network Selection -->
-            <section class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Network</h3>
-                    @if($this->network_id)
-                        <span class="text-xs text-primary font-medium flex items-center">
-                            <x-ui.icon name="check-circle" class="size-4 mr-1" />
-                            {{ $this->selectedNetwork?->name }}
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    @foreach ($this->networks as $network)
-                        <button 
-                            type="button"
-                            wire:click="$set('network_id', {{ $network->id }})"
-                            @class([
-                                'relative flex flex-col items-center p-4 rounded-2xl border-2 transition-all group',
-                                'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->network_id == $network->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->network_id != $network->id
-                            ])
-                        >
-                            <div class="size-12 rounded-xl overflow-hidden mb-2 group-hover:scale-110 transition-transform">
-                                <img src="{{ $network->image_url }}" alt="{{ $network->name }}" class="size-full object-cover">
-                            </div>
-                            <span @class([
-                                'text-xs font-bold uppercase tracking-tight',
-                                'text-primary' => $this->network_id == $network->id,
-                                'text-foreground-content' => $this->network_id != $network->id
-                            ])>{{ $network->name }}</span>
-                            
-                            @if($this->network_id == $network->id)
-                                <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
-                                    <x-ui.icon name="check" class="size-4" />
-                                </div>
-                            @endif
-                        </button>
-                    @endforeach
-                </div>
-                @error('network_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 2: Recipient details -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->network_id])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Recipient details</h3>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-foreground-content">
-                        <x-ui.icon name="device-phone-mobile" class="size-5" />
+        <div class="lg:col-span-2">
+            <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border space-y-8">
+                <!-- Step 1: Network Selection -->
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Network</h3>
+                        @if($this->network_id)
+                            <span class="text-xs text-primary font-medium flex items-center">
+                                <x-ui.icon name="check-circle" class="size-4 mr-1" />
+                                {{ $this->selectedNetwork?->name }}
+                            </span>
+                        @endif
                     </div>
-                    <input 
-                        type="tel" 
-                        wire:model.live="phone"
-                        placeholder="Enter phone number" 
-                        @class([
-                            'w-full pl-12 pr-4 py-4 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold tracking-widest placeholder:text-foreground-content/50',
-                            'border-border focus:border-primary' => !$errors->has('phone'),
-                            'border-error focus:border-error' => $errors->has('phone'),
-                        ])
-                    >
-                </div>
-                @error('phone')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 3: Amount -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->phone])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Amount</h3>
-                
-                <div class="space-y-4">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-primary font-black text-xl">
-                            ₦
-                        </div>
-                        <input 
-                            type="number" 
-                            wire:model.live="amount"
-                            placeholder="0.00" 
-                            @class([
-                                'w-full pl-10 pr-4 py-4 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-2xl font-black placeholder:text-foreground-content/30',
-                                'border-border focus:border-primary' => !$errors->has('amount'),
-                                'border-error focus:border-error' => $errors->has('amount'),
-                            ])
-                        >
-                    </div>
-
-                    <div class="grid grid-cols-4 gap-2">
-                        @foreach([100, 200, 500, 1000] as $preset)
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @foreach ($this->networks as $network)
                             <button 
                                 type="button"
-                                @click="amount = {{ $preset }}"
-                                class="py-2.5 rounded-xl border border-border bg-background-content text-xs font-bold text-foreground-content hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
+                                wire:click="$set('network_id', {{ $network->id }})"
+                                @class([
+                                    'relative flex flex-col items-center p-4 rounded-2xl border-2 transition-all group',
+                                    'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->network_id == $network->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->network_id != $network->id
+                                ])
                             >
-                                ₦{{ number_format($preset) }}
+                                <div class="size-12 rounded-xl overflow-hidden mb-2 group-hover:scale-110 transition-transform">
+                                    <img src="{{ $network->image_url }}" alt="{{ $network->name }}" class="size-full object-cover">
+                                </div>
+                                <span @class([
+                                    'text-xs font-bold uppercase tracking-tight',
+                                    'text-primary' => $this->network_id == $network->id,
+                                    'text-foreground-content' => $this->network_id != $network->id
+                                ])>{{ $network->name }}</span>
+                                
+                                @if($this->network_id == $network->id)
+                                    <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
+                                        <x-ui.icon name="check" class="size-4" />
+                                    </div>
+                                @endif
                             </button>
                         @endforeach
                     </div>
-                </div>
-                @error('amount')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                    @error('network_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 2: Recipient details -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->network_id])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Recipient details</h3>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-foreground-content">
+                            <x-ui.icon name="device-phone-mobile" class="size-5" />
+                        </div>
+                        <input 
+                            type="tel" 
+                            wire:model.live="phone"
+                            placeholder="Enter phone number" 
+                            @class([
+                                'w-full pl-12 pr-4 py-4 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold tracking-widest placeholder:text-foreground-content/50',
+                                'border-border focus:border-primary' => !$errors->has('phone'),
+                                'border-error focus:border-error' => $errors->has('phone'),
+                            ])
+                        >
+                    </div>
+                    @error('phone')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 3: Amount -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->phone])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Amount</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-primary font-black text-xl">
+                                ₦
+                            </div>
+                            <input 
+                                type="number" 
+                                wire:model.live="amount"
+                                placeholder="0.00" 
+                                @class([
+                                    'w-full pl-10 pr-4 py-4 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-2xl font-black placeholder:text-foreground-content/30',
+                                    'border-border focus:border-primary' => !$errors->has('amount'),
+                                    'border-error focus:border-error' => $errors->has('amount'),
+                                ])
+                            >
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2">
+                            @foreach([100, 200, 500, 1000] as $preset)
+                                <button 
+                                    type="button"
+                                    @click="amount = {{ $preset }}"
+                                    class="py-2.5 rounded-xl border border-border bg-background text-xs font-bold text-foreground-content hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
+                                >
+                                    ₦{{ number_format($preset) }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @error('amount')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+            </div>
         </div>
 
         <!-- Sidebar Summary -->

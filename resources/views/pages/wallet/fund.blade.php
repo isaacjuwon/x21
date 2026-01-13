@@ -51,7 +51,7 @@ new #[Layout('layouts::app')] class extends Component
         description="Add funds to your wallet securely"
     />
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border shadow-sm">
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
                 <x-ui.label>{{ __('Amount (NGN)') }}</x-ui.label>
@@ -61,9 +61,10 @@ new #[Layout('layouts::app')] class extends Component
                     autofocus
                     min="100"
                     placeholder="Enter amount to fund"
+                    class="bg-background"
                  />
                 <x-ui.error name="amount" />
-                <p class="text-xs text-gray-500 mt-1">Minimum funding amount is ₦100</p>
+                <p class="text-[10px] text-foreground-content mt-1 font-bold uppercase tracking-wider">Minimum funding amount is ₦100</p>
             </x-ui.field>
 
             <div class="flex justify-end gap-3">

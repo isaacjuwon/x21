@@ -120,140 +120,139 @@ new class extends Component
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form Content -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- Step 1: Operator Selection -->
-            <section class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Exam Body</h3>
-                    @if($this->operator_id)
-                        <span class="text-xs text-primary font-medium flex items-center">
-                            <x-ui.icon name="check-circle" class="size-4 mr-1" />
-                            {{ $this->selectedOperator?->name }}
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    @foreach ($this->operators as $operator)
-                        <button 
-                            type="button"
-                            wire:click="$set('operator_id', {{ $operator->id }})"
-                            @class([
-                                'relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all group',
-                                'border-primary bg-primary/5 ring-4 ring-primary/5' => $this->operator_id == $operator->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->operator_id != $operator->id
-                            ])
-                        >
-                            <div class="size-16 rounded-xl overflow-hidden mb-3 group-hover:scale-110 transition-transform">
-                                <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
-                            </div>
-                            <span @class([
-                                'text-sm font-black uppercase tracking-tight',
-                                'text-primary' => $this->operator_id == $operator->id,
-                                'text-foreground-content' => $this->operator_id != $operator->id
-                            ])>{{ $operator->name }}</span>
-                            
-                            @if($this->operator_id == $operator->id)
-                                <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
-                                    <x-ui.icon name="check" class="size-4" />
+        <div class="lg:col-span-2">
+            <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border space-y-10">
+                <!-- Step 1: Exam Selection -->
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Exam Body</h3>
+                        @if($this->operator_id)
+                            <span class="text-xs text-primary font-medium flex items-center">
+                                <x-ui.icon name="check-circle" class="size-4 mr-1" />
+                                {{ $this->selectedOperator?->name }}
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        @foreach ($this->operators as $operator)
+                            <button 
+                                type="button"
+                                wire:click="$set('operator_id', {{ $operator->id }})"
+                                @class([
+                                    'relative flex flex-col items-center p-4 rounded-2xl border-2 transition-all group',
+                                    'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->operator_id == $operator->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->operator_id != $operator->id
+                                ])
+                            >
+                                <div class="size-16 rounded-xl overflow-hidden mb-3 group-hover:scale-110 transition-transform">
+                                    <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
                                 </div>
-                            @endif
-                        </button>
-                    @endforeach
-                </div>
-                @error('operator_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                                <span @class([
+                                    'text-sm font-black uppercase tracking-tight',
+                                    'text-primary' => $this->operator_id == $operator->id,
+                                    'text-foreground-content' => $this->operator_id != $operator->id
+                                ])>{{ $operator->name }}</span>
+                                
+                                @if($this->operator_id == $operator->id)
+                                    <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
+                                        <x-ui.icon name="check" class="size-4" />
+                                    </div>
+                                @endif
+                            </button>
+                        @endforeach
+                    </div>
+                    @error('operator_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
 
-            <!-- Step 2: Plan Selection -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Select Card Product</h3>
-                </div>
+                <!-- Step 2: Product/Pin Selection -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Select Product Type</h3>
+                    </div>
 
-                <div class="grid grid-cols-1 gap-3">
-                    @forelse ($this->plans as $p)
-                        <button 
-                            type="button"
-                            wire:click="$set('plan_id', {{ $p->id }})"
-                            @class([
-                                'flex items-center justify-between p-5 rounded-2xl border-2 text-left transition-all',
-                                'border-primary bg-primary/5 ring-2 ring-primary/5' => $this->plan_id == $p->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->plan_id != $p->id
-                            ])
-                        >
-                            <div class="flex items-center gap-4">
-                                <div @class([
-                                    'size-10 rounded-full flex items-center justify-center',
-                                    'bg-primary text-white' => $this->plan_id == $p->id,
-                                    'bg-background text-foreground-content' => $this->plan_id != $p->id
-                                ])>
-                                    <x-ui.icon name="academic-cap" class="size-5" />
+                    <div class="grid grid-cols-1 gap-3">
+                        @forelse ($this->plans as $p)
+                            <button 
+                                type="button"
+                                wire:click="$set('plan_id', {{ $p->id }})"
+                                @class([
+                                    'flex items-center justify-between p-5 rounded-2xl border-2 text-left transition-all',
+                                    'border-primary bg-primary/5 ring-2 ring-primary/5' => $this->plan_id == $p->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->plan_id != $p->id
+                                ])
+                            >
+                                <div class="flex items-center gap-4">
+                                    <div @class([
+                                        'size-12 rounded-full flex items-center justify-center',
+                                        'bg-primary text-white shadow-lg' => $this->plan_id == $p->id,
+                                        'bg-background text-foreground-content' => $this->plan_id != $p->id
+                                    ])>
+                                        <x-ui.icon name="academic-cap" variant="solid" class="size-6" />
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <p @class([
+                                            'text-base font-black',
+                                            'text-primary' => $this->plan_id == $p->id,
+                                            'text-foreground' => $this->plan_id != $p->id
+                                        ])>{{ $p->name }}</p>
+                                        <p class="text-xs text-foreground-content font-medium uppercase tracking-tighter">Instant Delivery • Official Board E-PIN</p>
+                                    </div>
                                 </div>
-                                <div class="space-y-0.5">
-                                    <p @class([
-                                        'text-base font-black',
+                                <div class="text-right">
+                                    <span @class([
+                                        'text-lg font-black',
                                         'text-primary' => $this->plan_id == $p->id,
                                         'text-foreground' => $this->plan_id != $p->id
-                                    ])>{{ $p->name }}</p>
-                                    <p class="text-xs text-foreground-content font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">Exam Registration & Results Checking</p>
+                                    ])>{{ Number::currency($p->price) }}</span>
                                 </div>
+                            </button>
+                        @empty
+                            <div class="py-12 text-center bg-background rounded-3xl border-2 border-dashed border-border opacity-50">
+                                <x-ui.icon name="sparkles" class="size-10 mx-auto text-foreground-content/30 mb-3" />
+                                <p class="text-sm text-foreground-content font-medium italic">Select an exam body to view available pins</p>
                             </div>
-                            <div class="text-right ml-4">
-                                <span @class([
-                                    'text-lg font-black',
-                                    'text-primary' => $this->plan_id == $p->id,
-                                    'text-foreground' => $this->plan_id != $p->id
-                                ])>{{ Number::currency($p->price) }}</span>
-                            </div>
-                        </button>
-                    @empty
-                        <div class="py-12 text-center bg-background rounded-3xl border-2 border-dashed border-border">
-                            <x-ui.icon name="book-open" class="size-10 mx-auto text-foreground-content/30 mb-3" />
-                            <p class="text-sm text-foreground-content font-medium">Select an exam body to see available pins</p>
-                        </div>
-                    @endforelse
-                </div>
-                @error('plan_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 3: Bio Details -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->plan_id])>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Delivery Details</h3>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-foreground-content">
-                        <x-ui.icon name="envelope" class="size-6" />
+                        @endforelse
                     </div>
-                    <input 
-                        type="email" 
-                        wire:model.live="email"
-                        placeholder="Enter email for PIN delivery" 
-                        @class([
-                            'w-full pl-14 pr-4 py-5 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold placeholder:text-foreground-content/50',
-                            'border-border focus:border-primary' => !$errors->has('email'),
-                            'border-error focus:border-error' => $errors->has('email'),
-                        ])
-                    >
-                </div>
-                <p class="text-[10px] text-foreground-content font-medium pl-2 italic">The PIN will be sent to this email address once purchased.</p>
-                @error('email')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                    @error('plan_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 3: Delivery Details -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->plan_id])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. E-Pin Quantity</h3>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-foreground-content">
+                            <x-ui.icon name="ticket" class="size-6" />
+                        </div>
+                        <input 
+                            type="number" 
+                            wire:model.live="quantity"
+                            placeholder="How many PINs?" 
+                            @class([
+                                'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',
+                                'border-border focus:border-primary' => !$errors->has('quantity'),
+                                'border-error focus:border-error' => $errors->has('quantity'),
+                            ])
+                        >
+                    </div>
+                    @error('quantity')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+            </div>
         </div>
 
         <!-- Sidebar Summary -->

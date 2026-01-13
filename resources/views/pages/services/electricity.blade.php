@@ -108,138 +108,140 @@ new class extends Component
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form Content -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- Step 1: Operator Selection -->
-            <section class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Distributor</h3>
-                    @if($this->operator_id)
-                        <span class="text-xs text-primary font-medium flex items-center">
-                            <x-ui.icon name="check-circle" class="size-4 mr-1" />
-                            {{ $this->selectedoperator?->name }}
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    @foreach ($this->operators as $operator)
-                        <button 
-                            type="button"
-                            wire:click="$set('operator_id', {{ $operator->id }})"
-                            @class([
-                                'relative flex flex-col items-center p-5 rounded-2xl border-2 transition-all group',
-                                'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->operator_id == $operator->id,
-                                'border-border bg-background-content hover:border-primary/50' => $this->operator_id != $operator->id
-                            ])
-                        >
-                            <div class="size-14 rounded-xl overflow-hidden mb-3 group-hover:scale-110 transition-transform">
-                                <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
-                            </div>
-                            <span @class([
-                                'text-[10px] font-black uppercase tracking-wider text-center leading-tight',
-                                'text-primary' => $this->operator_id == $operator->id,
-                                'text-foreground-content' => $this->operator_id != $operator->id
-                            ])>{{ $operator->name }}</span>
-                            
-                            @if($this->operator_id == $operator->id)
-                                <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
-                                    <x-ui.icon name="check" class="size-4" />
+        <div class="lg:col-span-2">
+            <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border space-y-8">
+                <!-- Step 1: Operator Selection -->
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Distributor</h3>
+                        @if($this->operator_id)
+                            <span class="text-xs text-primary font-medium flex items-center">
+                                <x-ui.icon name="check-circle" class="size-4 mr-1" />
+                                {{ $this->selectedoperator?->name }}
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        @foreach ($this->operators as $operator)
+                            <button 
+                                type="button"
+                                wire:click="$set('operator_id', {{ $operator->id }})"
+                                @class([
+                                    'relative flex flex-col items-center p-5 rounded-2xl border-2 transition-all group',
+                                    'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->operator_id == $operator->id,
+                                    'border-border bg-background hover:border-primary/50' => $this->operator_id != $operator->id
+                                ])
+                            >
+                                <div class="size-14 rounded-xl overflow-hidden mb-3 group-hover:scale-110 transition-transform">
+                                    <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
                                 </div>
-                            @endif
-                        </button>
-                    @endforeach
-                </div>
-                @error('operator_id')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                                <span @class([
+                                    'text-[10px] font-black uppercase tracking-wider text-center leading-tight',
+                                    'text-primary' => $this->operator_id == $operator->id,
+                                    'text-foreground-content' => $this->operator_id != $operator->id
+                                ])>{{ $operator->name }}</span>
+                                
+                                @if($this->operator_id == $operator->id)
+                                    <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
+                                        <x-ui.icon name="check" class="size-4" />
+                                    </div>
+                                @endif
+                            </button>
+                        @endforeach
+                    </div>
+                    @error('operator_id')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
 
-            <!-- Step 2: Meter Type -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Meter Type</h3>
-                    @if($this->meter_type)
-                        <span class="text-xs text-primary font-bold uppercase">{{ $this->meter_type }}</span>
-                    @endif
-                </div>
+                <!-- Step 2: Meter Type -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Meter Type</h3>
+                        @if($this->meter_type)
+                            <span class="text-xs text-primary font-bold uppercase">{{ $this->meter_type }}</span>
+                        @endif
+                    </div>
 
-                <div class="flex gap-3">
-                    @foreach(['prepaid', 'postpaid'] as $type)
-                        <button 
-                            type="button" 
-                            wire:click="$set('meter_type', '{{ $type }}')"
+                    <div class="flex gap-3">
+                        @foreach(['prepaid', 'postpaid'] as $type)
+                            <button 
+                                type="button" 
+                                wire:click="$set('meter_type', '{{ $type }}')"
+                                @class([
+                                    'flex-1 py-4 rounded-2xl border-2 font-black uppercase tracking-widest text-xs transition-all',
+                                    'border-primary bg-primary text-white shadow-lg shadow-primary/20' => $this->meter_type == $type,
+                                    'border-border text-foreground-content bg-background hover:border-primary/30' => $this->meter_type != $type
+                                ])
+                            >
+                                {{ $type }}
+                            </button>
+                        @endforeach
+                    </div>
+                    @error('meter_type')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+
+                <!-- Step 3: Meter Number -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_type])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Meter Number</h3>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-foreground-content">
+                            <x-ui.icon name="hashtag" class="size-6" />
+                        </div>
+                        <input 
+                            type="text" 
+                            wire:model.live="meter_number"
+                            placeholder="Enter your meter number" 
                             @class([
-                                'flex-1 py-4 rounded-2xl border-2 font-black uppercase tracking-widest text-xs transition-all',
-                                'border-primary bg-primary text-white shadow-lg shadow-primary/20' => $this->meter_type == $type,
-                                'border-border text-foreground-content bg-background-content hover:border-primary/30' => $this->meter_type != $type
+                                'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',
+                                'border-border focus:border-primary' => !$errors->has('meter_number'),
+                                'border-error focus:border-error' => $errors->has('meter_number'),
                             ])
                         >
-                            {{ $type }}
-                        </button>
-                    @endforeach
-                </div>
-                @error('meter_type')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
-
-            <!-- Step 3: Meter Number -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_type])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Meter Number</h3>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-foreground-content">
-                        <x-ui.icon name="hashtag" class="size-6" />
                     </div>
-                    <input 
-                        type="text" 
-                        wire:model.live="meter_number"
-                        placeholder="Enter your meter number" 
-                        @class([
-                            'w-full pl-14 pr-4 py-5 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',
-                            'border-border focus:border-primary' => !$errors->has('meter_number'),
-                            'border-error focus:border-error' => $errors->has('meter_number'),
-                        ])
-                    >
-                </div>
-                @error('meter_number')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                    @error('meter_number')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
 
-            <!-- Step 4: Amount -->
-            <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_number])>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">4. Amount</h3>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-primary font-black text-2xl">
-                        ₦
+                <!-- Step 4: Amount -->
+                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_number])>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">4. Amount</h3>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-primary font-black text-2xl">
+                            ₦
+                        </div>
+                        <input 
+                            type="number" 
+                            wire:model.live="amount"
+                            placeholder="0.00" 
+                            @class([
+                                'w-full pl-12 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-3xl font-black placeholder:text-foreground-content/30',
+                                'border-border focus:border-primary' => !$errors->has('amount'),
+                                'border-error focus:border-error' => $errors->has('amount'),
+                            ])
+                        >
                     </div>
-                    <input 
-                        type="number" 
-                        wire:model.live="amount"
-                        placeholder="0.00" 
-                        @class([
-                            'w-full pl-12 pr-4 py-5 bg-background-content border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-3xl font-black placeholder:text-foreground-content/30',
-                            'border-border focus:border-primary' => !$errors->has('amount'),
-                            'border-error focus:border-error' => $errors->has('amount'),
-                        ])
-                    >
-                </div>
-                @error('amount')
-                    <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                        <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                        {{ $message }}
-                    </p>
-                @enderror
-            </section>
+                    @error('amount')
+                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </section>
+            </div>
         </div>
 
         <!-- Sidebar Summary -->

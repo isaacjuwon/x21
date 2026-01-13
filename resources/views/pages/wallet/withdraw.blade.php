@@ -68,7 +68,7 @@ new #[Layout('layouts.app')] class extends Component
         description="Withdraw funds from your wallet to your bank account"
     />
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border shadow-sm">
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
                 <x-ui.label>{{ __('Account Holder Name') }}</x-ui.label>
@@ -76,9 +76,9 @@ new #[Layout('layouts.app')] class extends Component
                     type="text"
                     value="{{ auth()->user()->name }}"
                     readonly
-                    class="bg-gray-50 dark:bg-gray-900"
+                    class="bg-background opacity-70"
                  />
-                <p class="text-xs text-gray-500 mt-1">Your bank account must be registered in this name</p>
+                <p class="text-[10px] text-foreground-content mt-1 font-bold uppercase tracking-wider">Your bank account must be registered in this name</p>
             </x-ui.field>
 
             <x-ui.field>
@@ -89,6 +89,7 @@ new #[Layout('layouts.app')] class extends Component
                     autofocus
                     min="100"
                     placeholder="Enter amount to withdraw"
+                    class="bg-background"
                  />
                 <x-ui.error name="amount" />
             </x-ui.field>
@@ -99,6 +100,7 @@ new #[Layout('layouts.app')] class extends Component
                     wire:model="account_number" 
                     type="text"
                     placeholder="Enter account number"
+                    class="bg-background"
                  />
                 <x-ui.error name="account_number" />
             </x-ui.field>
@@ -106,7 +108,7 @@ new #[Layout('layouts.app')] class extends Component
              <!-- Bank Select -->
             <x-ui.field>
                 <x-ui.label>{{ __('Bank') }}</x-ui.label>
-                <select wire:model="bank_code" class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                <select wire:model="bank_code" class="w-full bg-background border-2 border-border text-foreground rounded-2xl p-4 focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="">Select Bank</option>
                     @foreach($this->banks as $bank)
                         <option value="{{ $bank->code }}">{{ $bank->name }}</option>
