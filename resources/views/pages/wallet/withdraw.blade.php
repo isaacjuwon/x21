@@ -2,7 +2,6 @@
 
 use App\Actions\GenerateReferenceAction;
 use App\Actions\Wallet\WithdrawWalletAction;
-use App\Enums\Connectors\PaymentConnector;
 use App\Livewire\Concerns\HasToast;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
@@ -26,15 +25,23 @@ new #[Layout('layouts.app')] class extends Component
     #[Computed]
     public function banks(): Collection
     {
-        try {
-            return PaymentConnector::default()
-                ->connector()
-                ->bank()
-                ->list(country: 'nigeria');
-        } catch (\Exception $e) {
-            $this->toastError('Failed to load banks. Please refresh the page.');
-            return collect();
+        return app(\App\Actions\Wallet\FetchBanksAction::class)->handle();
+    }
+
+    #[Computed]
+    public function charges(): array
+    {
+        $settings = app(\App\Settings\WalletSettings::class);
+        $fee = ($this->amount * ($settings->withdrawal_fee_percentage / 100));
+
+        if ($settings->withdrawal_fee_cap > 0 && $fee > $settings->withdrawal_fee_cap) {
+            $fee = $settings->withdrawal_fee_cap;
         }
+
+        return [
+            'fee' => $fee,
+            'total' => $this->amount + $fee,
+        ];
     }
 
     public function save(WithdrawWalletAction $withdrawWalletAction, GenerateReferenceAction $generateReferenceAction)
@@ -84,7 +91,7 @@ new #[Layout('layouts.app')] class extends Component
             <x-ui.field>
                 <x-ui.label>{{ __('Amount (NGN)') }}</x-ui.label>
                 <x-ui.input 
-                    wire:model="amount" 
+                    wire:model.live="amount" 
                     type="number"
                     autofocus
                     min="100"
@@ -92,6 +99,19 @@ new #[Layout('layouts.app')] class extends Component
                     class="bg-background"
                  />
                 <x-ui.error name="amount" />
+                
+                @if($amount > 0)
+                    <div class="mt-3 p-3 bg-primary/5 rounded-xl border border-primary/10 space-y-2">
+                        <div class="flex justify-between text-xs font-medium">
+                            <span class="text-foreground-content">Withdrawal Fee:</span>
+                            <span class="text-foreground">{{ Number::currency($this->charges['fee']) }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold border-t border-primary/10 pt-2">
+                            <span class="text-foreground-content">Total Deduction:</span>
+                            <span class="text-primary">{{ Number::currency($this->charges['total']) }}</span>
+                        </div>
+                    </div>
+                @endif
             </x-ui.field>
 
             <x-ui.field>

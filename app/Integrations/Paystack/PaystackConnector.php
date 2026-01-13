@@ -47,6 +47,10 @@ final readonly class PaystackConnector
 
     public function send(Method $method, string $uri, array $options = []): Response
     {
+        if ($method === Method::GET && ! empty($options) && ! isset($options['query'])) {
+            $options = ['query' => $options];
+        }
+
         return $this->request->send(
             method: $method->value,
             url: $uri,
