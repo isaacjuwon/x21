@@ -1,8 +1,8 @@
 <?php
 
+use App\Actions\Loans\DisburseLoanAction;
 use App\Enums\LoanStatus;
 use App\Events\Loans\LoanApproved;
-use App\Events\Loans\LoanDisbursed;
 use App\Events\Loans\LoanRejected;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Loan;
@@ -49,18 +49,17 @@ new class extends Component
         $this->toastSuccess('Loan rejected.');
     }
 
-    public function disburse()
+    public function disburse(DisburseLoanAction $disburseAction)
     {
-        $this->loan->update([
-            'status' => LoanStatus::ACTIVE,
-            'disbursed_at' => now(),
-            'next_payment_date' => now()->addMonth()->startOfMonth(),
-        ]);
-
-        event(new LoanDisbursed($this->loan, $this->loan->user, $this->loan->amount));
-
-        $this->status = LoanStatus::ACTIVE->value;
-        $this->toastSuccess('Loan disbursed and active.');
+        try {
+            $disburseAction->execute($this->loan);
+            
+            $this->loan = $this->loan->fresh();
+            $this->status = LoanStatus::ACTIVE->value;
+            $this->toastSuccess('Loan disbursed and active.');
+        } catch (\Exception $e) {
+            $this->toastError($e->getMessage());
+        }
     }
 
     public function markAsDefaulted()

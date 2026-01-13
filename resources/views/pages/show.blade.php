@@ -10,4 +10,5 @@
             </div>
         </div>
     </div>
+    <x-layouts.front.footer />
 </x-layouts::front>
