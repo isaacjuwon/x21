@@ -61,9 +61,9 @@ new class extends Component
             <x-ui.card>
 
                 <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <p class="text-sm text-gray-600">Loan Amount</p>
-                        <p class="text-2xl font-bold">{{ Number::currency($loan->amount) }}</p>
+                    <div class="overflow-hidden">
+                        <p class="text-sm text-gray-600 dark:text-neutral-400">Loan Amount</p>
+                        <p class="text-xl sm:text-2xl font-bold truncate" title="{{ Number::currency($loan->amount) }}">{{ Number::currency($loan->amount) }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Loan Level</p>
@@ -77,13 +77,13 @@ new class extends Component
                         <p class="text-sm text-gray-600">Installment Period</p>
                         <p class="text-xl font-semibold">{{ $loan->installment_months }} months</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Monthly Payment</p>
-                        <p class="text-xl font-semibold text-primary-600">{{ Number::currency($loan->monthly_payment) }}</p>
+                    <div class="overflow-hidden">
+                        <p class="text-sm text-gray-600 dark:text-neutral-400">Monthly Payment</p>
+                        <p class="text-lg sm:text-xl font-semibold text-primary-600 truncate" title="{{ Number::currency($loan->monthly_payment) }}">{{ Number::currency($loan->monthly_payment) }}</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Total Repayment</p>
-                        <p class="text-xl font-semibold">{{ Number::currency($loan->total_repayment) }}</p>
+                    <div class="overflow-hidden">
+                        <p class="text-sm text-gray-600 dark:text-neutral-400">Total Repayment</p>
+                        <p class="text-lg sm:text-xl font-semibold truncate" title="{{ Number::currency($loan->total_repayment) }}">{{ Number::currency($loan->total_repayment) }}</p>
                     </div>
                 </div>
 
@@ -196,9 +196,9 @@ new class extends Component
                     <div class="space-y-3">
                         @foreach ($loan->payments->take(5) as $payment)
                             <div class="border-l-4 border-success-500 pl-3 py-2">
-                                <p class="font-semibold">{{ Number::currency($payment->amount) }}</p>
-                                <p class="text-xs text-gray-600">{{ $payment->payment_date->format('M d, Y') }}</p>
-                                <p class="text-xs text-gray-500">
+                                <p class="font-semibold truncate" title="{{ Number::currency($payment->amount) }}">{{ Number::currency($payment->amount) }}</p>
+                                <p class="text-xs text-gray-600 dark:text-neutral-400">{{ $payment->payment_date->format('M d, Y') }}</p>
+                                <p class="text-xs text-gray-500 truncate" title="P: {{ Number::currency($payment->principal_amount) }} | I: {{ Number::currency($payment->interest_amount) }}">
                                     P: {{ Number::currency($payment->principal_amount) }} | 
                                     I: {{ Number::currency($payment->interest_amount) }}
                                 </p>

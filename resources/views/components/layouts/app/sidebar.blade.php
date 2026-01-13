@@ -10,7 +10,7 @@
        <x-ui.layout>
             <x-ui.sidebar>
                 <x-slot:brand>
-                    <x-app-logo />
+                    {{-- Logo moved to navbar --}}
                 </x-slot:brand>
                 <x-ui.navlist>
                     <x-ui.navlist.group label="Main">
@@ -158,6 +158,9 @@
             <x-ui.layout.main>
                 <x-ui.layout.header>
                     <x-ui.sidebar.toggle class="md:hidden"/>
+                    <div class="flex items-center gap-2">
+                        <x-app-logo class="h-6 ml-2" />
+                    </div>
                     <x-ui.navbar class="flex-1 hidden lg:flex">
                         <x-ui.navbar.item
                             icon="home"

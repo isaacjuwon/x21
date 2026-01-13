@@ -145,10 +145,10 @@ new class extends Component
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative">
-            <div class="relative z-10">
+            <div class="relative z-10 overflow-hidden">
                 <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Total Repayment</p>
-                <h3 class="text-2xl font-bold mt-1 text-neutral-900 dark:text-white">{{ Number::currency($loan->total_repayment) }}</h3>
-                <p class="text-xs text-neutral-400 mt-1">{{ Number::currency($loan->amount) }} Principal + {{ Number::currency($loan->total_repayment - $loan->amount) }} Interest</p>
+                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-neutral-900 dark:text-white truncate" title="{{ Number::currency($loan->total_repayment) }}">{{ Number::currency($loan->total_repayment) }}</h3>
+                <p class="text-[10px] text-neutral-400 mt-1 truncate">{{ Number::currency($loan->amount) }} + Interest</p>
             </div>
             <div class="absolute -right-4 -bottom-4 opacity-5 dark:opacity-10">
                 <x-ui.icon name="banknotes" class="size-24" />
@@ -156,33 +156,33 @@ new class extends Component
         </x-ui.card>
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative">
-            <div class="relative z-10">
+            <div class="relative z-10 overflow-hidden">
                 <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Amount Paid</p>
-                <h3 class="text-2xl font-bold mt-1 text-green-600 dark:text-green-500">{{ Number::currency($loan->amount_paid) }}</h3>
+                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-green-600 dark:text-green-500 truncate" title="{{ Number::currency($loan->amount_paid) }}">{{ Number::currency($loan->amount_paid) }}</h3>
                 <div class="flex items-center gap-2 mt-2">
                     <div class="flex-1 h-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
                         <div class="h-full bg-green-500 rounded-full transition-all duration-500" style="width: {{ $loan->progress_percentage }}%"></div>
                     </div>
-                    <span class="text-xs font-medium">{{ $loan->progress_percentage }}%</span>
+                    <span class="text-[10px] font-medium">{{ $loan->progress_percentage }}%</span>
                 </div>
             </div>
         </x-ui.card>
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative border-red-500/20">
-            <div class="relative z-10">
+            <div class="relative z-10 overflow-hidden">
                 <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Remaining Balance</p>
-                <h3 class="text-2xl font-bold mt-1 text-red-600 dark:text-red-500">{{ Number::currency($loan->balance_remaining) }}</h3>
-                <p class="text-xs text-neutral-400 mt-1">{{ $loan->installment_months }} Months Plan</p>
+                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-red-600 dark:text-red-500 truncate" title="{{ Number::currency($loan->balance_remaining) }}">{{ Number::currency($loan->balance_remaining) }}</h3>
+                <p class="text-[10px] text-neutral-400 mt-1">{{ $loan->installment_months }} Months Plan</p>
             </div>
         </x-ui.card>
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative bg-neutral-900 border-neutral-800 dark:bg-white dark:border-white">
-            <div class="relative z-10">
+            <div class="relative z-10 overflow-hidden">
                 <p class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Next Payment</p>
-                <h3 class="text-2xl font-bold mt-1 text-white dark:text-neutral-900">
+                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-white dark:text-neutral-900 truncate">
                     {{ $loan->next_payment_date ? $loan->next_payment_date->format('M d, Y') : 'N/A' }}
                 </h3>
-                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Amount: {{ Number::currency($loan->monthly_payment ?? 0) }}</p>
+                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">Amount: {{ Number::currency($loan->monthly_payment ?? 0) }}</p>
             </div>
         </x-ui.card>
     </div>

@@ -83,23 +83,23 @@ new class extends Component
 
         <div class="mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <x-ui.card class="bg-primary/5 border-primary/20">
+                <x-ui.card class="bg-primary/5 border-primary/20 overflow-hidden">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600">Total Portfolio</span>
-                        <span class="block text-2xl font-bold text-primary">{{ number_format($this->totalShares) }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Total Portfolio</span>
+                        <span class="block text-xl sm:text-2xl font-bold text-primary truncate" title="{{ number_format($this->totalShares) }}">{{ number_format($this->totalShares) }}</span>
                     </div>
                 </x-ui.card>
-                <x-ui.card class="bg-success/5 border-success/20">
+                <x-ui.card class="bg-success/5 border-success/20 overflow-hidden">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600">Mature Shares</span>
-                        <span class="block text-2xl font-bold text-success-600">{{ number_format($this->matureSharesCount) }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Mature Shares</span>
+                        <span class="block text-xl sm:text-2xl font-bold text-success-600 truncate" title="{{ number_format($this->matureSharesCount) }}">{{ number_format($this->matureSharesCount) }}</span>
                         <span class="text-[10px] text-gray-500 uppercase tracking-tighter">Eligible for Dividends</span>
                     </div>
                 </x-ui.card>
-                <x-ui.card>
+                <x-ui.card class="overflow-hidden border border-border">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600">Estimated Value</span>
-                        <span class="block text-2xl font-bold text-gray-900">{{ Number::currency($this->totalValue) }}</span>
+                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Estimated Value</span>
+                        <span class="block text-xl sm:text-2xl font-bold text-foreground truncate" title="{{ Number::currency($this->totalValue) }}">{{ Number::currency($this->totalValue) }}</span>
                     </div>
                 </x-ui.card>
             </div>
@@ -141,7 +141,7 @@ new class extends Component
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                     {{ number_format($share->quantity) }} Units
-                                    <div class="text-[10px] text-gray-400 font-normal">
+                                    <div class="text-[10px] text-gray-400 font-normal truncate max-w-[120px]" title="Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}">
                                         Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}
                                     </div>
                                 </td>

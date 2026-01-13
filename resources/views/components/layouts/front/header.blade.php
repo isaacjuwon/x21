@@ -9,9 +9,9 @@
             @if($header)
                 <x-ui.layout.header class="fixed top-0 w-full z-50 px-6 py-6 border-none bg-transparent!">
                     <div class="max-w-7xl mx-auto flex flex-1 justify-between items-center glass rounded-2xl px-6 py-3 border-white/10">
-                        <x-slot:brand>
+                        <a href="/" wire:navigate class="flex items-center">
                              <x-app-logo class="h-8" />
-                        </x-slot:brand>
+                        </a>
                         
                         <div class="flex items-center gap-4 ml-auto">
                             @guest

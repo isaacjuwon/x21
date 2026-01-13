@@ -14,8 +14,8 @@
             </div>
         </div>
 
-        <div class="flex items-baseline gap-3">
-             <p class="{{ $variant === 'full' ? 'text-5xl' : 'text-4xl' }} font-bold mb-1">
+        <div class="flex items-baseline gap-3 overflow-hidden">
+             <p class="{{ $variant === 'full' ? 'text-3xl sm:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl lg:text-4xl' }} font-bold mb-1 truncate" title="{{ Number::currency($balance) }}">
                 {{ Number::currency($balance) }}
             </p>
         </div>

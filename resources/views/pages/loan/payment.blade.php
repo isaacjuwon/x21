@@ -99,22 +99,22 @@ new class extends Component
         @if ($loan->status === \App\Enums\LoanStatus::ACTIVE)
             <!-- Loan Summary -->
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-600">Balance Remaining</p>
-                    <p class="text-2xl font-bold text-warning-600">{{ Number::currency($loan->balance_remaining) }}</p>
+                <div class="bg-gray-50 dark:bg-neutral-800/50 p-4 rounded-lg overflow-hidden">
+                    <p class="text-sm text-gray-600 dark:text-neutral-400">Balance Remaining</p>
+                    <p class="text-xl sm:text-2xl font-bold text-warning-600 truncate" title="{{ Number::currency($loan->balance_remaining) }}">{{ Number::currency($loan->balance_remaining) }}</p>
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-600">Wallet Balance</p>
-                    <p class="text-2xl font-bold {{ $walletBalance >= $paymentAmount ? 'text-success-600' : 'text-error-600' }}">
+                <div class="bg-gray-50 dark:bg-neutral-800/50 p-4 rounded-lg overflow-hidden">
+                    <p class="text-sm text-gray-600 dark:text-neutral-400">Wallet Balance</p>
+                    <p class="text-xl sm:text-2xl font-bold {{ $walletBalance >= $paymentAmount ? 'text-success-600' : 'text-error-600' }} truncate" title="{{ Number::currency($walletBalance) }}">
                         {{ Number::currency($walletBalance) }}
                     </p>
                 </div>
             </div>
 
             <div class="mb-6">
-                <div class="bg-primary-50 border border-primary-200 p-4 rounded-lg">
-                    <p class="text-sm text-gray-700 mb-2">Monthly Payment Amount</p>
-                    <p class="text-3xl font-bold text-primary-600">{{ Number::currency($loan->monthly_payment) }}</p>
+                <div class="bg-primary-50 dark:bg-primary-900/10 border border-primary-200 dark:border-primary-800 p-4 rounded-lg overflow-hidden">
+                    <p class="text-sm text-gray-700 dark:text-primary-400 mb-2">Monthly Payment Amount</p>
+                    <p class="text-2xl sm:text-3xl font-bold text-primary-600 truncate" title="{{ Number::currency($loan->monthly_payment) }}">{{ Number::currency($loan->monthly_payment) }}</p>
                 </div>
             </div>
 

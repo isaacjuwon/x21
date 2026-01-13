@@ -82,7 +82,7 @@ new class extends Component
                             <x-ui.icon name="chart-bar" variant="solid" class="size-5 text-primary" />
                         </div>
                     </div>
-                    <p class="text-4xl font-bold text-foreground mb-1">{{ Number::currency($this->sharesValue) }}</p>
+                    <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 truncate" title="{{ Number::currency($this->sharesValue) }}">{{ Number::currency($this->sharesValue) }}</p>
                     <p class="text-foreground-content text-sm mb-6">{{ $this->totalShares }} shares owned</p>
                     <x-ui.button 
                         size="sm" 
@@ -112,7 +112,7 @@ new class extends Component
                         </div>
                     </div>
                     @if($this->activeLoan)
-                        <p class="text-4xl font-bold text-foreground mb-1">{{ Number::currency($this->activeLoan->balance_remaining) }}</p>
+                        <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 truncate" title="{{ Number::currency($this->activeLoan->balance_remaining) }}">{{ Number::currency($this->activeLoan->balance_remaining) }}</p>
                         <p class="text-foreground-content text-sm mb-6">{{ number_format($this->activeLoan->progress_percentage, 1) }}% paid</p>
                         <x-ui.button 
                             size="sm" 
@@ -124,7 +124,7 @@ new class extends Component
                             View Loan
                         </x-ui.button>
                     @else
-                        <p class="text-4xl font-bold text-foreground mb-1">{{ Number::currency($this->loanEligibility) }}</p>
+                        <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 truncate" title="{{ Number::currency($this->loanEligibility) }}">{{ Number::currency($this->loanEligibility) }}</p>
                         <p class="text-foreground-content text-sm mb-6">Available to borrow</p>
                         <x-ui.button 
                             size="sm" 
@@ -219,7 +219,7 @@ new class extends Component
                                         <x-ui.icon name="banknotes" variant="solid" class="w-5 h-5 text-warning" />
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-foreground">{{ Number::currency($loan->amount) }}</p>
+                                        <p class="font-semibold text-foreground truncate max-w-[120px]" title="{{ Number::currency($loan->amount) }}">{{ Number::currency($loan->amount) }}</p>
                                         <p class="text-sm text-foreground-content">{{ $loan->applied_at?->format('M d, Y') }}</p>
                                     </div>
                                 </div>
@@ -260,11 +260,11 @@ new class extends Component
                         <div class="grid grid-cols-2 gap-4">
                             <div class="text-center p-4 bg-success/10 rounded-xl">
                                 <p class="text-sm text-foreground-content mb-1">Total Shares</p>
-                                <p class="text-3xl font-bold text-success">{{ $this->totalShares }}</p>
+                                <p class="text-2xl sm:text-3xl font-bold text-success truncate" title="{{ $this->totalShares }}">{{ $this->totalShares }}</p>
                             </div>
                             <div class="text-center p-4 bg-info/10 rounded-xl">
                                 <p class="text-sm text-foreground-content mb-1">Total Value</p>
-                                <p class="text-3xl font-bold text-info">{{ Number::currency($this->sharesValue) }}</p>
+                                <p class="text-2xl sm:text-3xl font-bold text-info truncate" title="{{ Number::currency($this->sharesValue) }}">{{ Number::currency($this->sharesValue) }}</p>
                             </div>
                         </div>
                         <div class="pt-4 border-t border-border space-y-3">
