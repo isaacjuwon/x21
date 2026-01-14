@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Concerns\HasLoans;
 use App\Concerns\HasShares;
+use App\Models\Concerns\IsVerified;
 use App\Concerns\Wallet\ManagesWallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +20,7 @@ use App\Enums\Media\MediaCollectionType;
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasLoans, HasRoles, HasShares, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasLoans, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
     use InteractsWithMedia;
 
     /**

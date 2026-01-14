@@ -11,22 +11,35 @@ new class extends Component
     use WithFileUploads;
 
     public string $site_name;
+
     public string $site_description;
+
     public string $contact_email;
+
     public string $support_email;
+
     public bool $maintenance_mode;
+
     public bool $registration_enabled;
+
     public string $currency;
+
     public string $timezone;
 
     public $site_logo;
+
     public $site_dark_logo;
+
     public $site_favicon;
+
     public $site_dark_favicon;
 
     public $site_logo_path;
+
     public $site_dark_logo_path;
+
     public $site_favicon_path;
+
     public $site_dark_favicon_path;
 
     public function mount(GeneralSettings $settings): void

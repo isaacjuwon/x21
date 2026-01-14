@@ -47,4 +47,10 @@ return [
         'sandbox_url' => env('EPINS_SANDBOX_URL', 'https://sandbox.epins.com.ng/core'),
     ],
 
+    'dojah' => [
+        'api_key' => env('DOJAH_API_KEY'),
+        'app_id' => env('DOJAH_APP_ID'),
+        'base_url' => env('DOJAH_BASE_URL', 'https://api.dojah.io'),
+    ],
+
 ];

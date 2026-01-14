@@ -76,6 +76,13 @@
                             icon="credit-card"
                             :href="route('wallet.index')"
                         />
+
+                        <x-ui.navlist.item 
+                            label="KYC Verification"
+                            icon="shield-check"
+                            :href="route('kyc.index')"
+                            :active="request()->routeIs('kyc.*')"
+                        />
                     </x-ui.navlist.group>
                     
                     <x-ui.navlist.group 
@@ -106,6 +113,12 @@
                                 label="Admin Dashboard"
                                 icon="cog-6-tooth"
                                 :href="route('admin.dashboard')"
+                            />
+                            <x-ui.navlist.item 
+                                label="Mail"
+                                icon="envelope"
+                                :href="route('admin.mail.index')"
+                                :active="request()->routeIs('admin.mail.*')"
                             />
                         @endrole
                         

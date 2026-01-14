@@ -34,7 +34,7 @@
                         required 
                         autocomplete="current-password" 
                         placeholder="{{ __('Password') }}"
-                        viewable
+                        revealable
                     />
                     <x-ui.error name="password" />
                 </x-ui.field>

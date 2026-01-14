@@ -6,6 +6,8 @@
             <x-ui.navlist.item :href="route('admin.settings.loans')" :label="__('Loans')" :active="request()->routeIs('admin.settings.loans')" wire:navigate />
             <x-ui.navlist.item :href="route('admin.settings.wallet')" :label="__('Wallet')" :active="request()->routeIs('admin.settings.wallet')" wire:navigate />
             <x-ui.navlist.item :href="route('admin.settings.layout')" :label="__('Layout')" :active="request()->routeIs('admin.settings.layout')" wire:navigate />
+            <x-ui.navlist.item :href="route('admin.settings.integrations')" :label="__('Integrations')" :active="request()->routeIs('admin.settings.integrations')" wire:navigate />
+            <x-ui.navlist.item :href="route('admin.settings.verification')" :label="__('Verification')" :active="request()->routeIs('admin.settings.verification')" wire:navigate />
         </x-ui.navlist>
     </div>
 

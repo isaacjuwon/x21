@@ -91,7 +91,7 @@ new #[Layout('layouts.app')] class extends Component
             <x-ui.field>
                 <x-ui.label>{{ __('Amount (NGN)') }}</x-ui.label>
                 <x-ui.input 
-                    wire:model.live="amount" 
+                    wire:model.live.debounce.300ms="amount" 
                     type="number"
                     autofocus
                     min="100"

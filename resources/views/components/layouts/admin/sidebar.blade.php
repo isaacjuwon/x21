@@ -120,6 +120,13 @@
                             :active="request()->routeIs('admin.wallets.*')"
                         />
                         
+                        <x-ui.navlist.item 
+                            label="KYC Verification"
+                            icon="shield-check"
+                            :href="route('admin.kyc.index')"
+                            :active="request()->routeIs('admin.kyc.*')"
+                        />
+                        
                       
                     </x-ui.navlist.group>
 

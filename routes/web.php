@@ -78,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/tickets/create', 'pages::tickets.create')->name('tickets.create');
     Route::livewire('/tickets/{ticket}', 'pages::tickets.show')->name('tickets.show');
 
+    // KYC Verification routes
+    Route::livewire('/kyc', 'pages::kyc.index')->name('kyc.index');
+   
     // Admin Routes - Protected by role middleware
     Route::prefix('admin')->name('admin.')->middleware(['role:super-admin|admin|manager'])->group(function () {
         // Dashboard
@@ -138,6 +141,9 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('/users/{user}', 'admin::users.view')->name('users.view');
         Route::livewire('/users/{user}/edit', 'admin::users.edit')->name('users.edit');
 
+        // Mail
+        Route::livewire('/mail', 'admin::mail.index')->name('mail.index');
+
         // Wallets
         Route::livewire('/wallets', 'admin::wallets.index')->name('wallets.index');
         Route::livewire('/wallets/{user}', 'admin::wallets.view')->name('wallets.view');
@@ -145,6 +151,10 @@ Route::middleware(['auth'])->group(function () {
         // Tickets
         Route::livewire('/tickets', 'admin::tickets.index')->name('tickets.index');
         Route::livewire('/tickets/{ticket}', 'admin::tickets.show')->name('tickets.show');
+
+        // KYC Verifications
+        Route::livewire('/kyc', 'admin::kyc.index')->name('kyc.index');
+        Route::livewire('/kyc/{verification}', 'admin::kyc.view')->name('kyc.view');
 
         // Pages
         Route::livewire('/pages', 'admin::pages.index')->name('pages.index');
@@ -164,6 +174,8 @@ Route::middleware(['auth'])->group(function () {
             Route::livewire('/settings/loans', 'admin::settings.loans')->name('settings.loans');
             Route::livewire('/settings/wallet', 'admin::settings.wallet')->name('settings.wallet');
             Route::livewire('/settings/layout', 'admin::settings.layout')->name('settings.layout');
+            Route::livewire('/settings/verification', 'admin::settings.verification')->name('settings.verification');
+            Route::livewire('/settings/integrations', 'admin::settings.integrations')->name('settings.integrations');
         });
     });
 });

@@ -64,11 +64,11 @@ final readonly class PaystackConnector
             abstract: PaystackConnector::class,
             concrete: fn () => new PaystackConnector(
                 request: Http::baseUrl(
-                    url: config('services.paystack.url'),
+                    url: app(\App\Settings\IntegrationSettings::class)->paystack_url ?? config('services.paystack.url'),
                 )->timeout(
                     seconds: 30,
                 )->withToken(
-                    token: config('services.paystack.secret_key'),
+                    token: app(\App\Settings\IntegrationSettings::class)->paystack_secret_key ?? config('services.paystack.secret_key'),
                 )->asJson()->acceptJson(),
             ),
         );

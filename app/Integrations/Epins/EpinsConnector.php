@@ -67,11 +67,11 @@ final readonly class EpinsConnector
             abstract: EpinsConnector::class,
             concrete: fn () => new EpinsConnector(
                 request: Http::baseUrl(
-                    url: config('services.epins.url'),
+                    url: app(\App\Settings\IntegrationSettings::class)->epins_url ?? config('services.epins.url'),
                 )->timeout(
-                    seconds: 30,
+                    seconds: 60,
                 )->withToken(
-                    token: config('services.epins.api_key'),
+                    token: app(\App\Settings\IntegrationSettings::class)->epins_api_key ?? config('services.epins.api_key'),
                 )->asJson()->acceptJson(),
             ),
         );

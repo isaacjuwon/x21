@@ -6,6 +6,7 @@ use App\Listeners\SendLoanNotifications;
 use App\Listeners\SendShareNotifications;
 use App\Listeners\SendWalletNotifications;
 use App\Listeners\SendServiceNotifications;
+use App\Listeners\Kyc\SendKycVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -21,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\Paystack\PaymentSuccessful::class => [
             \App\Listeners\Paystack\ProcessWalletFunding::class,
+        ],
+        \App\Events\Kyc\KycVerificationCompleted::class => [
+            SendKycVerificationNotification::class,
         ],
     ];
 
