@@ -1,26 +1,33 @@
 <?php
 
-use App\Actions\Kyc\VerificationAction;
 use App\Actions\Kyc\CreateKycVerificationAction;
-use App\Models\KycVerification;
-use App\Livewire\Concerns\HasToast;
+use App\Enums\Kyc\Status as KycStatusEnum;
 use App\Enums\Kyc\VerificationMode;
+use App\Livewire\Concerns\HasToast;
 use App\Settings\VerificationSettings;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Enums\Kyc\Status as KycStatusEnum;
 
-new class extends Component {
+new class extends Component
+{
     use HasToast, WithFileUploads;
 
     public $type = 'bvn';
+
     public $id_number = '';
+
     public $dob = '';
+
     public $phone = '';
+
     public $email = '';
+
     public $document = null;
+
     public $status = null;
+
     public $response = null;
+
     public $verificationMode;
 
     public function mount()
@@ -74,8 +81,18 @@ new class extends Component {
         // Create KYC record via action
         $kyc = $action->handle($user, $data);
 
-        $this->toastSuccess('KYC record created! Pending verification.');
+        // Automatic mode: Trigger verification in parent index component
+        if ($this->verificationMode === VerificationMode::Automatic) {
+            $this->dispatch('trigger-verify', kycId: $kyc->id);
+            $this->toastSuccess('KYC record created! Verification started...');
+        } else {
+            // Manual mode: Notify user of admin review
+            $this->toastSuccess('KYC submitted! Admin is reviewing your details.');
+        }
+
         $this->reset(['id_number', 'dob', 'phone', 'email', 'document']);
+        $this->dispatch('close-modal', id: 'kyc-verification-modal');
+        $this->dispatch('refresh'); // Refresh list
     }
 
     public function render()

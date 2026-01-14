@@ -1,7 +1,6 @@
 <?php
 
 use App\Actions\Kyc\VerificationAction;
-use App\Enums\Kyc\Status as KycStatusEnum;
 use App\Livewire\Concerns\HasToast;
 use App\Models\KycVerification;
 use Livewire\Attributes\Computed;
@@ -25,41 +24,6 @@ new class extends Component
 
     public string $email = '';
 
-    public function submit(VerificationAction $action)
-    {
-        $this->validate([
-            'type' => 'required|in:bvn,nin',
-            'id_number' => 'required|string',
-            'dob' => 'nullable|date',
-            'phone' => 'nullable|string',
-            'email' => 'nullable|email',
-        ]);
-
-        $kyc = KycVerification::create([
-            'user_id' => auth()->id(),
-            'type' => $this->type,
-            'id_number' => $this->id_number,
-            'status' => KycStatusEnum::Pending,
-            'verification_mode' => app(\App\Settings\VerificationSettings::class)->kyc_verification_mode === 'automatic'
-                ? \App\Enums\Kyc\VerificationMode::Automatic
-                : \App\Enums\Kyc\VerificationMode::Manual,
-            'meta' => array_filter([
-                'dob' => $this->dob,
-                'phone' => $this->phone,
-                'email' => $this->email,
-            ]),
-        ]);
-
-        $this->reset(['id_number', 'dob', 'phone', 'email']);
-        $this->dispatch('close-modal', id: 'kyc-verification-modal');
-        $this->toastSuccess('KYC verification submitted successfully.');
-
-        // Trigger automatic verification if enabled
-        if ($kyc->verification_mode === \App\Enums\Kyc\VerificationMode::Automatic) {
-            $this->verify($action, $kyc);
-        }
-    }
-
     public function render()
     {
         return $this->view()
@@ -67,8 +31,13 @@ new class extends Component
             ->layout('layouts::app');
     }
 
-    public function verify(VerificationAction $verificationAction, KycVerification $kyc)
+    #[Livewire\Attributes\On('trigger-verify')]
+    public function verify(VerificationAction $verificationAction, $kycId)
     {
+        $kyc = KycVerification::find($kycId);
+        if (! $kyc) {
+             return;
+        }
         $result = $verificationAction->handle($kyc);
 
         if ($result->isOk()) {
@@ -173,51 +142,5 @@ new class extends Component
         </div>
     @endif
 
-    <x-ui.modal 
-        id="kyc-verification-modal"
-        heading="Add KYC Verification"
-        description="Submit your BVN or NIN for verification"
-    >
-        <form wire:submit="submit" class="space-y-4">
-            <x-ui.field>
-                <x-ui.label>Verification Type</x-ui.label>
-                <x-ui.select wire:model.live="type" required>
-                    <option value="bvn">BVN</option>
-                    <option value="nin">NIN</option>
-                </x-ui.select>
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>{{ $type === 'bvn' ? 'BVN Number' : 'NIN Number' }}</x-ui.label>
-                <x-ui.input wire:model.live="id_number" type="text" required />
-                <x-ui.error name="id_number" />
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>Date of Birth (optional)</x-ui.label>
-                <x-ui.input wire:model.live="dob" type="date" />
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>Phone (optional)</x-ui.label>
-                <x-ui.input wire:model.live="phone" type="text" />
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>Email (optional)</x-ui.label>
-                <x-ui.input wire:model.live="email" type="email" />
-            </x-ui.field>
-
-            <x-slot name="footer">
-                <div class="flex gap-3 w-full">
-                    <x-ui.button x-on:click="$data.close();" variant="outline" class="flex-1">
-                        Cancel
-                    </x-ui.button>
-                    <x-ui.button type="submit" variant="primary" class="flex-1">
-                        Submit Verification
-                    </x-ui.button>
-                </div>
-            </x-slot>
-        </form>
-    </x-ui.modal>
+   <livewire:pages::kyc.create />
 </div>
