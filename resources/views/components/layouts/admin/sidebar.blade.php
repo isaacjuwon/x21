@@ -140,6 +140,12 @@
                             :href="route('admin.tickets.index')"
                             :active="request()->routeIs('admin.tickets.*')"
                         />
+                        <x-ui.navlist.item 
+                            label="Mail"
+                            icon="envelope"
+                            :href="route('admin.mail.index')"
+                            :active="request()->routeIs('admin.mail.*')"
+                        />
                     </x-ui.navlist.group>
                     
                     <x-ui.navlist.group 

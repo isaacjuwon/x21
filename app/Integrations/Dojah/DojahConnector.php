@@ -33,6 +33,12 @@ final readonly class DojahConnector
                 'Accept' => 'application/json',
             ]);
 
-        return $request->{$method}($uri, $options['json'] ?? []);
+        $httpMethod = strtolower($method);
+        
+        if ($httpMethod === 'get') {
+            return $request->get($uri, $options['query'] ?? []);
+        }
+
+        return $request->{$httpMethod}($uri, $options['json'] ?? []);
     }
 }

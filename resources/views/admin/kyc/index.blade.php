@@ -64,16 +64,16 @@ new class extends Component
         </x-ui.input>
 
         <x-ui.select wire:model.live="filterStatus">
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="verified">Verified</option>
-            <option value="failed">Failed</option>
+            <x-ui.select.option value="">All Status</x-ui.select.option>
+            <x-ui.select.option value="pending">Pending</x-ui.select.option>
+            <x-ui.select.option value="verified">Verified</x-ui.select.option>
+            <x-ui.select.option value="failed">Failed</x-ui.select.option>
         </x-ui.select>
 
         <x-ui.select wire:model.live="filterMode">
-            <option value="">All Modes</option>
-            <option value="automatic">Automatic</option>
-            <option value="manual">Manual</option>
+            <x-ui.select.option value="">All Modes</x-ui.select.option>
+            <x-ui.select.option value="automatic">Automatic</x-ui.select.option>
+            <x-ui.select.option value="manual">Manual</x-ui.select.option>
         </x-ui.select>
     </div>
 

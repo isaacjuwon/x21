@@ -158,9 +158,9 @@ new class extends Component
             <x-ui.field>
                 <x-ui.label>Verification Status</x-ui.label>
                 <x-ui.select wire:model="status" required>
-                    <option value="pending">Pending</option>
-                    <option value="verified">Verified</option>
-                    <option value="failed">Failed</option>
+                    <x-ui.select.option value="pending">Pending</x-ui.select.option>
+                    <x-ui.select.option value="verified">Verified</x-ui.select.option>
+                    <x-ui.select.option value="failed">Failed</x-ui.select.option>
                 </x-ui.select>
                 <x-ui.error name="status" />
             </x-ui.field>

@@ -114,12 +114,6 @@
                                 icon="cog-6-tooth"
                                 :href="route('admin.dashboard')"
                             />
-                            <x-ui.navlist.item 
-                                label="Mail"
-                                icon="envelope"
-                                :href="route('admin.mail.index')"
-                                :active="request()->routeIs('admin.mail.*')"
-                            />
                         @endrole
                         
                         <x-ui.navlist.item 
