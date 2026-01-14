@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'kyc.verified' => \App\Http\Middleware\EnsureKycVerified::class,
+            'kyc.verify' => \App\Http\Middleware\EnsureKycVerified::class,
         ]);
 
         $middleware->web(append: [

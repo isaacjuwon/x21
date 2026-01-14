@@ -63,7 +63,9 @@ Route::middleware(['auth'])->group(function () {
     // Wallet routes
     Route::livewire('/wallet', 'pages::wallet.index')->name('wallet.index');
     Route::livewire('/wallet/fund', 'pages::wallet.fund')->name('wallet.fund');
-    Route::livewire('/wallet/withdraw', 'pages::wallet.withdraw')->name('wallet.withdraw');
+    Route::livewire('/wallet/withdraw', 'pages::wallet.withdraw')
+        ->middleware('kyc.verify')
+        ->name('wallet.withdraw');
     Route::livewire('/wallet/transfer', 'pages::wallet.transfer')->name('wallet.transfer');
     Route::livewire('/wallet/callback', 'pages::wallet.callback')->name('wallet.callback');
 
@@ -80,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
 
     // KYC Verification routes
     Route::livewire('/kyc', 'pages::kyc.index')->name('kyc.index');
-   
+
     // Admin Routes - Protected by role middleware
     Route::prefix('admin')->name('admin.')->middleware(['role:super-admin|admin|manager'])->group(function () {
         // Dashboard
