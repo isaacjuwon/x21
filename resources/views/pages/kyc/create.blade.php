@@ -110,7 +110,7 @@ new class extends Component
 
         @if ($status)
             <div class="mt-6">
-                <x-ui-alerts :type="$status === KycStatusEnum::Verified ? 'success' : ($status === KycStatusEnum::Failed ? 'danger' : 'info')">
+                <x-ui.alerts :type="$status === KycStatusEnum::Verified ? 'success' : ($status === KycStatusEnum::Failed ? 'danger' : 'info')">
                     @if ($status === KycStatusEnum::Verified)
                         Your KYC is verified.
                     @elseif ($status === KycStatusEnum::Failed)
@@ -118,7 +118,7 @@ new class extends Component
                     @else
                         Verification is pending. Please wait for processing.
                     @endif
-                </x-ui-alerts>
+                </x-ui.alerts>
             </div>
         @endif
     </div>
