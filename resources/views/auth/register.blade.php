@@ -1,5 +1,4 @@
 <x-layouts::auth>
-    <div class="flex flex-col gap-6">
         <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
 
         <!-- Session Status -->
@@ -78,5 +77,4 @@
             <span>{{ __('Already have an account?') }}</span>
             <x-ui.link :href="route('login')" wire:navigate>{{ __('Log in') }}</x-ui.link>
         </div>
-    </div>
 </x-layouts::auth>

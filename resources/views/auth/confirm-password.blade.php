@@ -1,5 +1,4 @@
 <x-layouts::auth>
-    <div class="flex flex-col gap-6">
         <x-auth-header
             :title="__('Confirm password')"
             :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
@@ -28,5 +27,4 @@
                 {{ __('Confirm') }}
             </x-ui.button>
         </form>
-    </div>
 </x-layouts::auth>

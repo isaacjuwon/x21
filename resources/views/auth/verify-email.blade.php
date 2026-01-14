@@ -1,5 +1,4 @@
 <x-layouts::auth>
-    <div class="mt-4 flex flex-col gap-6">
         <x-ui.text class="text-center">
             {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
         </x-ui.text>
@@ -25,5 +24,4 @@
                 </x-ui.button>
             </form>
         </div>
-    </div>
 </x-layouts::auth>
