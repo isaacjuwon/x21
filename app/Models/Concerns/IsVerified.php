@@ -2,8 +2,8 @@
 
 namespace App\Models\Concerns;
 
-use App\Models\KycVerification;
 use App\Enums\Kyc\Status as KycStatusEnum;
+use App\Models\KycVerification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait IsVerified
@@ -11,7 +11,7 @@ trait IsVerified
     /**
      * Get all KYC verifications for this user
      */
-    public function verifications(): HasMany
+    public function kycVerifications(): HasMany
     {
         return $this->hasMany(KycVerification::class, 'user_id');
     }
@@ -55,7 +55,7 @@ trait IsVerified
      */
     public function hasVerifiedKyc(): bool
     {
-        return $this->verifications()
+        return $this->kycVerifications()
             ->where('status', KycStatusEnum::Verified)
             ->exists();
     }
@@ -65,7 +65,7 @@ trait IsVerified
      */
     public function getVerifiedKyc(): ?KycVerification
     {
-        return $this->verifications()
+        return $this->kycVerifications()
             ->where('status', KycStatusEnum::Verified)
             ->latest()
             ->first();
