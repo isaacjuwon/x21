@@ -102,7 +102,6 @@ new class extends Component
         return DataPlan::where('brand_id', $this->network_id)
             ->where('status', true)
             ->distinct()
-            ->unique('type')
             ->pluck('type')
             ->filter()
             ->values();
@@ -298,7 +297,7 @@ new class extends Component
                         </div>
                         <input 
                             type="tel" 
-                            wire:model.live="phone"
+                            wire:model="phone"
                             placeholder="Enter phone number" 
                             @class([
                                 'w-full pl-12 pr-4 py-4 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold tracking-widest placeholder:text-foreground-content/50',

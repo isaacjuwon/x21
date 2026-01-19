@@ -54,18 +54,18 @@ new class extends Component
 
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-800">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Max Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Interest Rate</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Period</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Users</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Max Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Interest Rate</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Period</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Users</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($this->loanLevels as $level)
                             <tr wire:key="level-{{ $level->id }}">
                                 <td class="px-6 py-4 whitespace-nowrap">

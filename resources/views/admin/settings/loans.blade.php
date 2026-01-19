@@ -59,34 +59,34 @@ new class extends Component
             </div>
 
             <div class="border-t pt-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Loan Levels Configuration</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Loan Levels Configuration</h3>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                             <tr>
-                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level Name</th>
-                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max Amount</th>
-                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest Rate (%)</th>
-                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration (Months)</th>
-                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Repayments for Upgrade</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Level Name</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Max Amount</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Interest Rate (%)</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Duration (Months)</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Repayments for Upgrade</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($loanLevels as $index => $level)
                                 <tr>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {{ $level['name'] }}
                                     </td>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         <x-ui.input type="number" wire:model="loanLevels.{{ $index }}.maximum_loan_amount" />
                                     </td>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         <x-ui.input type="number" step="0.01" wire:model="loanLevels.{{ $index }}.interest_rate" />
                                     </td>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         <x-ui.input type="number" wire:model="loanLevels.{{ $index }}.installment_period_months" />
                                     </td>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         <x-ui.input type="number" wire:model="loanLevels.{{ $index }}.repayments_required_for_upgrade" />
                                     </td>
                                 </tr>

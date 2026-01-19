@@ -117,16 +117,16 @@ new class extends Component
             </x-ui.alerts>
         @else
             <div class="overflow-x-auto mb-6">
-                <table class="min-w-full divide-y border dark:border-zinc-700 divide-gray-200">
-                    <thead class="bg-gray-50 dark:bg-zinc-900">
+                <table class="min-w-full divide-y border dark:border-gray-700 divide-gray-200">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Allocation Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maturity</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Allocation Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Quantity</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Maturity</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-zinc-800 divide-y divide-gray-200 dark:divide-zinc-700">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($this->shares as $share)
                             @php
                                 $isMature = $share->status === \App\Enums\ShareStatus::APPROVED && 
@@ -136,7 +136,7 @@ new class extends Component
                                     : null;
                             @endphp
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{ $share->created_at->format('M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">

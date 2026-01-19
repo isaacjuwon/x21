@@ -34,7 +34,7 @@ new class extends Component
 
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Support Tickets</h1>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Support Tickets</h1>
         <div class="flex items-center gap-2">
             <span class="text-sm text-gray-600">Filter by Status:</span>
             <x-ui.select wire:model.live="status" class="w-40">
@@ -48,26 +48,26 @@ new class extends Component
     <x-ui.card>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="px-4 py-3 font-semibold text-gray-700">ID</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700">User</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700">Subject</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700">Status</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700">Priority</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700">Created</th>
-                        <th class="px-4 py-3 font-semibold text-gray-700 text-right">Action</th>
+                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <th class="px-4 py-3 font-semibold">ID</th>
+                        <th class="px-4 py-3 font-semibold">User</th>
+                        <th class="px-4 py-3 font-semibold">Subject</th>
+                        <th class="px-4 py-3 font-semibold">Status</th>
+                        <th class="px-4 py-3 font-semibold">Priority</th>
+                        <th class="px-4 py-3 font-semibold">Created</th>
+                        <th class="px-4 py-3 font-semibold text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse ($tickets as $ticket)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-3 font-mono text-gray-500">#{{ $ticket->id }}</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-4 py-3 font-mono text-gray-500 dark:text-gray-400">#{{ $ticket->id }}</td>
                             <td class="px-4 py-3">
-                                <div class="font-medium text-gray-900">{{ $ticket->user->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $ticket->user->email }}</div>
+                                <div class="font-medium text-gray-900 dark:text-white">{{ $ticket->user->name }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $ticket->user->email }}</div>
                             </td>
-                            <td class="px-4 py-3 text-gray-900">{{ $ticket->subject }}</td>
+                            <td class="px-4 py-3 text-gray-900 dark:text-white">{{ $ticket->subject }}</td>
                             <td class="px-4 py-3">
                                 <span @class([
                                     'px-2 py-1 rounded-full text-xs font-semibold',
@@ -87,7 +87,7 @@ new class extends Component
                                     {{ ucfirst($ticket->priority) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-gray-500">{{ $ticket->created_at->format('M d, Y') }}</td>
+                            <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $ticket->created_at->format('M d, Y') }}</td>
                             <td class="px-4 py-3 text-right">
                                 <x-ui.button variant="outline" size="sm" wire:navigate href="{{ route('admin.tickets.show', $ticket) }}">
                                     Manage
@@ -96,7 +96,7 @@ new class extends Component
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-8 text-center text-gray-500">No tickets found matching your filter.</td>
+                            <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">No tickets found matching your filter.</td>
                         </tr>
                     @endforelse
                 </tbody>

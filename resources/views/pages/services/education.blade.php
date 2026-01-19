@@ -236,7 +236,7 @@ new class extends Component
                         </div>
                         <input 
                             type="number" 
-                            wire:model.live="quantity"
+                            wire:model.live.debounce.300ms="quantity"
                             placeholder="How many PINs?" 
                             @class([
                                 'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',

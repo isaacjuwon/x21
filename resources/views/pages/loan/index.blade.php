@@ -116,27 +116,27 @@ new class extends Component
 
         @if ($this->loans->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date Applied</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Level</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Progress</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Date Applied</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Level</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Progress</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($this->loans as $loan)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{ $loan->applied_at?->format('M d, Y') ?? 'N/A' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-white">
                                     {{ Number::currency($loan->amount) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{ $loan->loanLevel->name }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -144,7 +144,7 @@ new class extends Component
                                         {{ $loan->status->getLabel() }}
                                     </x-ui.badge>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{ number_format($loan->progress_percentage, 1) }}%
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">

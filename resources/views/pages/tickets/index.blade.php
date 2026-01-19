@@ -36,19 +36,19 @@ new class extends Component
             @else
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="px-4 py-3 font-semibold text-gray-700">Subject</th>
-                                <th class="px-4 py-3 font-semibold text-gray-700">Status</th>
-                                <th class="px-4 py-3 font-semibold text-gray-700">Priority</th>
-                                <th class="px-4 py-3 font-semibold text-gray-700">Last Updated</th>
-                                <th class="px-4 py-3 font-semibold text-gray-700 text-right">Action</th>
+                        <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th class="px-4 py-3 font-semibold">Subject</th>
+                                <th class="px-4 py-3 font-semibold">Status</th>
+                                <th class="px-4 py-3 font-semibold">Priority</th>
+                                <th class="px-4 py-3 font-semibold">Last Updated</th>
+                                <th class="px-4 py-3 font-semibold text-right">Action</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                             @foreach ($tickets as $ticket)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-4 py-3 font-medium text-gray-900">{{ $ticket->subject }}</td>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $ticket->subject }}</td>
                                     <td class="px-4 py-3">
                                         <span @class([
                                             'px-2 py-1 rounded-full text-xs font-semibold',
@@ -68,7 +68,7 @@ new class extends Component
                                             {{ ucfirst($ticket->priority) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 text-gray-500">{{ $ticket->updated_at->diffForHumans() }}</td>
+                                    <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ $ticket->updated_at->diffForHumans() }}</td>
                                     <td class="px-4 py-3 text-right">
                                         <x-ui.button variant="outline" size="sm" wire:navigate href="{{ route('tickets.show', $ticket) }}">
                                             View

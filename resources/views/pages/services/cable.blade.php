@@ -237,7 +237,7 @@ new class extends Component
                         </div>
                         <input 
                             type="text" 
-                            wire:model.live="smartcard_number"
+                            wire:model.live.debounce.300ms="smartcard_number"
                             placeholder="Enter your account number" 
                             @class([
                                 'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',

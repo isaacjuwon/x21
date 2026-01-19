@@ -119,26 +119,26 @@ new class extends Component
                 </x-slot>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Payment</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Principal</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Interest</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase">#</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium uppercase">Due Date</th>
+                                <th class="px-4 py-3 text-right text-xs font-medium uppercase">Payment</th>
+                                <th class="px-4 py-3 text-right text-xs font-medium uppercase">Principal</th>
+                                <th class="px-4 py-3 text-right text-xs font-medium uppercase">Interest</th>
+                                <th class="px-4 py-3 text-right text-xs font-medium uppercase">Balance</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($paymentSchedule as $schedule)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm">{{ $schedule['payment_number'] }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($schedule['due_date'])->format('M d, Y') }}</td>
-                                    <td class="px-4 py-3 text-sm text-right font-semibold">{{ Number::currency($schedule['payment_amount']) }}</td>
-                                    <td class="px-4 py-3 text-sm text-right">{{ Number::currency($schedule['principal_amount']) }}</td>
-                                    <td class="px-4 py-3 text-sm text-right">{{ Number::currency($schedule['interest_amount']) }}</td>
-                                    <td class="px-4 py-3 text-sm text-right">{{ Number::currency($schedule['balance_remaining']) }}</td>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">{{ $schedule['payment_number'] }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ \Carbon\Carbon::parse($schedule['due_date'])->format('M d, Y') }}</td>
+                                    <td class="px-4 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">{{ Number::currency($schedule['payment_amount']) }}</td>
+                                    <td class="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400">{{ Number::currency($schedule['principal_amount']) }}</td>
+                                    <td class="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400">{{ Number::currency($schedule['interest_amount']) }}</td>
+                                    <td class="px-4 py-3 text-sm text-right text-gray-500 dark:text-gray-400">{{ Number::currency($schedule['balance_remaining']) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
