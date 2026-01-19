@@ -284,11 +284,11 @@ new class extends Component
                         <x-ui.button 
                             wire:click="save"
                             variant="primary" 
+                            icon="paper-airplane" 
                             class="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
                             :disabled="!$this->operator_id || !$this->meter_number || $this->amount < 100"
                         >
                             <span>Pay Bill</span>
-                            <x-ui.icon name="paper-airplane" class="size-5 ml-2" />
                         </x-ui.button>
                         
                         <p class="text-[10px] text-foreground-content text-center font-medium leading-relaxed">

@@ -302,11 +302,11 @@ new class extends Component
                         <x-ui.button 
                             wire:click="save"
                             variant="primary" 
+                            icon="chevron-double-right"
                             class="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
                             :disabled="!$this->plan_id || !$this->smartcard_number"
                         >
                             <span>Renew Now</span>
-                            <x-ui.icon name="chevron-double-right" class="size-5 ml-2" />
                         </x-ui.button>
                         
                         <p class="text-[10px] text-foreground-content text-center font-medium leading-relaxed">

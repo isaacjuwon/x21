@@ -303,11 +303,11 @@ new class extends Component
                         <x-ui.button 
                             wire:click="save"
                             variant="primary" 
+                            icon="sparkles"
                             class="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
                             :disabled="!$this->plan_id || !$this->email"
                         >
                             <span>Purchase Card</span>
-                            <x-ui.icon name="sparkles" class="w-5 h-5 ml-2" />
                         </x-ui.button>
                         
                         <p class="text-[10px] text-foreground-content text-center font-medium leading-relaxed px-2">

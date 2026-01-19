@@ -280,7 +280,7 @@ new class extends Component
                             wire:click="save"
                             variant="primary" 
                             class="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
-                            :disabled="!$this->network_id || !$this->phone || $this->amount < 100"
+                            :disabled="!$this->network_id || $this->amount < 100"
                         >
                             <span>Purchase Now</span>
                         </x-ui.button>
