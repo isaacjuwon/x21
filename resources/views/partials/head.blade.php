@@ -19,18 +19,29 @@
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-<script>
-    (function() {
-        try {
-            var theme = localStorage.getItem('theme') || 'system';
-            var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+ <script>
+        // Load dark mode before page renders to prevent flicker
+        const loadDarkMode = () => {
+            const theme = localStorage.getItem('theme') ?? 'system'
+            
+            if (
+                theme === 'dark' ||
+                (theme === 'system' &&
+                    window.matchMedia('(prefers-color-scheme: dark)')
+                    .matches)
+            ) {
+                document.documentElement.classList.add('dark')
             }
-        } catch (e) {}
-    })();
-</script>
+        }
+                
+        // Initialize on page load
+        loadDarkMode();
+        
+        // Reinitialize after Livewire navigation (for spa mode)
+        document.addEventListener('livewire:navigated', function() {
+            loadDarkMode();
+        });
+    </script>
+
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])

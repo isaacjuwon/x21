@@ -228,7 +228,11 @@
                 </div>
             </x-ui.layout.main>
         </x-ui.layout>
-         @livewireScripts
+      @livewireScriptConfig
+     <!-- Ensure dark mode is applied after scripts load, this is also required to prevent flickering when many livewire component changes indepently -->
+    <script>
+        loadDarkMode()
+    </script>
         {{-- without this it cause flicker when multiple components changes in isolation in the  page --}}
        
     </body>
