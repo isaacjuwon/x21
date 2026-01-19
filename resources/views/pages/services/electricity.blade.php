@@ -199,7 +199,7 @@ new class extends Component
                         </div>
                         <input 
                             type="text" 
-                            wire:model.live.debounce.300ms="meter_number"
+                            wire:model.live.debounce.50ms="meter_number"
                             placeholder="Enter your meter number" 
                             @class([
                                 'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',
@@ -225,7 +225,7 @@ new class extends Component
                         </div>
                         <input 
                             type="number" 
-                            wire:model.live.debounce.300ms="amount"
+                            wire:model.live.debounce.50ms="amount"
                             placeholder="0.00" 
                             @class([
                                 'w-full pl-12 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-3xl font-black placeholder:text-foreground-content/30',

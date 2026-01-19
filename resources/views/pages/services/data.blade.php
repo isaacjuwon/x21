@@ -117,7 +117,6 @@ new class extends Component
         return DataPlan::where('brand_id', $this->network_id)
             ->where('type', $this->data_type)
             ->where('status', true)
-            ->orderBy('size')
             ->get();
     }
 
