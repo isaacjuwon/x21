@@ -4,7 +4,6 @@
         @include('partials.head')
      
     </head>
-     @livewireStyles
     
     <body class="min-h-screen bg-background text-foreground">
        <x-ui.layout>
@@ -228,8 +227,10 @@
                 </div>
             </x-ui.layout.main>
         </x-ui.layout>
-      @livewireScriptConfig
-     <!-- Ensure dark mode is applied after scripts load, this is also required to prevent flickering when many livewire component changes indepently -->
+    @livewireScriptConfig
+    @vite(['resources/js/app.js'])
+    
+    <!-- Ensure dark mode is applied after scripts load, this is also required to prevent flickering when many livewire component changes indepently -->
     <script>
         loadDarkMode()
     </script>

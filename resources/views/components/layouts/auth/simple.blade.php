@@ -21,5 +21,12 @@
                 </div>
             </div>
         </div>
+    @livewireScriptConfig
+    @vite(['resources/js/app.js'])
+    
+    <!-- Ensure dark mode is applied after scripts load, this is also required to prevent flickering when many livewire component changes indepently -->
+    <script>
+        loadDarkMode()
+    </script>
     </body>
 </html>
