@@ -179,7 +179,7 @@ new class extends Component
                     <x-ui.input wire:model.live="email" type="email" />
                 </x-ui.field>
 
-                @if ($verificationMode === VerificationMode::Manual->value)
+                @if ($verificationMode === VerificationMode::Manual)
                     <x-ui.field>
                         <x-ui.label>Upload Document (required)</x-ui.label>
                         <x-ui.input 
