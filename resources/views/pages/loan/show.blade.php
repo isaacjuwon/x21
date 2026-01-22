@@ -13,7 +13,7 @@ new class extends Component
     public function mount(Loan $loan)
     {
         // Ensure user can only view their own loans
-        if ($loan->user_id !== auth()->id()) {
+        if ($loan->user_id != auth()->id()) {
             abort(403);
         }
 

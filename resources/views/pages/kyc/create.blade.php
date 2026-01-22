@@ -2,6 +2,7 @@
 
 use App\Actions\Kyc\CreateKycVerificationAction;
 use App\Enums\Kyc\Status as KycStatusEnum;
+use App\Enums\Kyc\Type as KycType;
 use App\Enums\Kyc\VerificationMode;
 use App\Livewire\Concerns\HasToast;
 use App\Settings\VerificationSettings;
@@ -39,7 +40,7 @@ new class extends Component
         $user = auth()->user();
         $kyc = $user->kycVerifications()->latest()->first();
         if ($kyc) {
-            $this->type = $kyc->type;
+            $this->type = $kyc->type->value;
             $this->id_number = $kyc->id_number;
             $this->status = $kyc->status instanceof KycStatusEnum ? $kyc->status : KycStatusEnum::match($kyc->status);
             $this->response = $kyc->response;
@@ -135,8 +136,9 @@ new class extends Component
                 <x-ui.field>
                     <x-ui.label>Type</x-ui.label>
                     <x-ui.select wire:model.live="type">
-                        <x-ui.select.option value="bvn">BVN</x-ui.select.option>
-                        <x-ui.select.option value="nin">NIN</x-ui.select.option>
+                        @foreach(KycType::cases() as $case)
+                            <x-ui.select.option :value="$case->value">{{ $case->getLabel() }}</x-ui.select.option>
+                        @endforeach
                     </x-ui.select>
                 </x-ui.field>
 

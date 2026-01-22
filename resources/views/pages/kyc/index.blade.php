@@ -2,6 +2,8 @@
 
 use App\Actions\Kyc\VerificationAction;
 use App\Livewire\Concerns\HasToast;
+use App\Enums\Kyc\Status as KycStatusEnum;
+use App\Enums\Kyc\Type as KycType;
 use App\Models\KycVerification;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -81,7 +83,7 @@ new class extends Component
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                            {{ strtoupper($verification->type) }}
+                            {{ $verification->type->getLabel() }}
                         </span>
                         <x-ui.badge :color="$verification->status === KycStatusEnum::Verified ? 'success' : ($verification->status === KycStatusEnum::Failed ? 'danger' : 'warning')">
                             {{ ucfirst($verification->status->value) }}

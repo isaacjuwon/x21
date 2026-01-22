@@ -3,6 +3,7 @@
 namespace App\Models\Concerns;
 
 use App\Enums\Kyc\Status as KycStatusEnum;
+use App\Enums\Kyc\Type as KycType;
 use App\Models\KycVerification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,7 +22,11 @@ trait IsVerified
      */
     public function isVerified(): bool
     {
-        return (bool) $this->is_verified;
+        if (! $this->is_verified) {
+            return false;
+        }
+
+        return $this->hasVerifiedKyc(KycType::Bvn) && $this->hasVerifiedKyc(KycType::Nin);
     }
 
     /**
@@ -53,10 +58,11 @@ trait IsVerified
     /**
      * Check if user has at least one verified KYC record
      */
-    public function hasVerifiedKyc(): bool
+    public function hasVerifiedKyc(?KycType $type = null): bool
     {
         return $this->kycVerifications()
             ->where('status', KycStatusEnum::Verified)
+            ->when($type, fn ($q) => $q->where('type', $type))
             ->exists();
     }
 

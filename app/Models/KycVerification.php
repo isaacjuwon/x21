@@ -7,6 +7,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\Kyc\Type as KycType;
 use App\Enums\Kyc\Status as KycStatusEnum;
 use App\Enums\Kyc\VerificationMode;
 
@@ -32,6 +33,7 @@ class KycVerification extends Model
     protected $casts = [
         'response' => 'array',
         'meta' => 'array',
+        'type' => KycType::class,
         'status' => KycStatusEnum::class,
         'verification_mode' => VerificationMode::class,
     ];
