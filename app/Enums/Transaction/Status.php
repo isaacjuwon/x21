@@ -8,7 +8,6 @@ enum Status: string
     case Success = 'success';
     case Failed = 'failed';
 
-
     public function getColor(): string|array|null
     {
         return match ($this) {
@@ -18,12 +17,12 @@ enum Status: string
         };
     }
 
-    public function getLabel(): null|string
+    public function getLabel(): ?string
     {
         return $this->value;
     }
 
-    public static function match(string|null $value): Status
+    public static function match(?string $value): Status
     {
         return match ($value) {
             Status::Pending->value => Status::Pending,
@@ -32,7 +31,6 @@ enum Status: string
             default => Status::Pending,
         };
     }
-
 
     public static function toSelect($placeholder = false): array
     {
@@ -52,7 +50,4 @@ enum Status: string
 
         return $array;
     }
-
-
-
 }

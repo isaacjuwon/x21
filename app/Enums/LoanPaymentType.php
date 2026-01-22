@@ -4,25 +4,25 @@ namespace App\Enums;
 
 enum LoanPaymentType: string
 {
-    case SCHEDULED = 'scheduled';
-    case EARLY = 'early';
-    case PENALTY = 'penalty';
+    case Scheduled = 'scheduled';
+    case Early = 'early';
+    case Penalty = 'penalty';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::SCHEDULED => 'Scheduled Payment',
-            self::EARLY => 'Early Payment',
-            self::PENALTY => 'Penalty Payment',
+            self::Scheduled => 'Scheduled Payment',
+            self::Early => 'Early Payment',
+            self::Penalty => 'Penalty Payment',
         };
     }
 
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::SCHEDULED => 'primary',
-            self::EARLY => 'success',
-            self::PENALTY => 'danger',
+            self::Scheduled => 'primary',
+            self::Early => 'success',
+            self::Penalty => 'danger',
         };
     }
 }

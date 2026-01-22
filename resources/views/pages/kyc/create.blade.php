@@ -13,9 +13,9 @@ new class extends Component
 {
     use HasToast, WithFileUploads;
 
-    public $type = 'bvn';
+    public $bvn = '';
 
-    public $id_number = '';
+    public $nin = '';
 
     public $dob = '';
 
@@ -38,22 +38,31 @@ new class extends Component
         $this->verificationMode = VerificationMode::tryFrom($verificationSettings->kyc_verification_mode) ?? VerificationMode::Automatic;
 
         $user = auth()->user();
-        $kyc = $user->kycVerifications()->latest()->first();
-        if ($kyc) {
-            $this->type = $kyc->type->value;
-            $this->id_number = $kyc->id_number;
-            $this->status = $kyc->status instanceof KycStatusEnum ? $kyc->status : KycStatusEnum::match($kyc->status);
-            $this->response = $kyc->response;
+
+        $bvnKyc = $user->kycVerifications()->where('type', KycType::Bvn)->latest()->first();
+        if ($bvnKyc) {
+            $this->bvn = $bvnKyc->id_number;
+        }
+
+        $ninKyc = $user->kycVerifications()->where('type', KycType::Nin)->latest()->first();
+        if ($ninKyc) {
+            $this->nin = $ninKyc->id_number;
+        }
+
+        $latestKyc = $user->kycVerifications()->latest()->first();
+        if ($latestKyc) {
+            $this->status = $latestKyc->status instanceof KycStatusEnum ? $latestKyc->status : KycStatusEnum::match($latestKyc->status);
+            $this->response = $latestKyc->response;
         }
     }
 
     public function submit(CreateKycVerificationAction $action)
     {
         $rules = [
-            'type' => 'required|in:bvn,nin',
-            'id_number' => 'required|string',
+            'bvn' => 'required|string|size:11',
+            'nin' => 'required|string|min:10|max:11',
             'dob' => 'nullable|date',
-            'phone' => 'nullable|phone',
+            'phone' => 'nullable',
             'email' => 'nullable|email',
         ];
 
@@ -65,9 +74,7 @@ new class extends Component
         $this->validate($rules);
 
         $user = auth()->user();
-        $data = [
-            'type' => $this->type,
-            'id_number' => $this->id_number,
+        $commonData = [
             'dob' => $this->dob,
             'phone' => $this->phone,
             'email' => $this->email,
@@ -76,22 +83,32 @@ new class extends Component
         // Handle document upload for manual verification
         if ($this->verificationMode === VerificationMode::Manual && $this->document) {
             $documentPath = $this->document->store("kyc/{$user->id}", 'private');
-            $data['document_path'] = $documentPath;
+            $commonData['document_path'] = $documentPath;
         }
 
-        // Create KYC record via action
-        $kyc = $action->handle($user, $data);
+        // Create or Update BVN record
+        $bvn = $action->handle($user, array_merge($commonData, [
+            'type' => KycType::Bvn->value,
+            'id_number' => $this->bvn,
+        ]));
 
-        // Automatic mode: Trigger verification in parent index component
+        // Create or Update NIN record
+        $nin = $action->handle($user, array_merge($commonData, [
+            'type' => KycType::Nin->value,
+            'id_number' => $this->nin,
+        ]));
+
+        // Automatic mode: Trigger verification for both
         if ($this->verificationMode === VerificationMode::Automatic) {
-            $this->dispatch('trigger-verify', kycId: $kyc->id);
-            $this->toastSuccess('KYC record created! Verification started...');
+            $this->dispatch('trigger-verify', kycId: $bvn->id);
+            $this->dispatch('trigger-verify', kycId: $nin->id);
+            $this->toastSuccess('KYC records created! Verification started for both BVN and NIN.');
         } else {
             // Manual mode: Notify user of admin review
             $this->toastSuccess('KYC submitted! Admin is reviewing your details.');
         }
 
-        $this->reset(['id_number', 'dob', 'phone', 'email', 'document']);
+        $this->reset(['bvn', 'nin', 'dob', 'phone', 'email', 'document']);
         $this->dispatch('close-modal', id: 'kyc-verification-modal');
         $this->dispatch('refresh'); // Refresh list
     }
@@ -133,20 +150,19 @@ new class extends Component
             <x-ui.fieldset label="Verification Information">
                 
 
-                <x-ui.field>
-                    <x-ui.label>Type</x-ui.label>
-                    <x-ui.select wire:model.live="type">
-                        @foreach(KycType::cases() as $case)
-                            <x-ui.select.option :value="$case->value">{{ $case->getLabel() }}</x-ui.select.option>
-                        @endforeach
-                    </x-ui.select>
-                </x-ui.field>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <x-ui.field>
+                        <x-ui.label>BVN Number</x-ui.label>
+                        <x-ui.input wire:model.live="bvn" type="text" maxlength="11" required placeholder="Enter 11-digit BVN" />
+                        <x-ui.error name="bvn" />
+                    </x-ui.field>
 
-                <x-ui.field>
-                    <x-ui.label>{{ $type === 'bvn' ? 'BVN Number' : 'NIN Number' }}</x-ui.label>
-                    <x-ui.input wire:model.live="id_number" type="text" required />
-                    <x-ui.error name="id_number" />
-                </x-ui.field>
+                    <x-ui.field>
+                        <x-ui.label>NIN Number</x-ui.label>
+                        <x-ui.input wire:model.live="nin" type="text" maxlength="11" required placeholder="Enter 11-digit NIN" />
+                        <x-ui.error name="nin" />
+                    </x-ui.field>
+                </div>
 
                 <x-ui.field>
                     <x-ui.label>Date of Birth (optional)</x-ui.label>
@@ -163,7 +179,7 @@ new class extends Component
                     <x-ui.input wire:model.live="email" type="email" />
                 </x-ui.field>
 
-                @if ($verificationMode === \App\Enums\VerificationMode::Manual)
+                @if ($verificationMode === VerificationMode::Manual)
                     <x-ui.field>
                         <x-ui.label>Upload Document (required)</x-ui.label>
                         <x-ui.input 

@@ -3,6 +3,7 @@
 namespace App\Actions\Kyc;
 
 use App\Enums\Kyc\Status as KycStatusEnum;
+use App\Enums\Kyc\Type as KycType;
 use App\Events\Kyc\KycVerificationCompleted;
 use App\Events\Kyc\KycVerificationFailed;
 use App\Events\Kyc\KycVerificationVerified;
@@ -26,15 +27,20 @@ class VerificationAction
             $connector = KycConnector::default()->connector();
             $verificationResource = $connector->verification();
 
-            if ($kyc->type === 'bvn') {
+            // Handle name parts
+            $nameParts = explode(' ', $user->name, 2);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+
+            if ($kyc->type === KycType::Bvn) {
                 $request = new BvnMatchRequest(
                     bvn: $kyc->id_number,
-                    firstName: $user->first_name,
-                    lastName: $user->last_name,
+                    firstName: $firstName,
+                    lastName: $lastName,
                     dob: $kyc->meta['dob'] ?? null,
                 );
                 $response = $verificationResource->bvnMatch($request);
-            } elseif ($kyc->type === 'nin') {
+            } elseif ($kyc->type === KycType::Nin) {
                 $request = new NinLookupRequest(
                     nin: $kyc->id_number,
                 );
@@ -42,9 +48,9 @@ class VerificationAction
             } else {
                 // Fallback to generic verify if type is unexpected
                 $request = new VerificationRequest(
-                    firstName: $user->first_name,
-                    lastName: $user->last_name,
-                    idType: $kyc->type,
+                    firstName: $firstName,
+                    lastName: $lastName,
+                    idType: $kyc->type->value,
                     idNumber: $kyc->id_number,
                     dob: $kyc->meta['dob'] ?? null,
                     phone: $kyc->meta['phone'] ?? null,

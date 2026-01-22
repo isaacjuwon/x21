@@ -6,8 +6,8 @@ namespace App\Enums;
 
 enum WalletType: string
 {
-    case MAIN = 'main';
-    case BONUS = 'bonus';
+    case Main = 'main';
+    case Bonus = 'bonus';
 
     /**
      * Check if a given value is a valid enum case.
@@ -35,8 +35,8 @@ enum WalletType: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::MAIN => 'Main Wallet',
-            self::BONUS => 'Bonus Wallet',
+            self::Main => 'Main Wallet',
+            self::Bonus => 'Bonus Wallet',
         };
     }
 
@@ -46,8 +46,8 @@ enum WalletType: string
     public static function getDepositableTypes(): array
     {
         return [
-            self::MAIN->value,
-            self::BONUS->value,
+            self::Main->value,
+            self::Bonus->value,
         ];
     }
 
@@ -57,8 +57,8 @@ enum WalletType: string
     public static function getPaymentOrder(): array
     {
         return [
-            self::MAIN->value,
-            self::BONUS->value,
+            self::Main->value,
+            self::Bonus->value,
         ];
     }
 }
