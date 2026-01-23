@@ -15,7 +15,7 @@
         <!-- Hero Section -->
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
             <div class="max-w-5xl mx-auto text-center">
-                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text text-foreground bg-linear-to-r from-primary via-accent to-secondary mb-8 reveal" 
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary via-accent to-secondary mb-8 reveal" 
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.2s">
                     {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
                 </h1>

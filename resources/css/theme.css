@@ -1,131 +1,90 @@
-/* By Sheaf.dev */
-
-:root {
-    /* Base Variables - Light Mode */
-    --primary: #1d9bf0;
-    --primary-fg: #ffffff;
-
-    --accent: #00a2ff;
-    --accent-fg: #ffffff;
-
-    --secondary: #64748b;
-    --secondary-fg: #ffffff;
-
-    --success: #00ba7c;
-    --success-fg: #ffffff;
-
-    --warning: #ffd400;
-    --warning-fg: #000000;
-
-    --error: #f4212e;
-    --error-fg: #ffffff;
-
-    --info: #1d9bf0;
-    --info-fg: #ffffff;
-
-    --neutral: #0f172a;
-    --neutral-fg: #ffffff;
-
-    --background: #f8fafc;
-    --background-content: #ffffff;
-
-    --foreground: #0f1419;
-    --foreground-content: #536471;
-
-    --border: #eff3f4;
-}
-
-html.dark {
-    /* Base Variables - Dark Mode */
-    --primary: #1d9bf0;
-    /* Restored brand primary in dark mode */
-    --primary-fg: #ffffff;
-
-    --accent: #00a2ff;
-    --accent-fg: #ffffff;
-
-    --secondary: #71767b;
-    --secondary-fg: #ffffff;
-
-    --success: #00ba7c;
-    --success-fg: #ffffff;
-
-    --warning: #ffd400;
-    --warning-fg: #000000;
-
-    --error: #f4212e;
-    --error-fg: #ffffff;
-
-    --info: #1d9bf0;
-    --info-fg: #ffffff;
-
-    --neutral: #16181c;
-    --neutral-fg: #71767b;
-
-    --background: #000000;
-    --background-content: #16181c;
-
-    --foreground: #eff3f4;
-    --foreground-content: #71767b;
-
-    --border: #2f3336;
-}
-
 @theme {
-    /* Map Tailwind Theme to our Base Variables */
-    --color-primary: var(--primary);
-    --color-primary-content: var(--primary);
-    --color-primary-fg: var(--primary-fg);
+    /* Main brand colors */
+    --color-primary: var(--color-blue-600);
+    --color-primary-content: var(--color-blue-700);
+    --color-primary-fg: var(--color-white);
 
-    --color-accent: var(--accent);
-    --color-accent-content: var(--accent);
-    --color-accent-fg: var(--accent-fg);
+    /* Secondary and Accent */
+    --color-secondary: var(--color-indigo-600);
+    --color-secondary-content: var(--color-indigo-700);
+    --color-secondary-fg: var(--color-white);
 
-    --color-secondary: var(--secondary);
-    --color-secondary-content: var(--secondary);
-    --color-secondary-fg: var(--secondary-fg);
+    --color-accent: var(--color-amber-500);
+    --color-accent-content: var(--color-amber-600);
+    --color-accent-fg: var(--color-neutral-900);
 
-    --color-success: var(--success);
-    --color-success-content: var(--success);
-    --color-success-fg: var(--success-fg);
+    /* Semantic colors */
+    --color-success: var(--color-green-600);
+    --color-error: var(--color-red-600);
+    --color-warning: var(--color-yellow-600);
 
-    --color-warning: var(--warning);
-    --color-warning-content: var(--warning);
-    --color-warning-fg: var(--warning-fg);
+    /* Radius controls */
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+}
 
-    --color-error: var(--error);
-    --color-error-content: var(--error);
-    --color-error-fg: var(--error-fg);
+@layer theme {
+    .dark {
+        --color-primary: var(--color-white) !important;
+        --color-primary-content: var(--color-white) !important;
+        --color-primary-fg: var(--color-neutral-800) !important;
 
-    --color-info: var(--info);
-    --color-info-content: var(--info);
-    --color-info-fg: var(--info-fg);
+        --sidebar-bg: var(--color-neutral-900);
+        --card-bg: var(--color-neutral-900);
+        --body-bg: var(--color-neutral-950);
+    }
+}
 
-    --color-neutral: var(--neutral);
-    --color-neutral-content: var(--neutral);
-    --color-neutral-fg: var(--neutral-fg);
+/* Component-Specific Tweaks via data-slots */
 
-    --color-background: var(--background);
-    --color-background-content: var(--background-content);
+/* Buttons: Branded with theme radius */
+[data-slot="button"] {
+    border-radius: var(--radius-field);
+    font-weight: 600;
+}
 
-    --color-foreground: var(--foreground);
-    --color-foreground-content: var(--foreground-content);
+/* Cards: Subtle borders and brand-aware shadows */
+[data-slot="card"] {
+    border-radius: var(--radius-box);
+    border: 1px solid color-mix(in oklab, var(--color-neutral-200), transparent 50%);
+    background-color: var(--color-white);
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    --color-border: var(--border);
+.dark [data-slot="card"] {
+    background-color: var(--card-bg);
+    border-color: color-mix(in oklab, var(--color-white), transparent 94%);
+}
 
-    /* radius variables */
-    --radius-field: 0.375rem;
-    --radius-box: 1rem;
+[data-slot="card"]:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 15px -3px color-mix(in oklab, var(--color-primary), transparent 90%);
+}
 
-    /* shadow variables */
-    --shadow-base: 0 1px 3px 0 rgb(29 155 240 / 0.1), 0 1px 2px -1px rgb(29 155 240 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(29 155 240 / 0.1), 0 2px 4px -2px rgb(29 155 240 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(29 155 240 / 0.1), 0 4px 6px -4px rgb(29 155 240 / 0.1);
+/* Form Controls */
+[data-slot="control"] {
+    border-radius: var(--radius-field);
+}
 
-    /* custom utilities */
-    --glass-background: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-blur: 12px;
+/* Icons: Subtle and responsive */
+[data-slot="icon"] {
+    color: var(--color-neutral-400);
+}
+
+.dark [data-slot="icon"] {
+    color: var(--color-neutral-500);
+}
+
+/* Badges: Bold and distinct */
+[data-slot="badge"] {
+    border-radius: 9999px;
+    font-weight: 700;
+}
+
+/* Headings: Branded for consistency */
+[data-slot="heading"] {
+    letter-spacing: -0.02em;
+    color: var(--color-primary);
 }
 
 /* Make all buttons extra rounded like Twitter */
