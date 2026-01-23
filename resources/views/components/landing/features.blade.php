@@ -4,9 +4,9 @@
     'items' => $layoutSettings->homepage_features_items,
 ])
 
-<section class="py-20 px-6" x-data="{ visible: false }" x-intersect.once="visible = true">
+<section class="py-20 px-6">
     <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16 reveal" :class="visible && 'reveal-active'">
+        <div class="text-center mb-16 reveal-active">
             <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary to-accent mb-4">
                 {{ $title }}
             </h2>
@@ -17,8 +17,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($items as $index => $item)
-                <div class="bg-gray-50/50 dark:bg-neutral-900/50 p-8 rounded-[2rem] border border-neutral-200 dark:border-neutral-800 reveal group hover:border-primary transition-all duration-300 shadow-sm" 
-                    :class="visible && 'reveal-active'" 
+                <div class="bg-gray-50/50 dark:bg-neutral-900/50 p-8 rounded-[2rem] border border-neutral-200 dark:border-neutral-800 reveal-active group hover:border-primary transition-all duration-300 shadow-sm" 
                     style="transition-delay: {{ ($index + 1) * 0.1 }}s">
                     <div class="w-12 h-12 bg-linear-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
                         <x-ui.icon :name="$item['icon'] ?? 'banknotes'" class="w-6 h-6" />

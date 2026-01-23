@@ -4,9 +4,9 @@
     'items' => $layoutSettings->homepage_faq_items,
 ])
 
-<section class="py-20 px-6" x-data="{ visible: false }" x-intersect.once="visible = true">
+<section class="py-20 px-6">
     <div class="max-w-3xl mx-auto">
-        <div class="text-center mb-16 reveal" :class="visible && 'reveal-active'">
+        <div class="text-center mb-16 reveal-active">
             <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
                 {{ $title }}
             </h2>
@@ -15,7 +15,7 @@
             </p>
         </div>
 
-        <div class="space-y-4 reveal" :class="visible && 'reveal-active'" style="transition-delay: 0.2s">
+        <div class="space-y-4 reveal-active" style="transition-delay: 0.2s">
             <x-ui.accordion>
                 @foreach($items as $index => $item)
                     <x-ui.accordion.item wire:key="faq-{{ $index }}" class="bg-gray-50/50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden mb-4 shadow-sm">
