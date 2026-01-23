@@ -4,7 +4,8 @@
     'items' => $layoutSettings->homepage_features_items,
 ])
 
-<section class="py-20 px-6">
+<section class="py-20 px-6 bg-primary/[0.03] dark:bg-transparent relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
     <div class="max-w-7xl mx-auto">
         <div class="text-center mb-16 reveal-active">
             <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary to-accent mb-4">

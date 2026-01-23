@@ -4,7 +4,8 @@
     'items' => $layoutSettings->homepage_faq_items,
 ])
 
-<section class="py-20 px-6">
+<section class="py-20 px-6 bg-amber-500/[0.02] dark:bg-transparent relative overflow-hidden">
+    <div class="absolute bottom-0 right-[-100px] w-[600px] h-[600px] bg-amber-500/5 blur-[100px] rounded-full pointer-events-none"></div>
     <div class="max-w-3xl mx-auto">
         <div class="text-center mb-16 reveal-active">
             <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
