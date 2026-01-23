@@ -1,5 +1,5 @@
 @use('App\Settings\LayoutSettings')
-<x-layouts::front :header="true">
+<x-layouts::front>
     <div class="relative min-h-screen  overflow-x-hidden" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 100)">
         
         <!-- Abstract Background Glows -->
@@ -19,7 +19,7 @@
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.2s">
                     {{ $layoutSettings->homepage_title ?? 'Financial Freedom for Everyone' }}
                 </h1>
-                <p class="text-lg lg:text-xl text-foreground-content max-w-2xl mx-auto leading-relaxed mb-12 reveal"
+                <p class="text-lg lg:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12 reveal"
                     :class="loaded && 'reveal-active'" style="transition-delay: 0.4s">
                     {{ $layoutSettings->homepage_description ?? 'Manage your loans, shares, and dividends in one place. Secure, transparent, and easy to use cooperative management system.' }}
                 </p>

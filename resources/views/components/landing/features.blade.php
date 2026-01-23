@@ -17,7 +17,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($items as $index => $item)
-                <div class="glass p-8 rounded-[2rem] border-white/5 reveal group hover:border-primary/30 transition-colors" 
+                <div class="bg-white dark:bg-neutral-900/50 p-8 rounded-[2rem] border border-neutral-200 dark:border-neutral-800 reveal group hover:border-primary transition-all duration-300" 
                     :class="visible && 'reveal-active'" 
                     style="transition-delay: {{ ($index + 1) * 0.1 }}s">
                     <div class="w-12 h-12 bg-linear-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">

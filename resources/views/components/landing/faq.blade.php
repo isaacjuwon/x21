@@ -18,7 +18,7 @@
         <div class="space-y-4 reveal" :class="visible && 'reveal-active'" style="transition-delay: 0.2s">
             <x-ui.accordion>
                 @foreach($items as $index => $item)
-                    <x-ui.accordion.item wire:key="faq-{{ $index }}" class="glass border-white/5 rounded-2xl overflow-hidden mb-4">
+                    <x-ui.accordion.item wire:key="faq-{{ $index }}" class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden mb-4">
                         <x-ui.accordion.trigger class="px-6 py-4 text-left font-bold text-slate-900 dark:text-white hover:bg-white/5">
                             {{ $item['question'] }}
                         </x-ui.accordion.trigger>

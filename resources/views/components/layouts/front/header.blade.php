@@ -4,18 +4,18 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-background text-foreground">
+    <body class="min-h-screen bg-white dark:bg-neutral-950 text-slate-900 dark:text-white">
      <x-ui.layout.main>
             @if($header)
-                <x-ui.layout.header class="fixed top-0 w-full z-50 px-6 py-6 border-none bg-transparent!">
-                    <div class="max-w-7xl mx-auto flex flex-1 justify-between items-center glass rounded-2xl px-6 py-3 border-white/10">
+                <x-ui.layout.header class="fixed top-0 w-full z-50 px-6 py-6 border-none bg-transparent">
+                    <div class="max-w-7xl mx-auto flex flex-1 justify-between items-center bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md shadow-sm rounded-2xl px-6 py-3 border border-neutral-200 dark:border-neutral-800">
                         <a href="/" wire:navigate class="flex items-center">
                              <x-app-logo class="h-8" />
                         </a>
                         
                         <div class="flex items-center gap-4 ml-auto">
                             @guest
-                                <x-ui.button variant="ghost" :href="route('login')" class="text-foreground-content">Login</x-ui.button>
+                                <x-ui.button variant="ghost" :href="route('login')" class="text-slate-600 dark:text-slate-400">Login</x-ui.button>
                                 <x-ui.button variant="primary" :href="route('register')" class="rounded-xl px-6">
                                     Get Started
                                 </x-ui.button>
