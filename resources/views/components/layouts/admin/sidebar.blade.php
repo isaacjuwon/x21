@@ -113,6 +113,13 @@
                         />
 
                         <x-ui.navlist.item 
+                            label="Referrals"
+                            icon="user-group"
+                            :href="route('admin.referrals.index')"
+                            :active="request()->routeIs('admin.referrals.*')"
+                        />
+
+                        <x-ui.navlist.item 
                             label="Wallets"
                             icon="wallet"
                             :href="route('admin.wallets.index')"
