@@ -22,6 +22,17 @@
         <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-linear-to-b from-primary/[0.05] via-transparent to-transparent -z-10"></div>
             <div class="max-w-5xl mx-auto text-center relative">
+                @if($layoutSettings->banner)
+                    <div class="mb-12 relative group reveal-active" style="transition-delay: 0.1s">
+                        <div class="absolute -inset-1 bg-linear-to-r from-primary/20 to-indigo-500/20 rounded-[2rem] blur-xl opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                        <div class="relative overflow-hidden rounded-[2rem] border border-neutral-200/50 dark:border-neutral-800/50 shadow-2xl shadow-primary/5">
+                            <img src="{{ Str::startsWith($layoutSettings->banner, ['http://', 'https://']) ? $layoutSettings->banner : Storage::url($layoutSettings->banner) }}" 
+                                 alt="Banner" 
+                                 class="w-full h-auto object-cover max-h-[400px] hover:scale-105 transition-transform duration-700">
+                        </div>
+                    </div>
+                @endif
+
                 <div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-3xl rounded-full opacity-50 -z-10 animate-pulse"></div>
                 <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/20 blur-3xl rounded-full opacity-50 -z-10 animate-pulse" style="animation-delay: 1s"></div>
                 
