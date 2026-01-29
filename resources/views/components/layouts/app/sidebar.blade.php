@@ -5,7 +5,7 @@
      
     </head>
     
-    <body class="min-h-screen bg-background text-foreground">
+    <body class="min-h-screen bg-neutral-100 dark:bg-neutral-900 text-foreground">
        <x-ui.layout>
             <x-ui.sidebar>
                 <x-slot:brand>
