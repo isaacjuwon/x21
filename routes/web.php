@@ -3,7 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::view('/', 'front.index')->name('home');
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return view('front.index');
+})->name('home');
 
 Route::post('/webhooks/paystack', \App\Http\Controllers\PaystackWebhookController::class)
     ->name('webhooks.paystack');
