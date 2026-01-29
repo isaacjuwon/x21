@@ -144,7 +144,7 @@ new class extends Component
 }; ?>
 
 <section class="w-full space-y-6">
-  <x-layouts.admin.settings heading="Layout Settings" subheading="Manage your application layout settingss">
+  <x-layouts.admin.settings heading="Layout Settings" subheading="Manage your application layout settings">
   
     <div class="w-full space-y-6 mb-4">
         <x-ui.card>
@@ -375,7 +375,7 @@ new class extends Component
     </div>
 
     <div class="flex justify-end">
-        <x-ui.button wire:click="save" color="primary">
+        <x-ui.button wire:click="save" variant="primary">
             Save Layout Settings
         </x-ui.button>
     </div>

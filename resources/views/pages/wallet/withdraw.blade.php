@@ -75,7 +75,7 @@ new #[Layout('layouts.app')] class extends Component
         description="Withdraw funds from your wallet to your bank account"
     />
 
-    <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border shadow-sm">
+    <div data-slot="card" class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
                 <x-ui.label>{{ __('Account Holder Name') }}</x-ui.label>
@@ -83,9 +83,9 @@ new #[Layout('layouts.app')] class extends Component
                     type="text"
                     value="{{ auth()->user()->name }}"
                     readonly
-                    class="bg-background opacity-70"
+                    class="bg-neutral-50 dark:bg-neutral-900/50 opacity-70 font-bold"
                  />
-                <p class="text-[10px] text-foreground-content mt-1 font-bold uppercase tracking-wider">Your bank account must be registered in this name</p>
+                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 font-bold uppercase tracking-widest">Your bank account must be registered in this name</p>
             </x-ui.field>
 
             <x-ui.field>
@@ -96,18 +96,18 @@ new #[Layout('layouts.app')] class extends Component
                     autofocus
                     min="100"
                     placeholder="Enter amount to withdraw"
-                    class="bg-background"
+                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
                  />
                 <x-ui.error name="amount" />
                 
                 @if($amount > 0)
-                    <div class="mt-3 p-3 bg-primary/5 rounded-xl border border-primary/10 space-y-2">
-                        <div class="flex justify-between text-xs font-medium">
-                            <span class="text-foreground-content">Withdrawal Fee:</span>
-                            <span class="text-foreground">{{ Number::currency($this->charges['fee']) }}</span>
+                    <div class="mt-3 p-3 bg-primary/5 rounded-[--radius-box] border border-primary/10 space-y-2">
+                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest">
+                            <span class="text-neutral-500 dark:text-neutral-400">Withdrawal Fee:</span>
+                            <span class="text-neutral-900 dark:text-white">{{ Number::currency($this->charges['fee']) }}</span>
                         </div>
                         <div class="flex justify-between text-sm font-bold border-t border-primary/10 pt-2">
-                            <span class="text-foreground-content">Total Deduction:</span>
+                            <span class="text-neutral-500 dark:text-neutral-400">Total Deduction:</span>
                             <span class="text-primary">{{ Number::currency($this->charges['total']) }}</span>
                         </div>
                     </div>
@@ -120,7 +120,7 @@ new #[Layout('layouts.app')] class extends Component
                     wire:model="account_number" 
                     type="text"
                     placeholder="Enter account number"
-                    class="bg-background"
+                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
                  />
                 <x-ui.error name="account_number" />
             </x-ui.field>
@@ -128,7 +128,7 @@ new #[Layout('layouts.app')] class extends Component
              <!-- Bank Select -->
             <x-ui.field>
                 <x-ui.label>{{ __('Bank') }}</x-ui.label>
-                <select wire:model="bank_code" class="w-full bg-background border-2 border-border text-foreground rounded-2xl p-4 focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                <select wire:model="bank_code" class="w-full bg-neutral-50 dark:bg-neutral-900/50 border-2 border-neutral-100 dark:border-neutral-700 text-neutral-900 dark:text-white rounded-[--radius-field] p-4 focus:ring-4 focus:ring-primary/10 transition-all font-bold text-sm">
                     <option value="">Select Bank</option>
                     @foreach($this->banks as $bank)
                         <option value="{{ $bank->code }}">{{ $bank->name }}</option>

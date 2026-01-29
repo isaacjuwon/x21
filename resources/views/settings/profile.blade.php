@@ -108,28 +108,28 @@ new class extends Component
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-8 mb-8">
                 <div class="relative">
                     @if(!is_null($avatar))
-                        <img src="{{ $avatar->temporaryUrl() }}" class="h-20 w-20 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700">
+                        <img src="{{ $avatar->temporaryUrl() }}" class="h-24 w-24 rounded-full object-cover border-4 border-neutral-100 dark:border-neutral-700 shadow-sm">
                     @elseif(auth()->user()->avatar_url)
-                        <img src="{{ auth()->user()->avatar_url }}" class="h-20 w-20 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700">
+                        <img src="{{ auth()->user()->avatar_url }}" class="h-24 w-24 rounded-full object-cover border-4 border-neutral-100 dark:border-neutral-700 shadow-sm">
                     @else
-                        <div class="h-20 w-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 border-2 border-gray-200 dark:border-gray-700">
-                            <span class="text-2xl font-bold">{{ auth()->user()->initials() }}</span>
+                        <div class="h-24 w-24 rounded-full bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center text-neutral-400 border-4 border-neutral-100 dark:border-neutral-700 shadow-sm">
+                            <span class="text-3xl font-bold">{{ auth()->user()->initials() }}</span>
                         </div>
                     @endif
                     
-                    <label for="avatar-upload" class="absolute bottom-0 right-0 p-1 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <x-ui.icon name="camera" class="w-4 h-4 text-gray-500" />
+                    <label for="avatar-upload" class="absolute bottom-1 right-1 p-2 bg-white dark:bg-neutral-800 rounded-full shadow-lg border border-neutral-100 dark:border-neutral-700 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-all hover:scale-110 active:scale-95">
+                        <x-ui.icon name="camera" class="w-4 h-4 text-neutral-500" />
                         <input type="file" wire:model="avatar" id="avatar-upload" class="hidden" accept="image/*">
                     </label>
                 </div>
                 
                 <div class="flex-1">
                     <x-ui.field>
-                        <x-ui.label>{{ __('Name') }}</x-ui.label>
-                        <x-ui.input wire:model="name" type="text" required autofocus autocomplete="name" />
+                        <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Full Name') }}</x-ui.label>
+                        <x-ui.input wire:model="name" type="text" required autofocus autocomplete="name" class="text-base font-bold tracking-widest h-14" />
                         <x-ui.error name="name" />
                     </x-ui.field>
                 </div>
@@ -137,18 +137,19 @@ new class extends Component
 
             <x-ui.error name="avatar" />
 
-            <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <x-ui.field>
-                    <x-ui.label>{{ __('Email') }}</x-ui.label>
-                    <x-ui.input wire:model="email" type="email" required autocomplete="email" />
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Email Address') }}</x-ui.label>
+                    <x-ui.input wire:model="email" type="email" required autocomplete="email" class="text-base font-bold tracking-widest h-14" />
                     <x-ui.error name="email" />
                 </x-ui.field>
 
                 <x-ui.field>
-                    <x-ui.label>{{ __('Phone Number') }}</x-ui.label>
-                    <x-ui.input wire:model="phone_number" type="tel" />
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Phone Number') }}</x-ui.label>
+                    <x-ui.input wire:model="phone_number" type="tel" class="text-base font-bold tracking-widest h-14" />
                     <x-ui.error name="phone_number" />
                 </x-ui.field>
+            </div>
 
                 @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
                     <div>
@@ -169,14 +170,39 @@ new class extends Component
                 @endif
             </div>
 
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <x-ui.button variant="primary" type="submit" class="w-full" data-test="update-profile-button">
-                        {{ __('Save') }}
-                    </x-ui.button>
+            {{-- Referral Link Section --}}
+            <div class="bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] p-6 border border-neutral-100 dark:border-neutral-700 space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-neutral-900 dark:text-white">{{ __('Referral Program') }}</h3>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{{ __('Share your referral link with friends and earn rewards when they join.') }}</p>
                 </div>
 
-                <x-action-message class="me-3" on="profile-updated">
+                <div class="flex gap-2">
+                    <x-ui.input 
+                        readonly 
+                        value="{{ auth()->user()->referral_link }}" 
+                        class="flex-1 bg-white dark:bg-neutral-800 font-mono text-[10px]" 
+                        id="referral-link"
+                    />
+                    <x-ui.button 
+                        type="button"
+                        variant="outline"
+                        x-on:click="
+                            navigator.clipboard.writeText('{{ auth()->user()->referral_link }}');
+                            $dispatch('toast', { type: 'success', message: 'Referral link copied!' });
+                        "
+                    >
+                        {{ __('Copy') }}
+                    </x-ui.button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 pt-4">
+                <x-ui.button variant="primary" type="submit" class="h-14 px-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20" data-test="update-profile-button">
+                    {{ __('Save Changes') }}
+                </x-ui.button>
+
+                <x-action-message class="text-xs font-bold text-success uppercase tracking-widest" on="profile-updated">
                     {{ __('Saved.') }}
                 </x-action-message>
             </div>

@@ -10,7 +10,7 @@ new #[Layout('layouts::app')] class extends Component
 {
     use HasToast;
 
-    #[Rule('required|string|regex:/^[0-9]{11}$/')]
+    #[Rule('required|string|regex:/^[0-9]{10,11}$/')]
     public string $phone_number = '';
 
     #[Rule('required|numeric|min:1')]
@@ -23,8 +23,10 @@ new #[Layout('layouts::app')] class extends Component
 
     public function validateRecipient(TransferFundAction $transferAction)
     {
+        $this->normalizePhoneNumber();
+
         $this->validate([
-            'phone_number' => 'required|string|regex:/^[0-9]{11}$/',
+            'phone_number' => 'required|string|regex:/^[0-9]{10,11}$/',
         ]);
 
         $result = $transferAction->validateRecipient($this->phone_number);
@@ -55,6 +57,8 @@ new #[Layout('layouts::app')] class extends Component
 
     public function confirmTransfer(TransferFundAction $transferAction)
     {
+        $this->normalizePhoneNumber();
+
         $this->validate();
 
         $data = [
@@ -83,6 +87,12 @@ new #[Layout('layouts::app')] class extends Component
         // Redirect to wallet index
         return $this->redirect(route('wallet.index'));
     }
+    protected function normalizePhoneNumber(): void
+    {
+        if (strlen($this->phone_number) === 10 && ! str_starts_with($this->phone_number, '0')) {
+            $this->phone_number = '0'.$this->phone_number;
+        }
+    }
 }; ?>
 
 <div class="max-w-xl mx-auto p-6">
@@ -91,7 +101,16 @@ new #[Layout('layouts::app')] class extends Component
         description="Transfer funds to another user via phone number"
     />
 
-    <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border shadow-sm">
+    <x-ui.alerts type="info" class="mb-6">
+        <x-slot:heading>
+            {{ __('Phone Number Format') }}
+        </x-slot:heading>
+        <x-slot:content>
+            {{ __('You can enter the recipient\'s 11-digit phone number starting with 0, or simply enter the 10 digits without the leading 0 (e.g., 80XXXXXXXX).') }}
+        </x-slot:content>
+    </x-ui.alerts>
+
+    <div data-slot="card" class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
         <form wire:submit="openConfirmModal" class="space-y-6">
             <x-ui.field>
                 <x-ui.label>{{ __('Recipient Phone Number') }}</x-ui.label>
@@ -101,12 +120,13 @@ new #[Layout('layouts::app')] class extends Component
                         type="text"
                         autofocus
                         placeholder="08012345678"
-                        class="flex-1 bg-background"
+                        class="flex-1 bg-neutral-50 dark:bg-neutral-900/50 font-bold"
                      />
                     <x-ui.button 
                         type="button" 
                         wire:click="validateRecipient" 
                         variant="outline"
+                        class="font-bold"
                     >
                         Verify
                     </x-ui.button>
@@ -126,10 +146,10 @@ new #[Layout('layouts::app')] class extends Component
                     type="number"
                     min="1"
                     placeholder="Enter amount to transfer"
-                    class="bg-background"
+                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
                  />
                 <x-ui.error name="amount" />
-                <p class="text-[10px] text-foreground-content mt-1 font-bold uppercase tracking-wider">Minimum transfer amount is ₦1</p>
+                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 font-bold uppercase tracking-widest">Minimum transfer amount is ₦1</p>
             </x-ui.field>
 
             <x-ui.field>
@@ -138,16 +158,16 @@ new #[Layout('layouts::app')] class extends Component
                     wire:model="notes" 
                     placeholder="Add a note for this transfer"
                     rows="3"
-                    class="bg-background"
+                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
                  />
                 <x-ui.error name="notes" />
             </x-ui.field>
 
             <div class="flex justify-end gap-3">
-                <x-ui.button tag="a" href="{{ route('wallet.index') }}" variant="outline">
+                <x-ui.button tag="a" href="{{ route('wallet.index') }}" variant="outline" class="font-bold">
                     Cancel
                 </x-ui.button>
-                <x-ui.button type="submit" variant="primary" :disabled="!$recipientData">
+                <x-ui.button type="submit" variant="primary" :disabled="!$recipientData" class="font-bold">
                     Transfer Funds
                 </x-ui.button>
             </div>
@@ -162,25 +182,25 @@ new #[Layout('layouts::app')] class extends Component
         width="md"
     >
         <div class="space-y-4">
-            <div class="bg-background rounded-2xl p-4 space-y-3 border border-border">
-                <div class="flex justify-between text-sm">
-                    <span class="text-foreground-content">Recipient:</span>
-                    <span class="font-bold text-foreground">{{ $recipientData['name'] ?? '' }}</span>
+            <div class="bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] p-4 space-y-3 border border-neutral-100 dark:border-neutral-700">
+                <div class="flex justify-between text-xs">
+                    <span class="text-neutral-500 dark:text-neutral-400">Recipient:</span>
+                    <span class="font-bold text-neutral-900 dark:text-white">{{ $recipientData['name'] ?? '' }}</span>
                 </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-foreground-content">Phone:</span>
-                    <span class="font-bold text-foreground">{{ $phone_number }}</span>
+                <div class="flex justify-between text-xs">
+                    <span class="text-neutral-500 dark:text-neutral-400">Phone:</span>
+                    <span class="font-bold text-neutral-900 dark:text-white">{{ $phone_number }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-sm text-foreground-content">Amount:</span>
-                    <span class="font-black text-xl text-success">
+                    <span class="text-xs text-neutral-500 dark:text-neutral-400">Amount:</span>
+                    <span class="font-bold text-xl text-success">
                         {{ Number::currency($amount) }}
                     </span>
                 </div>
                 @if($notes)
-                <div class="pt-2 border-t border-border">
-                    <p class="text-[10px] text-foreground-content font-bold uppercase tracking-wider">Notes:</p>
-                    <p class="text-sm text-foreground mt-1">{{ $notes }}</p>
+                <div class="pt-2 border-t border-neutral-100 dark:border-neutral-700">
+                    <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Notes:</p>
+                    <p class="text-xs text-neutral-900 dark:text-white mt-1">{{ $notes }}</p>
                 </div>
                 @endif
             </div>

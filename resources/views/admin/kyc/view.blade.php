@@ -55,21 +55,21 @@ new class extends Component
         <!-- User Information -->
         <x-ui.card class="md:col-span-1">
             <x-slot:header>
-                <h3 class="text-lg font-semibold">User Information</h3>
+                <h3 class="text-base font-bold text-neutral-900 dark:text-white">User Information</h3>
             </x-slot:header>
 
             <div class="space-y-4">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Name</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->user->name }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Name</p>
+                    <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->user->name }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->user->email }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Email</p>
+                    <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->user->email }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Phone</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->user->phone_number ?? 'N/A' }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Phone</p>
+                    <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->user->phone_number ?? 'N/A' }}</p>
                 </div>
             </div>
         </x-ui.card>
@@ -77,25 +77,25 @@ new class extends Component
         <!-- Verification Information -->
         <x-ui.card class="md:col-span-1">
             <x-slot:header>
-                <h3 class="text-lg font-semibold">Verification Information</h3>
+                <h3 class="text-base font-bold text-neutral-900 dark:text-white">Verification Information</h3>
             </x-slot:header>
 
             <div class="space-y-4">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Type</p>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Type</p>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
                         {{ strtoupper($this->verification->type) }}
                     </span>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Mode</p>
-                    <x-ui.badge :color="$this->verification->verification_mode === VerificationMode::Automatic ? 'info' : 'warning'">
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Mode</p>
+                    <x-ui.badge :color="$this->verification->verification_mode === VerificationMode::Automatic ? 'info' : 'warning'" class="text-[10px]">
                         {{ ucfirst($this->verification->verification_mode->value) }}
                     </x-ui.badge>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Submitted</p>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->created_at->format('M d, Y H:i') }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Submitted</p>
+                    <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->created_at->format('M d, Y H:i') }}</p>
                 </div>
             </div>
         </x-ui.card>
@@ -104,32 +104,32 @@ new class extends Component
     <!-- KYC Details -->
     <x-ui.card>
         <x-slot:header>
-            <h3 class="text-lg font-semibold">KYC Details</h3>
+            <h3 class="text-base font-bold text-neutral-900 dark:text-white">KYC Details</h3>
         </x-slot:header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">ID Number</p>
-                <p class="font-mono font-medium text-lg text-gray-900 dark:text-white">{{ $this->verification->id_number }}</p>
+                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">ID Number</p>
+                <p class="font-mono font-bold text-lg text-neutral-900 dark:text-white">{{ $this->verification->id_number }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Date of Birth</p>
-                <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->dob?->format('M d, Y') ?? 'Not provided' }}</p>
+                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Date of Birth</p>
+                <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->dob?->format('M d, Y') ?? 'Not provided' }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Phone</p>
-                <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->phone ?? 'Not provided' }}</p>
+                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Phone</p>
+                <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->phone ?? 'Not provided' }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                <p class="font-medium text-gray-900 dark:text-white">{{ $this->verification->email ?? 'Not provided' }}</p>
+                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Email</p>
+                <p class="font-bold text-neutral-900 dark:text-white text-sm">{{ $this->verification->email ?? 'Not provided' }}</p>
             </div>
         </div>
 
         @if($this->verification->document_path)
-            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Document</p>
-                <a href="{{ route('kyc.download-document', $this->verification) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <div class="mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-700">
+                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-3">Document</p>
+                <a href="{{ route('kyc.download-document', $this->verification) }}" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-[--radius-field] hover:bg-primary-600">
                     <x-ui.icon name="arrow-down-tray" class="w-4 h-4 mr-2" />
                     Download Document
                 </a>
@@ -141,17 +141,17 @@ new class extends Component
     @if($this->verification->verification_mode === VerificationMode::Automatic && $this->verification->response)
         <x-ui.card>
             <x-slot:header>
-                <h3 class="text-lg font-semibold">API Response</h3>
+                <h3 class="text-base font-bold text-neutral-900 dark:text-white">API Response</h3>
             </x-slot:header>
 
-            <pre class="bg-gray-100 dark:bg-gray-900 rounded p-4 text-xs overflow-x-auto text-gray-700 dark:text-gray-300">{{ json_encode($this->verification->response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+            <pre class="bg-neutral-100 dark:bg-neutral-900 rounded-[--radius-field] p-4 text-xs overflow-x-auto text-neutral-700 dark:text-neutral-300">{{ json_encode($this->verification->response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
         </x-ui.card>
     @endif
 
     <!-- Status Update Section -->
     <x-ui.card>
         <x-slot:header>
-            <h3 class="text-lg font-semibold">Update Status</h3>
+            <h3 class="text-base font-bold text-neutral-900 dark:text-white">Update Status</h3>
         </x-slot:header>
 
         <form wire:submit="updateStatus" class="space-y-4">
@@ -166,7 +166,7 @@ new class extends Component
             </x-ui.field>
 
             <div class="flex gap-3 justify-end">
-                <a href="{{ route('admin.kyc.index') }}" class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                <a href="{{ route('admin.kyc.index') }}" class="px-4 py-2 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 rounded-[--radius-field] hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
                     Back
                 </a>
                 <x-ui.button type="submit" variant="primary">

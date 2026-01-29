@@ -113,9 +113,9 @@ new class extends Component
                 <!-- Step 1: Operator Selection -->
                 <section class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">1. Select Distributor</h3>
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">1. Select Distributor</h3>
                         @if($this->operator_id)
-                            <span class="text-xs text-primary font-medium flex items-center">
+                            <span class="text-[10px] text-primary font-bold flex items-center uppercase tracking-widest">
                                 <x-ui.icon name="check-circle" class="size-4 mr-1" />
                                 {{ $this->selectedoperator?->name }}
                             </span>
@@ -128,18 +128,18 @@ new class extends Component
                                 type="button"
                                 wire:click="$set('operator_id', {{ $operator->id }})"
                                 @class([
-                                    'relative flex flex-col items-center p-5 rounded-2xl border-2 transition-all group',
+                                    'relative flex flex-col items-center p-5 rounded-[--radius-box] border-2 transition-all group',
                                     'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->operator_id == $operator->id,
-                                    'border-border bg-background hover:border-primary/50' => $this->operator_id != $operator->id
+                                    'border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 hover:border-primary/50' => $this->operator_id != $operator->id
                                 ])
                             >
-                                <div class="size-14 rounded-xl overflow-hidden mb-3 group-hover:scale-110 transition-transform">
+                                <div class="size-14 rounded-[--radius-field] overflow-hidden mb-3 group-hover:scale-110 transition-transform">
                                     <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
                                 </div>
                                 <span @class([
-                                    'text-[10px] font-black uppercase tracking-wider text-center leading-tight',
+                                    'text-[10px] font-bold uppercase tracking-widest text-center leading-tight',
                                     'text-primary' => $this->operator_id == $operator->id,
-                                    'text-foreground-content' => $this->operator_id != $operator->id
+                                    'text-neutral-500 dark:text-neutral-400' => $this->operator_id != $operator->id
                                 ])>{{ $operator->name }}</span>
                                 
                                 @if($this->operator_id == $operator->id)
@@ -161,9 +161,9 @@ new class extends Component
                 <!-- Step 2: Meter Type -->
                 <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
                     <div class="flex items-center justify-between">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">2. Meter Type</h3>
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">2. Meter Type</h3>
                         @if($this->meter_type)
-                            <span class="text-xs text-primary font-bold uppercase">{{ $this->meter_type }}</span>
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-widest">{{ $this->meter_type }}</span>
                         @endif
                     </div>
 
@@ -173,9 +173,9 @@ new class extends Component
                                 type="button" 
                                 wire:click="$set('meter_type', '{{ $type }}')"
                                 @class([
-                                    'flex-1 py-4 rounded-2xl border-2 font-black uppercase tracking-widest text-xs transition-all',
+                                    'flex-1 py-4 rounded-[--radius-box] border-2 font-bold uppercase tracking-widest text-[10px] transition-all',
                                     'border-primary bg-primary text-white shadow-lg shadow-primary/20' => $this->meter_type == $type,
-                                    'border-border text-foreground-content bg-background hover:border-primary/30' => $this->meter_type != $type
+                                    'border-neutral-100 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-900/50 hover:border-primary/30' => $this->meter_type != $type
                                 ])
                             >
                                 {{ $type }}
@@ -192,9 +192,9 @@ new class extends Component
 
                 <!-- Step 3: Meter Number -->
                 <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_type])>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">3. Meter Number</h3>
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">3. Meter Number</h3>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-foreground-content">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-neutral-400">
                             <x-ui.icon name="hashtag" class="size-6" />
                         </div>
                         <input 
@@ -202,8 +202,8 @@ new class extends Component
                             wire:model.live.debounce.50ms="meter_number"
                             placeholder="Enter your meter number" 
                             @class([
-                                'w-full pl-14 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold tracking-widest placeholder:text-foreground-content/50',
-                                'border-border focus:border-primary' => !$errors->has('meter_number'),
+                                'w-full pl-14 pr-4 py-5 bg-neutral-50 dark:bg-neutral-900/50 border-2 rounded-[--radius-box] focus:ring-4 focus:ring-primary/10 transition-all text-base font-bold tracking-widest placeholder:text-neutral-500/50',
+                                'border-neutral-100 dark:border-neutral-700 focus:border-primary' => !$errors->has('meter_number'),
                                 'border-error focus:border-error' => $errors->has('meter_number'),
                             ])
                         >
@@ -218,9 +218,9 @@ new class extends Component
 
                 <!-- Step 4: Amount -->
                 <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->meter_number])>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-foreground">4. Amount</h3>
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">4. Amount</h3>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-primary font-black text-2xl">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-primary font-bold text-xl">
                             ₦
                         </div>
                         <input 
@@ -228,8 +228,8 @@ new class extends Component
                             wire:model.live.debounce.50ms="amount"
                             placeholder="0.00" 
                             @class([
-                                'w-full pl-12 pr-4 py-5 bg-background border-2 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all text-3xl font-black placeholder:text-foreground-content/30',
-                                'border-border focus:border-primary' => !$errors->has('amount'),
+                                'w-full pl-12 pr-4 py-5 bg-neutral-50 dark:bg-neutral-900/50 border-2 rounded-[--radius-box] focus:ring-4 focus:ring-primary/10 transition-all text-xl font-bold placeholder:text-neutral-500/30',
+                                'border-neutral-100 dark:border-neutral-700 focus:border-primary' => !$errors->has('amount'),
                                 'border-error focus:border-error' => $errors->has('amount'),
                             ])
                         >
@@ -247,37 +247,37 @@ new class extends Component
         <!-- Sidebar Summary -->
         <div class="lg:col-span-1">
             <div class="sticky top-24 space-y-6">
-                <div class="bg-background-content rounded-3xl shadow-xl overflow-hidden border border-border">
-                    <div class="p-6 bg-primary border-b border-primary-fg/10">
-                        <h4 class="text-primary-fg font-bold uppercase tracking-widest text-xs">Payment Summary</h4>
+                <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-xl overflow-hidden border border-neutral-100 dark:border-neutral-700">
+                    <div class="p-6 bg-primary border-b border-white/10">
+                        <h4 class="text-white font-bold uppercase tracking-widest text-[10px]">Payment Summary</h4>
                     </div>
                     
                     <div class="p-6 space-y-6">
                         @if($this->selectedoperator)
                             <div class="flex items-center gap-4">
-                                <img src="{{ $this->selectedoperator->image_url }}" alt="" class="size-14 rounded-2xl object-cover shadow-md">
+                                <img src="{{ $this->selectedoperator->image_url }}" alt="" class="size-14 rounded-[--radius-field] object-cover shadow-md">
                                 <div>
-                                    <p class="text-xs text-foreground-content font-bold uppercase tracking-wider">Distributor</p>
-                                    <p class="font-black text-foreground uppercase text-sm leading-tight">{{ $this->selectedoperator->name }}</p>
+                                    <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Distributor</p>
+                                    <p class="font-bold text-neutral-900 dark:text-white uppercase text-base leading-tight">{{ $this->selectedoperator->name }}</p>
                                 </div>
                             </div>
                         @endif
 
                         @if($this->amount > 0)
                             <div class="space-y-1">
-                                <p class="text-xs text-foreground-content font-bold uppercase tracking-wider">Total Charge</p>
-                                <p class="font-black text-foreground text-3xl leading-tight">{{ Number::currency($this->amount) }}</p>
+                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Total Charge</p>
+                                <p class="font-bold text-neutral-900 dark:text-white text-xl leading-tight">{{ Number::currency($this->amount) }}</p>
                                 <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 bg-warning/10 rounded text-[10px] font-bold text-warning uppercase tracking-tighter">{{ $this->meter_type ?? 'Meter' }}</span>
-                                    <span class="text-[10px] text-foreground-content/70 font-medium">Token instant delivery</span>
+                                    <span class="px-2 py-0.5 bg-warning/10 rounded text-[10px] font-bold text-warning uppercase tracking-widest">{{ $this->meter_type ?? 'Meter' }}</span>
+                                    <span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Token instant delivery</span>
                                 </div>
                             </div>
                         @else
                             <div class="py-12 text-center">
-                                <div class="size-16 bg-background rounded-2xl flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-border">
-                                    <x-ui.icon name="light-bulb" class="size-8 text-foreground-content/30" />
+                                <div class="size-16 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-neutral-100 dark:border-neutral-700">
+                                    <x-ui.icon name="light-bulb" class="size-8 text-neutral-300 dark:text-neutral-500" />
                                 </div>
-                                <p class="text-xs text-foreground-content font-medium max-w-[150px] mx-auto">Complete the form to see your payment summary</p>
+                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold max-w-[150px] mx-auto uppercase tracking-widest">Complete the form to see summary</p>
                             </div>
                         @endif
 
@@ -285,23 +285,23 @@ new class extends Component
                             wire:click="save"
                             variant="primary" 
                             icon="paper-airplane" 
-                            class="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
+                            class="w-full h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
                             :disabled="!$this->operator_id || !$this->meter_number || $this->amount < 100"
                         >
                             <span>Pay Bill</span>
                         </x-ui.button>
                         
-                        <p class="text-[10px] text-foreground-content text-center font-medium leading-relaxed">
+                        <p class="text-[10px] text-neutral-500 dark:text-neutral-400 text-center font-bold uppercase tracking-widest leading-relaxed">
                             Your token will be displayed on screen and sent via SMS/Email after a successful payment.
                         </p>
                     </div>
                 </div>
 
                 <!-- Wallet info quick display -->
-                <div class="bg-accent rounded-3xl p-5 text-white shadow-lg overflow-hidden relative group">
+                <div class="bg-accent rounded-[--radius-box] p-5 text-white shadow-lg overflow-hidden relative group">
                     <div class="relative z-10">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-primary-fg/80 mb-1">Current Balance</p>
-                        <p class="text-2xl font-black">{{ Number::currency(auth()->user()->wallet_balance) }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/80 mb-1">Current Balance</p>
+                        <p class="text-2xl font-bold">{{ Number::currency(auth()->user()->wallet_balance) }}</p>
                     </div>
                     <x-ui.icon name="wallet" class="absolute -right-6 -bottom-6 size-28 text-white/10 group-hover:scale-110 transition-transform" />
                 </div>
@@ -312,33 +312,33 @@ new class extends Component
     <!-- Confirmation Modal Refined -->
     <x-ui.modal id="confirm-purchase" heading="Review Electricity Bill">
         <div class="space-y-6">
-            <div class="p-5 bg-background rounded-3xl border border-border">
+            <div class="p-5 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700">
                 <div class="flex items-center gap-5 mb-8">
-                    <div class="size-20 rounded-2xl bg-background-content p-2 shadow-sm border border-border">
-                        <img src="{{ $this->selectedoperator?->image_url }}" alt="" class="size-full object-cover rounded-xl">
+                    <div class="size-20 rounded-[--radius-field] bg-white dark:bg-neutral-800 p-2 shadow-sm border border-neutral-100 dark:border-neutral-700">
+                        <img src="{{ $this->selectedoperator?->image_url }}" alt="" class="size-full object-cover rounded-[--radius-field]">
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-foreground-content uppercase tracking-widest mb-1">Utility Provider</p>
-                        <h4 class="text-2xl font-black text-foreground leading-tight mb-1">{{ $this->selectedoperator?->name }}</h4>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Utility Provider</p>
+                        <h4 class="text-xl font-bold text-neutral-900 dark:text-white leading-tight mb-1">{{ $this->selectedoperator?->name }}</h4>
                         <div class="flex gap-2">
-                           <span class="px-2 py-1 rounded-lg bg-background text-foreground-content text-[10px] font-black uppercase">{{ $this->meter_type }}</span>
-                           <span class="px-2 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase">Instant Token</span>
+                           <span class="px-2 py-1 rounded-[--radius-field] bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 text-[10px] font-bold uppercase tracking-widest">{{ $this->meter_type }}</span>
+                           <span class="px-2 py-1 rounded-[--radius-field] bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">Instant Token</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-y-6">
                     <div class="space-y-1">
-                        <p class="text-[10px] font-bold text-foreground-content uppercase tracking-widest">Meter Number</p>
-                        <p class="text-xl font-black tracking-widest text-foreground">{{ $this->meter_number }}</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Meter Number</p>
+                        <p class="text-lg font-bold tracking-widest text-neutral-900 dark:text-white">{{ $this->meter_number }}</p>
                     </div>
                     <div class="space-y-1 text-right">
-                        <p class="text-[10px] font-bold text-foreground-content uppercase tracking-widest">Transaction Fee</p>
-                        <p class="text-xl font-black text-success uppercase transition-all">₹0.00</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Transaction Fee</p>
+                        <p class="text-lg font-bold text-success uppercase tracking-widest transition-all">FREE</p>
                     </div>
-                    <div class="col-span-2 pt-6 border-t border-border flex items-center justify-between">
-                        <p class="text-sm font-black text-foreground-content uppercase">Total to Pay</p>
-                        <p class="text-3xl font-black text-primary">{{ Number::currency($this->amount) }}</p>
+                    <div class="col-span-2 pt-6 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Total to Pay</p>
+                        <p class="text-2xl font-bold text-primary">{{ Number::currency($this->amount) }}</p>
                     </div>
                 </div>
             </div>
@@ -350,10 +350,10 @@ new class extends Component
         
         <x-slot name="footer">
             <div class="flex gap-4 w-full">
-                <x-ui.button x-on:click="$data.close();" variant="outline" class="flex-1 h-14 rounded-2xl font-black uppercase tracking-widest text-xs">
+                <x-ui.button x-on:click="$data.close();" variant="outline" class="flex-1 h-14 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px]">
                     Go Back
                 </x-ui.button>
-                <x-ui.button x-on:click="$wire.confirmation()" variant="primary" class="flex-1 h-14 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20">
+                <x-ui.button x-on:click="$wire.confirmation()" variant="primary" class="flex-1 h-14 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20">
                     Confirm & Pay
                 </x-ui.button>
             </div>

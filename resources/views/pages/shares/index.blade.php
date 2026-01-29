@@ -83,23 +83,23 @@ new class extends Component
 
         <div class="mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <x-ui.card class="bg-primary/5 border-primary/20 overflow-hidden">
+                <x-ui.card class="bg-primary/5 border-primary/20 overflow-hidden shadow-none">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Total Portfolio</span>
-                        <span class="block text-xl sm:text-2xl font-bold text-primary truncate" title="{{ number_format($this->totalShares) }}">{{ number_format($this->totalShares) }}</span>
+                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Total Portfolio</span>
+                        <span class="block text-xl font-bold text-primary truncate" title="{{ number_format($this->totalShares) }}">{{ number_format($this->totalShares) }}</span>
                     </div>
                 </x-ui.card>
-                <x-ui.card class="bg-success/5 border-success/20 overflow-hidden">
+                <x-ui.card class="bg-success/5 border-success/20 overflow-hidden shadow-none">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Mature Shares</span>
-                        <span class="block text-xl sm:text-2xl font-bold text-success-600 truncate" title="{{ number_format($this->matureSharesCount) }}">{{ number_format($this->matureSharesCount) }}</span>
-                        <span class="text-[10px] text-gray-500 uppercase tracking-tighter">Eligible for Dividends</span>
+                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Mature Shares</span>
+                        <span class="block text-xl font-bold text-success truncate" title="{{ number_format($this->matureSharesCount) }}">{{ number_format($this->matureSharesCount) }}</span>
+                        <span class="text-[10px] text-success/70 font-bold uppercase tracking-widest">Eligible Dividend</span>
                     </div>
                 </x-ui.card>
-                <x-ui.card class="overflow-hidden border border-border">
+                <x-ui.card class="overflow-hidden border-neutral-100 dark:border-neutral-700 shadow-none bg-neutral-50 dark:bg-neutral-900/50">
                     <div class="text-center">
-                        <span class="block text-sm text-gray-600 dark:text-neutral-400">Estimated Value</span>
-                        <span class="block text-xl sm:text-2xl font-bold text-foreground truncate" title="{{ Number::currency($this->totalValue) }}">{{ Number::currency($this->totalValue) }}</span>
+                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Estimated Value</span>
+                        <span class="block text-xl font-bold text-neutral-900 dark:text-white truncate" title="{{ Number::currency($this->totalValue) }}">{{ Number::currency($this->totalValue) }}</span>
                     </div>
                 </x-ui.card>
             </div>
@@ -117,16 +117,16 @@ new class extends Component
             </x-ui.alerts>
         @else
             <div class="overflow-x-auto mb-6">
-                <table class="min-w-full divide-y border dark:border-gray-700 divide-gray-200">
-                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                <table class="min-w-full divide-y border border-neutral-100 dark:border-neutral-700 divide-neutral-100 dark:divide-neutral-700">
+                    <thead class="bg-neutral-50 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 uppercase tracking-widest text-[10px] font-bold">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Allocation Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Quantity</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Maturity</th>
+                            <th scope="col" class="px-6 py-4 text-left">Allocation Date</th>
+                            <th scope="col" class="px-6 py-4 text-left">Quantity</th>
+                            <th scope="col" class="px-6 py-4 text-left">Status</th>
+                            <th scope="col" class="px-6 py-4 text-left">Maturity</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-700">
                         @foreach($this->shares as $share)
                             @php
                                 $isMature = $share->status === \App\Enums\ShareStatus::APPROVED && 
@@ -136,32 +136,32 @@ new class extends Component
                                     : null;
                             @endphp
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-5 whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400 font-bold">
                                     {{ $share->created_at->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
                                     {{ number_format($share->quantity) }} Units
-                                    <div class="text-[10px] text-gray-400 font-normal truncate max-w-[120px]" title="Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}">
+                                    <div class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-1 truncate max-w-[120px]" title="Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}">
                                         Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <x-ui.badge :color="$share->status->getColor()">
+                                <td class="px-6 py-5 whitespace-nowrap">
+                                    <x-ui.badge :color="$share->status->getColor()" class="text-[10px] font-bold uppercase tracking-widest">
                                         {{ $share->status->getLabel() }}
                                     </x-ui.badge>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold uppercase tracking-widest">
                                     @if($share->status === \App\Enums\ShareStatus::PENDING)
-                                        <span class="text-gray-400 italic">Awaiting Approval</span>
+                                        <span class="text-neutral-400 italic">Awaiting Approval</span>
                                     @elseif($isMature)
-                                        <span class="text-success-600 font-medium inline-flex items-center">
+                                        <span class="text-success font-bold inline-flex items-center">
                                             <x-ui.icon name="check-circle" class="w-4 h-4 mr-1" />
                                             Mature
                                         </span>
                                     @else
                                         <div class="flex flex-col">
-                                            <span class="text-amber-600 font-medium">Immature</span>
-                                            <span class="text-[10px] text-gray-500">Mature in {{ $daysUntilMature }} days</span>
+                                            <span class="text-amber-500 font-bold">Immature</span>
+                                            <span class="text-[10px] text-neutral-500 lowercase">in {{ $daysUntilMature }} days</span>
                                         </div>
                                     @endif
                                 </td>

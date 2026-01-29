@@ -109,8 +109,8 @@ new class extends Component
 <div class="p-6 space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <x-ui.heading>Loan Profile</x-ui.heading>
-            <p class="text-neutral-500 dark:text-neutral-400">#{{ $loan->id }} &bull; {{ $loan->user->name }}</p>
+            <x-ui.heading variant="h1" class="text-xl font-bold text-neutral-900 dark:text-white">Loan Profile</x-ui.heading>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">#{{ $loan->id }} &bull; {{ $loan->user->name }}</p>
         </div>
         <div class="flex items-center gap-2">
             <x-ui.button tag="a" href="{{ route('admin.loans.index') }}" variant="ghost" icon="arrow-left">Back</x-ui.button>
@@ -146,8 +146,8 @@ new class extends Component
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative">
             <div class="relative z-10 overflow-hidden">
-                <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Total Repayment</p>
-                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-neutral-900 dark:text-white truncate" title="{{ Number::currency($loan->total_repayment) }}">{{ Number::currency($loan->total_repayment) }}</h3>
+                <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Total Repayment</p>
+                <h3 class="text-xl font-extrabold mt-1 text-neutral-900 dark:text-white truncate" title="{{ Number::currency($loan->total_repayment) }}">{{ Number::currency($loan->total_repayment) }}</h3>
                 <p class="text-[10px] text-neutral-400 mt-1 truncate">{{ Number::currency($loan->amount) }} + Interest</p>
             </div>
             <div class="absolute -right-4 -bottom-4 opacity-5 dark:opacity-10">
@@ -157,29 +157,29 @@ new class extends Component
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative">
             <div class="relative z-10 overflow-hidden">
-                <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Amount Paid</p>
-                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-green-600 dark:text-green-500 truncate" title="{{ Number::currency($loan->amount_paid) }}">{{ Number::currency($loan->amount_paid) }}</h3>
+                <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Amount Paid</p>
+                <h3 class="text-xl font-extrabold mt-1 text-success truncate" title="{{ Number::currency($loan->amount_paid) }}">{{ Number::currency($loan->amount_paid) }}</h3>
                 <div class="flex items-center gap-2 mt-2">
                     <div class="flex-1 h-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-green-500 rounded-full transition-all duration-500" style="width: {{ $loan->progress_percentage }}%"></div>
+                        <div class="h-full bg-success rounded-full transition-all duration-500" style="width: {{ $loan->progress_percentage }}%"></div>
                     </div>
-                    <span class="text-[10px] font-medium">{{ $loan->progress_percentage }}%</span>
+                    <span class="text-[10px] font-bold">{{ $loan->progress_percentage }}%</span>
                 </div>
             </div>
         </x-ui.card>
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative border-red-500/20">
             <div class="relative z-10 overflow-hidden">
-                <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Remaining Balance</p>
-                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-red-600 dark:text-red-500 truncate" title="{{ Number::currency($loan->balance_remaining) }}">{{ Number::currency($loan->balance_remaining) }}</h3>
+                <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Remaining Balance</p>
+                <h3 class="text-xl font-extrabold mt-1 text-error truncate" title="{{ Number::currency($loan->balance_remaining) }}">{{ Number::currency($loan->balance_remaining) }}</h3>
                 <p class="text-[10px] text-neutral-400 mt-1">{{ $loan->installment_months }} Months Plan</p>
             </div>
         </x-ui.card>
 
         <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative bg-neutral-900 border-neutral-800 dark:bg-white dark:border-white">
             <div class="relative z-10 overflow-hidden">
-                <p class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Next Payment</p>
-                <h3 class="text-xl sm:text-2xl font-bold mt-1 text-white dark:text-neutral-900 truncate">
+                <p class="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">Next Payment</p>
+                <h3 class="text-xl font-extrabold mt-1 text-white dark:text-neutral-900 truncate">
                     {{ $loan->next_payment_date ? $loan->next_payment_date->format('M d, Y') : 'N/A' }}
                 </h3>
                 <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 truncate">Amount: {{ Number::currency($loan->monthly_payment ?? 0) }}</p>
@@ -191,25 +191,25 @@ new class extends Component
         <!-- Repayment Schedule -->
         <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center justify-between">
-                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Repayment History</h3>
+                <h3 class="text-base font-bold text-neutral-900 dark:text-white">Repayment History</h3>
             </div>
             <x-ui.table>
                 <x-slot:header>
-                    <x-ui.table.header>Date</x-ui.table.header>
-                    <x-ui.table.header>Reference</x-ui.table.header>
-                    <x-ui.table.header>Amount</x-ui.table.header>
-                    <x-ui.table.header>Balance After</x-ui.table.header>
-                    <x-ui.table.header>Status</x-ui.table.header>
+                    <x-ui.table.header class="text-[10px] font-bold uppercase tracking-widest">Date</x-ui.table.header>
+                    <x-ui.table.header class="text-[10px] font-bold uppercase tracking-widest">Reference</x-ui.table.header>
+                    <x-ui.table.header class="text-[10px] font-bold uppercase tracking-widest">Amount</x-ui.table.header>
+                    <x-ui.table.header class="text-[10px] font-bold uppercase tracking-widest">Balance After</x-ui.table.header>
+                    <x-ui.table.header class="text-[10px] font-bold uppercase tracking-widest">Status</x-ui.table.header>
                 </x-slot:header>
                 <x-slot:body>
                     @forelse($loan->payments as $payment)
-                        <x-ui.table.row>
-                            <x-ui.table.cell class="font-medium">{{ $payment->created_at->format('M d, Y') }}</x-ui.table.cell>
-                            <x-ui.table.cell class="text-neutral-500 uppercase text-xs">{{ $payment->reference ?? 'N/A' }}</x-ui.table.cell>
-                            <x-ui.table.cell class="text-green-600 font-semibold">{{ Number::currency($payment->amount) }}</x-ui.table.cell>
-                            <x-ui.table.cell>{{ Number::currency($payment->balance_after) }}</x-ui.table.cell>
+                        <x-ui.table.row class="text-xs">
+                            <x-ui.table.cell class="font-bold text-neutral-900 dark:text-white">{{ $payment->created_at->format('M d, Y') }}</x-ui.table.cell>
+                            <x-ui.table.cell class="text-neutral-500 uppercase text-[10px] tracking-widest">{{ $payment->reference ?? 'N/A' }}</x-ui.table.cell>
+                            <x-ui.table.cell class="text-success font-bold">{{ Number::currency($payment->amount) }}</x-ui.table.cell>
+                            <x-ui.table.cell class="text-neutral-500">{{ Number::currency($payment->balance_after) }}</x-ui.table.cell>
                             <x-ui.table.cell>
-                                <x-ui.badge color="success">Paid</x-ui.badge>
+                                <x-ui.badge color="success" class="text-[10px]">Paid</x-ui.badge>
                             </x-ui.table.cell>
                         </x-ui.table.row>
                     @empty
@@ -226,33 +226,33 @@ new class extends Component
         <!-- Details & Status Update -->
         <div class="space-y-6">
             <x-ui.card class="p-6">
-                <h3 class="text-lg font-bold mb-4 text-neutral-900 dark:text-white">Loan Details</h3>
+                <h3 class="text-base font-bold mb-4 text-neutral-900 dark:text-white">Loan Details</h3>
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between text-sm py-2 border-b border-black/5 dark:border-white/5">
-                        <span class="text-neutral-500">Interest Rate</span>
-                        <span class="font-medium text-neutral-900 dark:text-white">{{ $loan->interest_rate }}%</span>
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-neutral-100 dark:border-neutral-700/50">
+                        <span class="text-neutral-500 uppercase tracking-widest text-[10px] font-bold">Interest Rate</span>
+                        <span class="font-bold text-neutral-900 dark:text-white">{{ $loan->interest_rate }}%</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm py-2 border-b border-black/5 dark:border-white/5">
-                        <span class="text-neutral-500">Duration</span>
-                        <span class="font-medium text-neutral-900 dark:text-white">{{ $loan->installment_months }} Months</span>
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-neutral-100 dark:border-neutral-700/50">
+                        <span class="text-neutral-500 uppercase tracking-widest text-[10px] font-bold">Duration</span>
+                        <span class="font-bold text-neutral-900 dark:text-white">{{ $loan->installment_months }} Months</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm py-2 border-b border-black/5 dark:border-white/5">
-                        <span class="text-neutral-500">Monthly Installment</span>
-                        <span class="font-medium text-neutral-900 dark:text-white">{{ Number::currency($loan->monthly_payment ?? 0) }}</span>
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-neutral-100 dark:border-neutral-700/50">
+                        <span class="text-neutral-500 uppercase tracking-widest text-[10px] font-bold">Monthly Installment</span>
+                        <span class="font-bold text-neutral-900 dark:text-white">{{ Number::currency($loan->monthly_payment ?? 0) }}</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm py-2 border-b border-black/5 dark:border-white/5">
-                        <span class="text-neutral-500">Shares Required</span>
-                        <span class="font-medium text-neutral-900 dark:text-white">{{ $loan->shares_required }} Units</span>
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-neutral-100 dark:border-neutral-700/50">
+                        <span class="text-neutral-500 uppercase tracking-widest text-[10px] font-bold">Shares Required</span>
+                        <span class="font-bold text-neutral-900 dark:text-white">{{ $loan->shares_required }} Units</span>
                     </div>
-                    <div class="flex items-center justify-between text-sm py-2">
-                        <span class="text-neutral-500">Current Status</span>
-                        <x-ui.badge :color="$loan->status_badge">{{ $loan->status->getLabel() }}</x-ui.badge>
+                    <div class="flex items-center justify-between text-xs py-2">
+                        <span class="text-neutral-500 uppercase tracking-widest text-[10px] font-bold">Current Status</span>
+                        <x-ui.badge :color="$loan->status_badge" class="text-[10px]">{{ $loan->status->getLabel() }}</x-ui.badge>
                     </div>
                 </div>
             </x-ui.card>
 
             <x-ui.card class="p-6">
-                <h3 class="text-lg font-bold mb-4 text-neutral-900 dark:text-white">Update Status</h3>
+                <h3 class="text-base font-bold mb-4 text-neutral-900 dark:text-white">Update Status</h3>
                 <form wire:submit="save" class="space-y-4">
                     <x-ui.field>
                         <x-ui.label for="status">Manual Override</x-ui.label>

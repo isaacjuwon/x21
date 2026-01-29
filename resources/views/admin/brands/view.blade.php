@@ -100,7 +100,7 @@ new class extends Component
                 <x-ui.label for="view_image">Logo</x-ui.label>
                 @if($brand->image_url)
                     <div class="mb-2">
-                        <img src="{{ $brand->image_url }}" alt="{{ $brand->name }}" class="h-16 w-16 object-contain rounded-lg border border-gray-200 dark:border-gray-700">
+                        <img src="{{ $brand->image_url }}" alt="{{ $brand->name }}" class="h-16 w-16 object-contain rounded-[--radius-field] border border-neutral-200 dark:border-neutral-700">
                     </div>
                 @endif
                 <x-ui.input type="file" wire:model="image" id="view_image" />
@@ -115,8 +115,8 @@ new class extends Component
             </x-ui.field>
 
             <div class="flex items-center gap-2">
-                <x-ui.checkbox wire:model="status" id="view_status" />
-                <x-ui.label for="view_status" class="mb-0">Active</x-ui.label>
+                <x-ui.checkbox wire:model="status" id="view_status" class="rounded-[--radius-field]" />
+                <x-ui.label for="view_status" class="mb-0 text-xs font-bold">Active</x-ui.label>
             </div>
 
             <div class="flex justify-between pt-4">

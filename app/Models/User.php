@@ -12,15 +12,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Spatie\Permission\Traits\HasRoles;
-use Spatie\MediaLibrary\HasMedia;
+use App\Concerns\HasReferrals;
+use App\Models\Concerns\IsVerified;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Enums\Media\MediaCollectionType;
 
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasLoans, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasLoans, HasReferrals, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
     use InteractsWithMedia;
 
     /**
@@ -107,6 +107,11 @@ class User extends Authenticatable implements HasMedia
     {
         static::created(function (User $user) {
             // Assign default 'user' role to newly created users
+            if (!$user->referral_code) {
+                $user->referral_code = static::generateReferralCode();
+                $user->saveQuietly();
+            }
+
             $user->assignRole('user');
 
             // Assign default 'Basic' loan level to newly created users

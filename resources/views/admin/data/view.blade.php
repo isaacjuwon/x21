@@ -122,7 +122,7 @@ new class extends Component
         </x-slot:actions>
     </x-page-header>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
                 <x-ui.label for="name">Name</x-ui.label>
@@ -194,7 +194,7 @@ new class extends Component
             </x-ui.field>
 
             <div class="flex items-center gap-2">
-                <input type="checkbox" wire:model="status" id="status" class="rounded border-gray-300 text-primary-600 shadow-sm focus:ring-primary-500">
+                <input type="checkbox" wire:model="status" id="status" class="rounded-[--radius-field] border-neutral-300 text-primary-600 shadow-sm focus:ring-primary-500">
                 <x-ui.label for="status" class="mb-0">Active</x-ui.label>
             </div>
 

@@ -76,31 +76,31 @@ new class extends Component
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Compose Mail</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Send emails to users</p>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Compose Mail</h1>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Send emails to users</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- User Selection -->
         <div class="lg:col-span-2 space-y-4">
-             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-[600px]">
-                <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col gap-3">
-                    <h2 class="font-semibold text-gray-900 dark:text-white">Select Recipients</h2>
+             <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden flex flex-col h-[600px]">
+                <div class="p-4 border-b border-neutral-100 dark:border-neutral-700 flex flex-col gap-3">
+                    <h2 class="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-widest">Select Recipients</h2>
                     <x-ui.input 
                         wire:model.live.debounce.300ms="search" 
                         placeholder="Search users..." 
                         type="search"
                     >
                         <x-slot:leading>
-                            <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-gray-400" />
+                        <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-neutral-400" />
                         </x-slot:leading>
                     </x-ui.input>
                 </div>
 
                 <div class="flex-1 overflow-y-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium sticky top-0 backdrop-blur-sm z-10">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold sticky top-0 backdrop-blur-sm z-10">
                             <tr>
                                 <th class="px-6 py-4 w-10">
                                     <x-ui.checkbox wire:model.live="selectAll" />
@@ -109,22 +109,22 @@ new class extends Component
                                 <th class="px-6 py-4">Email</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                             @forelse($this->users as $user)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors" wire:key="user-{{ $user->id }}">
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors" wire:key="user-{{ $user->id }}">
                                     <td class="px-6 py-4">
                                         <x-ui.checkbox wire:model.live="selectedUsers" value="{{ $user->id }}" />
                                     </td>
-                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                    <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                         {{ $user->name }}
                                     </td>
-                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                                    <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400 font-medium">
                                         {{ $user->email }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                                    <td colspan="3" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                         No users found
                                     </td>
                                 </tr>
@@ -132,7 +132,7 @@ new class extends Component
                         </tbody>
                     </table>
                 </div>
-                 <div class="p-4 border-t border-gray-100 dark:border-gray-700">
+                 <div class="p-4 border-t border-neutral-100 dark:border-neutral-700">
                     {{ $this->users->links() }}
                 </div>
             </div>
@@ -140,13 +140,13 @@ new class extends Component
 
         <!-- Compose Form -->
         <div class="lg:col-span-1">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-6">
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6 sticky top-6">
                 <form wire:submit="send" class="space-y-6">
                     <div>
                         <div class="flex items-center justify-between mb-2">
-                             <x-ui.label for="subject">Subject</x-ui.label>
-                             <span class="text-xs text-gray-500">
-                                {{ count($selectedUsers) }} recipients selected
+                             <x-ui.label for="subject" class="text-xs font-bold uppercase tracking-widest">Subject</x-ui.label>
+                             <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+                                {{ count($selectedUsers) }} selected
                              </span>
                         </div>
                        

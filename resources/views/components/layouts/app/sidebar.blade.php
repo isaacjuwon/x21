@@ -113,6 +113,13 @@
                                 icon="cog-6-tooth"
                                 :href="route('admin.dashboard')"
                             />
+                            
+                            <x-ui.navlist.item 
+                                label="Referrals"
+                                icon="user-group"
+                                :href="route('admin.referrals.index')"
+                                :active="request()->routeIs('admin.referrals.*')"
+                            />
                         @endrole
                         
                         <x-ui.navlist.item 
@@ -127,35 +134,35 @@
 
                 <x-ui.sidebar.push />
 
-            <x-ui.dropdown portal>
+                <x-ui.dropdown portal>
                     <x-slot:button>
-                        <div class="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-background-content transition-colors">
-                            <x-ui.avatar size="sm" :src="auth()->user()->avatar_url" circle alt="Profile Picture" />
+                        <div class="flex items-center gap-3 px-3 py-2 rounded-[--radius-field] hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors">
+                            <x-ui.avatar size="sm" :src="auth()->user()->avatar_url" circle alt="Profile Picture" class="ring-2 ring-neutral-100 dark:ring-neutral-700" />
                             <div class="flex flex-col items-start min-w-0">
-                                <span class="text-sm font-medium text-foreground truncate max-w-[150px]">
+                                <span class="text-xs font-bold text-neutral-900 dark:text-white truncate max-w-[150px]">
                                     {{ auth()->user()->name }}
                                 </span>
-                                <span class="text-xs text-foreground-content truncate max-w-[150px]">
+                                <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 truncate max-w-[150px] uppercase tracking-widest">
                                     {{ auth()->user()->email }}
                                 </span>
                             </div>
                         </div>
                     </x-slot:button>
                     
-                    <x-slot:menu class="!w-[14rem]">
-                        <x-ui.dropdown.item :href="route('profile.edit')" icon="adjustments-horizontal">
+                    <x-slot:menu class="!w-[14rem] p-1 bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-700 rounded-[--radius-box] shadow-xl">
+                        <x-ui.dropdown.item :href="route('profile.edit')" icon="adjustments-horizontal" class="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-300">
                             Preference
                         </x-ui.dropdown.item>
                         
-                        <x-ui.dropdown.item :href="route('profile.edit')" icon="user-circle">
+                        <x-ui.dropdown.item :href="route('profile.edit')" icon="user-circle" class="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-300">
                             Profile
                         </x-ui.dropdown.item>
                         
-                        <x-ui.dropdown.item :href="route('profile.edit')" icon="lock-closed">
+                        <x-ui.dropdown.item :href="route('profile.edit')" icon="lock-closed" class="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-300">
                             Security
                         </x-ui.dropdown.item>
                         
-                        <x-ui.dropdown.item href="#" icon="bell" variant="danger">
+                        <x-ui.dropdown.item href="#" icon="bell" variant="danger" class="text-xs font-bold uppercase tracking-widest">
                             Notifications
                         </x-ui.dropdown.item>
                     </x-slot:menu>
@@ -189,20 +196,20 @@
                                 <x-ui.avatar size="sm" :src="auth()->user()->avatar_url" circle alt="Profile Picture" />
                             </x-slot:button>
 
-                            <x-slot:menu class="w-56">
-                                <x-ui.dropdown.group label="signed in as">
-                                    <x-ui.dropdown.item>
+                            <x-slot:menu class="w-64 p-1 bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-700 rounded-[--radius-box] shadow-xl">
+                                <x-ui.dropdown.group label="signed in as" class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                                    <x-ui.dropdown.item class="text-xs font-bold text-neutral-900 dark:text-white truncate">
                                         {{ Auth::user()->email }}
                                     </x-ui.dropdown.item>
                                 </x-ui.dropdown.group>
 
-                                <x-ui.dropdown.separator />
+                                <x-ui.dropdown.separator class="bg-neutral-100 dark:bg-neutral-800" />
 
-                                <x-ui.dropdown.item :href="route('profile.edit')" wire:navigate>
-                                    Account
+                                <x-ui.dropdown.item :href="route('profile.edit')" wire:navigate class="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-300">
+                                    Account Settings
                                 </x-ui.dropdown.item>
 
-                                <x-ui.dropdown.separator />
+                                <x-ui.dropdown.separator class="bg-neutral-100 dark:bg-neutral-800" />
 
                                 <form
                                     action="{{ route('logout') }}"
@@ -210,7 +217,7 @@
                                     class="contents"
                                 >
                                     @csrf
-                                    <x-ui.dropdown.item as="button" type="submit">
+                                    <x-ui.dropdown.item as="button" type="submit" class="w-full text-xs font-bold uppercase tracking-widest text-error">
                                         Sign Out
                                     </x-ui.dropdown.item>
                                 </form>

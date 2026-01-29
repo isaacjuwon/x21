@@ -142,6 +142,9 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('/users', 'admin::users.index')->name('users.index');
         Route::livewire('/users/{user}', 'admin::users.view')->name('users.view');
         Route::livewire('/users/{user}/edit', 'admin::users.edit')->name('users.edit');
+        
+        // Referrals
+        Route::livewire('/referrals', 'admin::referrals.index')->name('referrals.index');
 
         // Mail
         Route::livewire('/mail', 'admin::mail.index')->name('mail.index');

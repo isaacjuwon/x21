@@ -66,9 +66,11 @@ new class extends Component
                     <x-ui.error name="content" />
                 </x-ui.field>
 
-                <div class="flex items-center gap-2">
-                    <x-ui.checkbox wire:model="is_published" id="is_published" />
-                    <x-ui.label for="is_published" class="mb-0">Publish Page</x-ui.label>
+                <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
+                    <div class="flex items-center gap-2">
+                        <x-ui.checkbox wire:model="is_published" id="is_published" />
+                        <x-ui.label for="is_published" class="mb-0">Publish Page</x-ui.label>
+                    </div>
                 </div>
             </div>
         </x-ui.card>

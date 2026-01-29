@@ -58,11 +58,11 @@ new class extends Component
                 </x-ui.field>
             </div>
 
-            <div class="border-t pt-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Loan Levels Configuration</h3>
+            <div class="border-t border-neutral-100 dark:border-neutral-700 pt-6">
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-4">Loan Levels Configuration</h3>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                    <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+                        <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-medium">
                             <tr>
                                 <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Level Name</th>
                                 <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Max Amount</th>
@@ -71,13 +71,13 @@ new class extends Component
                                 <th class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Repayments for Upgrade</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
                             @foreach($loanLevels as $index => $level)
                                 <tr>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                    <td class="px-3 py-2 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
                                         {{ $level['name'] }}
                                     </td>
-                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    <td class="px-3 py-2 whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400">
                                         <x-ui.input type="number" wire:model="loanLevels.{{ $index }}.maximum_loan_amount" />
                                     </td>
                                     <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">

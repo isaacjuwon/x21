@@ -47,12 +47,10 @@
 [data-slot="card"] {
     border-radius: var(--radius-box);
     border: 1px solid color-mix(in oklab, var(--color-neutral-200), transparent 50%);
-    background-color: var(--color-white);
     transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark [data-slot="card"] {
-    background-color: var(--card-bg);
     border-color: color-mix(in oklab, var(--color-white), transparent 94%);
 }
 

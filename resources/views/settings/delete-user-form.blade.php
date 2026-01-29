@@ -24,13 +24,13 @@ new class extends Component {
 ?>
 
 <section class="mt-10 space-y-6">
-    <div class="relative mb-5">
-        <x-ui.heading>{{ __('Delete account') }}</x-ui.heading>
-        <x-ui.description>{{ __('Delete your account and all of its resources') }}</x-ui.description>
+    <div class="relative mb-8">
+        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">{{ __('Delete Account') }}</h2>
+        <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mt-1">{{ __('Permanently remove your account and all associated data') }}</p>
     </div>
 
     <x-ui.modal.trigger id="confirm-user-deletion">
-        <x-ui.button variant="danger" x-data=""  data-test="delete-user-button">
+        <x-ui.button variant="danger" x-data="" class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-error/20" data-test="delete-user-button">
             {{ __('Delete account') }}
         </x-ui.button>
     </x-ui.modal.trigger>
@@ -38,24 +38,25 @@ new class extends Component {
     <x-ui.modal id="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable class="max-w-lg">
         <form method="POST" wire:submit="deleteUser" class="space-y-6">
             <div>
-                <x-ui.heading size="lg">{{ __('Are you sure you want to delete your account?') }}</x-ui.heading>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">{{ __('Are you sure you want to delete your account?') }}</h3>
 
-                <x-ui.description>
+                <p class="mt-2 text-xs font-bold text-neutral-500 dark:text-neutral-400 leading-relaxed tracking-wide">
                     {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-                </x-ui.description>
+                </p>
             </div>
 
             <x-ui.field>
-                <x-ui.label>{{ __('Password') }}</x-ui.label>
-                <x-ui.input wire:model="password" type="password" />
+                <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Password') }}</x-ui.label>
+                <x-ui.input wire:model="password" type="password" class="text-base font-bold tracking-widest h-14" />
                 <x-ui.error name="password" />
             </x-ui.field>
 
-            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-               
-                <x-ui.button  wire:click="$dispatach('close-modal', 'confirm-user-deletion')" variant="filled">{{ __('Cancel') }}</x-ui.button>
+            <div class="flex justify-end gap-3 pt-4">
+                <x-ui.button type="button" x-on:click="$dispatch('close-modal', 'confirm-user-deletion')" variant="outline" class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
+                    {{ __('Cancel') }}
+                </x-ui.button>
 
-                <x-ui.button variant="danger" type="submit" data-test="confirm-delete-user-button">
+                <x-ui.button variant="danger" type="submit" class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-error/20" data-test="confirm-delete-user-button">
                     {{ __('Delete account') }}
                 </x-ui.button>
             </div>

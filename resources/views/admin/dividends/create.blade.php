@@ -65,6 +65,7 @@ new class extends Component
     <x-page-header 
         heading="Declare Dividend" 
         description="Create a new dividend declaration"
+        class="mb-6"
     >
         <x-slot:actions>
             <x-ui.button tag="a" href="{{ route('admin.dividends.index') }}" variant="outline">
@@ -73,7 +74,7 @@ new class extends Component
         </x-slot:actions>
     </x-page-header>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
         <form wire:submit="save" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <x-ui.field>

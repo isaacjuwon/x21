@@ -110,16 +110,16 @@ new class extends Component
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Branding Section -->
                 <div class="md:col-span-2 space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Branding</h3>
+                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Branding</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Light Logo -->
                         <x-ui.field>
                             <x-ui.label>Light Logo</x-ui.label>
                             <div class="mt-2 flex flex-col items-center gap-4">
                                 @if ($site_logo)
-                                    <img src="{{ $site_logo->temporaryUrl() }}" class="h-16 object-contain bg-gray-50 p-2 rounded border" />
+                                    <img src="{{ $site_logo->temporaryUrl() }}" class="h-16 object-contain bg-neutral-50 p-2 rounded-[--radius-field] border border-neutral-100 dark:border-neutral-700" />
                                 @elseif ($site_logo_path)
-                                    <img src="{{ Storage::url($site_logo_path) }}" class="h-16 object-contain bg-gray-50 p-2 rounded border" />
+                                    <img src="{{ Storage::url($site_logo_path) }}" class="h-16 object-contain bg-neutral-50 p-2 rounded-[--radius-field] border border-neutral-100 dark:border-neutral-700" />
                                 @endif
                                 <x-ui.input type="file" wire:model="site_logo" accept="image/*" />
                             </div>
@@ -131,9 +131,9 @@ new class extends Component
                             <x-ui.label>Dark Logo</x-ui.label>
                             <div class="mt-2 flex flex-col items-center gap-4">
                                 @if ($site_dark_logo)
-                                    <img src="{{ $site_dark_logo->temporaryUrl() }}" class="h-16 object-contain bg-gray-900 p-2 rounded border" />
+                                    <img src="{{ $site_dark_logo->temporaryUrl() }}" class="h-16 object-contain bg-neutral-900 p-2 rounded-[--radius-field] border border-neutral-800" />
                                 @elseif ($site_dark_logo_path)
-                                    <img src="{{ Storage::url($site_dark_logo_path) }}" class="h-16 object-contain bg-gray-900 p-2 rounded border" />
+                                    <img src="{{ Storage::url($site_dark_logo_path) }}" class="h-16 object-contain bg-neutral-900 p-2 rounded-[--radius-field] border border-neutral-800" />
                                 @endif
                                 <x-ui.input type="file" wire:model="site_dark_logo" accept="image/*" />
                             </div>
@@ -145,9 +145,9 @@ new class extends Component
                             <x-ui.label>Favicon</x-ui.label>
                             <div class="mt-2 flex flex-col items-center gap-4">
                                 @if ($site_favicon)
-                                    <img src="{{ $site_favicon->temporaryUrl() }}" class="h-12 w-12 object-contain bg-gray-50 p-2 rounded border" />
+                                    <img src="{{ $site_favicon->temporaryUrl() }}" class="h-12 w-12 object-contain bg-neutral-50 p-2 rounded-[--radius-field] border border-neutral-100 dark:border-neutral-700" />
                                 @elseif ($site_favicon_path)
-                                    <img src="{{ Storage::url($site_favicon_path) }}" class="h-12 w-12 object-contain bg-gray-50 p-2 rounded border" />
+                                    <img src="{{ Storage::url($site_favicon_path) }}" class="h-12 w-12 object-contain bg-neutral-50 p-2 rounded-[--radius-field] border border-neutral-100 dark:border-neutral-700" />
                                 @endif
                                 <x-ui.input type="file" wire:model="site_favicon" accept="image/*" />
                             </div>
@@ -159,9 +159,9 @@ new class extends Component
                             <x-ui.label>Dark Favicon</x-ui.label>
                             <div class="mt-2 flex flex-col items-center gap-4">
                                 @if ($site_dark_favicon)
-                                    <img src="{{ $site_dark_favicon->temporaryUrl() }}" class="h-12 w-12 object-contain bg-gray-900 p-2 rounded border" />
+                                    <img src="{{ $site_dark_favicon->temporaryUrl() }}" class="h-12 w-12 object-contain bg-neutral-900 p-2 rounded-[--radius-field] border border-neutral-800" />
                                 @elseif ($site_dark_favicon_path)
-                                    <img src="{{ Storage::url($site_dark_favicon_path) }}" class="h-12 w-12 object-contain bg-gray-900 p-2 rounded border" />
+                                    <img src="{{ Storage::url($site_dark_favicon_path) }}" class="h-12 w-12 object-contain bg-neutral-900 p-2 rounded-[--radius-field] border border-neutral-800" />
                                 @endif
                                 <x-ui.input type="file" wire:model="site_dark_favicon" accept="image/*" />
                             </div>
@@ -172,7 +172,7 @@ new class extends Component
 
                 <!-- Site Information -->
                 <div class="md:col-span-2 space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Site Information</h3>
+                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Site Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <x-ui.field>
                             <x-ui.label for="site_name">Site Name</x-ui.label>
@@ -214,7 +214,7 @@ new class extends Component
             </div>
 
             <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Settings</h3>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Settings</h3>
                 <div class="space-y-3">
                     <div class="flex items-center gap-2">
                         <x-ui.checkbox wire:model="maintenance_mode" id="maintenance_mode" />

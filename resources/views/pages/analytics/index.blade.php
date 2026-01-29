@@ -111,49 +111,49 @@ new class extends Component
     <!-- Financial Overview Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Wallet Balance -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                <div class="p-3 rounded-[--radius-field] bg-success/10 text-success">
                     <x-ui.icon name="wallet" class="w-6 h-6" />
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">₦{{ number_format($walletBalance, 2) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Wallet Balance</p>
-        </div>
+            <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ Number::currency($walletBalance, 'NGN') }}</h3>
+            <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-1">Wallet Balance</p>
+        </x-ui.card>
 
         <!-- Total Shares -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                <div class="p-3 rounded-[--radius-field] bg-primary/10 text-primary">
                     <x-ui.icon name="chart-pie" class="w-6 h-6" />
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalShares) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Shares (₦{{ number_format($shareValue, 2) }})</p>
-        </div>
+            <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ number_format($totalShares) }}</h3>
+            <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-1">Total Shares ({{ Number::currency($shareValue, 'NGN') }})</p>
+        </x-ui.card>
 
         <!-- Total Borrowed -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
+                <div class="p-3 rounded-[--radius-field] bg-error/10 text-error">
                     <x-ui.icon name="banknotes" class="w-6 h-6" />
                 </div>
-                <x-ui.badge color="warning">{{ $activeLoans }} Active</x-ui.badge>
+                <x-ui.badge color="warning" class="text-[10px] font-bold uppercase tracking-widest">{{ $activeLoans }} Active</x-ui.badge>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">₦{{ number_format($totalBorrowed, 2) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Borrowed</p>
-        </div>
+            <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ Number::currency($totalBorrowed, 'NGN') }}</h3>
+            <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-1">Total Borrowed</p>
+        </x-ui.card>
 
         <!-- Total Repaid -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none p-6">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                <div class="p-3 rounded-[--radius-field] bg-purple-500/10 text-purple-600">
                     <x-ui.icon name="check-circle" class="w-6 h-6" />
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">₦{{ number_format($totalRepaid, 2) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Repaid</p>
-        </div>
+            <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ Number::currency($totalRepaid, 'NGN') }}</h3>
+            <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-1">Total Repaid</p>
+        </x-ui.card>
     </div>
 
     <!-- Charts Grid -->
@@ -180,29 +180,29 @@ new class extends Component
     </div>
 
     <!-- Transaction Details Table -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Transaction Summary</h3>
+    <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none overflow-hidden">
+        <div class="px-6 py-5 border-b border-neutral-100 dark:border-neutral-700">
+            <h3 class="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest">Recent Transaction Summary</h3>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-900/50 text-neutral-400 font-bold">
                     <tr>
-                        <th class="px-6 py-4">Type</th>
-                        <th class="px-6 py-4">Count</th>
-                        <th class="px-6 py-4">Total Amount</th>
+                        <th class="px-6 py-4 uppercase tracking-widest">Type</th>
+                        <th class="px-6 py-4 uppercase tracking-widest">Count</th>
+                        <th class="px-6 py-4 uppercase tracking-widest">Total Amount</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($transactionsByType as $type => $data)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $type }}</td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $data['count'] }}</td>
-                            <td class="px-6 py-4 text-gray-900 dark:text-white font-medium">₦{{ number_format($data['total'], 2) }}</td>
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">{{ $type }}</td>
+                            <td class="px-6 py-4 text-neutral-500 font-bold">{{ $data['count'] }}</td>
+                            <td class="px-6 py-4 text-neutral-900 dark:text-white font-bold">{{ Number::currency($data['total'], 'NGN') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="3" class="px-6 py-10 text-center text-neutral-400 font-bold uppercase tracking-widest">
                                 No transactions in the last 30 days
                             </td>
                         </tr>
@@ -210,7 +210,7 @@ new class extends Component
                 </tbody>
             </table>
         </div>
-    </div>
+    </x-ui.card>
 </div>
 
 @push('scripts')

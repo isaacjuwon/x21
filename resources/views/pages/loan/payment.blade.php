@@ -98,73 +98,77 @@ new class extends Component
 
         @if ($loan->status === \App\Enums\LoanStatus::ACTIVE)
             <!-- Loan Summary -->
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-gray-50 dark:bg-neutral-800/50 p-4 rounded-lg overflow-hidden">
-                    <p class="text-sm text-gray-600 dark:text-neutral-400">Balance Remaining</p>
-                    <p class="text-xl sm:text-2xl font-bold text-warning-600 truncate" title="{{ Number::currency($loan->balance_remaining) }}">{{ Number::currency($loan->balance_remaining) }}</p>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div class="bg-neutral-50 dark:bg-neutral-900/50 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Remaining Balance</p>
+                    <p class="text-xl font-bold text-amber-500 truncate" title="{{ Number::currency($loan->balance_remaining, 'NGN') }}">{{ Number::currency($loan->balance_remaining, 'NGN') }}</p>
                 </div>
-                <div class="bg-gray-50 dark:bg-neutral-800/50 p-4 rounded-lg overflow-hidden">
-                    <p class="text-sm text-gray-600 dark:text-neutral-400">Wallet Balance</p>
-                    <p class="text-xl sm:text-2xl font-bold {{ $walletBalance >= $paymentAmount ? 'text-success-600' : 'text-error-600' }} truncate" title="{{ Number::currency($walletBalance) }}">
-                        {{ Number::currency($walletBalance) }}
+                <div class="bg-neutral-50 dark:bg-neutral-900/50 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Wallet Balance</p>
+                    <p class="text-xl font-bold {{ $walletBalance >= $paymentAmount ? 'text-success' : 'text-error' }} truncate" title="{{ Number::currency($walletBalance, 'NGN') }}">
+                        {{ Number::currency($walletBalance, 'NGN') }}
                     </p>
                 </div>
             </div>
 
             <div class="mb-6">
-                <div class="bg-primary-50 dark:bg-primary-900/10 border border-primary-200 dark:border-primary-800 p-4 rounded-lg overflow-hidden">
-                    <p class="text-sm text-gray-700 dark:text-primary-400 mb-2">Monthly Payment Amount</p>
-                    <p class="text-2xl sm:text-3xl font-bold text-primary-600 truncate" title="{{ Number::currency($loan->monthly_payment) }}">{{ Number::currency($loan->monthly_payment) }}</p>
+                <div class="bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/80 p-6 rounded-[--radius-box] overflow-hidden">
+                    <p class="text-[10px] font-bold text-primary dark:text-primary-400 uppercase tracking-widest mb-2">Monthly Installment</p>
+                    <p class="text-3xl font-bold text-primary truncate" title="{{ Number::currency($loan->monthly_payment, 'NGN') }}">{{ Number::currency($loan->monthly_payment, 'NGN') }}</p>
                 </div>
             </div>
 
             <!-- Payment Form -->
             <form wire:submit="makePayment">
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <x-ui.field>
-                        <x-ui.label>{{ __('Payment Amount') }}</x-ui.label>
+                        <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Payment Amount') }}</x-ui.label>
                         <x-ui.input
                             wire:model="paymentAmount"
                             type="number"
                             step="0.01"
                             min="0.01"
                             :max="$loan->balance_remaining"
-                            placeholder="Enter payment amount"
+                            placeholder="0.00"
+                            class="text-base font-bold tracking-widest h-14"
                             required
                         />
                         <x-ui.error name="paymentAmount" />
                     </x-ui.field>
 
                     <!-- Quick Actions -->
-                    <div class="flex gap-2">
+                    <div class="flex gap-4">
                         <x-ui.button 
                             type="button" 
                             variant="outline" 
                             size="sm" 
                             wire:click="setMonthlyPayment"
+                            class="flex-1 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px]"
                         >
-                            Monthly Payment
+                            Monthly Installment
                         </x-ui.button>
                         <x-ui.button 
                             type="button" 
                             variant="outline" 
                             size="sm" 
                             wire:click="setFullPayment"
+                            class="flex-1 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px]"
                         >
                             Pay Full Balance
                         </x-ui.button>
                     </div>
 
                     @if ($walletBalance < $paymentAmount)
-                        <x-ui.alerts type="warning">
-                            Insufficient wallet balance. You need {{ Number::currency($paymentAmount - $walletBalance) }} more.
+                        <x-ui.alerts type="warning" class="bg-amber-50 text-amber-600 border-amber-100 rounded-[--radius-box]">
+                            <p class="text-xs font-bold uppercase tracking-widest">Insufficient wallet balance</p>
+                            <p class="text-[10px] mt-1">You need {{ Number::currency($paymentAmount - $walletBalance, 'NGN') }} more.</p>
                         </x-ui.alerts>
                     @endif
 
-                    <div class="border-t pt-4">
+                    <div class="border-t border-neutral-100 dark:border-neutral-700 pt-6">
                         <x-ui.button 
                             type="submit" 
-                            class="w-full" 
+                            class="w-full h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20" 
                             :disabled="$walletBalance < $paymentAmount || $paymentAmount <= 0"
                         >
                             Process Payment
@@ -175,21 +179,21 @@ new class extends Component
 
             <!-- Next Payment Info -->
             @if ($loan->next_payment_date)
-                <div class="mt-6 pt-6 border-t">
+                <div class="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600">Next Payment Due</p>
-                            <p class="font-semibold {{ $loan->is_overdue ? 'text-error-600' : 'text-gray-900' }}">
+                            <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-1">Next Payment Due</p>
+                            <p class="text-base font-bold text-neutral-900 dark:text-white">
                                 {{ $loan->next_payment_date->format('F d, Y') }}
                             </p>
                         </div>
                         @if ($loan->is_overdue)
-                            <x-ui.badge color="danger">
+                            <x-ui.badge color="danger" class="text-[10px] font-bold uppercase tracking-widest">
                                 Overdue
                             </x-ui.badge>
                         @else
-                            <x-ui.badge color="success">
-                                {{ $loan->next_payment_date->diffForHumans() }}
+                            <x-ui.badge color="success" class="text-[10px] font-bold uppercase tracking-widest">
+                                Due {{ $loan->next_payment_date->diffForHumans() }}
                             </x-ui.badge>
                         @endif
                     </div>

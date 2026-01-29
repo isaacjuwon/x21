@@ -147,54 +147,68 @@ new class extends Component
         description="Submit your BVN or NIN for verification"
     >
         <form wire:submit="submit" class="space-y-4">
-            <x-ui.fieldset label="Verification Information">
+            <x-ui.fieldset label="Verification Information" class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                 
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <x-ui.field>
-                        <x-ui.label>BVN Number</x-ui.label>
-                        <x-ui.input wire:model.live="bvn" type="text" maxlength="11" required placeholder="Enter 11-digit BVN" />
+                        <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">BVN Number</x-ui.label>
+                        <x-ui.input 
+                            wire:model.live="bvn" 
+                            type="text" 
+                            maxlength="11" 
+                            required 
+                            placeholder="00000000000" 
+                            class="text-base font-bold tracking-widest h-14"
+                        />
                         <x-ui.error name="bvn" />
                     </x-ui.field>
 
                     <x-ui.field>
-                        <x-ui.label>NIN Number</x-ui.label>
-                        <x-ui.input wire:model.live="nin" type="text" maxlength="11" required placeholder="Enter 11-digit NIN" />
+                        <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">NIN Number</x-ui.label>
+                        <x-ui.input 
+                            wire:model.live="nin" 
+                            type="text" 
+                            maxlength="11" 
+                            required 
+                            placeholder="00000000000" 
+                            class="text-base font-bold tracking-widest h-14"
+                        />
                         <x-ui.error name="nin" />
                     </x-ui.field>
                 </div>
 
                 <x-ui.field>
-                    <x-ui.label>Date of Birth (optional)</x-ui.label>
-                    <x-ui.input wire:model.live="dob" type="date" />
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Date of Birth (optional)</x-ui.label>
+                    <x-ui.input wire:model.live="dob" type="date" class="h-12" />
                 </x-ui.field>
 
                 <x-ui.field>
-                    <x-ui.label>Phone (optional)</x-ui.label>
-                    <x-ui.input wire:model.live="phone" type="text" />
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Phone (optional)</x-ui.label>
+                    <x-ui.input wire:model.live="phone" type="text" class="h-12" />
                 </x-ui.field>
 
                 <x-ui.field>
-                    <x-ui.label>Email (optional)</x-ui.label>
-                    <x-ui.input wire:model.live="email" type="email" />
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Email (optional)</x-ui.label>
+                    <x-ui.input wire:model.live="email" type="email" class="h-12" />
                 </x-ui.field>
 
                 @if ($verificationMode === VerificationMode::Manual)
                     <x-ui.field>
-                        <x-ui.label>Upload Document (required)</x-ui.label>
+                        <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Upload Document (required)</x-ui.label>
                         <x-ui.input 
                             wire:model.live="document" 
                             type="file" 
                             accept=".pdf,.jpg,.jpeg,.png"
+                            class="h-12"
                         />
                         <x-ui.error name="document" />
-                        <p class="text-sm text-gray-500 mt-2">Accepted formats: PDF, JPG, PNG (Max 5MB)</p>
+                        <p class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mt-2">Accepted formats: PDF, JPG, PNG (Max 5MB)</p>
                     </x-ui.field>
                 @endif
             </x-ui.fieldset>
 
-            <div class="flex gap-3">
-                <x-ui.button type="submit" class="flex-1">
+            <div class="flex gap-4 pt-4">
+                <x-ui.button type="submit" class="flex-1 h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
                     Submit Verification
                 </x-ui.button>
             </div>

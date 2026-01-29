@@ -43,88 +43,38 @@ new class extends Component
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Users -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                    <x-ui.icon name="users" class="w-6 h-6" />
-                </div>
-                <x-ui.badge color="neutral">Total</x-ui.badge>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalUsers) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Registered Users</p>
-        </div>
-
-        <!-- Total Loans -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
-                    <x-ui.icon name="banknotes" class="w-6 h-6" />
-                </div>
-                <x-ui.badge color="warning">{{ $pendingLoans }} Pending</x-ui.badge>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalLoans) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Loans ({{ $activeLoans }} Active)</p>
-        </div>
-
-        <!-- Total Shares -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
-                    <x-ui.icon name="chart-pie" class="w-6 h-6" />
-                </div>
-                <x-ui.badge color="warning">{{ $pendingShares }} Pending</x-ui.badge>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalShares) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Shares ({{ $approvedShares }} Approved)</p>
-        </div>
-
-        <!-- Total Wallet Balance -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-                    <x-ui.icon name="wallet" class="w-6 h-6" />
-                </div>
-                <x-ui.badge color="success">Active</x-ui.badge>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">₦{{ number_format($totalWalletBalance, 2) }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Wallet Balance</p>
-        </div>
-    </div>
-
-    <!-- Additional Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                <div class="p-3 rounded-[--radius-field] bg-neutral-100 dark:bg-neutral-900/20 text-neutral-600 dark:text-neutral-400">
                     <x-ui.icon name="currency-dollar" class="w-6 h-6" />
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($totalDividends) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Dividends</p>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ number_format($totalDividends) }}</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Total Dividends</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                <div class="p-3 rounded-[--radius-field] bg-secondary/10 dark:bg-secondary/20 text-secondary">
                     <x-ui.icon name="arrow-path" class="w-6 h-6" />
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($totalTransactions) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Transactions</p>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ number_format($totalTransactions) }}</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Total Transactions</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                <div class="p-3 rounded-[--radius-field] bg-success/10 dark:bg-success/20 text-success">
                     <x-ui.icon name="check-circle" class="w-6 h-6" />
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($successfulTransactions) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Successful Transactions</p>
+                    <h3 class="text-xl font-bold text-neutral-900 dark:text-white">{{ number_format($successfulTransactions) }}</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Successful Transactions</p>
                 </div>
             </div>
         </div>
@@ -132,24 +82,24 @@ new class extends Component
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Users -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Users</h3>
+        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Recent Users</h3>
                 <x-ui.button tag="a" href="{{ route('admin.users.index') }}" variant="ghost" size="sm">
                     View All
                 </x-ui.button>
             </div>
-            <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="divide-y divide-neutral-100 dark:divide-neutral-700">
                 @forelse($recentUsers as $user)
-                    <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <div class="px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                         <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ $user->name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
+                            <p class="font-bold text-neutral-900 dark:text-white text-xs">{{ $user->name }}</p>
+                            <p class="text-[10px] text-neutral-500 dark:text-neutral-400">{{ $user->email }}</p>
                         </div>
-                        <p class="text-xs text-gray-500">{{ $user->created_at->diffForHumans() }}</p>
+                        <p class="text-[10px] text-neutral-400">{{ $user->created_at->diffForHumans() }}</p>
                     </div>
                 @empty
-                    <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <div class="px-6 py-8 text-center text-neutral-500 dark:text-neutral-400 italic text-xs">
                         No users yet
                     </div>
                 @endforelse
@@ -157,26 +107,26 @@ new class extends Component
         </div>
 
         <!-- Recent Loans -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Loans</h3>
+        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Recent Loans</h3>
                 <x-ui.button tag="a" href="{{ route('admin.loans.index') }}" variant="ghost" size="sm">
                     View All
                 </x-ui.button>
             </div>
-            <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="divide-y divide-neutral-100 dark:divide-neutral-700">
                 @forelse($recentLoans as $loan)
-                    <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <div class="px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                         <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ $loan->user->name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">₦{{ number_format($loan->amount, 2) }}</p>
+                            <p class="font-bold text-neutral-900 dark:text-white text-xs">{{ $loan->user->name }}</p>
+                            <p class="text-[10px] text-neutral-500 dark:text-neutral-400">₦{{ number_format($loan->amount, 2) }}</p>
                         </div>
-                        <x-ui.badge :color="$loan->status->getColor()">
+                        <x-ui.badge :color="$loan->status->getColor()" class="text-[10px]">
                             {{ $loan->status->getLabel() }}
                         </x-ui.badge>
                     </div>
                 @empty
-                    <div class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <div class="px-6 py-8 text-center text-neutral-500 dark:text-neutral-400 italic text-xs">
                         No loans yet
                     </div>
                 @endforelse
@@ -185,48 +135,48 @@ new class extends Component
     </div>
 
     <!-- Recent Transactions -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Transactions</h3>
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+        <div class="px-6 py-4 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Recent Transactions</h3>
             <x-ui.button tag="a" href="{{ route('admin.transactions.index') }}" variant="ghost" size="sm">
                 View All
             </x-ui.button>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
-                    <tr>
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
+                    <tr class="border-b border-neutral-100 dark:border-neutral-700">
                         <th class="px-6 py-4">User</th>
-                        <th class="px-6 py-4">Type</th>
-                        <th class="px-6 py-4">Amount</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Date</th>
+                        <th class="px-6 py-4 text-center">Type</th>
+                        <th class="px-6 py-4 text-center">Amount</th>
+                        <th class="px-6 py-4 text-center">Status</th>
+                        <th class="px-6 py-4 text-right">Date</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($recentTransactions as $transaction)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white truncate max-w-[150px]">
                                 {{ $transaction->user->name }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400 text-center">
                                 {{ $transaction->type->getLabel() }}
                             </td>
-                            <td class="px-6 py-4 text-gray-900 dark:text-white font-medium">
+                            <td class="px-6 py-4 text-neutral-900 dark:text-white font-bold text-center">
                                 ₦{{ number_format($transaction->amount, 2) }}
                             </td>
-                            <td class="px-6 py-4">
-                                <x-ui.badge :color="$transaction->status->getColor()">
+                            <td class="px-6 py-4 text-center">
+                                <x-ui.badge :color="$transaction->status->getColor()" class="text-[10px]">
                                     {{ $transaction->status->getLabel() }}
                                 </x-ui.badge>
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400 text-right">
                                 {{ $transaction->created_at->format('M d, Y') }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="5" class="px-6 py-8 text-center text-neutral-500 dark:text-neutral-400 italic">
                                 No transactions yet
                             </td>
                         </tr>

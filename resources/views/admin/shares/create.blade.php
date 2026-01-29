@@ -59,7 +59,7 @@ new class extends Component {
         </x-slot:actions>
     </x-page-header>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
                 <x-ui.label for="user_id">Holder (User)</x-ui.label>

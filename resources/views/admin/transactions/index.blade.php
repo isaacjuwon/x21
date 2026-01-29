@@ -57,8 +57,8 @@ new class extends Component
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">View system transactions</p>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Transactions</h1>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">View system transactions</p>
         </div>
     </div>
 
@@ -92,10 +92,10 @@ new class extends Component
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
                     <tr>
                         <th class="px-6 py-4">Reference</th>
                         <th class="px-6 py-4">User</th>
@@ -106,19 +106,19 @@ new class extends Component
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($this->transactions as $transaction)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-mono text-gray-900 dark:text-white">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                            <td class="px-6 py-4 font-mono text-[10px] text-neutral-900 dark:text-white">
                                 {{ $transaction->reference }}
                             </td>
-                            <td class="px-6 py-4 text-gray-900 dark:text-white">
+                            <td class="px-6 py-4 text-neutral-900 dark:text-white font-bold">
                                 {{ $transaction->user->name ?? 'System' }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400">
                                 {{ $transaction->type->getLabel() }}
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ number_format($transaction->amount, 2) }}
                             </td>
                             <td class="px-6 py-4">
@@ -126,7 +126,7 @@ new class extends Component
                                     {{ $transaction->status->getLabel() }}
                                 </x-ui.badge>
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400">
                                 {{ $transaction->created_at->format('M d, Y H:i') }}
                             </td>
                             <td class="px-6 py-4 text-right">
@@ -148,7 +148,7 @@ new class extends Component
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
             {{ $this->transactions->links() }}
         </div>
     </div>

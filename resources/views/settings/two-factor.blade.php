@@ -218,16 +218,16 @@ new class extends Component
         :heading="__('Two Factor Authentication')"
         :subheading="__('Manage your two-factor authentication settings')"
     >
-        <div class="flex flex-col w-full mx-auto space-y-6 text-sm" wire:cloak>
+        <div class="flex flex-col w-full mx-auto space-y-6" wire:cloak>
             @if ($twoFactorEnabled)
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div class="flex items-center gap-3">
-                        <x-ui.badge color="green">{{ __('Enabled') }}</x-ui.badge>
+                        <x-ui.badge color="success" class="text-[10px] font-bold uppercase tracking-widest">{{ __('Enabled') }}</x-ui.badge>
                     </div>
 
-                    <x-ui.text>
+                    <p class="text-xs font-bold text-neutral-600 dark:text-neutral-400 leading-relaxed tracking-wide">
                         {{ __('With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.') }}
-                    </x-ui.text>
+                    </p>
 
                     <livewire:settings.two-factor.recovery-codes :$requiresConfirmation/>
 
@@ -237,26 +237,28 @@ new class extends Component
                             icon="shield-exclamation"
                             icon:variant="outline"
                             wire:click="disable"
+                            class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-error/20"
                         >
                             {{ __('Disable 2FA') }}
                         </x-ui.button>
                     </div>
                 </div>
             @else
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div class="flex items-center gap-3">
-                        <x-ui.badge color="red">{{ __('Disabled') }}</x-ui.badge>
+                        <x-ui.badge color="danger" class="text-[10px] font-bold uppercase tracking-widest">{{ __('Disabled') }}</x-ui.badge>
                     </div>
 
-                    <x-ui.text variant="subtle">
+                    <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 leading-relaxed tracking-wide">
                         {{ __('When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.') }}
-                    </x-ui.text>
+                    </p>
 
                     <x-ui.button
                         variant="primary"
                         icon="shield-check"
                         icon:variant="outline"
                         wire:click="enable"
+                        class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20"
                     >
                         {{ __('Enable 2FA') }}
                     </x-ui.button>
@@ -273,27 +275,27 @@ new class extends Component
     >
         <div class="space-y-6">
             <div class="flex flex-col items-center space-y-4">
-                <div class="p-0.5 w-auto rounded-full border border-stone-100 dark:border-stone-600 bg-white dark:bg-stone-800 shadow-sm">
-                    <div class="p-2.5 rounded-full border border-stone-200 dark:border-stone-600 overflow-hidden bg-stone-100 dark:bg-stone-200 relative">
-                        <div class="flex items-stretch absolute inset-0 w-full h-full divide-x [&>div]:flex-1 divide-stone-200 dark:divide-stone-300 justify-around opacity-50">
+                <div class="p-0.5 w-auto rounded-full border border-neutral-100 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm">
+                    <div class="p-2.5 rounded-full border border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-50 dark:bg-neutral-900 relative">
+                        <div class="flex items-stretch absolute inset-0 w-full h-full divide-x [&>div]:flex-1 divide-neutral-200 dark:divide-neutral-700 justify-around opacity-50">
                             @for ($i = 1; $i <= 5; $i++)
                                 <div></div>
                             @endfor
                         </div>
 
-                        <div class="flex flex-col items-stretch absolute w-full h-full divide-y [&>div]:flex-1 inset-0 divide-stone-200 dark:divide-stone-300 justify-around opacity-50">
+                        <div class="flex flex-col items-stretch absolute w-full h-full divide-y [&>div]:flex-1 inset-0 divide-neutral-200 dark:divide-neutral-700 justify-around opacity-50">
                             @for ($i = 1; $i <= 5; $i++)
                                 <div></div>
                             @endfor
                         </div>
 
-                        <x-ui.icon.qr-code class="relative z-20 dark:text-accent-foreground"/>
+                        <x-ui.icon name="qr-code" class="relative z-20 dark:text-accent-foreground"/>
                     </div>
                 </div>
 
                 <div class="space-y-2 text-center">
-                    <x-ui.heading size="lg">{{ $this->modalConfig['title'] }}</x-ui.heading>
-                    <x-ui.text>{{ $this->modalConfig['description'] }}</x-ui.text>
+                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white">{{ $this->modalConfig['title'] }}</h3>
+                    <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">{{ $this->modalConfig['description'] }}</p>
                 </div>
             </div>
 
@@ -307,16 +309,16 @@ new class extends Component
                             autocomplete="one-time-code"
                         />
                         @error('code')
-                            <x-ui.text color="red">
+                            <p class="text-xs font-bold text-error uppercase tracking-widest">
                                 {{ $message }}
-                            </x-ui.text>
+                            </p>
                         @enderror
                     </div>
 
                     <div class="flex items-center space-x-3">
                         <x-ui.button
                             variant="outline"
-                            class="flex-1"
+                            class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs"
                             wire:click="resetVerification"
                         >
                             {{ __('Back') }}
@@ -324,7 +326,7 @@ new class extends Component
 
                         <x-ui.button
                             variant="primary"
-                            class="flex-1"
+                            class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20"
                             wire:click="confirmTwoFactor"
                             x-bind:disabled="$wire.code.length < 6"
                         >
@@ -338,14 +340,14 @@ new class extends Component
                 @enderror
 
                 <div class="flex justify-center">
-                    <div class="relative w-64 overflow-hidden border rounded-lg border-stone-200 dark:border-stone-700 aspect-square">
+                    <div class="relative w-64 overflow-hidden border border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 rounded-[--radius-box] aspect-square">
                         @empty($qrCodeSvg)
-                            <div class="absolute inset-0 flex items-center justify-center bg-white dark:bg-stone-700 animate-pulse">
-                                <x-ui.icon.loading/>
+                            <div class="absolute inset-0 flex items-center justify-center bg-white dark:bg-neutral-800 animate-pulse">
+                                <x-ui.icon name="loading" class="w-8 h-8 text-primary animate-spin" />
                             </div>
                         @else
                             <div class="flex items-center justify-center h-full p-4">
-                                <div class="bg-white p-3 rounded">
+                                <div class="bg-white p-4 rounded-[--radius-field] shadow-sm">
                                     {!! $qrCodeSvg !!}
                                 </div>
                             </div>
@@ -357,7 +359,7 @@ new class extends Component
                     <x-ui.button
                         :disabled="$errors->has('setupData')"
                         variant="primary"
-                        class="w-full"
+                        class="w-full h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20"
                         wire:click="showVerificationIfNecessary"
                     >
                         {{ $this->modalConfig['buttonText'] }}
@@ -366,8 +368,8 @@ new class extends Component
 
                 <div class="space-y-4">
                     <div class="relative flex items-center justify-center w-full">
-                        <div class="absolute inset-0 w-full h-px top-1/2 bg-stone-200 dark:bg-stone-600"></div>
-                        <span class="relative px-2 text-sm bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400">
+                        <div class="absolute inset-0 w-full h-px top-1/2 bg-neutral-100 dark:bg-neutral-700"></div>
+                        <span class="relative px-3 text-[10px] font-bold bg-white dark:bg-neutral-800 text-neutral-400 uppercase tracking-widest">
                             {{ __('or, enter the code manually') }}
                         </span>
                     </div>
@@ -387,29 +389,26 @@ new class extends Component
                             }
                         }"
                     >
-                        <div class="flex items-stretch w-full border rounded-xl dark:border-stone-700">
+                        <div class="flex items-stretch w-full border border-neutral-100 dark:border-neutral-700 rounded-[--radius-box] bg-neutral-50 dark:bg-neutral-900/50 overflow-hidden">
                             @empty($manualSetupKey)
-                                <div class="flex items-center justify-center w-full p-3 bg-stone-100 dark:bg-stone-700">
-                                    <x-ui.icon.loading variant="mini"/>
+                                <div class="flex items-center justify-center w-full p-4">
+                                    <x-ui.icon name="loading" class="w-5 h-5 text-neutral-300 animate-spin" />
                                 </div>
                             @else
                                 <input
                                     type="text"
                                     readonly
                                     value="{{ $manualSetupKey }}"
-                                    class="w-full p-3 bg-transparent outline-none text-stone-900 dark:text-stone-100"
+                                    class="w-full p-4 bg-transparent outline-none text-xs font-bold font-mono tracking-widest text-neutral-900 dark:text-white"
                                 />
 
                                 <button
+                                    type="button"
                                     @click="copy()"
-                                    class="px-3 transition-colors border-l cursor-pointer border-stone-200 dark:border-stone-600"
+                                    class="px-5 transition-colors border-l border-neutral-100 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                                 >
-                                    <x-ui.icon.document-duplicate x-show="!copied" variant="outline"></x-ui.icon>
-                                    <x-ui.icon.check
-                                        x-show="copied"
-                                        variant="solid"
-                                        class="text-green-500"
-                                    ></x-ui.icon>
+                                    <x-ui.icon name="document-duplicate" x-show="!copied" class="w-4 h-4 text-neutral-500" />
+                                    <x-ui.icon name="check" x-show="copied" class="w-4 h-4 text-success" />
                                 </button>
                             @endempty
                         </div>

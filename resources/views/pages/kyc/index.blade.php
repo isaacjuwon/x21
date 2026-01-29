@@ -79,23 +79,23 @@ new class extends Component
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($this->verifications as $verification)
-            <x-ui.card class="flex flex-col justify-between">
-                <div class="space-y-3">
+            <x-ui.card class="flex flex-col justify-between shadow-none border-neutral-100 dark:border-neutral-700 bg-white dark:bg-neutral-800">
+                <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                        <span class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-neutral-100 dark:bg-neutral-700/50 text-neutral-600 dark:text-neutral-400">
                             {{ $verification->type->getLabel() }}
                         </span>
-                        <x-ui.badge :color="$verification->status === KycStatusEnum::Verified ? 'success' : ($verification->status === KycStatusEnum::Failed ? 'danger' : 'warning')">
+                        <x-ui.badge :color="$verification->status === KycStatusEnum::Verified ? 'success' : ($verification->status === KycStatusEnum::Failed ? 'danger' : 'warning')" class="text-[10px] font-bold uppercase tracking-widest">
                             {{ ucfirst($verification->status->value) }}
                         </x-ui.badge>
                     </div>
                     
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">ID Number</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white font-mono">{{ $verification->id_number }}</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">ID Number</p>
+                        <p class="text-base font-bold text-neutral-900 dark:text-white font-mono tracking-wider">{{ $verification->id_number }}</p>
                     </div>
 
-                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <div class="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
                         Created {{ $verification->created_at->diffForHumans() }}
                     </div>
                 </div>
@@ -106,7 +106,7 @@ new class extends Component
                             <x-ui.button 
                                 wire:click="verify({{ $verification->id }})" 
                                 size="sm"
-                                class="w-full"
+                                class="w-full h-11 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs"
                             >
                                 Verify Now
                             </x-ui.button>
@@ -129,10 +129,10 @@ new class extends Component
             </x-ui.card>
         @empty
             <div class="col-span-full">
-                <div class="rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-12 text-center">
-                    <x-ui.icon name="inbox" class="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <p class="text-gray-500 dark:text-gray-400">No KYC verifications yet</p>
-                    <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Add a new verification to get started</p>
+                <div class="rounded-[--radius-box] border-2 border-dashed border-neutral-100 dark:border-neutral-700 p-12 text-center bg-neutral-50/50 dark:bg-neutral-900/20">
+                    <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-200 dark:text-neutral-700 mx-auto mb-4" />
+                    <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">No KYC verifications yet</p>
+                    <p class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-2 uppercase tracking-widest">Add a new verification to get started</p>
                 </div>
             </div>
         @endforelse

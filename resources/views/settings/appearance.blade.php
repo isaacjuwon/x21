@@ -25,20 +25,19 @@ new class extends Component
                     x-on:click="$theme.setLight()"
                     x-bind:class="{
                         'ring-2 ring-primary border-primary': $theme.isLight,
-                        'border-gray-300': !$theme.isLight
+                        'border-neutral-100 dark:border-neutral-800': !$theme.isLight
                     }"
-                    class="p-6 bg-white rounded-xl border-2 hover:border-primary transition-all cursor-pointer group shadow-sm"
+                    class="p-6 bg-white rounded-[--radius-box] border-2 hover:border-primary transition-all cursor-pointer group shadow-sm flex-1"
                     role="button"
                     aria-pressed="false"
                     x-bind:aria-pressed="$theme.isLight"
                     aria-label="Activate light theme"
                 >
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="p-3 bg-gray-800 rounded-lg group-hover:bg-gray-700 transition-colors">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="p-3 bg-neutral-900 rounded-[--radius-field] group-hover:bg-neutral-800 transition-colors">
                             <x-ui.icon name="sun" class="w-6 h-6 text-amber-400" />
                         </div>
-                        <span class="font-medium text-gray-900">{{ __('Light') }}</span>
-                        <span class="text-sm text-gray-600 text-center">{{ __('Light theme') }}</span>
+                        <span class="text-xs font-bold text-neutral-900 uppercase tracking-widest">{{ __('Light') }}</span>
                     </div>
                 </button>
 
@@ -48,20 +47,19 @@ new class extends Component
                     x-on:click="$theme.setDark()"
                     x-bind:class="{
                         'ring-2 ring-primary border-primary': $theme.isDark,
-                        'border-gray-700': !$theme.isDark
+                        'border-neutral-800': !$theme.isDark
                     }"
-                    class="p-6 bg-gray-900 rounded-xl border-2 hover:border-primary transition-all cursor-pointer group shadow-sm"
+                    class="p-6 bg-neutral-900 rounded-[--radius-box] border-2 hover:border-primary transition-all cursor-pointer group shadow-sm flex-1"
                     role="button"
                     aria-pressed="false"
                     x-bind:aria-pressed="$theme.isDark"
                     aria-label="Activate dark theme"
                 >
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="p-3 bg-white rounded-lg group-hover:bg-gray-100 transition-colors">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="p-3 bg-white rounded-[--radius-field] group-hover:bg-neutral-100 transition-colors">
                             <x-ui.icon name="moon" class="w-6 h-6 text-indigo-600" />
                         </div>
-                        <span class="font-medium text-white">{{ __('Dark') }}</span>
-                        <span class="text-sm text-gray-400 text-center">{{ __('Dark theme') }}</span>
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">{{ __('Dark') }}</span>
                     </div>
                 </button>
 
@@ -71,20 +69,19 @@ new class extends Component
                     x-on:click="$theme.setSystem()"
                     x-bind:class="{
                         'ring-2 ring-primary border-primary': $theme.isSystem,
-                        'border-gray-200 dark:border-gray-700': !$theme.isSystem
+                        'border-neutral-100 dark:border-neutral-800': !$theme.isSystem
                     }"
-                    class="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 hover:border-primary transition-all cursor-pointer group shadow-sm"
+                    class="p-6 bg-white dark:bg-neutral-900/50 rounded-[--radius-box] border-2 hover:border-primary transition-all cursor-pointer group shadow-sm flex-1"
                     role="button"
                     aria-pressed="false"
                     x-bind:aria-pressed="$theme.isSystem"
                     aria-label="Activate system theme"
                 >
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg group-hover:bg-gray-100 dark:group-hover:bg-gray-600 transition-colors">
-                            <x-ui.icon name="computer-desktop" class="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="p-3 bg-neutral-50 dark:bg-neutral-800 rounded-[--radius-field] group-hover:bg-neutral-100 dark:group-hover:bg-neutral-700 transition-colors">
+                            <x-ui.icon name="computer-desktop" class="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
                         </div>
-                        <span class="font-medium text-gray-900 dark:text-white">{{ __('System') }}</span>
-                        <span class="text-sm text-gray-500 dark:text-gray-400 text-center">{{ __('Follow system') }}</span>
+                        <span class="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest">{{ __('System') }}</span>
                     </div>
                 </button>
             </div>

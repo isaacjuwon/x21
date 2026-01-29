@@ -38,8 +38,8 @@ new class extends Component {
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Cable Plans</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage cable TV packages</p>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Cable Plans</h1>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Manage cable TV packages</p>
         </div>
         <x-ui.button tag="a" href="{{ route('admin.cable.create') }}" variant="primary">
             <x-ui.icon name="plus" class="w-4 h-4 mr-2" />
@@ -47,23 +47,23 @@ new class extends Component {
         </x-ui.button>
     </div>
 
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-xs">
         <x-ui.input 
             wire:model.live.debounce.300ms="search" 
             placeholder="Search plans..." 
             type="search"
         >
             <x-slot:leading>
-                <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-gray-400" />
+                <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-neutral-400" />
             </x-slot:leading>
         </x-ui.input>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
-                    <tr>
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
+                    <tr class="border-b border-neutral-100 dark:border-neutral-700">
                         <th class="px-6 py-4">Name</th>
                         <th class="px-6 py-4">Image</th>
                         <th class="px-6 py-4">Provider</th>
@@ -72,25 +72,25 @@ new class extends Component {
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($this->plans as $plan)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ $plan->name }}
                             </td>
                             <td class="px-6 py-4">
                                 @if($plan->brand && $plan->brand->image_url)
-                                    <img src="{{ $plan->brand->image_url }}" alt="{{ $plan->brand->name }}" class="w-10 h-10 rounded-lg object-cover bg-gray-50 dark:bg-gray-800">
+                                    <img src="{{ $plan->brand->image_url }}" alt="{{ $plan->brand->name }}" class="w-10 h-10 rounded-[--radius-field] object-cover bg-neutral-50 dark:bg-neutral-800">
                                 @else
-                                    <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
+                                    <div class="w-10 h-10 rounded-[--radius-field] bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-400">
                                         <x-ui.icon name="photo" class="w-5 h-5" />
                                     </div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400">
                                 {{ $plan->brand?->name ?? 'N/A' }}
                             </td>
-                            <td class="px-6 py-4 font-mono text-gray-900 dark:text-white">
+                            <td class="px-6 py-4 font-mono text-neutral-900 dark:text-white">
                                 {{ number_format($plan->price, 2) }}
                             </td>
                             <td class="px-6 py-4">
@@ -117,9 +117,9 @@ new class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="6" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                 <div class="flex flex-col items-center justify-center">
-                                    <x-ui.icon name="inbox" class="w-12 h-12 text-gray-300 mb-3" />
+                                    <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-300 mb-3" />
                                     <p>No plans found</p>
                                 </div>
                             </td>
@@ -128,7 +128,7 @@ new class extends Component {
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
             {{ $this->plans->links() }}
         </div>
     </div>

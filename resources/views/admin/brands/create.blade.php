@@ -87,8 +87,8 @@ new class extends Component
         </x-ui.field>
 
         <div class="flex items-center gap-2">
-            <x-ui.checkbox wire:model="status" id="create_status" />
-            <x-ui.label for="create_status" class="mb-0">Active</x-ui.label>
+            <x-ui.checkbox wire:model="status" id="create_status" class="rounded-[--radius-field]" />
+            <x-ui.label for="create_status" class="mb-0 text-xs font-bold">Active</x-ui.label>
         </div>
 
         <div class="flex justify-end pt-4 gap-3">

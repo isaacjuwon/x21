@@ -81,23 +81,27 @@ new class extends Component
 
         <div>
             <x-ui.label>Permissions</x-ui.label>
-            <div class="mt-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-2">
-                @forelse($permissions as $permission)
-                    <div class="flex items-center gap-2">
-                        <input 
-                            type="checkbox" 
-                            wire:model="selectedPermissions" 
-                            value="{{ $permission->name }}" 
-                            id="create_perm_{{ $permission->id }}"
-                            class="rounded border-gray-300 text-primary-600 shadow-sm focus:ring-primary-500"
-                        >
-                        <label for="create_perm_{{ $permission->id }}" class="text-sm text-gray-700 dark:text-gray-300">
-                            {{ $permission->name }}
-                        </label>
-                    </div>
-                @empty
-                    <p class="text-sm text-gray-500">No permissions available for this guard</p>
-                @endforelse
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
+                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Create Role</h1>
+                <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Add a new system role</p>
+                <div class="mt-2 max-h-64 overflow-y-auto space-y-2">
+                    @forelse($permissions as $permission)
+                        <div class="flex items-center gap-2">
+                            <input 
+                                type="checkbox" 
+                                wire:model="selectedPermissions" 
+                                value="{{ $permission->name }}" 
+                                id="create_perm_{{ $permission->id }}"
+                                class="rounded border-gray-300 text-primary-600 shadow-sm focus:ring-primary-500"
+                            >
+                            <label for="create_perm_{{ $permission->id }}" class="text-sm text-neutral-700 dark:text-neutral-300">
+                                {{ $permission->name }}
+                            </label>
+                        </div>
+                    @empty
+                        <p class="text-sm text-neutral-500">No permissions available for this guard</p>
+                    @endforelse
+                </div>
             </div>
         </div>
 

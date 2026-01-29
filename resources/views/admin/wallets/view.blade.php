@@ -112,19 +112,19 @@ new class extends Component
                     default => 'currency-dollar',
                 };
                 $color = match($type) {
-                    WalletType::MAIN => 'blue',
-                    WalletType::BONUS => 'orange',
+                    WalletType::MAIN => 'primary',
+                    WalletType::BONUS => 'accent',
                     default => 'neutral',
                 };
             @endphp
-            <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative" wire:key="balance-{{ $type->value }}">
+            <x-ui.card class="p-4 flex flex-col justify-between overflow-hidden relative rounded-[--radius-box]" wire:key="balance-{{ $type->value }}">
                 <div class="relative z-10">
                     <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{{ $type->getLabel() }}</p>
                     <h3 class="text-2xl font-bold mt-1 text-neutral-900 dark:text-white">
                         {{ \Illuminate\Support\Number::currency($balance) }}
                     </h3>
                 </div>
-                <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-10 text-{{ $color }}-600">
+                <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-10 text-[--color-{{ $color }}]">
                     <x-ui.icon :name="$icon" class="size-24" />
                 </div>
             </x-ui.card>
@@ -134,7 +134,7 @@ new class extends Component
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Adjustment Form -->
         <div class="lg:col-span-1">
-            <x-ui.card class="p-6 h-full">
+            <x-ui.card class="p-6 h-full rounded-[--radius-box]">
                 <h3 class="text-lg font-bold mb-6 text-neutral-900 dark:text-white">Manual Adjustment</h3>
                 <form wire:submit="processOperation" class="space-y-5">
                     <x-ui.field>
@@ -149,14 +149,14 @@ new class extends Component
 
                     <x-ui.field>
                         <x-ui.label>Adjustment Type</x-ui.label>
-                        <div class="flex p-1 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+                        <div class="flex p-1 bg-neutral-100 dark:bg-neutral-900 rounded-[--radius-box]">
                             <button type="button" wire:click="$set('action', 'credit')" 
-                                class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg transition-all {{ $action === 'credit' ? 'bg-white dark:bg-neutral-800 text-green-600 shadow-sm' : 'text-neutral-500' }}">
+                                class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[--radius-field] transition-all {{ $action === 'credit' ? 'bg-white dark:bg-neutral-800 text-success shadow-sm' : 'text-neutral-500' }}">
                                 <x-ui.icon name="plus-circle" class="size-4" />
                                 <span class="text-sm font-semibold">Credit</span>
                             </button>
                             <button type="button" wire:click="$set('action', 'debit')" 
-                                class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg transition-all {{ $action === 'debit' ? 'bg-white dark:bg-neutral-800 text-red-600 shadow-sm' : 'text-neutral-500' }}">
+                                class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[--radius-field] transition-all {{ $action === 'debit' ? 'bg-white dark:bg-neutral-800 text-error shadow-sm' : 'text-neutral-500' }}">
                                 <x-ui.icon name="minus-circle" class="size-4" />
                                 <span class="text-sm font-semibold">Debit</span>
                             </button>
@@ -186,14 +186,13 @@ new class extends Component
             </x-ui.card>
         </div>
 
-        {{-- 
         <!-- Transaction History Table -->
         <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Recent Transactions</h3>
             </div>
             
-            <div class="relative overflow-x-auto border border-black/10 dark:border-white/10 rounded-xl bg-white dark:bg-neutral-900 shadow-sm">
+            <div class="relative overflow-x-auto border border-black/10 dark:border-white/10 rounded-[--radius-box] bg-white dark:bg-neutral-900 shadow-sm">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead class="bg-neutral-50 dark:bg-neutral-800/50 border-b border-black/10 dark:border-white/10">
                         <tr>
@@ -217,7 +216,7 @@ new class extends Component
                                 </td>
                                 <td class="px-4 py-4">
                                     <div class="flex flex-col">
-                                        <span class="font-bold {{ $transaction->transaction_type === 'increment' ? 'text-green-600' : 'text-red-600' }}">
+                                        <span class="font-bold {{ $transaction->transaction_type === 'increment' ? 'text-success' : 'text-error' }}">
                                             {{ $transaction->transaction_type === 'increment' ? '+' : '-' }}
                                             {{ \Illuminate\Support\Number::currency($transaction->amount ?? 0) }}
                                         </span>
@@ -229,7 +228,7 @@ new class extends Component
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-12 text-center text-neutral-400 italic">
+                                <td colspan="3" class="px-4 py-12 text-center text-neutral-400 italic">
                                     No transaction history found for this user.
                                 </td>
                             </tr>
@@ -244,6 +243,5 @@ new class extends Component
                 </div>
             @endif
         </div>
-        --}}
     </div>
 </div>

@@ -70,9 +70,8 @@ new class extends Component
     <x-layouts.admin.settings heading="Integration Settings" subheading="Manage third-party service credentials">
         <form wire:submit="save" class="mx-6 space-y-8">
             
-            <!-- Paystack -->
             <div class="space-y-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Paystack</h3>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Paystack</h3>
                 <div class="grid grid-cols-1 gap-6">
                     <x-ui.field>
                         <x-ui.label for="paystack_public_key">Public Key</x-ui.label>
@@ -96,7 +95,7 @@ new class extends Component
 
             <!-- Epins -->
             <div class="space-y-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Epins</h3>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Epins</h3>
                 <div class="grid grid-cols-1 gap-6">
                     <x-ui.field>
                         <x-ui.label for="epins_api_key">API Key</x-ui.label>
@@ -120,7 +119,7 @@ new class extends Component
 
             <!-- Dojah -->
             <div class="space-y-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">Dojah</h3>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">Dojah</h3>
                 <div class="grid grid-cols-1 gap-6">
                     <x-ui.field>
                         <x-ui.label for="dojah_api_key">API Key</x-ui.label>

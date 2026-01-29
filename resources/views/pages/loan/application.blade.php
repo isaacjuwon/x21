@@ -119,76 +119,77 @@ new class extends Component
 
         <div class="space-y-6">
             <!-- Eligibility Information -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <x-ui.card>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <x-ui.card class="bg-primary/5 border-primary/20 shadow-none rounded-[--radius-box]">
                     <div class="text-center">
-                        <p class="text-sm text-gray-600">Your Shares Value</p>
-                        <p class="text-2xl font-bold text-primary">{{ Number::currency($sharesValue) }}</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Your Shares Value</p>
+                        <p class="text-xl font-bold text-primary">{{ Number::currency($sharesValue, 'NGN') }}</p>
                     </div>
                 </x-ui.card>
 
-                <x-ui.card>
+                <x-ui.card class="bg-success/5 border-success/20 shadow-none rounded-[--radius-box]">
                     <div class="text-center">
-                        <p class="text-sm text-gray-600">Eligible Loan Amount</p>
-                        <p class="text-2xl font-bold text-success-600">{{ Number::currency($eligibleAmount) }}</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Eligible Amount</p>
+                        <p class="text-xl font-bold text-success">{{ Number::currency($eligibleAmount, 'NGN') }}</p>
                     </div>
                 </x-ui.card>
 
-                <x-ui.card>
+                <x-ui.card class="bg-neutral-50 dark:bg-neutral-900/50 border-neutral-100 dark:border-neutral-700 shadow-none rounded-[--radius-box]">
                     <div class="text-center">
-                        <p class="text-sm text-gray-600">Loan Level</p>
-                        <p class="text-2xl font-bold text-purple-600">{{ $loanLevelName ?? 'N/A' }}</p>
+                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Loan Level</p>
+                        <p class="text-xl font-bold text-purple-600">{{ $loanLevelName ?? 'N/A' }}</p>
                     </div>
                 </x-ui.card>
             </div>
 
             @if ($eligibleAmount > 0)
                 <!-- Loan Details -->
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3">Loan Terms</h3>
-                    <div class="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                            <span class="text-gray-600">Interest Rate:</span>
-                            <span class="font-semibold">{{ number_format($interestRate, 2) }}% per month</span>
+                <div class="bg-neutral-50 dark:bg-neutral-900/50 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700">
+                    <h3 class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-4">Loan Terms</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-center justify-between md:justify-start md:gap-4">
+                            <span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Interest Rate:</span>
+                            <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ number_format($interestRate, 2) }}% per month</span>
                         </div>
-                        <div>
-                            <span class="text-gray-600">Repayment Period:</span>
-                            <span class="font-semibold">{{ $installmentMonths }} months</span>
+                        <div class="flex items-center justify-between md:justify-start md:gap-4">
+                            <span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Repayment Period:</span>
+                            <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ $installmentMonths }} months</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Application Form -->
                 <form wire:submit="apply">
-                    <div class="space-y-4">
+                    <div class="space-y-6">
                         <x-ui.field>
-                            <x-ui.label>{{ __('Requested Amount') }}</x-ui.label>
+                            <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Requested Amount') }}</x-ui.label>
                             <x-ui.input
                                 wire:model.live.debounce.500ms="requestedAmount"
                                 type="number"
                                 step="0.01"
                                 min="1"
                                 :max="$eligibleAmount"
-                                placeholder="Enter loan amount"
+                                placeholder="0.00"
+                                class="text-base font-bold tracking-widest h-14"
                                 required
                             />
                             <x-ui.error name="requestedAmount" />
                         </x-ui.field>
 
                         @if ($estimatedMonthlyPayment > 0)
-                            <x-ui.alerts type="info">
-                                <div class="flex justify-between items-center">
-                                    <span>Estimated Monthly Payment:</span>
-                                    <span class="font-bold text-lg">{{ Number::currency($estimatedMonthlyPayment) }}</span>
+                            <x-ui.alerts type="info" class="bg-primary/5 text-primary border-primary/20 rounded-[--radius-box]">
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest">Monthly Payment:</span>
+                                    <span class="font-bold text-xl">{{ Number::currency($estimatedMonthlyPayment, 'NGN') }}</span>
                                 </div>
                             </x-ui.alerts>
                         @endif
 
-                        <div class="flex gap-3">
-                            <x-ui.button type="submit" class="flex-1">
+                        <div class="flex gap-4 pt-4">
+                            <x-ui.button type="submit" class="flex-1 h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
                                 Apply for Loan
                             </x-ui.button>
-                            <x-ui.button type="button" variant="outline" wire:click="calculateEligibility">
+                            <x-ui.button type="button" variant="outline" wire:click="calculateEligibility" class="h-14 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
                                 Recalculate
                             </x-ui.button>
                         </div>

@@ -74,6 +74,8 @@ new class extends Component {
 
             <x-ui.field>
                 <x-ui.label for="edit_permission_guard">Guard Name</x-ui.label>
+                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Edit Permission</h1>
+            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Update system permission details</p>
                 <x-ui.select wire:model="guard_name" id="edit_permission_guard">
                     <x-ui.select.option value="web">Web</x-ui.select.option>
                     <x-ui.select.option value="api">API</x-ui.select.option>
@@ -81,7 +83,7 @@ new class extends Component {
                 <x-ui.error name="guard_name" />
             </x-ui.field>
 
-            <div class="flex justify-between items-center pt-4">
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
                 <x-ui.button 
                     type="button" 
                     wire:click="delete" 

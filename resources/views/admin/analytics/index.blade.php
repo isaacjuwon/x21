@@ -95,54 +95,6 @@ new class extends Component
     }
 }; ?>
 
-<div class="max-w-7xl mx-auto p-6 space-y-6">
-    <x-page-header 
-        heading="Analytics Dashboard" 
-        description="Comprehensive insights and data visualization for platform performance"
-    />
-
-    <!-- Revenue Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
-                    <x-ui.icon name="banknotes" class="w-6 h-6" />
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">₦{{ number_format($revenueData['loan_interest'], 2) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Loan Interest</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                    <x-ui.icon name="chart-pie" class="w-6 h-6" />
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">₦{{ number_format($revenueData['share_purchases'], 2) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Share Purchases</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
-                    <x-ui.icon name="arrow-path" class="w-6 h-6" />
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">₦{{ number_format($revenueData['transactions'], 2) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Service Transactions</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- User Growth Chart -->
         <x-ui.chart title="User Growth" description="New user registrations over the last 12 months">
             <canvas id="userGrowthChart"></canvas>
         </x-ui.chart>

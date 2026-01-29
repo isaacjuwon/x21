@@ -36,7 +36,7 @@ new class extends Component
     <x-layouts.admin.settings heading="Verification Settings" subheading="Configure KYC and identity verification options">
         <form wire:submit="save" class="mx-6 space-y-8">
             <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white border-b pb-2">KYC Verification Mode</h3>
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white border-b border-neutral-100 dark:border-neutral-700 pb-2">KYC Verification Mode</h3>
                 <div class="space-y-3">
                     <div class="flex items-center gap-2">
                         <x-ui.input 

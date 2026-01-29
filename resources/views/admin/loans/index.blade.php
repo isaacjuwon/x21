@@ -40,8 +40,8 @@ new class extends Component
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <x-ui.heading>Loans</x-ui.heading>
-            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Manage user loans and repayment statuses.</p>
+            <x-ui.heading variant="h1" class="text-xl font-bold text-neutral-900 dark:text-white">Loans</x-ui.heading>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Manage user loans and repayment statuses.</p>
         </div>
         <x-ui.button tag="a" icon="plus" href="{{ route('admin.loans.create') }}" variant="primary">
             New Loan
@@ -49,7 +49,7 @@ new class extends Component
     </div>
 
     <div class="flex items-center gap-4">
-        <div class="w-full max-w-md">
+        <div class="w-full max-w-xs">
             <x-ui.input 
                 wire:model.live.debounce.300ms="search" 
                 placeholder="Search by user..." 
@@ -83,17 +83,17 @@ new class extends Component
             @forelse($this->loans as $loan)
                 <x-ui.table.row wire:key="loan-{{ $loan->id }}">
                     <x-ui.table.cell>
-                        <div class="font-medium text-neutral-900 dark:text-white">{{ $loan->user->name }}</div>
-                        <div class="text-xs text-neutral-500">{{ $loan->user->email }}</div>
+                        <div class="font-bold text-neutral-900 dark:text-white text-xs">{{ $loan->user->name }}</div>
+                        <div class="text-[10px] text-neutral-500">{{ $loan->user->email }}</div>
                     </x-ui.table.cell>
-                    <x-ui.table.cell>
+                    <x-ui.table.cell class="font-bold text-neutral-900 dark:text-white">
                         {{ Number::currency($loan->amount) }}
                     </x-ui.table.cell>
-                    <x-ui.table.cell>
+                    <x-ui.table.cell class="text-neutral-500">
                         {{ Number::currency($loan->balance_remaining) }}
                     </x-ui.table.cell>
                     <x-ui.table.cell>
-                        <x-ui.badge :color="$loan->status_badge">
+                        <x-ui.badge :color="$loan->status_badge" class="text-[10px]">
                             {{ $loan->status->getLabel() }}
                         </x-ui.badge>
                     </x-ui.table.cell>

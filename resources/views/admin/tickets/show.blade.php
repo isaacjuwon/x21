@@ -37,17 +37,17 @@ new class extends Component
 };
 ?>
 
-<div class="max-w-4xl mx-auto p-6">
+<div class="max-w-4xl mx-auto p-6 space-y-8">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-4">
             <x-ui.button variant="ghost" size="sm" wire:navigate href="{{ route('admin.tickets.index') }}">
                 &larr; Back
             </x-ui.button>
-            <h1 class="text-2xl font-bold text-gray-800">Ticket #{{ $ticket->id }}</h1>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Ticket #{{ $ticket->id }}</h1>
              <span @class([
-                'px-3 py-1 rounded-full text-sm font-semibold',
-                'bg-green-100 text-green-700' => $ticket->status === 'open',
-                'bg-gray-100 text-gray-700' => $ticket->status === 'closed',
+                'px-3 py-1 rounded-full text-xs font-bold',
+                'bg-success/10 text-success' => $ticket->status === 'open',
+                'bg-neutral-100 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300' => $ticket->status === 'closed',
             ])>
                 {{ ucfirst($ticket->status) }}
             </span>
@@ -63,15 +63,15 @@ new class extends Component
         <div class="md:col-span-2 space-y-6">
             <!-- Ticket Message -->
             <x-ui.card>
-                <div class="border-b border-gray-100 pb-4 mb-4">
-                     <div class="font-bold text-lg text-gray-900 mb-1">{{ $ticket->subject }}</div>
-                     <div class="flex items-center gap-2 text-sm text-gray-500">
+                <div class="border-b border-neutral-100 dark:border-neutral-700 pb-4 mb-4">
+                     <div class="font-bold text-lg text-neutral-900 dark:text-white mb-1">{{ $ticket->subject }}</div>
+                     <div class="flex items-center gap-2 text-xs text-neutral-500">
                         <span>By {{ $ticket->user->name }}</span>
                         <span>&bull;</span>
                         <span>{{ $ticket->created_at->format('M d, Y H:i A') }}</span>
                      </div>
                 </div>
-                <div class="prose max-w-none text-gray-700">
+                <div class="prose prose-sm max-w-none text-neutral-700 dark:text-neutral-300">
                     {{ $ticket->message }}
                 </div>
             </x-ui.card>
@@ -84,15 +84,15 @@ new class extends Component
                     @endif
                     
                     <div @class([
-                        'max-w-[80%] rounded-lg p-4 shadow-sm',
-                        'bg-white border border-gray-100' => $reply->user_id !== Auth::id(), // User reply
-                        'bg-blue-50 text-blue-900 border border-blue-100' => $reply->user_id === Auth::id(), // Admin reply
+                        'max-w-[80%] rounded-[--radius-box] p-4 shadow-sm',
+                        'bg-white dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 text-neutral-900 dark:text-white' => $reply->user_id !== Auth::id(), // User reply
+                        'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-400 border border-primary/20' => $reply->user_id === Auth::id(), // Admin reply
                     ])>
                         <div class="flex items-center gap-2 mb-2 {{ $reply->user_id === Auth::id() ? 'justify-end' : '' }}">
-                            <span class="font-bold text-sm">{{ $reply->user->name }}</span>
-                            <span class="text-xs opacity-70">{{ $reply->created_at->format('M d, Y H:i') }}</span>
+                            <span class="font-bold text-xs">{{ $reply->user->name }}</span>
+                            <span class="text-[10px] opacity-70">{{ $reply->created_at->format('M d, Y H:i') }}</span>
                         </div>
-                        <div class="text-sm whitespace-pre-wrap">{{ $reply->message }}</div>
+                        <div class="text-xs whitespace-pre-wrap">{{ $reply->message }}</div>
                     </div>
 
                     @if($reply->user_id === Auth::id())
@@ -102,15 +102,15 @@ new class extends Component
             @endforeach
 
             <!-- Reply Form -->
-            <x-ui.card class="bg-gray-50 border-gray-200">
-                <h3 class="font-semibold text-gray-800 mb-4">Post a Reply</h3>
+            <x-ui.card class="bg-neutral-50 dark:bg-neutral-900/50 border-neutral-100 dark:border-neutral-700">
+                <h3 class="font-bold text-neutral-800 dark:text-white mb-4">Post a Reply</h3>
                 <form wire:submit="reply">
                     <x-ui.field>
                         <x-ui.textarea wire:model="message" rows="4" placeholder="Type your response..." />
                         <x-ui.error name="message" />
                     </x-ui.field>
                     <div class="flex justify-end mt-3">
-                        <x-ui.button type="submit">Send Reply</x-ui.button>
+                        <x-ui.button type="submit" variant="primary">Send Reply</x-ui.button>
                     </div>
                 </form>
             </x-ui.card>
@@ -120,29 +120,29 @@ new class extends Component
             <x-ui.card>
                 <div class="space-y-4">
                      <div>
-                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">User Details</div>
+                        <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-2">User Details</div>
                         <div class="flex items-center gap-2">
                              <x-ui.avatar :src="$ticket->user->profile_photo_url" :alt="$ticket->user->name" size="sm" />
                              <div>
-                                 <div class="text-sm font-medium">{{ $ticket->user->name }}</div>
-                                 <div class="text-xs text-gray-500">{{ $ticket->user->email }}</div>
+                                 <div class="text-xs font-bold text-neutral-900 dark:text-white">{{ $ticket->user->name }}</div>
+                                 <div class="text-[10px] text-neutral-500">{{ $ticket->user->email }}</div>
                              </div>
                         </div>
                     </div>
                      <div>
-                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Priority</div>
+                        <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Priority</div>
                          <span @class([
-                            'px-2 py-0.5 rounded text-xs font-semibold',
-                            'bg-red-100 text-red-700' => $ticket->priority === 'high',
-                            'bg-yellow-100 text-yellow-700' => $ticket->priority === 'medium',
-                            'bg-blue-100 text-blue-700' => $ticket->priority === 'low',
+                            'px-2 py-0.5 rounded text-[10px] font-bold',
+                            'bg-error/10 text-error' => $ticket->priority === 'high',
+                            'bg-warning/10 text-warning' => $ticket->priority === 'medium',
+                            'bg-primary/10 text-primary' => $ticket->priority === 'low',
                         ])>
                             {{ ucfirst($ticket->priority) }}
                         </span>
                     </div>
                      <div>
-                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Last Updated</div>
-                        <div class="text-sm">{{ $ticket->updated_at->diffForHumans() }}</div>
+                        <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Last Updated</div>
+                        <div class="text-xs text-neutral-900 dark:text-white font-bold">{{ $ticket->updated_at->diffForHumans() }}</div>
                     </div>
                 </div>
             </x-ui.card>

@@ -169,6 +169,45 @@ new class extends Component
                     Delete
                 </x-ui.button>
                 <x-ui.button tag="a" href="{{ route('admin.shares.index') }}" variant="outline">
+
+<div class="max-w-5xl mx-auto p-6 space-y-8">
+    <x-page-header 
+        :heading="'Share Allocation #' . $share->id" 
+        :description="'Manage shareholding for ' . ($share->holder->name ?? 'Unknown')"
+    >
+        <x-slot:actions>
+            <div class="flex items-center gap-3">
+                @if($share->status === \App\Enums\ShareStatus::PENDING)
+                    <x-ui.button 
+                        type="button" 
+                        wire:click="approve" 
+                        wire:confirm="Are you sure you want to approve this share allocation?"
+                        variant="primary" 
+                    >
+                        Approve Allocation
+                    </x-ui.button>
+                    <x-ui.button 
+                        type="button" 
+                        wire:click="reject" 
+                        wire:confirm="Are you sure you want to reject this share allocation?"
+                        variant="ghost" 
+                        class="text-red-600 hover:text-red-700"
+                    >
+                        Reject
+                    </x-ui.button>
+                @endif
+
+                <x-ui.button 
+                    type="button" 
+                    wire:click="delete" 
+                    wire:confirm="Are you sure you want to delete this share?"
+                    variant="ghost"
+                    class="text-gray-500 hover:text-gray-700"
+                >
+                    <x-ui.icon name="trash" class="w-4 h-4 mr-2" />
+                    Delete
+                </x-ui.button>
+                <x-ui.button tag="a" href="{{ route('admin.shares.index') }}" variant="outline">
                     Back to List
                 </x-ui.button>
             </div>
@@ -177,38 +216,38 @@ new class extends Component
 
     {{-- Stats Overview --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-neutral-800 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-[--radius-field] flex items-center justify-center text-primary dark:text-primary-400">
                     <x-ui.icon name="chart-pie" class="w-6 h-6" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Shares</p>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($share->quantity) }} <span class="text-sm font-normal text-gray-500">{{ $share->currency }}</span></p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Total Shares</p>
+                    <p class="text-xl font-bold text-neutral-900 dark:text-white">{{ number_format($share->quantity) }} <span class="text-xs font-normal text-neutral-500">{{ $share->currency }}</span></p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-neutral-800 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400">
+                <div class="w-12 h-12 bg-success/10 dark:bg-success/20 rounded-[--radius-field] flex items-center justify-center text-success dark:text-success-400">
                     <x-ui.icon name="banknotes" class="w-6 h-6" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Dividends</p>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ \Illuminate\Support\Number::currency($this->totalDividends) }}</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Total Dividends</p>
+                    <p class="text-xl font-bold text-neutral-900 dark:text-white">{{ \Illuminate\Support\Number::currency($this->totalDividends) }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-neutral-800 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <div class="w-12 h-12 bg-accent/10 dark:bg-accent/20 rounded-[--radius-field] flex items-center justify-center text-accent dark:text-accent-400">
                     <x-ui.icon name="calendar" class="w-6 h-6" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Next Payment</p>
-                    <p class="text-xl font-bold text-gray-900 dark:text-white">
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Next Payment</p>
+                    <p class="text-lg font-bold text-neutral-900 dark:text-white">
                         {{ $this->nextDividend?->payment_date?->format('M d, Y') ?? 'Not scheduled' }}
                     </p>
                 </div>
@@ -221,65 +260,65 @@ new class extends Component
         <div class="lg:col-span-2 space-y-8">
             {{-- Next Payment Card --}}
             @if($this->nextDividend)
-                <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-6 text-white shadow-lg shadow-indigo-500/20">
+                <div class="bg-gradient-to-br from-secondary to-secondary-fg rounded-[--radius-box] p-6 text-white shadow-lg shadow-secondary/20">
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <h3 class="text-lg font-semibold opacity-90 text-white">Upcoming Dividend</h3>
-                            <p class="text-3xl font-bold mt-1 text-white">{{ \Illuminate\Support\Number::currency($share->quantity * $this->nextDividend->amount_per_share) }}</p>
+                            <h3 class="text-lg font-bold opacity-90 text-white">Upcoming Dividend</h3>
+                            <p class="text-2xl font-extrabold mt-1 text-white">{{ \Illuminate\Support\Number::currency($share->quantity * $this->nextDividend->amount_per_share) }}</p>
                         </div>
-                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        <div class="bg-white/20 p-2 rounded-[--radius-field] backdrop-blur-sm">
                             <x-ui.icon name="bolt" class="w-6 h-6" />
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div class="bg-white/10 rounded-xl p-3">
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="bg-white/10 rounded-[--radius-field] p-3">
                             <p class="opacity-70">Payment Date</p>
-                            <p class="font-medium text-white">{{ $this->nextDividend->payment_date->format('M d, Y') }}</p>
+                            <p class="font-bold text-white">{{ $this->nextDividend->payment_date->format('M d, Y') }}</p>
                         </div>
-                        <div class="bg-white/10 rounded-xl p-3 text-white">
+                        <div class="bg-white/10 rounded-[--radius-field] p-3 text-white">
                             <p class="opacity-70">Record Date</p>
-                            <p class="font-medium text-white">{{ $this->nextDividend->record_date->format('M d, Y') }}</p>
+                            <p class="font-bold text-white">{{ $this->nextDividend->record_date->format('M d, Y') }}</p>
                         </div>
                     </div>
                 </div>
             @endif
 
             {{-- Payment History --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h3 class="font-bold text-gray-900 dark:text-white">Dividend History</h3>
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+                    <h3 class="font-bold text-neutral-900 dark:text-white">Dividend History</h3>
                     <x-ui.badge color="neutral">{{ $this->paymentHistory->count() }} payments</x-ui.badge>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-xs">
                         <thead>
-                            <tr class="bg-gray-50/50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-left">
-                                <th class="px-6 py-3 font-medium">Date</th>
-                                <th class="px-6 py-3 font-medium">Type</th>
-                                <th class="px-6 py-3 font-medium">Rate</th>
-                                <th class="px-6 py-3 font-medium text-right">Amount</th>
+                            <tr class="bg-neutral-50/50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 text-left">
+                                <th class="px-6 py-3 font-bold">Date</th>
+                                <th class="px-6 py-3 font-bold">Type</th>
+                                <th class="px-6 py-3 font-bold">Rate</th>
+                                <th class="px-6 py-3 font-bold text-right">Amount</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                             @forelse($this->paymentHistory as $payment)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-white">
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                                    <td class="px-6 py-4 text-neutral-900 dark:text-white">
                                         {{ $payment->paid_at->format('M d, Y') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <x-ui.badge color="neutral">{{ $payment->dividend->type }}</x-ui.badge>
                                     </td>
-                                    <td class="px-6 py-4 text-gray-500">
+                                    <td class="px-6 py-4 text-neutral-500">
                                         {{ number_format($payment->amount_per_share, 4) }}/sh
                                     </td>
-                                    <td class="px-6 py-4 text-right font-bold text-gray-900 dark:text-white">
+                                    <td class="px-6 py-4 text-right font-bold text-neutral-900 dark:text-white">
                                         {{ \Illuminate\Support\Number::currency($payment->total_amount) }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                                    <td colspan="4" class="px-6 py-12 text-center text-neutral-400">
                                         No dividend payments found.
                                     </td>
                                 </tr>
@@ -293,8 +332,8 @@ new class extends Component
         {{-- Right Column: Side Actions --}}
         <div class="space-y-8">
             {{-- Edit Form --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-                <h3 class="font-bold text-gray-900 dark:text-white mb-6">Manage Allocation</h3>
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm p-6">
+                <h3 class="font-bold text-neutral-900 dark:text-white mb-6">Manage Allocation</h3>
                 <form wire:submit="save" class="space-y-4">
                     <x-ui.field>
                         <x-ui.label for="quantity">Quantity</x-ui.label>
@@ -303,7 +342,7 @@ new class extends Component
                             id="quantity" 
                             type="number" 
                             min="1" 
-                            class="bg-gray-50 dark:bg-gray-900/50"
+                            class="bg-neutral-50 dark:bg-neutral-900/50"
                         />
                         <x-ui.error name="quantity" />
                     </x-ui.field>
@@ -314,7 +353,7 @@ new class extends Component
                             wire:model="currency" 
                             id="currency" 
                             readonly 
-                            class="bg-gray-100 dark:bg-gray-900 cursor-not-allowed"
+                            class="bg-neutral-100 dark:bg-neutral-900 cursor-not-allowed"
                         />
                         <x-ui.error name="currency" />
                     </x-ui.field>
@@ -328,41 +367,41 @@ new class extends Component
             </div>
 
             {{-- Shareholder Quick Info --}}
-            <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Shareholder</h3>
+            <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-[--radius-box] p-6 border border-neutral-100 dark:border-neutral-100/10">
+                <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-4">Shareholder</h3>
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-primary-400 font-bold">
                         {{ strtoupper(substr($share->holder->name ?? '?', 0, 1)) }}
                     </div>
                     <div>
-                        <p class="font-medium text-gray-900 dark:text-white leading-none">{{ $share->holder->name ?? 'Unknown' }}</p>
-                        <p class="text-xs text-gray-500 mt-1 uppercase">{{ str_replace('App\\Models\\', '', $share->holder_type) }}</p>
+                        <p class="font-bold text-neutral-900 dark:text-white leading-none">{{ $share->holder->name ?? 'Unknown' }}</p>
+                        <p class="text-xs text-neutral-500 mt-1 uppercase">{{ str_replace('App\\Models\\', '', $share->holder_type) }}</p>
                     </div>
                 </div>
                 
-                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Status</span>
+                <div class="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-700 space-y-3">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-neutral-500">Status</span>
                         <x-ui.badge :color="$share->status->getColor()">{{ $share->status->getLabel() }}</x-ui.badge>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Allocated</span>
-                        <span class="text-gray-900 dark:text-white font-medium">{{ $share->created_at->format('M d, Y') }}</span>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-neutral-500">Allocated</span>
+                        <span class="text-neutral-900 dark:text-white font-bold">{{ $share->created_at->format('M d, Y') }}</span>
                     </div>
                 </div>
             </div>
 
             {{-- Market Info --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-                <h3 class="font-bold text-gray-900 dark:text-white mb-4">Market Overview</h3>
+            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm p-6">
+                <h3 class="font-bold text-neutral-900 dark:text-white mb-4">Market Overview</h3>
                 <div class="space-y-4">
-                    <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl flex justify-between items-center">
-                        <span class="text-xs text-gray-500 font-medium uppercase">Current Price</span>
-                        <span class="font-bold text-gray-900 dark:text-white">{{ \Illuminate\Support\Number::currency($shareSettings->share_price) }}</span>
+                    <div class="p-3 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-field] flex justify-between items-center">
+                        <span class="text-xs text-neutral-500 font-bold uppercase">Current Price</span>
+                        <span class="font-bold text-neutral-900 dark:text-white">{{ \Illuminate\Support\Number::currency($shareSettings->share_price) }}</span>
                     </div>
-                    <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl flex justify-between items-center">
-                        <span class="text-xs text-gray-500 font-medium uppercase">Interest Rate</span>
-                        <span class="font-bold text-green-600">{{ number_format($shareSettings->share_interest_rate, 2) }}%</span>
+                    <div class="p-3 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-field] flex justify-between items-center">
+                        <span class="text-xs text-neutral-500 font-bold uppercase">Interest Rate</span>
+                        <span class="font-bold text-success">{{ number_format($shareSettings->share_interest_rate, 2) }}%</span>
                     </div>
                 </div>
             </div>

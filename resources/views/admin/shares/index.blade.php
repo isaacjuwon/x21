@@ -44,8 +44,8 @@ new class extends Component
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Shares</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage user shares</p>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Shares</h1>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Manage user shares</p>
         </div>
         <x-ui.button icon="plus"  tag="a" href="{{ route('admin.shares.create') }}" variant="primary">
             New Share   
@@ -74,10 +74,10 @@ new class extends Component
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
                     <tr>
                         <th class="px-6 py-4">Holder</th>
                         <th class="px-6 py-4">Type</th>
@@ -88,21 +88,21 @@ new class extends Component
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($this->shares as $share)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ $share->holder->name ?? 'Unknown' }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400">
                                 <x-ui.badge color="neutral">
                                     {{ class_basename($share->holder_type) }}
                                 </x-ui.badge>
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ number_format($share->quantity) }} Units
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ Number::currency($share->quantity * $shareSettings->share_price, 'NGN') }}
                             </td>
                             <td class="px-6 py-4">
@@ -110,7 +110,7 @@ new class extends Component
                                     {{ $share->status->getLabel() }}
                                 </x-ui.badge>
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400">
                                 {{ $share->created_at->format('M d, Y H:i') }}
                             </td>
                             <td class="px-6 py-4 text-right">
@@ -121,7 +121,7 @@ new class extends Component
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="7" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                 <div class="flex flex-col items-center justify-center">
                                     <x-ui.icon name="inbox" class="w-12 h-12 text-gray-300 mb-3" />
                                     <p>No shares found</p>
@@ -132,7 +132,7 @@ new class extends Component
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
             {{ $this->shares->links() }}
         </div>
     </div>

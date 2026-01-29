@@ -56,7 +56,7 @@ new class extends Component
             <x-ui.label for="create_permission_name">Permission Name</x-ui.label>
             <x-ui.input wire:model="name" id="create_permission_name" placeholder="e.g., manage users" autofocus />
             <x-ui.error name="name" />
-            <p class="text-xs text-gray-500 mt-1">Use lowercase with spaces or hyphens</p>
+            <p class="text-xs text-neutral-500 mt-1">Use lowercase with spaces or hyphens</p>
         </x-ui.field>
 
         <x-ui.field>

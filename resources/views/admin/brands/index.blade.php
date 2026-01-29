@@ -41,8 +41,8 @@ new class extends Component
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Brands</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your service brands</p>
+            <h1 class="text-xl font-bold text-neutral-900 dark:text-white">Brands</h1>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Manage your service brands</p>
         </div>
         <x-ui.modal.trigger id="create-brand">
             <x-ui.button type="button" icon="plus" variant="primary">
@@ -52,23 +52,23 @@ new class extends Component
     </div>
 
     <div class="flex items-center gap-4">
-        <div class="w-full max-w-md">
+        <div class="w-full max-w-xs">
             <x-ui.input 
                 wire:model.live.debounce.300ms="search" 
                 placeholder="Search brands..." 
                 type="search"
             >
                 <x-slot:leading>
-                    <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-gray-400" />
+                    <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-neutral-400" />
                 </x-slot:leading>
             </x-ui.input>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
                     <tr>
                         <th class="px-6 py-4">Image</th>
                         <th class="px-6 py-4">Name</th>
@@ -76,37 +76,37 @@ new class extends Component
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($this->brands as $brand)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                             <td class="px-6 py-4">
                                 @if($brand->image_url)
-                                    <img src="{{ $brand->image_url }}" alt="{{ $brand->name }}" class="h-10 w-10 object-contain rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <img src="{{ $brand->image_url }}" alt="{{ $brand->name }}" class="h-10 w-10 object-contain rounded-[--radius-field] border border-neutral-200 dark:border-neutral-700">
                                 @else
-                                    <div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+                                    <div class="h-10 w-10 rounded-[--radius-field] bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-400">
                                         <x-ui.icon name="photo" class="w-5 h-5" />
                                     </div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                             <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
                                 {{ $brand->name }}
                             </td>
                             <td class="px-6 py-4">
-                                <x-ui.badge :color="$brand->status ? 'success' : 'danger'">
+                                <x-ui.badge :color="$brand->status ? 'success' : 'danger'" class="text-[10px]">
                                     {{ $brand->status ? 'Active' : 'Inactive' }}
                                 </x-ui.badge>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                    <x-ui.button variant="ghost" @click="$dispatch('show-view-brand', {id: {{ $brand->id }}})" size="sm">
+                                     <x-ui.button variant="ghost" @click="$dispatch('show-view-brand', {id: {{ $brand->id }}})" size="sm" class="font-bold">
                                         View
                                     </x-ui.button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="4" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                 <div class="flex flex-col items-center justify-center">
-                                    <x-ui.icon name="inbox" class="w-12 h-12 text-gray-300 mb-3" />
+                                    <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-300 mb-3" />
                                     <p>No brands found</p>
                                 </div>
                             </td>
@@ -115,7 +115,7 @@ new class extends Component
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
             {{ $this->brands->links() }}
         </div>
     </div>

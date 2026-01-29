@@ -8,6 +8,6 @@ class GenerateReferenceAction
 {
     public function handle(string $prefix = 'TRX'): string
     {
-        return $prefix . '-' . strtoupper(Str::random(20));
+        return $prefix.'-'.strtoupper(Str::random(20));
     }
 }

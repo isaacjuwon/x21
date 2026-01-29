@@ -41,9 +41,9 @@ new class extends Component
         description="View and manage user wallet balances across the platform."
     />
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
-            <x-ui.field class="max-w-md">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
+        <div class="p-6 border-b border-neutral-100 dark:border-neutral-700">
+            <x-ui.field class="max-w-xs">
                 <x-ui.input 
                     wire:model.live.debounce.300ms="search" 
                     placeholder="Search users by name, email, or phone..." 
@@ -57,29 +57,29 @@ new class extends Component
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
-                    <tr>
-                        <th class="px-6 py-4 text-xs uppercase tracking-wider">User</th>
-                        <th class="px-6 py-4 text-xs uppercase tracking-wider">Wallet Balance</th>
-                        <th class="px-6 py-4 text-xs uppercase tracking-wider text-right">Actions</th>
+            <table class="w-full text-xs text-left">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-bold">
+                    <tr class="border-b border-neutral-100 dark:border-neutral-700">
+                        <th class="px-6 py-4 uppercase tracking-wider">User</th>
+                        <th class="px-6 py-4 uppercase tracking-wider">Wallet Balance</th>
+                        <th class="px-6 py-4 uppercase tracking-wider text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($users as $user)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <x-ui.avatar size="sm" :src="$user->avatar_url" circle />
                                     <div class="min-w-0">
-                                        <p class="font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $user->email }}</p>
+                                        <p class="font-bold text-neutral-900 dark:text-white truncate">{{ $user->name }}</p>
+                                        <p class="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{{ $user->email }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="space-y-1">
-                                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                    <div class="text-xs font-bold text-neutral-900 dark:text-white">
                                         {{ \Illuminate\Support\Number::currency($user->walletBalance) }}
                                     </div>
                                     <div class="flex gap-2">
@@ -104,9 +104,9 @@ new class extends Component
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="3" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                 <div class="flex flex-col items-center">
-                                    <x-ui.icon name="wallet" class="w-12 h-12 text-gray-200 mb-4" />
+                                    <x-ui.icon name="wallet" class="w-12 h-12 text-neutral-200 mb-4" />
                                     <p>No users found matching your search.</p>
                                 </div>
                             </td>
@@ -117,7 +117,7 @@ new class extends Component
         </div>
 
         @if($users->hasPages())
-            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+            <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
                 {{ $users->links() }}
             </div>
         @endif

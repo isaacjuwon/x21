@@ -40,8 +40,8 @@ new class extends Component {
 <div class="max-w-7xl mx-auto p-6 space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Roles</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage user roles and permissions</p>
+            <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Roles</h1>
+            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Manage system roles and permissions</p>
         </div>
         <x-ui.button type="button" x-on:click="$dispatch('show-create-role-modal')" variant="primary">
             <x-ui.icon name="plus" class="w-4 h-4 mr-2" />
@@ -56,15 +56,15 @@ new class extends Component {
             type="search"
         >
             <x-slot:leading>
-                <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-gray-400" />
+                <x-ui.icon name="magnifying-glass" class="w-5 h-5 text-neutral-400" />
             </x-slot:leading>
         </x-ui.input>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                <thead class="bg-neutral-50 dark:bg-neutral-700/50 text-neutral-500 dark:text-neutral-400 font-medium">
                     <tr>
                         <th class="px-6 py-4">Name</th>
                         <th class="px-6 py-4">Permissions</th>
@@ -72,14 +72,14 @@ new class extends Component {
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
                     @forelse($this->roles as $role)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-neutral-900 dark:text-white">
                                 {{ $role->name }}
                             </td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
-                                {{ $role->permissions_count }} permissions
+                            <td class="px-6 py-4 text-neutral-500 dark:text-neutral-400 font-mono text-xs">
+                                {{ $role->guard_name }}
                             </td>
                             <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
                                 {{ $role->created_at->format('M d, Y') }}
@@ -92,9 +92,9 @@ new class extends Component {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="4" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                                 <div class="flex flex-col items-center justify-center">
-                                    <x-ui.icon name="inbox" class="w-12 h-12 text-gray-300 mb-3" />
+                                    <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-300 mb-3" />
                                     <p>No roles found</p>
                                 </div>
                             </td>
@@ -103,7 +103,7 @@ new class extends Component {
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-700">
             {{ $this->roles->links() }}
         </div>
     </div>

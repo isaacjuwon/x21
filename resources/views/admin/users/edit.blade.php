@@ -99,31 +99,31 @@ new class extends Component
     @if($user)
         <form wire:submit="save" class="space-y-6">
             <x-ui.field>
-                <x-ui.label for="edit_user_name">Name</x-ui.label>
+                <x-ui.label for="edit_user_name" class="text-[10px] font-bold uppercase tracking-widest mb-1">Name</x-ui.label>
                 <x-ui.input wire:model="name" id="edit_user_name" />
                 <x-ui.error name="name" />
             </x-ui.field>
 
             <x-ui.field>
-                <x-ui.label for="edit_user_email">Email</x-ui.label>
+                <x-ui.label for="edit_user_email" class="text-[10px] font-bold uppercase tracking-widest mb-1">Email</x-ui.label>
                 <x-ui.input wire:model="email" id="edit_user_email" type="email" />
                 <x-ui.error name="email" />
             </x-ui.field>
 
             <x-ui.field>
-                <x-ui.label for="edit_user_phone">Phone Number</x-ui.label>
+                <x-ui.label for="edit_user_phone" class="text-[10px] font-bold uppercase tracking-widest mb-1">Phone Number</x-ui.label>
                 <x-ui.input wire:model="phone_number" id="edit_user_phone" type="tel" />
                 <x-ui.error name="phone_number" />
             </x-ui.field>
 
             <x-ui.field>
-                <x-ui.label for="edit_user_password">Password (leave blank to keep current)</x-ui.label>
+                <x-ui.label for="edit_user_password" class="text-[10px] font-bold uppercase tracking-widest mb-1">Password (leave blank to keep current)</x-ui.label>
                 <x-ui.input wire:model="password" id="edit_user_password" type="password" placeholder="••••••••" />
                 <x-ui.error name="password" />
             </x-ui.field>
 
             <x-ui.field>
-                <x-ui.label for="edit_user_loan_level">Loan Level</x-ui.label>
+                <x-ui.label for="edit_user_loan_level" class="text-[10px] font-bold uppercase tracking-widest mb-1">Loan Level</x-ui.label>
                 <x-ui.select wire:model="loan_level_id" id="edit_user_loan_level">
                     <x-ui.select.option value="">No Loan Level</x-ui.select.option>
                     @foreach($loanLevels as $level)
@@ -134,8 +134,8 @@ new class extends Component
             </x-ui.field>
 
             <div>
-                <x-ui.label>Roles</x-ui.label>
-                <div class="mt-2 max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-2">
+                <x-ui.label class="text-[10px] font-bold uppercase tracking-widest mb-2">Roles</x-ui.label>
+                <div class="mt-2 max-h-48 overflow-y-auto border border-neutral-200 dark:border-neutral-700 rounded-[--radius-field] p-4 space-y-2">
                     @forelse($roles as $role)
                         <div class="flex items-center gap-2">
                             <input 
@@ -143,14 +143,14 @@ new class extends Component
                                 wire:model="selectedRoles" 
                                 value="{{ $role->name }}" 
                                 id="edit_user_role_{{ $role->id }}"
-                                class="rounded border-gray-300 text-primary-600 shadow-sm focus:ring-primary-500"
+                                class="rounded-[--radius-field] border-neutral-300 text-primary-600 shadow-sm focus:ring-primary-500"
                             >
-                            <label for="edit_user_role_{{ $role->id }}" class="text-sm text-gray-700 dark:text-gray-300">
+                            <label for="edit_user_role_{{ $role->id }}" class="text-[10px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-widest">
                                 {{ $role->name }}
                             </label>
                         </div>
                     @empty
-                        <p class="text-sm text-gray-500">No roles available</p>
+                        <p class="text-xs text-neutral-500">No roles available</p>
                     @endforelse
                 </div>
             </div>

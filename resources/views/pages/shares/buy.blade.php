@@ -87,16 +87,16 @@ new class extends Component
 
     <x-ui.card>
 
-        <div class="mb-4">
-            <x-ui.card>
-                <div class="space-y-3">
+        <div class="mb-6">
+            <x-ui.card class="bg-neutral-50 dark:bg-neutral-900/50 border-neutral-100 dark:border-neutral-700 shadow-none">
+                <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Wallet Balance:</span>
-                        <span class="font-bold text-gray-800">{{ number_format($this->walletBalance, 2) }}</span>
+                        <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Wallet Balance:</span>
+                        <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ Number::currency($this->walletBalance, 'NGN') }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Price per Share:</span>
-                        <span class="font-bold text-gray-800">{{ number_format($pricePerShare, 2) }}</span>
+                        <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Price per Share:</span>
+                        <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ Number::currency($pricePerShare, 'NGN') }}</span>
                     </div>
                 </div>
             </x-ui.card>
@@ -105,27 +105,28 @@ new class extends Component
         <form wire:submit="buy">
             <div class="space-y-4">
                 <x-ui.field>
-                    <x-ui.label>{{ __('Quantity') }}</x-ui.label>
+                    <x-ui.label class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">{{ __('Quantity') }}</x-ui.label>
                     <x-ui.input
                         wire:model.live="quantity"
                         type="number"
                         min="1"
                         placeholder="Enter number of shares"
+                        class="text-base font-bold tracking-widest h-14"
                         required
                     />
                     <x-ui.error name="quantity" />
                 </x-ui.field>
 
-                <div class="flex justify-between items-center border-t border-gray-200 pt-4">
-                    <span class="text-lg font-semibold text-gray-700">Total Cost:</span>
-                    <span class="text-xl font-bold text-primary">{{ Number::currency($this->totalCost) }}</span>
+                <div class="flex justify-between items-center border-t border-neutral-100 dark:border-neutral-700 pt-6 mt-2">
+                    <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Total Cost:</span>
+                    <span class="text-2xl font-bold text-primary">{{ Number::currency($this->totalCost, 'NGN') }}</span>
                 </div>
 
-                <div class="flex gap-3">
-                    <x-ui.button type="submit" class="flex-1">
+                <div class="flex gap-4 pt-4">
+                    <x-ui.button type="submit" class="flex-1 h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
                         Confirm Purchase
                     </x-ui.button>
-                    <x-ui.button type="button" variant="outline" wire:navigate href="{{ route('shares.index') }}">
+                    <x-ui.button type="button" variant="outline" wire:navigate href="{{ route('shares.index') }}" class="flex-1 h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
                         Cancel
                     </x-ui.button>
                 </div>

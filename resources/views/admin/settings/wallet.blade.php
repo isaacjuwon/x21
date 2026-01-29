@@ -133,7 +133,7 @@ new class extends Component
                 </x-ui.field>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-3 pt-6 border-t border-neutral-100 dark:border-neutral-700">
                 <div class="flex items-center gap-2">
                     <x-ui.checkbox wire:model="wallet_enabled" id="wallet_enabled" />
                     <x-ui.label for="wallet_enabled" class="mb-0">Enable Wallet System</x-ui.label>

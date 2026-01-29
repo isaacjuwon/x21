@@ -52,56 +52,56 @@ new class extends Component
 
     <!-- Active Loan -->
     @if ($this->activeLoan)
-        <x-ui.card class="mb-6 border-2 border-primary-500">
+        <x-ui.card class="mb-6 border-2 border-primary/20 shadow-lg shadow-primary/5 bg-white dark:bg-neutral-800 rounded-[--radius-box]">
             <x-slot name="header">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Active Loan</h3>
-                    <x-ui.badge :color="$this->activeLoan->status_badge">
+                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Active Loan</h3>
+                    <x-ui.badge :color="$this->activeLoan->status_badge" class="text-[10px] font-bold uppercase tracking-widest">
                         {{ $this->activeLoan->status->getLabel() }}
                     </x-ui.badge>
                 </div>
             </x-slot>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
                 <div>
-                    <p class="text-sm text-gray-600">Loan Amount</p>
-                    <p class="text-xl font-bold">{{ Number::currency($this->activeLoan->amount) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Loan Amount</p>
+                    <p class="text-lg font-bold text-neutral-900 dark:text-white">{{ Number::currency($this->activeLoan->amount, 'NGN') }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600">Amount Paid</p>
-                    <p class="text-xl font-bold text-success-600">{{ Number::currency($this->activeLoan->amount_paid) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Amount Paid</p>
+                    <p class="text-lg font-bold text-success">{{ Number::currency($this->activeLoan->amount_paid, 'NGN') }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600">Balance Remaining</p>
-                    <p class="text-xl font-bold text-warning-600">{{ Number::currency($this->activeLoan->balance_remaining) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Remaining</p>
+                    <p class="text-lg font-bold text-amber-500">{{ Number::currency($this->activeLoan->balance_remaining, 'NGN') }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-600">Progress</p>
-                    <p class="text-xl font-bold">{{ number_format($this->activeLoan->progress_percentage, 1) }}%</p>
+                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Progress</p>
+                    <p class="text-lg font-bold text-neutral-900 dark:text-white">{{ number_format($this->activeLoan->progress_percentage, 1) }}%</p>
                 </div>
             </div>
 
             <!-- Progress Bar -->
-            <div class="mb-4">
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div class="bg-primary-600 h-3 rounded-full transition-all" style="width: {{ $this->activeLoan->progress_percentage }}%"></div>
+            <div class="mb-6">
+                <div class="w-full bg-neutral-100 dark:bg-neutral-700 rounded-full h-2 overflow-hidden">
+                    <div class="bg-primary h-full rounded-full transition-all duration-500" style="width: {{ $this->activeLoan->progress_percentage }}%"></div>
                 </div>
             </div>
 
-            <div class="flex gap-3">
-                <x-ui.button wire:navigate href="/loans/{{ $this->activeLoan->id }}">
+            <div class="flex gap-4">
+                <x-ui.button wire:navigate href="/loans/{{ $this->activeLoan->id }}" class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
                     View Details
                 </x-ui.button>
-                <x-ui.button variant="outline" wire:navigate href="/loans/{{ $this->activeLoan->id }}/payment">
+                <x-ui.button variant="outline" wire:navigate href="/loans/{{ $this->activeLoan->id }}/payment" class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
                     Make Payment
                 </x-ui.button>
             </div>
         </x-ui.card>
     @else
-        <x-ui.card class="mb-6">
-            <div class="text-center py-8">
-                <p class="text-gray-600 mb-4">You don't have an active loan</p>
-                <x-ui.button wire:navigate href="/loans/apply">
+        <x-ui.card class="mb-6 bg-neutral-50 dark:bg-neutral-900/50 border-neutral-100 dark:border-neutral-700 shadow-none rounded-[--radius-box]">
+            <div class="text-center py-10">
+                <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-6">You don't have an active loan</p>
+                <x-ui.button wire:navigate href="/loans/apply" class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
                     Apply for Loan
                 </x-ui.button>
             </div>
@@ -109,46 +109,46 @@ new class extends Component
     @endif
 
     <!-- Loan History -->
-    <x-ui.card>
+    <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none">
         <x-slot name="header">
-            <h3 class="text-xl font-bold">Loan History</h3>
+            <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Loan History</h3>
         </x-slot>
 
         @if ($this->loans->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
+                <table class="min-w-full divide-y border border-neutral-100 dark:border-neutral-700 divide-neutral-100 dark:divide-neutral-700">
+                    <thead class="bg-neutral-50 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 uppercase tracking-widest text-[10px] font-bold">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Date Applied</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Level</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Progress</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
+                            <th class="px-6 py-4 text-left">Date Applied</th>
+                            <th class="px-6 py-4 text-left">Amount</th>
+                            <th class="px-6 py-4 text-left">Level</th>
+                            <th class="px-6 py-4 text-left">Status</th>
+                            <th class="px-6 py-4 text-left">Progress</th>
+                            <th class="px-6 py-4 text-left">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-700">
                         @foreach ($this->loans as $loan)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-5 whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400 font-bold">
                                     {{ $loan->applied_at?->format('M d, Y') ?? 'N/A' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-white">
-                                    {{ Number::currency($loan->amount) }}
+                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
+                                    {{ Number::currency($loan->amount, 'NGN') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $loan->loanLevel->name }}
+                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
+                                    {{ $loan->loanLevel?->name ?? 'Default' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <x-ui.badge :color="$loan->status_badge">
+                                <td class="px-6 py-5 whitespace-nowrap">
+                                    <x-ui.badge :color="$loan->status_badge" class="text-[10px] font-bold uppercase tracking-widest">
                                         {{ $loan->status->getLabel() }}
                                     </x-ui.badge>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
                                     {{ number_format($loan->progress_percentage, 1) }}%
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <x-ui.button size="sm" variant="outline" wire:navigate href="/loans/{{ $loan->id }}">
+                                <td class="px-6 py-5 whitespace-nowrap">
+                                    <x-ui.button size="xs" variant="outline" wire:navigate href="/loans/{{ $loan->id }}" class="rounded-[--radius-field] font-bold uppercase tracking-widest">
                                         View
                                     </x-ui.button>
                                 </td>
@@ -162,8 +162,9 @@ new class extends Component
                 {{ $this->loans->links() }}
             </div>
         @else
-            <div class="text-center py-8 text-gray-600">
-                No loan history found
+            <div class="text-center py-10 bg-neutral-50/50 dark:bg-neutral-900/20 rounded-[--radius-box] border-2 border-dashed border-neutral-100 dark:border-neutral-700">
+                <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-200 dark:text-neutral-700 mx-auto mb-4" />
+                <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">No loan history found</p>
             </div>
         @endif
     </x-ui.card>
