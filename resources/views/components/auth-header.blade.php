@@ -3,7 +3,7 @@
     'description',
 ])
 
-<div class="flex w-full flex-col text-center">
+<div class="flex w-full flex-col text-center gap-1">
     <x-ui.heading size="xl">{{ $title }}</x-ui.heading>
     <x-ui.description>{{ $description }}</x-ui.description>
 </div>

@@ -16,7 +16,7 @@
     };
 
     $classes = [
-        'font-semibold text-neutral-800 dark:text-white text-start',
+        'font-semibold text-neutral-800 dark:text-white',
         $variantClasses
     ];
 
