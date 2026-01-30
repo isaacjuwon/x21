@@ -4,11 +4,17 @@ use App\Livewire\Concerns\HasToast;
 use App\Settings\LayoutSettings;
 use Livewire\Component;
 
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
 new class extends Component
 {
     use HasToast;
+    use WithFileUploads;
 
     public ?string $banner = '';
+
+    public $banner_file;
 
     public ?string $about = '';
 
@@ -42,6 +48,7 @@ new class extends Component
     {
         return [
             'banner' => 'nullable|string',
+            'banner_file' => 'nullable|image|max:2048',
             'about' => 'nullable|string',
             'address' => 'nullable|string',
             'facebook' => 'nullable|string',
@@ -115,7 +122,13 @@ new class extends Component
     {
         $this->validate();
 
-        $settings->banner = $this->banner;
+        if ($this->banner_file) {
+            $settings->banner = $this->banner_file->store('settings', 'public');
+            $this->banner = $settings->banner;
+            $this->banner_file = null;
+        } else {
+            $settings->banner = $this->banner;
+        }
         $settings->about = $this->about;
         $settings->address = $this->address;
         $settings->facebook = $this->facebook;
@@ -155,11 +168,22 @@ new class extends Component
                 </div>
 
                 <div class="space-y-4">
-                    <x-ui.input
-                        wire:model="banner"
-                        label="Banner URL"
-                        placeholder="Enter banner image URL"
-                    />
+                    <x-ui.field>
+                        <x-ui.label>Banner Image</x-ui.label>
+                        <div class="mt-2 flex flex-col items-center gap-4">
+                            @if ($banner_file)
+                                <img src="{{ $banner_file->temporaryUrl() }}" class="h-32 w-full object-cover rounded-box border border-neutral-100 dark:border-neutral-700" />
+                            @elseif ($banner)
+                                <img src="{{ Storage::url($banner) }}" class="h-32 w-full object-cover rounded-box border border-neutral-100 dark:border-neutral-700" />
+                            @endif
+                            <x-ui.input
+                                type="file"
+                                wire:model="banner_file"
+                                accept="image/*"
+                            />
+                        </div>
+                        <x-ui.error name="banner_file" />
+                    </x-ui.field>
 
                     <x-ui.textarea
                         wire:model="about"
