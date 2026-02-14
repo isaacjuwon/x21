@@ -28,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->api(append: [
-            \App\Http\Middleware\SetReferrerPolicy::class,
+            //            \App\Http\Middleware\SetReferrerPolicy::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
