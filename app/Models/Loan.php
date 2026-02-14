@@ -43,6 +43,7 @@ class Loan extends Model
         'shares_value_at_application' => 'decimal:2',
         'installment_months' => 'integer',
         'shares_required' => 'integer',
+
         'status' => LoanStatus::class,
         'applied_at' => 'datetime',
         'approved_at' => 'datetime',
