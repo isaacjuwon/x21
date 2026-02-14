@@ -1,10 +1,23 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Public Auth Routes
+Route::post('/register', [AuthController::class, 'register'])->name('api.register');
+Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
 Route::middleware(['auth:sanctum'])->group(function () {
+    // Auth Routes
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('api.profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('api.profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('api.profile.password');
+
     // User Routes
     Route::get('/user', [UserController::class, 'show'])->name('api.user.show');
     Route::put('/user', [UserController::class, 'update'])->name('api.user.update');

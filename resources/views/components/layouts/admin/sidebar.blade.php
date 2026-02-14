@@ -69,6 +69,18 @@
                             icon="arrows-right-left"
                             :href="route('admin.transactions.index')"
                         />
+                         <x-ui.navlist.item 
+                            label="Properties"
+                            icon="building-office-2"
+                            :href="route('admin.properties.index')"
+                            :active="request()->routeIs('admin.properties.*')"
+                        />
+                        <x-ui.navlist.item 
+                            label="Enquiries"
+                            icon="chat-bubble-bottom-center-text"
+                            :href="route('admin.enquiries.index')"
+                            :active="request()->routeIs('admin.enquiries.*')"
+                        />
                         <x-ui.navlist.item 
                             label="Pages"
                             icon="document-text"

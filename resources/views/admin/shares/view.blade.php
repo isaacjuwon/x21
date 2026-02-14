@@ -169,45 +169,6 @@ new class extends Component
                     Delete
                 </x-ui.button>
                 <x-ui.button tag="a" href="{{ route('admin.shares.index') }}" variant="outline">
-
-<div class="max-w-5xl mx-auto p-6 space-y-8">
-    <x-page-header 
-        :heading="'Share Allocation #' . $share->id" 
-        :description="'Manage shareholding for ' . ($share->holder->name ?? 'Unknown')"
-    >
-        <x-slot:actions>
-            <div class="flex items-center gap-3">
-                @if($share->status === \App\Enums\ShareStatus::PENDING)
-                    <x-ui.button 
-                        type="button" 
-                        wire:click="approve" 
-                        wire:confirm="Are you sure you want to approve this share allocation?"
-                        variant="primary" 
-                    >
-                        Approve Allocation
-                    </x-ui.button>
-                    <x-ui.button 
-                        type="button" 
-                        wire:click="reject" 
-                        wire:confirm="Are you sure you want to reject this share allocation?"
-                        variant="ghost" 
-                        class="text-red-600 hover:text-red-700"
-                    >
-                        Reject
-                    </x-ui.button>
-                @endif
-
-                <x-ui.button 
-                    type="button" 
-                    wire:click="delete" 
-                    wire:confirm="Are you sure you want to delete this share?"
-                    variant="ghost"
-                    class="text-gray-500 hover:text-gray-700"
-                >
-                    <x-ui.icon name="trash" class="w-4 h-4 mr-2" />
-                    Delete
-                </x-ui.button>
-                <x-ui.button tag="a" href="{{ route('admin.shares.index') }}" variant="outline">
                     Back to List
                 </x-ui.button>
             </div>

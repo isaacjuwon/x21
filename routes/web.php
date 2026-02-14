@@ -59,6 +59,10 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/loans/{loan}', 'pages::loan.show')->name('loans.details');
     Route::livewire('/loans/{loan}/payment', 'pages::loan.payment')->name('loans.payment');
 
+    // Property routes
+    Route::livewire('/properties', 'pages::properties.index')->name('properties.listing');
+    Route::livewire('/properties/{property:slug}', 'pages::properties.show')->name('properties.show');
+
     // Service routes
     Route::livewire('/services/airtime', 'pages::services.airtime')->name('airtime');
     Route::livewire('/services/data', 'pages::services.data')->name('data');
@@ -113,6 +117,14 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('/shares', 'admin::shares.index')->name('shares.index');
         Route::livewire('/shares/create', 'admin::shares.create')->name('shares.create');
         Route::livewire('/shares/{share}', 'admin::shares.view')->name('shares.view');
+
+        // Properties
+        Route::livewire('/properties', 'admin::properties.index')->name('properties.index');
+        Route::livewire('/properties/create', 'admin::properties.create')->name('properties.create');
+        Route::livewire('/properties/{property}', 'admin::properties.view')->name('properties.view');
+
+        // Enquiries
+        Route::livewire('/enquiries', 'admin::enquiries.index')->name('enquiries.index');
 
         // Dividends
         Route::livewire('/dividends', 'admin::dividends.index')->name('dividends.index');

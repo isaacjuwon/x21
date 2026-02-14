@@ -15,13 +15,14 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use App\Concerns\HasReferrals;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Enums\Media\MediaCollectionType;
 
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasLoans, HasReferrals, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasLoans, HasReferrals, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
     use InteractsWithMedia;
 
     /**

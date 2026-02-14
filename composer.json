@@ -12,6 +12,7 @@
         "php": "^8.2",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "v4.0.0-beta.2",
@@ -19,6 +20,7 @@
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "*",
         "spatie/laravel-settings": "*",
+        "sunchayn/nimbus": "*",
         "wireui/heroicons": "*",
         "wireui/phosphoricons": "^2.4"
     },
@@ -30,7 +32,8 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "phpunit/phpunit": "^11.5.3",
+        "yasin_tgh/laravel-postman": "*"
     },
     "autoload": {
         "psr-4": {

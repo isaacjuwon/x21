@@ -107,13 +107,13 @@ new class extends Component
             @php
                 $balance = $user->getWalletBalanceByType($type);
                 $icon = match($type) {
-                    WalletType::MAIN => 'wallet',
-                    WalletType::BONUS => 'gift',
+                    WalletType::Main => 'wallet',
+                    WalletType::Bonus => 'gift',
                     default => 'currency-dollar',
                 };
                 $color = match($type) {
-                    WalletType::MAIN => 'primary',
-                    WalletType::BONUS => 'accent',
+                    WalletType::Main => 'primary',
+                    WalletType::Bonus => 'accent',
                     default => 'neutral',
                 };
             @endphp

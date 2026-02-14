@@ -1,0 +1,77 @@
+{
+  "_AppPopoverTrigger.vue_vue_type_script_setup_true_lang-nBfag7CV.js": {
+    "file": "assets/AppPopoverTrigger.vue_vue_type_script_setup_true_lang-nBfag7CV.js",
+    "name": "AppPopoverTrigger.vue_vue_type_script_setup_true_lang",
+    "imports": [
+      "resources/js/app/app.ts"
+    ]
+  },
+  "node_modules/shiki/dist/langs/javascript.mjs": {
+    "file": "assets/javascript-ySlJ1b_l.js",
+    "name": "javascript",
+    "src": "node_modules/shiki/dist/langs/javascript.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/shiki/dist/themes/vitesse-dark.mjs": {
+    "file": "assets/vitesse-dark-D0r3Knsf.js",
+    "name": "vitesse-dark",
+    "src": "node_modules/shiki/dist/themes/vitesse-dark.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/shiki/dist/themes/vitesse-light.mjs": {
+    "file": "assets/vitesse-light-CVO1_9PV.js",
+    "name": "vitesse-light",
+    "src": "node_modules/shiki/dist/themes/vitesse-light.mjs",
+    "isDynamicEntry": true
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-PzvJiV8M.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app/app.ts": {
+    "file": "assets/app-9y4VsaPU.js",
+    "name": "app",
+    "src": "resources/js/app/app.ts",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/pages/Main.vue",
+      "resources/js/pages/Settings.vue"
+    ],
+    "css": [
+      "assets/app-PzvJiV8M.css"
+    ]
+  },
+  "resources/js/pages/Main.vue": {
+    "file": "assets/Main-ChqJeGTY.js",
+    "name": "Main",
+    "src": "resources/js/pages/Main.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app/app.ts",
+      "_AppPopoverTrigger.vue_vue_type_script_setup_true_lang-nBfag7CV.js"
+    ],
+    "dynamicImports": [
+      "node_modules/shiki/dist/themes/vitesse-light.mjs",
+      "node_modules/shiki/dist/themes/vitesse-dark.mjs",
+      "node_modules/shiki/dist/langs/javascript.mjs"
+    ],
+    "css": [
+      "assets/Main-DT_Im_ve.css",
+      "assets/app-PzvJiV8M.css"
+    ]
+  },
+  "resources/js/pages/Settings.vue": {
+    "file": "assets/Settings-BVB2dB75.js",
+    "name": "Settings",
+    "src": "resources/js/pages/Settings.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AppPopoverTrigger.vue_vue_type_script_setup_true_lang-nBfag7CV.js",
+      "resources/js/app/app.ts"
+    ],
+    "css": [
+      "assets/app-PzvJiV8M.css"
+    ]
+  }
+}

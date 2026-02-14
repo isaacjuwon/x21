@@ -26,6 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CheckMaintenanceMode::class,
             \App\Http\Middleware\TrackReferralCode::class,
         ]);
+
+        $middleware->api(append: [
+            \App\Http\Middleware\SetReferrerPolicy::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Payment\VerifyPaymentAction;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
-class PaymentController extends Controller
+class PaymentController extends ApiController
 {
     /**
      * Verify a payment reference.
@@ -17,18 +16,10 @@ class PaymentController extends Controller
     {
         $result = $action->handle($reference);
 
-        if (!$result->success) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Payment verification failed.',
-                'error' => $result->message,
-            ], 400);
+        if (! $result->success) {
+            return $this->errorResponse($result->message, 400);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Payment verified.',
-            'data' => $result->data,
-        ]);
+        return $this->successResponse($result->data, 'Payment verified.');
     }
 }

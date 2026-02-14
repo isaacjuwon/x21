@@ -53,7 +53,7 @@ new class extends Component
     {
         try {
             $disburseAction->execute($this->loan);
-            
+
             $this->loan = $this->loan->fresh();
             $this->status = LoanStatus::ACTIVE->value;
             $this->toastSuccess('Loan disbursed and active.');

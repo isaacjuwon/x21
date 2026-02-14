@@ -69,6 +69,13 @@
                             icon="banknotes"
                             :href="route('loan.index')"
                         />
+
+                        <x-ui.navlist.item 
+                            label="Properties"
+                            icon="building-office-2"
+                            :href="route('properties.listing')"
+                            :active="request()->routeIs('properties.*')"
+                        />
                         
                         <x-ui.navlist.item 
                             label="Wallet"
