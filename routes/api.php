@@ -8,10 +8,18 @@ use Illuminate\Support\Facades\Route;
 // Public Auth Routes
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('api.password.email');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('api.password.update');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Auth Routes
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+    Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])
+        ->middleware('throttle:6,1')
+        ->name('api.verification.send');
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('api.verification.verify');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('api.profile.show');
@@ -23,27 +31,60 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user', [UserController::class, 'update'])->name('api.user.update');
 
     // Share Routes
-    Route::get('/shares', [\App\Http\Controllers\Api\ShareController::class, 'index'])->name('api.shares.index');
-    Route::post('/shares/buy', [\App\Http\Controllers\Api\ShareController::class, 'buy'])->name('api.shares.buy');
-    Route::post('/shares/sell', [\App\Http\Controllers\Api\ShareController::class, 'sell'])->name('api.shares.sell');
+    Route::prefix('shares')->name('api.shares.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\ShareController::class, 'index'])->name('index');
+        Route::post('/buy', [\App\Http\Controllers\Api\ShareController::class, 'buy'])->name('buy');
+        Route::post('/sell', [\App\Http\Controllers\Api\ShareController::class, 'sell'])->name('sell');
+    });
 
     // Loan Routes
-    Route::get('/loans', [\App\Http\Controllers\Api\LoanController::class, 'index'])->name('api.loans.index');
-    Route::post('/loans/apply', [\App\Http\Controllers\Api\LoanController::class, 'apply'])->name('api.loans.apply');
-    Route::post('/loans/{loan}/repay', [\App\Http\Controllers\Api\LoanController::class, 'repay'])->name('api.loans.repay');
+    Route::prefix('loans')->name('api.loans.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\LoanController::class, 'index'])->name('index');
+        Route::post('/apply', [\App\Http\Controllers\Api\LoanController::class, 'apply'])->name('apply');
+        Route::post('/{loan}/repay', [\App\Http\Controllers\Api\LoanController::class, 'repay'])->name('repay');
+    });
 
     // Wallet Routes
-    Route::get('/wallet', [\App\Http\Controllers\Api\WalletController::class, 'index'])->name('api.wallet.index');
-    Route::post('/wallet/deposit', [\App\Http\Controllers\Api\WalletController::class, 'deposit'])->name('api.wallet.deposit');
-    Route::post('/wallet/fund', [\App\Http\Controllers\Api\WalletController::class, 'fund'])->name('api.wallet.fund');
-    Route::post('/wallet/withdraw', [\App\Http\Controllers\Api\WalletController::class, 'withdraw'])->name('api.wallet.withdraw');
-    Route::post('/wallet/transfer', [\App\Http\Controllers\Api\WalletController::class, 'transfer'])->name('api.wallet.transfer');
-    Route::get('/banks', [\App\Http\Controllers\Api\WalletController::class, 'getBanks'])->name('api.banks.index');
+    Route::prefix('wallet')->name('api.wallet.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\WalletController::class, 'index'])->name('index');
+        Route::post('/deposit', [\App\Http\Controllers\Api\WalletController::class, 'deposit'])->name('deposit');
+        Route::post('/fund', [\App\Http\Controllers\Api\WalletController::class, 'fund'])->name('fund');
+        Route::post('/withdraw', [\App\Http\Controllers\Api\WalletController::class, 'withdraw'])->name('withdraw');
+        Route::post('/transfer', [\App\Http\Controllers\Api\WalletController::class, 'transfer'])->name('transfer');
+        Route::get('/banks', [\App\Http\Controllers\Api\WalletController::class, 'getBanks'])->name('banks.index');
+    });
 
     // KYC Routes
-    Route::get('/kyc', [\App\Http\Controllers\Api\KycController::class, 'index'])->name('api.kyc.index');
-    Route::post('/kyc/verify', [\App\Http\Controllers\Api\KycController::class, 'verify'])->name('api.kyc.verify');
+    Route::prefix('kyc')->name('api.kyc.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\KycController::class, 'index'])->name('index');
+        Route::post('/verify', [\App\Http\Controllers\Api\KycController::class, 'verify'])->name('verify');
+    });
 
     // Payment Routes
     Route::get('/payment/verify/{reference}', [\App\Http\Controllers\Api\PaymentController::class, 'verify'])->name('api.payment.verify');
+
+    // Service Routes
+    Route::prefix('services')->name('api.services.')->group(function () {
+        // Airtime
+        Route::get('/airtime', [\App\Http\Controllers\Api\Service\AirtimeController::class, 'index'])->name('airtime.index');
+        Route::post('/airtime', [\App\Http\Controllers\Api\Service\AirtimeController::class, 'store'])->name('airtime');
+
+        // Data
+        Route::get('/data', [\App\Http\Controllers\Api\Service\DataController::class, 'index'])->name('data.index');
+        Route::post('/data', [\App\Http\Controllers\Api\Service\DataController::class, 'store'])->name('data');
+
+        // Cable
+        Route::get('/cable', [\App\Http\Controllers\Api\Service\CableController::class, 'index'])->name('cable.index');
+        Route::post('/cable', [\App\Http\Controllers\Api\Service\CableController::class, 'store'])->name('cable');
+
+        // Education
+        Route::get('/education', [\App\Http\Controllers\Api\Service\EducationController::class, 'index'])->name('education.index');
+        Route::post('/education', [\App\Http\Controllers\Api\Service\EducationController::class, 'store'])->name('education');
+
+        // Electricity
+        Route::get('/electricity', [\App\Http\Controllers\Api\Service\ElectricityController::class, 'index'])->name('electricity.index');
+        Route::post('/electricity', [\App\Http\Controllers\Api\Service\ElectricityController::class, 'store'])->name('electricity');
+    });
 });
+
+

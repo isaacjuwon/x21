@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fd6498d51d0d879a04fab2c92da0744",
+    "content-hash": "65198825a466a3b84c9f691329d8bd0b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1344,6 +1344,88 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "irabbi360/laravel-api-inspector",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/irabbi360/laravel-api-inspector.git",
+                "reference": "824b2cb2ecedcf58c4b04422ee1ff0171c424ae2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/irabbi360/laravel-api-inspector/zipball/824b2cb2ecedcf58c4b04422ee1ff0171c424ae2",
+                "reference": "824b2cb2ecedcf58c4b04422ee1ff0171c424ae2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^10.0 | ^11.0 | ^12.0",
+                "php": "^8.1 | ^8.2 | ^8.3",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^7.8 | ^8.8",
+                "orchestra/testbench": "^10.0.0||^9.0.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-arch": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "LaravelApiInspector": "Irabbi360\\LaravelApiInspector\\Facades\\LaravelApiInspector"
+                    },
+                    "providers": [
+                        "Irabbi360\\LaravelApiInspector\\LaravelApiInspectorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Irabbi360\\LaravelApiInspector\\": "src/",
+                    "Irabbi360\\LaravelApiInspector\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fazle Rabbi",
+                    "email": "fazle08rabbi@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Auto Generate API Documentation for request rules, parameters and API Response",
+            "homepage": "https://github.com/irabbi360/laravel-api-inspector",
+            "keywords": [
+                "api-docs",
+                "api-documentation",
+                "api-inspector",
+                "api-tester",
+                "irabbi360",
+                "laravel",
+                "laravel-api-inspector"
+            ],
+            "support": {
+                "issues": "https://github.com/irabbi360/laravel-api-inspector/issues",
+                "source": "https://github.com/irabbi360/laravel-api-inspector/tree/v1.2.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Irabbi360",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-16T11:58:20+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -10584,56 +10666,6 @@
                 }
             ],
             "time": "2025-11-17T20:03:58+00:00"
-        },
-        {
-            "name": "yasin_tgh/laravel-postman",
-            "version": "v1.4.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yasintqvi/laravel-postman.git",
-                "reference": "bb4a103518eba379fb71f9ee2a499473cc43d40f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yasintqvi/laravel-postman/zipball/bb4a103518eba379fb71f9ee2a499473cc43d40f",
-                "reference": "bb4a103518eba379fb71f9ee2a499473cc43d40f",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^10.0|^11.0|^12.0",
-                "php": "^8.1",
-                "symfony/console": "^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "logo": "https://i.imgur.com/wt0yMs7.png",
-                    "providers": [
-                        "YasinTgh\\LaravelPostman\\PostmanServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "YasinTgh\\LaravelPostman\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "yasin taghavi",
-                    "email": "mrtqvi@yahoo.com"
-                }
-            ],
-            "description": "A powerful package to automatically generate Postman collections from your Laravel routes with intelligent organization and rich documentation capabilities.",
-            "support": {
-                "issues": "https://github.com/yasintqvi/laravel-postman/issues",
-                "source": "https://github.com/yasintqvi/laravel-postman/tree/v1.4.5"
-            },
-            "time": "2025-12-19T08:49:27+00:00"
         }
     ],
     "aliases": [],

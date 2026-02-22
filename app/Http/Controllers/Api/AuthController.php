@@ -2,48 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\ResetUserPassword;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends ApiController
 {
     /**
      * Register a new user.
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(RegisterRequest $request, CreateNewUser $creator): JsonResponse
     {
-        $validated = $request->validated();
+        // We use the Fortify action to ensure consistency with web registration
+        $user = $creator->create($request->validated());
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        // Assign default 'user' role
-        if (method_exists($user, 'assignRole')) {
-            $user->assignRole('user');
-        }
-
-        $tokenStr = '';
-        $tokenResult = $user->createToken('auth_token');
-
-        if (isset($tokenResult->plainTextToken)) {
-            $tokenStr = $tokenResult->plainTextToken;
-        } elseif (isset($tokenResult->accessToken)) {
-            $tokenStr = $tokenResult->accessToken;
-        } else {
-            // Fallback or string
-            $tokenStr = (string) $tokenResult;
-        }
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return $this->createdResponse([
             'user' => $user,
-            'access_token' => $tokenStr,
+            'access_token' => $token,
             'token_type' => 'Bearer',
         ], 'User registered successfully');
     }
@@ -53,36 +40,22 @@ class AuthController extends ApiController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $user = User::where('email', $request->email)->first();
 
-        $user = User::where('email', $validated['email'])->first();
-
-        if (! $user || ! Hash::check($validated['password'], $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return $this->unauthorizedResponse('Invalid credentials');
         }
 
-        $tokenStr = '';
-        $tokenResult = $user->createToken('auth_token');
-
-        if (isset($tokenResult->plainTextToken)) {
-            $tokenStr = $tokenResult->plainTextToken;
-        } elseif (isset($tokenResult->accessToken)) {
-            $tokenStr = $tokenResult->accessToken;
-        } else {
-            $tokenStr = (string) $tokenResult;
-        }
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         $response = [
             'user' => $user,
-            'access_token' => $tokenStr,
+            'access_token' => $token,
             'token_type' => 'Bearer',
         ];
 
         if (method_exists($user, 'getRoleNames')) {
             $response['roles'] = $user->getRoleNames();
-        }
-        if (method_exists($user, 'getAllPermissions')) {
-            $response['permissions'] = $user->getAllPermissions()->pluck('name');
         }
 
         return $this->successResponse($response, 'Login successful');
@@ -93,18 +66,87 @@ class AuthController extends ApiController
      */
     public function logout(Request $request): JsonResponse
     {
-        // Handle Sanctum or Passport
         $user = $request->user();
-        if ($user) {
-            if (method_exists($user->currentAccessToken(), 'delete')) {
-                // Sanctum
-                $user->currentAccessToken()->delete();
-            } elseif (method_exists($user->token(), 'revoke')) {
-                // Passport
-                $user->token()->revoke();
-            }
+
+        if ($user && $user->currentAccessToken()) {
+            $user->currentAccessToken()->delete();
         }
 
         return $this->successResponse(null, 'Logged out successfully');
     }
+
+    /**
+     * Send a reset link to the given user.
+     */
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? $this->successResponse(null, __($status))
+            : $this->errorResponse(__($status), 422);
+    }
+
+    /**
+     * Reset the user's password.
+     */
+    public function resetPassword(Request $request, ResetUserPassword $reseter): JsonResponse
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) use ($reseter, $request) {
+                $reseter->reset($user, $request->only('password', 'password_confirmation'));
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? $this->successResponse(null, __($status))
+            : $this->errorResponse(__($status), 422);
+    }
+
+    /**
+     * Verify the user's email.
+     */
+    public function verifyEmail(Request $request): JsonResponse
+    {
+        $user = User::findOrFail($request->route('id'));
+
+        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+            return $this->errorResponse('Invalid verification link.', 403);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return $this->successResponse(null, 'Email already verified.');
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return $this->successResponse(null, 'Email verified successfully.');
+    }
+
+    /**
+     * Resend verification email.
+     */
+    public function resendVerificationEmail(Request $request): JsonResponse
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return $this->successResponse(null, 'Email already verified.');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return $this->successResponse(null, 'Verification link sent.');
+    }
 }
+
