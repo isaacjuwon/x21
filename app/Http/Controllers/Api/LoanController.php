@@ -32,6 +32,72 @@ class LoanController extends ApiController
     }
 
     /**
+     * Get user's loan eligibility status.
+     */
+    public function eligibility(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user->loan_level_id) {
+            return $this->successResponse([
+                'shares_value' => $user->getSharesValue(),
+                'eligible_amount' => 0,
+                'loan_level_name' => null,
+                'max_loan_amount' => 0,
+                'installment_months' => 0,
+                'interest_rate' => 0,
+                'is_eligible' => false,
+                'reason' => 'No loan level assigned to your account.',
+            ]);
+        }
+
+        $loanLevel = $user->loanLevel;
+        $sharesValue = $user->getSharesValue();
+        $eligibleAmount = $user->getLoanEligibilityAmount();
+
+        return $this->successResponse([
+            'shares_value' => $sharesValue,
+            'eligible_amount' => $eligibleAmount,
+            'loan_level_name' => $loanLevel->name,
+            'max_loan_amount' => $loanLevel->maximum_loan_amount,
+            'installment_months' => $loanLevel->installment_period_months,
+            'interest_rate' => $loanLevel->interest_rate,
+            'is_eligible' => $eligibleAmount > 0 && ! $user->hasActiveLoan(),
+            'has_active_loan' => $user->hasActiveLoan(),
+        ]);
+    }
+
+    /**
+     * Show detailed loan information.
+     */
+    public function show(Request $request, Loan $loan): JsonResponse
+    {
+        // Ensure user owns the loan
+        if ($loan->user_id !== $request->user()->id) {
+            return $this->forbiddenResponse('You do not own this loan');
+        }
+
+        $loan->load(['loanLevel', 'payments' => fn ($q) => $q->latest()->take(10)]);
+
+        return $this->successResponse(new LoanResource($loan), 'Loan details retrieved successfully');
+    }
+
+    /**
+     * Get loan payment schedule.
+     */
+    public function schedule(Request $request, Loan $loan, CalculateLoanScheduleAction $action): JsonResponse
+    {
+        // Ensure user owns the loan
+        if ($loan->user_id !== $request->user()->id) {
+            return $this->forbiddenResponse('You do not own this loan');
+        }
+
+        $schedule = $action->execute($loan);
+
+        return $this->successResponse($schedule, 'Loan payment schedule retrieved successfully');
+    }
+
+    /**
      * Apply for a new loan.
      */
     public function apply(ApplyLoanRequest $request, ApplyForLoanAction $action): JsonResponse
@@ -48,6 +114,8 @@ class LoanController extends ApiController
 
     /**
      * Make a loan repayment.
+
+
      */
     public function repay(RepayLoanRequest $request, Loan $loan, MakeLoanPaymentAction $action): JsonResponse
     {

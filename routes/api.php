@@ -33,6 +33,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Share Routes
     Route::prefix('shares')->name('api.shares.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\ShareController::class, 'index'])->name('index');
+        Route::get('/stats', [\App\Http\Controllers\Api\ShareController::class, 'stats'])->name('stats');
+        Route::get('/settings', [\App\Http\Controllers\Api\ShareController::class, 'settings'])->name('settings');
         Route::post('/buy', [\App\Http\Controllers\Api\ShareController::class, 'buy'])->name('buy');
         Route::post('/sell', [\App\Http\Controllers\Api\ShareController::class, 'sell'])->name('sell');
     });
@@ -40,7 +42,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Loan Routes
     Route::prefix('loans')->name('api.loans.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\LoanController::class, 'index'])->name('index');
+        Route::get('/eligibility', [\App\Http\Controllers\Api\LoanController::class, 'eligibility'])->name('eligibility');
         Route::post('/apply', [\App\Http\Controllers\Api\LoanController::class, 'apply'])->name('apply');
+        Route::get('/{loan}', [\App\Http\Controllers\Api\LoanController::class, 'show'])->name('show');
+        Route::get('/{loan}/schedule', [\App\Http\Controllers\Api\LoanController::class, 'schedule'])->name('schedule');
         Route::post('/{loan}/repay', [\App\Http\Controllers\Api\LoanController::class, 'repay'])->name('repay');
     });
 
@@ -86,5 +91,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/electricity', [\App\Http\Controllers\Api\Service\ElectricityController::class, 'store'])->name('electricity');
     });
 });
-
-
