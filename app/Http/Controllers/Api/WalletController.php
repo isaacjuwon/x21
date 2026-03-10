@@ -24,7 +24,46 @@ class WalletController extends ApiController
      */
     public function index(Request $request): JsonResponse
     {
-        return $this->successResponse(new WalletResource($request->user()), 'Wallet retrieved successfully');
+        $user = $request->user();
+        $user->load('wallets');
+
+        return $this->successResponse(new WalletResource($user), 'Wallet retrieved successfully');
+    }
+
+    /**
+     * Get user wallet statistics.
+     */
+    public function stats(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $user->load('wallets');
+
+        $mainWallet = $user->getOrCreateWallet(\App\Enums\WalletType::Main);
+
+        return $this->successResponse([
+            'status' => 'Active', // Simple status for now
+            'currency' => 'NGN',
+            'currency_name' => 'Nigerian Naira',
+            'total_deposited' => $mainWallet->total_deposited,
+            'total_withdrawn' => $mainWallet->total_withdrawn,
+            'last_activity' => $user->walletTransactions()->latest()->first()?->created_at?->diffForHumans() ?? 'No activity',
+        ], 'Wallet statistics retrieved successfully');
+    }
+
+    /**
+     * Get paginated wallet transactions.
+     */
+    public function transactions(Request $request): JsonResponse
+    {
+        $transactions = $request->user()->walletTransactions()
+            ->latest()
+            ->paginate(20);
+
+        $transactions->setCollection(
+            $transactions->getCollection()->mapInto(WalletTransactionResource::class)
+        );
+
+        return $this->paginatedResponse($transactions, 'Transactions retrieved successfully');
     }
 
     /**
@@ -49,11 +88,11 @@ class WalletController extends ApiController
         $payload = $request->payload();
 
         $result = DB::transaction(function () use ($action, $payload) {
-             return $action->handle($payload->toArray());
+            return $action->handle($payload->toArray());
         });
 
-        if (!$result->success) {
-             return $this->errorResponse($result->message, 400);
+        if (! $result->success) {
+            return $this->errorResponse($result->message, 400);
         }
 
         return $this->successResponse($result->data, 'Funding initialized successfully');
@@ -70,7 +109,7 @@ class WalletController extends ApiController
             return $action->handle($payload->toArray());
         });
 
-        if (!$result->success) {
+        if (! $result->success) {
             return $this->errorResponse($result->message, 400);
         }
 
@@ -98,8 +137,8 @@ class WalletController extends ApiController
             return $action->handle($request->user(), $payload->toArray());
         });
 
-        if (!$result->success) {
-             return $this->errorResponse($result->message, 400);
+        if (! $result->success) {
+            return $this->errorResponse($result->message, 400);
         }
 
         return $this->successResponse(null, 'Transfer successful.');

@@ -2,63 +2,42 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
-use App\Http\Requests\Api\Auth\LoginRequest;
-use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends ApiController
 {
     /**
-     * Register a new user.
+     * Refresh the access token.
      */
-    public function register(RegisterRequest $request, CreateNewUser $creator): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
-        // We use the Fortify action to ensure consistency with web registration
-        $user = $creator->create($request->validated());
+        $user = $request->user();
+        $token = $user->currentAccessToken();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return $this->createdResponse([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ], 'User registered successfully');
-    }
-
-    /**
-     * Login user and create token.
-     */
-    public function login(LoginRequest $request): JsonResponse
-    {
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->unauthorizedResponse('Invalid credentials');
+        // Ensure the token has the refresh ability
+        if (! $token->can('auth:refresh')) {
+            return $this->forbiddenResponse('Invalid token for refreshing');
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Revoke the old refresh token (and potentially existing access tokens)
+        $token->delete();
 
-        $response = [
-            'user' => $user,
-            'access_token' => $token,
+        // Issue new tokens
+        $accessToken = $user->createToken('access_token', ['*'], now()->addMinutes(60))->plainTextToken;
+        $refreshToken = $user->createToken('refresh_token', ['auth:refresh'], now()->addDays(30))->plainTextToken;
+
+        return $this->successResponse([
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
             'token_type' => 'Bearer',
-        ];
-
-        if (method_exists($user, 'getRoleNames')) {
-            $response['roles'] = $user->getRoleNames();
-        }
-
-        return $this->successResponse($response, 'Login successful');
+            'expires_in' => 3600,
+        ], 'Token refreshed successfully');
     }
 
     /**
@@ -149,4 +128,3 @@ class AuthController extends ApiController
         return $this->successResponse(null, 'Verification link sent.');
     }
 }
-

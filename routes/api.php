@@ -5,15 +5,17 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Public Auth Routes
-Route::post('/register', [AuthController::class, 'register'])->name('api.register');
-Route::post('/login', [AuthController::class, 'login'])->name('api.login');
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('api.password.email');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('api.password.update');
+// Public Auth Routes (Handled by Fortify Controllers)
+Route::post('/register', [\Laravel\Fortify\Http\Controllers\RegisteredUserController::class, 'store'])->name('api.register');
+Route::post('/login', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'store'])->name('api.login');
+Route::post('/forgot-password', [\Laravel\Fortify\Http\Controllers\PasswordResetLinkController::class, 'store'])->name('api.password.email');
+Route::post('/reset-password', [\Laravel\Fortify\Http\Controllers\NewPasswordController::class, 'store'])->name('api.password.update');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Auth Routes
-    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->name('api.refresh');
+    Route::post('/logout', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'destroy'])->name('api.logout');
+
     Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])
         ->middleware('throttle:6,1')
         ->name('api.verification.send');
@@ -52,6 +54,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Wallet Routes
     Route::prefix('wallet')->name('api.wallet.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\WalletController::class, 'index'])->name('index');
+        Route::get('/stats', [\App\Http\Controllers\Api\WalletController::class, 'stats'])->name('stats');
+        Route::get('/transactions', [\App\Http\Controllers\Api\WalletController::class, 'transactions'])->name('transactions');
         Route::post('/deposit', [\App\Http\Controllers\Api\WalletController::class, 'deposit'])->name('deposit');
         Route::post('/fund', [\App\Http\Controllers\Api\WalletController::class, 'fund'])->name('fund');
         Route::post('/withdraw', [\App\Http\Controllers\Api\WalletController::class, 'withdraw'])->name('withdraw');

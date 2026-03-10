@@ -16,12 +16,19 @@ class WalletResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $wallets = $this->wallets->map(fn ($wallet) => [
+            'type' => $wallet->type,
+            'label' => $wallet->type->getLabel(),
+            'balance' => (float) $wallet->balance,
+            'formatted_balance' => number_format((float) $wallet->balance, 2),
+        ]);
+
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'balance' => $this->balance,
-            'wallet_type' => $this->wallet_type ?? 'main', // Assuming wallet type field or default
-            // Add transactions if relation loaded?
+            'total_balance' => (float) $this->getWalletBalance(),
+            'formatted_balance' => number_format((float) $this->getWalletBalance(), 2),
+            'wallets' => $wallets,
+            // Include recent transactions if loaded
+            'recent_transactions' => WalletTransactionResource::collection($this->whenLoaded('walletTransactions')),
         ];
     }
 }

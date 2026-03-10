@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,7 +19,20 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            \App\Http\Responses\LoginResponse::class
+        );
+
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\RegisterResponse::class,
+            \App\Http\Responses\RegisterResponse::class
+        );
+
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LogoutResponse::class,
+            \App\Http\Responses\LogoutResponse::class
+        );
     }
 
     /**
@@ -38,6 +52,37 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $usernameField = Fortify::username();
+            $username = $request->input($usernameField);
+            $password = $request->input('password');
+
+            \Illuminate\Support\Facades\Log::info('API Login Attempt', [
+                'username_field' => $usernameField,
+                'username' => $username,
+                'has_password' => ! empty($password),
+                'is_json' => $request->expectsJson(),
+                'method' => $request->method(),
+                'url' => $request->fullUrl(),
+            ]);
+
+            $user = User::where($usernameField, Str::lower($username))->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($password, $user->password)) {
+                \Illuminate\Support\Facades\Log::info('API Login Success', ['user_id' => $user->id]);
+
+                return $user;
+            }
+
+            \Illuminate\Support\Facades\Log::warning('API Login Failure', [
+                'user_found' => ! is_null($user),
+                'username' => $username,
+            ]);
+
+            return null;
+        });
+
     }
 
     /**

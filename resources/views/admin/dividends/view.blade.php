@@ -50,34 +50,6 @@ new class extends Component
     }
 }; ?>
 
-<div class="max-w-2xl mx-auto p-6 space-y-6">
-    <x-page-header 
-        heading="Dividend Details" 
-        :description="'Dividend #' . $dividend->id"
-    >
-        <x-slot:actions>
-            <div class="flex items-center gap-3">
-                @if(!$dividend->paid_out)
-                    <x-ui.button 
-                        type="button" 
-                        wire:click="processPayout" 
-                        wire:confirm="Are you sure you want to process the payout for this dividend? This will create payment records for all eligible shareholders."
-                        variant="success" 
-                    >
-                        Process Payout
-                    </x-ui.button>
-
-                    <x-ui.button 
-                        type="button" 
-                        wire:click="delete" 
-                        wire:confirm="Are you sure you want to delete this dividend declaration?"
-                        variant="danger" 
-                        outline
-                    >
-                        Delete
-                    </x-ui.button>
-                @endif
-                <x-ui.button tag="a" href="{{ route('admin.dividends.index') }}" variant="outline">
 
 <div class="max-w-2xl mx-auto p-6 space-y-6">
     <x-page-header 
