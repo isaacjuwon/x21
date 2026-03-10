@@ -4,37 +4,37 @@ namespace App\Enums;
 
 enum LoanStatus: string
 {
-    case PENDING = 'pending';
-    case APPROVED = 'approved';
-    case REJECTED = 'rejected';
-    case DISBURSED = 'disbursed';
-    case ACTIVE = 'active';
-    case FULLY_PAID = 'fully_paid';
-    case DEFAULTED = 'defaulted';
+    case Pending = 'pending';
+    case Approved = 'approved';
+    case Rejected = 'rejected';
+    case Disbursed = 'disbursed';
+    case Active = 'active';
+    case FullyPaid = 'fully_paid';
+    case Defaulted = 'defaulted';
 
     public function getLabel(): string
     {
         return match ($this) {
-            self::PENDING => 'Pending',
-            self::APPROVED => 'Approved',
-            self::REJECTED => 'Rejected',
-            self::DISBURSED => 'Disbursed',
-            self::ACTIVE => 'Active',
-            self::FULLY_PAID => 'Fully Paid',
-            self::DEFAULTED => 'Defaulted',
+            self::Pending => 'Pending',
+            self::Approved => 'Approved',
+            self::Rejected => 'Rejected',
+            self::Disbursed => 'Disbursed',
+            self::Active => 'Active',
+            self::FullyPaid => 'Fully Paid',
+            self::Defaulted => 'Defaulted',
         };
     }
 
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::PENDING => 'warning',
-            self::APPROVED => 'info',
-            self::REJECTED => 'danger',
-            self::DISBURSED => 'primary',
-            self::ACTIVE => 'primary',
-            self::FULLY_PAID => 'success',
-            self::DEFAULTED => 'danger',
+            self::Pending => 'warning',
+            self::Approved => 'info',
+            self::Rejected => 'danger',
+            self::Disbursed => 'primary',
+            self::Active => 'primary',
+            self::FullyPaid => 'success',
+            self::Defaulted => 'danger',
         };
     }
 

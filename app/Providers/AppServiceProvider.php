@@ -24,14 +24,18 @@ class AppServiceProvider extends ServiceProvider
 
         // Share all settings with views
         view()->composer('*', function ($view) {
-            $view->with([
-                'generalSettings' => app(\App\Settings\GeneralSettings::class),
-                'loanSettings' => app(\App\Settings\LoanSettings::class),
-                'shareSettings' => app(\App\Settings\ShareSettings::class),
-                'walletSettings' => app(\App\Settings\WalletSettings::class),
-                'layoutSettings' => app(\App\Settings\LayoutSettings::class),
-                'integrationSettings' => app(\App\Settings\IntegrationSettings::class),
-            ]);
+            try {
+                $view->with([
+                    'generalSettings' => app(\App\Settings\GeneralSettings::class),
+                    'loanSettings' => app(\App\Settings\LoanSettings::class),
+                    'shareSettings' => app(\App\Settings\ShareSettings::class),
+                    'walletSettings' => app(\App\Settings\WalletSettings::class),
+                    'layoutSettings' => app(\App\Settings\LayoutSettings::class),
+                    'integrationSettings' => app(\App\Settings\IntegrationSettings::class),
+                ]);
+            } catch (\Exception $e) {
+                // Settings table likely doesn't exist yet
+            }
         });
 
         // Override config with settings

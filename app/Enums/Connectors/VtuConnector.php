@@ -8,18 +8,18 @@ use App\Integrations\Epins\EpinsConnector;
 
 enum VtuConnector: string
 {
-    case EPINS = 'epins';
+    case Epins = 'epins';
 
     public function connector(): EpinsConnector
     {
         return match ($this) {
-            self::EPINS => app(EpinsConnector::class),
+            self::Epins => app(EpinsConnector::class),
         };
     }
 
     public static function default(): self
     {
-        return self::EPINS;
+        return self::Epins;
     }
 
     public static function register(\Illuminate\Contracts\Foundation\Application $app): void

@@ -2,153 +2,165 @@
 
 declare(strict_types=1);
 
+namespace Tests\Feature\Integrations\Paystack;
+
 use App\Events\Paystack\PaymentFailed;
 use App\Events\Paystack\PaymentSuccessful;
 use App\Events\Paystack\TransferFailed;
 use App\Events\Paystack\TransferSuccessful;
-use App\Integrations\Paystack\Exceptions\WebhookVerificationException;
 use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
-test('webhook verifies signature correctly', function () {
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+class WebhookTest extends TestCase
+{
+    public function test_webhook_verifies_signature_correctly(): void
+    {
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'charge.success',
-        'data' => [
-            'reference' => 'test_ref',
-            'amount' => 50000,
-            'status' => 'success',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'charge.success',
+            'data' => [
+                'reference' => 'test_ref',
+                'amount' => 50000,
+                'status' => 'success',
+            ],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    $response->assertNoContent();
-});
+        $response->assertNoContent();
+    }
 
-test('webhook rejects invalid signature', function () {
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_rejects_invalid_signature(): void
+    {
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'charge.success',
-        'data' => [
-            'reference' => 'test_ref',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'charge.success',
+            'data' => [
+                'reference' => 'test_ref',
+            ],
+        ]);
 
-    $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => 'invalid_signature',
-    ]);
+        $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => 'invalid_signature',
+        ]);
 
-    $response->assertStatus(500);
-});
+        $response->assertStatus(500);
+    }
 
-test('webhook dispatches payment successful event', function () {
-    Event::fake();
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_dispatches_payment_successful_event(): void
+    {
+        Event::fake();
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'charge.success',
-        'data' => [
-            'reference' => 'test_ref',
-            'amount' => 50000,
-            'status' => 'success',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'charge.success',
+            'data' => [
+                'reference' => 'test_ref',
+                'amount' => 50000,
+                'status' => 'success',
+            ],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    Event::assertDispatched(PaymentSuccessful::class, function ($event) {
-        return $event->data['reference'] === 'test_ref';
-    });
-});
+        Event::assertDispatched(PaymentSuccessful::class, function ($event) {
+            return $event->data['reference'] === 'test_ref';
+        });
+    }
 
-test('webhook dispatches payment failed event', function () {
-    Event::fake();
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_dispatches_payment_failed_event(): void
+    {
+        Event::fake();
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'charge.failed',
-        'data' => [
-            'reference' => 'test_ref',
-            'status' => 'failed',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'charge.failed',
+            'data' => [
+                'reference' => 'test_ref',
+                'status' => 'failed',
+            ],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    Event::assertDispatched(PaymentFailed::class);
-});
+        Event::assertDispatched(PaymentFailed::class);
+    }
 
-test('webhook dispatches transfer successful event', function () {
-    Event::fake();
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_dispatches_transfer_successful_event(): void
+    {
+        Event::fake();
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'transfer.success',
-        'data' => [
-            'reference' => 'transfer_ref',
-            'status' => 'success',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'transfer.success',
+            'data' => [
+                'reference' => 'transfer_ref',
+                'status' => 'success',
+            ],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    Event::assertDispatched(TransferSuccessful::class);
-});
+        Event::assertDispatched(TransferSuccessful::class);
+    }
 
-test('webhook dispatches transfer failed event', function () {
-    Event::fake();
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_dispatches_transfer_failed_event(): void
+    {
+        Event::fake();
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'transfer.failed',
-        'data' => [
-            'reference' => 'transfer_ref',
-            'status' => 'failed',
-        ],
-    ]);
+        $payload = json_encode([
+            'event' => 'transfer.failed',
+            'data' => [
+                'reference' => 'transfer_ref',
+                'status' => 'failed',
+            ],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    Event::assertDispatched(TransferFailed::class);
-});
+        Event::assertDispatched(TransferFailed::class);
+    }
 
-test('webhook ignores unknown events', function () {
-    Event::fake();
-    config(['services.paystack.secret_key' => 'test_secret_key']);
+    public function test_webhook_ignores_unknown_events(): void
+    {
+        Event::fake();
+        config(['services.paystack.secret_key' => 'test_secret_key']);
 
-    $payload = json_encode([
-        'event' => 'unknown.event',
-        'data' => [],
-    ]);
+        $payload = json_encode([
+            'event' => 'unknown.event',
+            'data' => [],
+        ]);
 
-    $signature = hash_hmac('sha512', $payload, 'test_secret_key');
+        $signature = hash_hmac('sha512', $payload, 'test_secret_key');
 
-    $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
-        'x-paystack-signature' => $signature,
-    ]);
+        $response = $this->postJson('/webhooks/paystack', json_decode($payload, true), [
+            'x-paystack-signature' => $signature,
+        ]);
 
-    $response->assertNoContent();
-    Event::assertNothingDispatched();
-});
+        $response->assertNoContent();
+        Event::assertNothingDispatched();
+    }
+}

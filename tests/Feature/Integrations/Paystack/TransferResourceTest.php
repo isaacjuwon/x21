@@ -2,94 +2,103 @@
 
 declare(strict_types=1);
 
+namespace Tests\Feature\Integrations\Paystack;
+
 use App\Integrations\Paystack\Entities\InitiateTransfer;
 use App\Integrations\Paystack\Entities\TransferResponse;
 use App\Integrations\Paystack\Exceptions\PaystackException;
 use App\Integrations\Paystack\PaystackConnector;
 use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
-test('can initiate transfer', function () {
-    Http::fake([
-        'api.paystack.co/transfer' => Http::response([
-            'status' => true,
-            'message' => 'Transfer has been queued',
-            'data' => [
-                'reference' => 'transfer_ref_123',
-                'status' => 'pending',
-                'amount' => 100000,
-                'recipient' => 'RCP_test123',
-                'transfer_code' => 'TRF_test123',
-                'reason' => 'Withdrawal request',
-            ],
-        ], 200),
-    ]);
+class TransferResourceTest extends TestCase
+{
+    public function test_can_initiate_transfer(): void
+    {
+        Http::fake([
+            'api.paystack.co/transfer' => Http::response([
+                'status' => true,
+                'message' => 'Transfer has been queued',
+                'data' => [
+                    'reference' => 'transfer_ref_123',
+                    'status' => 'pending',
+                    'amount' => 100000,
+                    'recipient' => 'RCP_test123',
+                    'transfer_code' => 'TRF_test123',
+                    'reason' => 'Withdrawal request',
+                ],
+            ], 200),
+        ]);
 
-    $paystack = app(PaystackConnector::class);
+        $paystack = app(PaystackConnector::class);
 
-    $response = $paystack->transfers()->initiate(
-        new InitiateTransfer(
-            source: 'balance',
-            amount: 100000,
-            recipient: 'RCP_test123',
-            reason: 'Withdrawal request',
-        )
-    );
+        $response = $paystack->transfers()->initiate(
+            new InitiateTransfer(
+                source: 'balance',
+                amount: 100000,
+                recipient: 'RCP_test123',
+                reason: 'Withdrawal request',
+            )
+        );
 
-    expect($response)
-        ->toBeInstanceOf(TransferResponse::class)
-        ->reference->toBe('transfer_ref_123')
-        ->status->toBe('pending')
-        ->amount->toBe(100000)
-        ->recipient->toBe('RCP_test123');
+        $this->assertInstanceOf(TransferResponse::class, $response);
+        $this->assertEquals('transfer_ref_123', $response->reference);
+        $this->assertEquals('pending', $response->status);
+        $this->assertEquals(100000, $response->amount);
+        $this->assertEquals('RCP_test123', $response->recipient);
 
-    Http::assertSent(function ($request) {
-        return $request->url() === 'https://api.paystack.co/transfer'
-            && $request->method() === 'POST'
-            && $request['source'] === 'balance'
-            && $request['amount'] === 100000;
-    });
-});
+        Http::assertSent(function ($request) {
+            return $request->url() === 'https://api.paystack.co/transfer'
+                && $request->method() === 'POST'
+                && $request['source'] === 'balance'
+                && $request['amount'] === 100000;
+        });
+    }
 
-test('can verify transfer', function () {
-    Http::fake([
-        'api.paystack.co/transfer/verify/*' => Http::response([
-            'status' => true,
-            'message' => 'Transfer retrieved',
-            'data' => [
-                'reference' => 'transfer_ref_123',
-                'status' => 'success',
-                'amount' => 100000,
-                'recipient' => 'RCP_test123',
-            ],
-        ], 200),
-    ]);
+    public function test_can_verify_transfer(): void
+    {
+        Http::fake([
+            'api.paystack.co/transfer/verify/*' => Http::response([
+                'status' => true,
+                'message' => 'Transfer retrieved',
+                'data' => [
+                    'reference' => 'transfer_ref_123',
+                    'status' => 'success',
+                    'amount' => 100000,
+                    'recipient' => 'RCP_test123',
+                ],
+            ], 200),
+        ]);
 
-    $paystack = app(PaystackConnector::class);
+        $paystack = app(PaystackConnector::class);
 
-    $response = $paystack->transfers()->verify('transfer_ref_123');
+        $response = $paystack->transfers()->verify('transfer_ref_123');
 
-    expect($response)
-        ->toBeInstanceOf(TransferResponse::class)
-        ->reference->toBe('transfer_ref_123')
-        ->status->toBe('success')
-        ->amount->toBe(100000);
-});
+        $this->assertInstanceOf(TransferResponse::class, $response);
+        $this->assertEquals('transfer_ref_123', $response->reference);
+        $this->assertEquals('success', $response->status);
+        $this->assertEquals(100000, $response->amount);
+    }
 
-test('throws exception when transfer initiation fails', function () {
-    Http::fake([
-        'api.paystack.co/transfer' => Http::response([
-            'status' => false,
-            'message' => 'Invalid recipient',
-        ], 400),
-    ]);
+    public function test_throws_exception_when_transfer_initiation_fails(): void
+    {
+        Http::fake([
+            'api.paystack.co/transfer' => Http::response([
+                'status' => false,
+                'message' => 'Invalid recipient',
+            ], 400),
+        ]);
 
-    $paystack = app(PaystackConnector::class);
+        $this->expectException(PaystackException::class);
 
-    $paystack->transfers()->initiate(
-        new InitiateTransfer(
-            source: 'balance',
-            amount: 100000,
-            recipient: 'invalid',
-        )
-    );
-})->throws(PaystackException::class);
+        $paystack = app(PaystackConnector::class);
+
+        $paystack->transfers()->initiate(
+            new InitiateTransfer(
+                source: 'balance',
+                amount: 100000,
+                recipient: 'invalid',
+            )
+        );
+    }
+}

@@ -10,12 +10,12 @@ use InvalidArgumentException;
 
 enum SocialiteProviders: string
 {
-    case GOOGLE = 'google';
+    case Google = 'google';
 
     public function make(): AbstractSocialProvider
     {
         return match ($this) {
-            self::GOOGLE => new GoogleProvider(),
+            self::Google => new GoogleProvider,
             default => throw new InvalidArgumentException('Invalid social provider'),
         };
     }

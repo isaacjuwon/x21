@@ -8,18 +8,18 @@ use App\Integrations\Paystack\PaystackConnector;
 
 enum PaymentConnector: string
 {
-    case PAYSTACK = 'paystack';
+    case Paystack = 'paystack';
 
     public function connector(): PaystackConnector
     {
         return match ($this) {
-            self::PAYSTACK => app(PaystackConnector::class),
+            self::Paystack => app(PaystackConnector::class),
         };
     }
 
     public static function default(): self
     {
-        return self::PAYSTACK;
+        return self::Paystack;
     }
 
     public static function register(\Illuminate\Contracts\Foundation\Application $app): void
