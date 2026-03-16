@@ -21,7 +21,7 @@ final readonly class TransactionResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::POST,
+                method: Method::Post,
                 uri: '/transaction/initialize',
                 options: ['json' => $entity->toRequestBody()],
             );
@@ -39,7 +39,7 @@ final readonly class TransactionResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::GET,
+                method: Method::Get,
                 uri: "/transaction/verify/{$reference}",
             );
         } catch (Throwable $exception) {

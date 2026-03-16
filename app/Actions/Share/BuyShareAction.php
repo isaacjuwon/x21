@@ -58,8 +58,8 @@ class BuyShareAction
             // I will use a direct DB update for now to be safe within transaction.
             $user->decrement('balance', $totalCost);
 
-            $status = $this->settings->require_admin_approval ? ShareStatus::PENDING : ShareStatus::APPROVED;
-            $approvedAt = $status === ShareStatus::APPROVED ? now() : null;
+            $status = $this->settings->require_admin_approval ? ShareStatus::Pending : ShareStatus::Approved;
+            $approvedAt = $status === ShareStatus::Approved ? now() : null;
 
             $share = new Share;
             $share->holder_type = User::class;

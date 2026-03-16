@@ -22,7 +22,7 @@ class MakeLoanPaymentAction
         $user = $loan->user;
 
         // Check if loan is active
-        if ($loan->status !== LoanStatus::ACTIVE) {
+        if ($loan->status !== LoanStatus::Active) {
             throw new \Exception("Can only make payments on active loans.");
         }
 
@@ -71,7 +71,7 @@ class MakeLoanPaymentAction
         $payment = LoanPayment::create([
             "loan_id" => $loan->id,
             "amount" => $amount,
-            "payment_type" => LoanPaymentType::SCHEDULED,
+            "payment_type" => LoanPaymentType::Scheduled,
             "payment_date" => now(),
             "due_date" => $loan->next_payment_date,
             "principal_amount" => $principalAmount,
@@ -87,7 +87,7 @@ class MakeLoanPaymentAction
         // Dispatch events
         event(new LoanPaymentMade($loan, $payment, $user));
 
-        if ($loan->status === LoanStatus::FULLY_PAID) {
+        if ($loan->status === LoanStatus::FullyPaid) {
             event(new LoanFullyPaid($loan, $user));
         }
 

@@ -15,18 +15,18 @@ class DisburseLoanAction
     public function execute(Loan $loan): void
     {
         // Only disburse approved loans
-        if ($loan->status !== LoanStatus::APPROVED) {
+        if ($loan->status !== LoanStatus::Approved) {
             throw new \Exception("Only approved loans can be disbursed.");
         }
 
         $user = $loan->user;
 
         // Deposit to user's main wallet
-        $user->deposit(WalletType::MAIN, $loan->amount, "Loan disbursement for Loan #{$loan->id}");
+        $user->deposit(WalletType::Main, $loan->amount, "Loan disbursement for Loan #{$loan->id}");
 
         // Update loan status
         $loan->update([
-            "status" => LoanStatus::ACTIVE,
+            "status" => LoanStatus::Active,
             "disbursed_at" => now(),
         ]);
 

@@ -56,7 +56,7 @@ class Dividend extends Model
 
             // Get all qualified shareholders grouped by holder to ensure a single payout per user
             $eligibleShares = Share::where('currency', $this->currency)
-                ->where('status', \App\Enums\ShareStatus::APPROVED)
+                ->where('status', \App\Enums\ShareStatus::Approved)
                 ->where('quantity', '>', 0)
                 ->where('approved_at', '<=', $eligibilityDate)
                 ->with('holder')
@@ -96,7 +96,7 @@ class Dividend extends Model
             'paid_at' => now(),
         ]);
 
-        $holder->deposit(\App\Enums\WalletType::BONUS, $amount, "Dividend payout for {$quantity} shares");
+        $holder->deposit(\App\Enums\WalletType::Bonus, $amount, "Dividend payout for {$quantity} shares");
 
         \App\Events\Dividend\DividendPaid::dispatch($holder, $this, $payment);
     }
@@ -115,7 +115,7 @@ class Dividend extends Model
 
             Share::select('holder_type', 'holder_id', DB::raw('SUM(quantity) as total_quantity'))
                 ->where('currency', $this->currency)
-                ->where('status', \App\Enums\ShareStatus::APPROVED)
+                ->where('status', \App\Enums\ShareStatus::Approved)
                 ->where('quantity', '>', 0)
                 ->where('approved_at', '<=', $eligibilityDate)
                 ->groupBy('holder_type', 'holder_id')

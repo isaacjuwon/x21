@@ -19,7 +19,7 @@ trait HasShares
     {
         return (int) $this->shares()
             ->where('currency', $currency)
-            ->where('status', \App\Enums\ShareStatus::APPROVED)
+            ->where('status', \App\Enums\ShareStatus::Approved)
             ->sum('quantity');
     }
 
@@ -36,13 +36,13 @@ trait HasShares
 
         $this->pay($totalCost, "Purchase of {$quantity} shares");
 
-        $status = $shareSettings->require_admin_approval ? \App\Enums\ShareStatus::PENDING : \App\Enums\ShareStatus::APPROVED;
+        $status = $shareSettings->require_admin_approval ? \App\Enums\ShareStatus::Pending : \App\Enums\ShareStatus::Approved;
 
         $share = $this->shares()->create([
             'currency' => $currency,
             'quantity' => $quantity,
             'status' => $status,
-            'approved_at' => $status === \App\Enums\ShareStatus::APPROVED ? now() : null,
+            'approved_at' => $status === \App\Enums\ShareStatus::Approved ? now() : null,
         ]);
 
         event(new SharesPurchased($this, $quantity, $currency, $this->getApprovedSharesCount($currency)));
@@ -71,7 +71,7 @@ trait HasShares
             // FIFO: Get oldest approved shares first
             $allocations = $this->shares()
                 ->where('currency', $currency)
-                ->where('status', \App\Enums\ShareStatus::APPROVED)
+                ->where('status', \App\Enums\ShareStatus::Approved)
                 ->where('quantity', '>', 0)
                 ->orderBy('approved_at', 'asc')
                 ->get();
@@ -92,7 +92,7 @@ trait HasShares
                 }
             }
 
-            $this->deposit(\App\Enums\WalletType::MAIN, $totalValue, "Sale of {$quantity} shares");
+            $this->deposit(\App\Enums\WalletType::Main, $totalValue, "Sale of {$quantity} shares");
         });
 
         event(new SharesSold($this, $quantity, $currency, $this->getApprovedSharesCount($currency)));

@@ -140,7 +140,7 @@ trait CalculatesLoanEligibility
      */
     public function calculateNextDueDate(\App\Models\Loan $loan): ?Carbon
     {
-        if ($loan->status === \App\Enums\LoanStatus::FULLY_PAID || $loan->balance_remaining <= 0) {
+        if ($loan->status === \App\Enums\LoanStatus::FullyPaid || $loan->balance_remaining <= 0) {
             return null;
         }
 

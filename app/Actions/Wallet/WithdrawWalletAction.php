@@ -129,7 +129,7 @@ class WithdrawWalletAction
 
             // Refund on immediate failure
             $user->deposit(
-                type: \App\Enums\WalletType::MAIN,
+                type: \App\Enums\WalletType::Main,
                 amount: (float) $totalAmount,
                 notes: 'Refund: Withdrawal Failed - '.$data['reference']
             );
@@ -148,7 +148,7 @@ class WithdrawWalletAction
             if (isset($user) && isset($totalAmount) && ! isset($result)) {
                 try {
                     $user->deposit(
-                        type: \App\Enums\WalletType::MAIN,
+                        type: \App\Enums\WalletType::Main,
                         amount: (float) $totalAmount,
                         notes: 'Refund: Withdrawal Error - '.$data['reference']
                     );

@@ -21,7 +21,7 @@ final readonly class TransferResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::POST,
+                method: Method::Post,
                 uri: '/transfer',
                 options: $entity->toRequestBody(),
             );
@@ -39,7 +39,7 @@ final readonly class TransferResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::GET,
+                method: Method::Get,
                 uri: "/transfer/verify/{$reference}",
             );
         } catch (Throwable $exception) {

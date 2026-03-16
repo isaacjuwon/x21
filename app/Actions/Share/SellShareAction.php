@@ -26,7 +26,7 @@ class SellShareAction
             // Find approved shares for this user, ordered by oldest first (FIFO)
             $shares = Share::where('holder_type', User::class)
                 ->where('holder_id', $user->id)
-                ->where('status', ShareStatus::APPROVED)
+                ->where('status', ShareStatus::Approved)
                 ->orderBy('created_at', 'asc')
                 ->lockForUpdate() // Lock rows to prevent race conditions
                 ->get();

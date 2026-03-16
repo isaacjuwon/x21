@@ -21,7 +21,7 @@ final readonly class RecipientResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::POST,
+                method: Method::Post,
                 uri: '/transferrecipient',
                 options: $entity->toRequestBody(),
             );

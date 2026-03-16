@@ -43,11 +43,11 @@ class ShareController extends ApiController
         $shares = $user->shares()->where('quantity', '>', 0)->get();
         
         $totalShares = $shares->sum('quantity');
-        $approvedShares = $shares->where('status', \App\Enums\ShareStatus::APPROVED)->sum('quantity');
+        $approvedShares = $shares->where('status', \App\Enums\ShareStatus::Approved)->sum('quantity');
         
         $eligibilityDate = now()->subDays($holdingPeriod);
         $matureShares = $shares
-            ->where('status', \App\Enums\ShareStatus::APPROVED)
+            ->where('status', \App\Enums\ShareStatus::Approved)
             ->filter(fn ($share) => $share->approved_at?->lte($eligibilityDate))
             ->sum('quantity');
 

@@ -21,7 +21,7 @@ final readonly class EducationResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::POST,
+                method: Method::Post,
                 uri: '/exams/',
                 options: $entity->toRequestBody(),
             );

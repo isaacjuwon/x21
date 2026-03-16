@@ -81,7 +81,7 @@ class Loan extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('status', LoanStatus::ACTIVE);
+        return $query->where('status', LoanStatus::Active);
     }
 
     /**
@@ -89,7 +89,7 @@ class Loan extends Model
      */
     public function scopeFullyPaid($query)
     {
-        return $query->where('status', LoanStatus::FULLYPAID);
+        return $query->where('status', LoanStatus::FullyPaid);
     }
 
     /**
@@ -137,7 +137,7 @@ class Loan extends Model
      */
     public function hasPendingPayment(): bool
     {
-        return $this->status === LoanStatus::ACTIVE && $this->balance_remaining > 0;
+        return $this->status === LoanStatus::Active && $this->balance_remaining > 0;
     }
 
     /**
@@ -176,7 +176,7 @@ class Loan extends Model
      */
     public function markAsPaid(): void
     {
-        $this->status = LoanStatus::FULLYPAID;
+        $this->status = LoanStatus::FullyPaid;
         $this->fully_paid_at = now();
         $this->next_payment_date = null;
         $this->save();

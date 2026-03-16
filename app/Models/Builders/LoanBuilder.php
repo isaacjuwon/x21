@@ -36,7 +36,7 @@ class LoanBuilder extends Builder
      */
     public function pending(): LoanBuilder
     {
-        return $this->where('status', operator: Status::PENDING);
+        return $this->where('status', operator: Status::Pending);
     }
 
     /**
@@ -44,7 +44,7 @@ class LoanBuilder extends Builder
      */
     public function underReview(): LoanBuilder
     {
-        return $this->where('status', Status::UNDER_REVIEW);
+        return $this->where('status', Status::UnderReview);
     }
 
     /**
@@ -52,7 +52,7 @@ class LoanBuilder extends Builder
      */
     public function approved(): LoanBuilder
     {
-        return $this->where('status', Status::APPROVED);
+        return $this->where('status', Status::Approved);
     }
 
     /**
@@ -60,7 +60,7 @@ class LoanBuilder extends Builder
      */
     public function rejected(): LoanBuilder
     {
-        return $this->where('status', Status::REJECTED);
+        return $this->where('status', Status::Rejected);
     }
 
     /**
@@ -68,7 +68,7 @@ class LoanBuilder extends Builder
      */
     public function disbursed(): LoanBuilder
     {
-        return $this->where('status', Status::DISBURSED);
+        return $this->where('status', Status::Disbursed);
     }
 
     /**
@@ -76,7 +76,7 @@ class LoanBuilder extends Builder
      */
     public function completed(): LoanBuilder
     {
-        return $this->where('status', Status::COMPLETED);
+        return $this->where('status', Status::Completed);
     }
 
     /**
@@ -84,7 +84,7 @@ class LoanBuilder extends Builder
      */
     public function defaulted(): LoanBuilder
     {
-        return $this->where('status', Status::DEFAULTED);
+        return $this->where('status', Status::Defaulted);
     }
 
     /**
@@ -92,7 +92,7 @@ class LoanBuilder extends Builder
      */
     public function cancelled(): LoanBuilder
     {
-        return $this->where('status', Status::CANCELLED);
+        return $this->where('status', Status::Cancelled);
     }
 
     /**
