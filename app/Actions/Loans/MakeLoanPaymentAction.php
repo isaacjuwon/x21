@@ -23,12 +23,12 @@ class MakeLoanPaymentAction
 
         // Check if loan is active
         if ($loan->status !== LoanStatus::Active) {
-            throw new \Exception("Can only make payments on active loans.");
+            throw new \Exception('Can only make payments on active loans.');
         }
 
         // Validate payment amount
         if ($amount <= 0) {
-            throw new \Exception("Payment amount must be greater than zero.");
+            throw new \Exception('Payment amount must be greater than zero.');
         }
 
         // Check if amount exceeds balance
@@ -37,14 +37,14 @@ class MakeLoanPaymentAction
         }
 
         // Check wallet balance using ManagesWallet trait method
-        if (!$user->hasSufficientBalance($amount)) {
+        if (! $user->hasSufficientBalance($amount)) {
             $totalBalance = $user->getTotalBalance();
             throw new InsufficientBalanceException(
-                "Insufficient wallet balance. You have $" .
-                    number_format($totalBalance, 2) .
-                    " but need $" .
-                    number_format($amount, 2) .
-                    ".",
+                'Insufficient wallet balance. You have $'.
+                    number_format($totalBalance, 2).
+                    ' but need $'.
+                    number_format($amount, 2).
+                    '.',
             );
         }
 
@@ -69,20 +69,19 @@ class MakeLoanPaymentAction
 
         // Create payment record
         $payment = LoanPayment::create([
-            "loan_id" => $loan->id,
-            "amount" => $amount,
-            "payment_type" => LoanPaymentType::Scheduled,
-            "payment_date" => now(),
-            "due_date" => $loan->next_payment_date,
-            "principal_amount" => $principalAmount,
-            "interest_amount" => $interestAmount,
-            "balance_after" => $loan->balance_remaining - $amount,
-            "wallet_transaction_id" => null, // Can be linked if wallet returns transaction ID
+            'loan_id' => $loan->id,
+            'amount' => $amount,
+            'payment_type' => LoanPaymentType::Scheduled,
+            'payment_date' => now(),
+            'due_date' => $loan->next_payment_date,
+            'principal_amount' => $principalAmount,
+            'interest_amount' => $interestAmount,
+            'balance_after' => $loan->balance_remaining - $amount,
+            'wallet_transaction_id' => null, // Can be linked if wallet returns transaction ID
         ]);
 
         // Update loan balance
         $loan->updateBalance($amount);
-
 
         // Dispatch events
         event(new LoanPaymentMade($loan, $payment, $user));

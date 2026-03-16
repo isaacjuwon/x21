@@ -29,7 +29,7 @@ final readonly class ElectricityResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to validate meter: ' . $exception->getMessage(),
+                message: 'Failed to validate meter: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -47,7 +47,7 @@ final readonly class ElectricityResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to purchase electricity: ' . $exception->getMessage(),
+                message: 'Failed to purchase electricity: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

@@ -16,7 +16,7 @@ class DisburseLoanAction
     {
         // Only disburse approved loans
         if ($loan->status !== LoanStatus::Approved) {
-            throw new \Exception("Only approved loans can be disbursed.");
+            throw new \Exception('Only approved loans can be disbursed.');
         }
 
         $user = $loan->user;
@@ -26,8 +26,8 @@ class DisburseLoanAction
 
         // Update loan status
         $loan->update([
-            "status" => LoanStatus::Active,
-            "disbursed_at" => now(),
+            'status' => LoanStatus::Active,
+            'disbursed_at' => now(),
         ]);
 
         // Sync next payment date correctly based on disbursement

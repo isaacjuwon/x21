@@ -4,7 +4,6 @@
 
 namespace App\Models;
 
-use App\Events\Dividend\DividendPaid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,7 +49,7 @@ class Dividend extends Model
         DB::transaction(function () {
             $shareSettings = app(\App\Settings\ShareSettings::class);
             $holdingPeriodDays = $shareSettings->holding_period;
-            
+
             // Only shares approved before (record_date - holding_period) are eligible
             $eligibilityDate = $this->record_date->subDays($holdingPeriodDays);
 
@@ -61,7 +60,7 @@ class Dividend extends Model
                 ->where('approved_at', '<=', $eligibilityDate)
                 ->with('holder')
                 ->get()
-                ->groupBy(fn ($share) => $share->holder_type . ':' . $share->holder_id);
+                ->groupBy(fn ($share) => $share->holder_type.':'.$share->holder_id);
 
             if ($eligibleShares->isEmpty()) {
                 // No shareholders to pay
@@ -74,7 +73,7 @@ class Dividend extends Model
                 // Aggregate shares for this holder
                 $firstShare = $shares->first();
                 $totalQuantity = $shares->sum('quantity');
-                
+
                 // We'll pass a dummy share object or modify processDividendForShareholder to accept holder and quantity
                 $this->processDividendForHolder($firstShare->holder, $totalQuantity);
             }

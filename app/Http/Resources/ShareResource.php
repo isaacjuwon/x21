@@ -18,11 +18,11 @@ class ShareResource extends JsonResource
     {
         $settings = app(\App\Settings\ShareSettings::class);
         $holdingPeriod = $settings->holding_period;
-        
-        $isMature = $this->status === \App\Enums\ShareStatus::Approved && 
+
+        $isMature = $this->status === \App\Enums\ShareStatus::Approved &&
                    $this->approved_at?->lte(now()->subDays($holdingPeriod));
-        
-        $daysUntilMature = $this->approved_at 
+
+        $daysUntilMature = $this->approved_at
             ? max(0, $holdingPeriod - $this->approved_at->diffInDays(now()))
             : null;
 
@@ -40,5 +40,4 @@ class ShareResource extends JsonResource
             'updated_at' => $this->updated_at,
         ];
     }
-
 }

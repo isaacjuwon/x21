@@ -23,8 +23,8 @@ class WithdrawWalletAction
             $settings = app(\App\Settings\WalletSettings::class);
 
             // Check if user is fully KYC verified (BVN & NIN)
-            if (!$user->isVerified()) {
-                return Result::error(new Exception("You must complete both BVN and NIN verification before you can withdraw from your wallet."));
+            if (! $user->isVerified()) {
+                return Result::error(new Exception('You must complete both BVN and NIN verification before you can withdraw from your wallet.'));
             }
 
             // Calculate fees

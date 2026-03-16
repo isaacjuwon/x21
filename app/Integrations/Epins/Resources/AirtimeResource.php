@@ -27,7 +27,7 @@ final readonly class AirtimeResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to purchase airtime: ' . $exception->getMessage(),
+                message: 'Failed to purchase airtime: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

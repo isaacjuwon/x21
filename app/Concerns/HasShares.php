@@ -2,9 +2,9 @@
 
 namespace App\Concerns;
 
-use App\Models\Share;
 use App\Events\Shares\SharesPurchased;
 use App\Events\Shares\SharesSold;
+use App\Models\Share;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +26,7 @@ trait HasShares
     public function buyShares(int $quantity, string $currency = 'SHARE'): void
     {
         if ($quantity <= 0) {
-            throw new \InvalidArgumentException("Quantity must be greater than zero.");
+            throw new \InvalidArgumentException('Quantity must be greater than zero.');
         }
 
         // Get share price from settings
@@ -51,13 +51,13 @@ trait HasShares
     public function sellShares(int $quantity, string $currency = 'SHARE'): void
     {
         if ($quantity <= 0) {
-            throw new \InvalidArgumentException("Quantity must be greater than zero.");
+            throw new \InvalidArgumentException('Quantity must be greater than zero.');
         }
 
         $totalApproved = $this->getApprovedSharesCount($currency);
 
         if ($totalApproved < $quantity) {
-            throw new \App\Exceptions\Shares\InsufficientSharesException("Insufficient approved shares to sell.");
+            throw new \App\Exceptions\Shares\InsufficientSharesException('Insufficient approved shares to sell.');
         }
 
         // Get share price from settings

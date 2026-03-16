@@ -27,7 +27,7 @@ final readonly class TransactionResource
             );
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to initialize payment: ' . $exception->getMessage(),
+                message: 'Failed to initialize payment: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -44,7 +44,7 @@ final readonly class TransactionResource
             );
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to verify payment: ' . $exception->getMessage(),
+                message: 'Failed to verify payment: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

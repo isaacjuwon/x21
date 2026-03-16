@@ -26,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Kyc\KycVerificationCompleted::class => [
             SendKycVerificationNotification::class,
         ],
+        \App\Events\Loans\LoanRepaymentFailed::class => [
+            \App\Listeners\Loans\ReverseLoanRepaymentDebit::class,
+        ],
     ];
 
     /**

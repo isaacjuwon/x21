@@ -27,7 +27,7 @@ final readonly class TransferResource
             );
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to initiate transfer: ' . $exception->getMessage(),
+                message: 'Failed to initiate transfer: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -44,7 +44,7 @@ final readonly class TransferResource
             );
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to verify transfer: ' . $exception->getMessage(),
+                message: 'Failed to verify transfer: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

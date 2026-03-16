@@ -6,7 +6,7 @@ use App\Enums\Media\MediaConversion;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-trait HasMediaConvertionRegistrations 
+trait HasMediaConvertionRegistrations
 {
     use InteractsWithMedia;
 

@@ -27,7 +27,7 @@ final readonly class DataResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to purchase data: ' . $exception->getMessage(),
+                message: 'Failed to purchase data: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

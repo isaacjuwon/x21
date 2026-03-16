@@ -39,12 +39,12 @@ class ShareController extends ApiController
         $user = $request->user();
         $settings = app(\App\Settings\ShareSettings::class);
         $holdingPeriod = $settings->holding_period;
-        
+
         $shares = $user->shares()->where('quantity', '>', 0)->get();
-        
+
         $totalShares = $shares->sum('quantity');
         $approvedShares = $shares->where('status', \App\Enums\ShareStatus::Approved)->sum('quantity');
-        
+
         $eligibilityDate = now()->subDays($holdingPeriod);
         $matureShares = $shares
             ->where('status', \App\Enums\ShareStatus::Approved)
@@ -75,7 +75,6 @@ class ShareController extends ApiController
             'require_admin_approval' => $settings->require_admin_approval,
         ], 'Share settings retrieved successfully');
     }
-
 
     /**
      * Buy new shares.

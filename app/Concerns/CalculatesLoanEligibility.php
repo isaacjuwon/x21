@@ -13,6 +13,7 @@ trait CalculatesLoanEligibility
     {
         $loanSettings = app(\App\Settings\LoanSettings::class);
         $eligibleBasedOnShares = $sharesValue * $loanSettings->loan_to_shares_ratio;
+
         return min($eligibleBasedOnShares, $maxLoanAmount);
     }
 
@@ -22,6 +23,7 @@ trait CalculatesLoanEligibility
     public function calculateRequiredShares(float $loanAmount): float
     {
         $loanSettings = app(\App\Settings\LoanSettings::class);
+
         return $loanAmount / $loanSettings->loan_to_shares_ratio;
     }
 
@@ -64,7 +66,7 @@ trait CalculatesLoanEligibility
         float $loanAmount,
         float $monthlyInterestRate,
         int $months,
-        Carbon $startDate = null,
+        ?Carbon $startDate = null,
     ): array {
         $startDate = $startDate ?? now();
         $monthlyPayment = $this->calculateMonthlyPayment(
@@ -90,12 +92,12 @@ trait CalculatesLoanEligibility
             $balance -= $principalAmount;
 
             $schedule[] = [
-                "payment_number" => $i,
-                "due_date" => $startDate->copy()->addMonths($i)->format("Y-m-d"),
-                "payment_amount" => round($monthlyPayment, 2),
-                "principal_amount" => round($principalAmount, 2),
-                "interest_amount" => round($interestAmount, 2),
-                "balance_remaining" => round(max(0, $balance), 2),
+                'payment_number' => $i,
+                'due_date' => $startDate->copy()->addMonths($i)->format('Y-m-d'),
+                'payment_amount' => round($monthlyPayment, 2),
+                'principal_amount' => round($principalAmount, 2),
+                'interest_amount' => round($interestAmount, 2),
+                'balance_remaining' => round(max(0, $balance), 2),
             ];
         }
 
@@ -116,6 +118,7 @@ trait CalculatesLoanEligibility
             $months,
         );
         $totalRepayment = $monthlyPayment * $months;
+
         return round($totalRepayment - $loanAmount, 2);
     }
 
@@ -132,6 +135,7 @@ trait CalculatesLoanEligibility
             $monthlyInterestRate,
             $months,
         );
+
         return round($monthlyPayment * $months, 2);
     }
 
@@ -144,14 +148,14 @@ trait CalculatesLoanEligibility
             return null;
         }
 
-        if (!$loan->disbursed_at) {
+        if (! $loan->disbursed_at) {
             return null;
         }
 
         // Determine how many full installments have been paid
         // We use monthly_payment as the baseline for a "month"
         $installmentsPaid = floor($loan->amount_paid / $loan->monthly_payment);
-        
+
         // The next due date is (installmentsPaid + 1) months after disbursement
         return Carbon::parse($loan->disbursed_at)->addMonths((int) ($installmentsPaid + 1));
     }

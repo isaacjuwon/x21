@@ -29,7 +29,7 @@ final readonly class CableResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to validate smartcard: ' . $exception->getMessage(),
+                message: 'Failed to validate smartcard: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -47,7 +47,7 @@ final readonly class CableResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to purchase cable subscription: ' . $exception->getMessage(),
+                message: 'Failed to purchase cable subscription: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

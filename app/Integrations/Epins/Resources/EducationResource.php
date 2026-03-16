@@ -27,7 +27,7 @@ final readonly class EducationResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to purchase exam PIN: ' . $exception->getMessage(),
+                message: 'Failed to purchase exam PIN: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
