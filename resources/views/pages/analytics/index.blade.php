@@ -213,7 +213,8 @@ new class extends Component
     </x-ui.card>
 </div>
 
-@push('scripts')
+
+@script
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
     // Chart.js default configuration
@@ -365,4 +366,4 @@ new class extends Component
         Chart.instances.forEach(chart => chart.update());
     });
 </script>
-@endpush
+@endscript

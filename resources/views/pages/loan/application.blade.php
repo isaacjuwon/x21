@@ -177,7 +177,7 @@ new class extends Component
                         </x-ui.field>
 
                         @if ($estimatedMonthlyPayment > 0)
-                            <x-ui.alerts type="info" class="bg-primary/5 text-primary border-primary/20 rounded-[--radius-box]">
+                            <x-ui.alerts type="info" class="rounded-[--radius-box]">
                                 <div class="flex justify-between items-center py-2">
                                     <span class="text-[10px] font-bold uppercase tracking-widest">Monthly Payment:</span>
                                     <span class="font-bold text-xl">{{ Number::currency($estimatedMonthlyPayment, 'NGN') }}</span>

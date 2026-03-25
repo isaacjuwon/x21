@@ -28,7 +28,7 @@ final class WalletTransaction extends Model
     ];
 
     protected $casts = [
-        'wallet_type' => WalletType::class,
+        'wallet_type' => '?' . WalletType::class,
         'from_balance' => 'decimal:2',
         'to_balance' => 'decimal:2',
         'amount' => 'decimal:2',
