@@ -35,7 +35,7 @@ new class extends Component
     #[Computed]
     public function approvedSharesCount()
     {
-        return $this->shares->where('status', \App\Enums\ShareStatus::APPROVED)->sum('quantity');
+        return $this->shares->where('status', \App\Enums\ShareStatus::Approved)->sum('quantity');
     }
 
     #[Computed]
@@ -44,7 +44,7 @@ new class extends Component
         $eligibilityDate = now()->subDays($this->holdingPeriodDays);
 
         return $this->shares
-            ->where('status', \App\Enums\ShareStatus::APPROVED)
+            ->where('status', \App\Enums\ShareStatus::Approved)
             ->filter(fn ($share) => $share->approved_at?->lte($eligibilityDate))
             ->sum('quantity');
     }
@@ -129,7 +129,7 @@ new class extends Component
                     <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-700">
                         @foreach($this->shares as $share)
                             @php
-                                $isMature = $share->status === \App\Enums\ShareStatus::APPROVED && 
+                                $isMature = $share->status === \App\Enums\ShareStatus::Approved && 
                                            $share->approved_at?->lte(now()->subDays($this->holdingPeriodDays));
                                 $daysUntilMature = $share->approved_at 
                                     ? max(0, $this->holdingPeriodDays - $share->approved_at->diffInDays(now()))
@@ -151,7 +151,7 @@ new class extends Component
                                     </x-ui.badge>
                                 </td>
                                 <td class="px-6 py-5 whitespace-nowrap text-xs font-bold uppercase tracking-widest">
-                                    @if($share->status === \App\Enums\ShareStatus::PENDING)
+                                    @if($share->status === \App\Enums\ShareStatus::Pending)
                                         <span class="text-neutral-400 italic">Awaiting Approval</span>
                                     @elseif($isMature)
                                         <span class="text-success font-bold inline-flex items-center">

@@ -108,7 +108,7 @@ new class extends Component
                     </div>
                 </div>
 
-                @if ($loan->status === \App\Enums\LoanStatus::ACTIVE)
+                @if ($loan->status === \App\Enums\LoanStatus::Active)
                     <div class="mt-8 pt-4">
                         <x-ui.button wire:navigate href="/loans/{{ $loan->id }}/payment" class="w-full h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
                             Make Payment
@@ -171,7 +171,7 @@ new class extends Component
                             <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ $loan->disbursed_at->format('M d, Y') }}</span>
                         </div>
                     @endif
-                    @if ($loan->next_payment_date && $loan->status === \App\Enums\LoanStatus::ACTIVE)
+                    @if ($loan->next_payment_date && $loan->status === \App\Enums\LoanStatus::Active)
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Next Payment</span>
                             <span class="text-xs font-bold {{ $loan->is_overdue ? 'text-error' : 'text-primary' }}">

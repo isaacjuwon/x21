@@ -41,7 +41,7 @@ new class extends Component
             'total_repayment' => $totalRepayment,
             'amount_paid' => 0,
             'balance_remaining' => $totalRepayment,
-            'status' => LoanStatus::PENDING,
+            'status' => LoanStatus::Pending,
             'applied_at' => now(),
         ]);
 

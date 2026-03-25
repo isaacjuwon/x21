@@ -41,7 +41,7 @@ class ShareTest extends TestCase
             'holder_type' => User::class,
             'holder_id' => $user->id,
             'quantity' => 10,
-            'status' => ShareStatus::APPROVED,
+            'status' => ShareStatus::Approved,
             'currency' => 'SHARE',
             'approved_at' => now(),
         ]);
@@ -95,7 +95,7 @@ class ShareTest extends TestCase
             'holder_type' => User::class,
             'holder_id' => $user->id,
             'quantity' => 10,
-            'status' => ShareStatus::APPROVED,
+            'status' => ShareStatus::Approved,
             'currency' => 'SHARE',
             'approved_at' => now(),
         ]);
@@ -122,7 +122,7 @@ class ShareTest extends TestCase
             'holder_type' => User::class,
             'holder_id' => $user->id,
             'quantity' => 2,
-            'status' => ShareStatus::APPROVED,
+            'status' => ShareStatus::Approved,
             'currency' => 'SHARE',
             'approved_at' => now(),
         ]);

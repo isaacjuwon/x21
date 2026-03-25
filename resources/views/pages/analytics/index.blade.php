@@ -19,7 +19,7 @@ new class extends Component
         // User's loan statistics
         $totalLoans = Loan::where('user_id', $user->id)->count();
         $activeLoans = Loan::where('user_id', $user->id)
-            ->where('status', LoanStatus::ACTIVE)
+            ->where('status', LoanStatus::Active)
             ->count();
         $totalBorrowed = Loan::where('user_id', $user->id)->sum('amount');
         $totalRepaid = LoanPayment::whereHas('loan', fn($q) => $q->where('user_id', $user->id))->sum('amount');
@@ -40,7 +40,7 @@ new class extends Component
         // Share portfolio
         $totalShares = Share::where('holder_type', $user->getMorphClass())
             ->where('holder_id', $user->id)
-            ->where('status', ShareStatus::APPROVED)
+            ->where('status', ShareStatus::Approved)
             ->sum('quantity');
         $shareSettings = app(\App\Settings\ShareSettings::class);
         $shareValue = $totalShares * ($shareSettings->share_price ?? 0);

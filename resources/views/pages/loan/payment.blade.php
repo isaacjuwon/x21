@@ -51,7 +51,7 @@ new class extends Component
             $this->walletBalance = auth()->user()->wallet_balance ?? 0;
 
             // Reset to default payment amount
-            if ($this->loan->status === \App\Enums\LoanStatus::ACTIVE) {
+            if ($this->loan->status === \App\Enums\LoanStatus::Active) {
                 $this->paymentAmount = $this->loan->monthly_payment;
             } else {
                 $this->paymentAmount = 0;
@@ -96,7 +96,7 @@ new class extends Component
 
     <x-ui.card>
 
-        @if ($loan->status === \App\Enums\LoanStatus::ACTIVE)
+        @if ($loan->status === \App\Enums\LoanStatus::Active)
             <!-- Loan Summary -->
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <div class="bg-neutral-50 dark:bg-neutral-900/50 p-6 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 overflow-hidden">

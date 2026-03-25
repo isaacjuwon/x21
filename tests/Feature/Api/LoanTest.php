@@ -82,7 +82,7 @@ class LoanTest extends TestCase
     public function test_user_can_repay_loan(): void
     {
         $user = User::factory()->create();
-        $loan = Loan::factory()->create(['user_id' => $user->id, 'balance_remaining' => 1000, 'status' => \App\Enums\LoanStatus::ACTIVE]);
+        $loan = Loan::factory()->create(['user_id' => $user->id, 'balance_remaining' => 1000, 'status' => \App\Enums\LoanStatus::Active]);
 
         // Mock Repay Action
         $this->mock(\App\Actions\Loans\MakeLoanPaymentAction::class, function ($mock) use ($user, $loan) {

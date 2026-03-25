@@ -51,45 +51,51 @@ class MakeLoanPaymentAction
         // Deduct from wallet using pay method
         $user->pay($amount, "Loan payment for Loan #{$loan->id}");
 
-        // Calculate principal and interest portions
-        $monthlyRate = $loan->interest_rate / 100 / 12;
-        $interestAmount = $loan->balance_remaining * $monthlyRate;
-        $principalAmount = $amount - $interestAmount;
+        try {
+            // Calculate principal and interest portions
+            $monthlyRate = $loan->interest_rate / 100 / 12;
+            $interestAmount = $loan->balance_remaining * $monthlyRate;
+            $principalAmount = $amount - $interestAmount;
 
-        // If interest exceeds payment, adjust
-        if ($interestAmount > $amount) {
-            $interestAmount = $amount;
-            $principalAmount = 0;
+            // If interest exceeds payment, adjust
+            if ($interestAmount > $amount) {
+                $interestAmount = $amount;
+                $principalAmount = 0;
+            }
+
+            // For simplicity, if this is a partial or final payment, adjust accordingly
+            if ($principalAmount < 0) {
+                $principalAmount = 0;
+            }
+
+            // Create payment record
+            $payment = LoanPayment::create([
+                'loan_id' => $loan->id,
+                'amount' => $amount,
+                'payment_type' => LoanPaymentType::Scheduled,
+                'payment_date' => now(),
+                'due_date' => $loan->next_payment_date,
+                'principal_amount' => $principalAmount,
+                'interest_amount' => $interestAmount,
+                'balance_after' => $loan->balance_remaining - $amount,
+                'wallet_transaction_id' => null, // Can be linked if wallet returns transaction ID
+            ]);
+
+            // Update loan balance
+            $loan->updateBalance($amount);
+
+            // Dispatch events
+            event(new LoanPaymentMade($loan, $payment, $user));
+
+            if ($loan->status === LoanStatus::FullyPaid) {
+                event(new LoanFullyPaid($loan, $user));
+            }
+
+            return $payment;
+        } catch (\Throwable $e) {
+            event(new \App\Events\Loans\LoanRepaymentFailed($loan, (float) $amount, $e));
+
+            throw $e;
         }
-
-        // For simplicity, if this is a partial or final payment, adjust accordingly
-        if ($principalAmount < 0) {
-            $principalAmount = 0;
-        }
-
-        // Create payment record
-        $payment = LoanPayment::create([
-            'loan_id' => $loan->id,
-            'amount' => $amount,
-            'payment_type' => LoanPaymentType::Scheduled,
-            'payment_date' => now(),
-            'due_date' => $loan->next_payment_date,
-            'principal_amount' => $principalAmount,
-            'interest_amount' => $interestAmount,
-            'balance_after' => $loan->balance_remaining - $amount,
-            'wallet_transaction_id' => null, // Can be linked if wallet returns transaction ID
-        ]);
-
-        // Update loan balance
-        $loan->updateBalance($amount);
-
-        // Dispatch events
-        event(new LoanPaymentMade($loan, $payment, $user));
-
-        if ($loan->status === LoanStatus::FullyPaid) {
-            event(new LoanFullyPaid($loan, $user));
-        }
-
-        return $payment;
     }
 }

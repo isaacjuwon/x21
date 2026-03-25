@@ -27,25 +27,25 @@ new class extends Component
     public function approve()
     {
         $this->loan->update([
-            'status' => LoanStatus::APPROVED,
+            'status' => LoanStatus::Approved,
             'approved_at' => now(),
         ]);
 
         event(new LoanApproved($this->loan, $this->loan->user));
 
-        $this->status = LoanStatus::APPROVED->value;
+        $this->status = LoanStatus::Approved->value;
         $this->toastSuccess('Loan approved successfully.');
     }
 
     public function reject()
     {
         $this->loan->update([
-            'status' => LoanStatus::REJECTED,
+            'status' => LoanStatus::Rejected,
         ]);
 
         event(new LoanRejected($this->loan, $this->loan->user));
 
-        $this->status = LoanStatus::REJECTED->value;
+        $this->status = LoanStatus::Rejected->value;
         $this->toastSuccess('Loan rejected.');
     }
 
@@ -55,7 +55,7 @@ new class extends Component
             $disburseAction->execute($this->loan);
 
             $this->loan = $this->loan->fresh();
-            $this->status = LoanStatus::ACTIVE->value;
+            $this->status = LoanStatus::Active->value;
             $this->toastSuccess('Loan disbursed and active.');
         } catch (\Exception $e) {
             $this->toastError($e->getMessage());
@@ -65,10 +65,10 @@ new class extends Component
     public function markAsDefaulted()
     {
         $this->loan->update([
-            'status' => LoanStatus::DEFAULTED,
+            'status' => LoanStatus::Defaulted,
         ]);
 
-        $this->status = LoanStatus::DEFAULTED->value;
+        $this->status = LoanStatus::Defaulted->value;
         $this->toastSuccess('Loan marked as defaulted.');
     }
 
@@ -87,9 +87,9 @@ new class extends Component
         $newStatus = LoanStatus::from($this->status);
 
         match ($newStatus) {
-            LoanStatus::APPROVED => $this->approve(),
-            LoanStatus::REJECTED => $this->reject(),
-            LoanStatus::ACTIVE => $this->disburse(),
+            LoanStatus::Approved => $this->approve(),
+            LoanStatus::Rejected => $this->reject(),
+            LoanStatus::Active => $this->disburse(),
             default => $this->updateStatus($newStatus),
         };
     }
@@ -115,16 +115,16 @@ new class extends Component
         <div class="flex items-center gap-2">
             <x-ui.button tag="a" href="{{ route('admin.loans.index') }}" variant="ghost" icon="arrow-left">Back</x-ui.button>
             <div class="h-6 w-px bg-neutral-200 dark:bg-neutral-800 mx-1"></div>
-            @if($loan->status === LoanStatus::PENDING)
+            @if($loan->status === LoanStatus::Pending)
                 <x-ui.button wire:click="approve" variant="primary" icon="check" wire:confirm="Approve this loan?">Approve</x-ui.button>
                 <x-ui.button wire:click="reject" variant="outline" color="red" icon="x-mark" wire:confirm="Reject this loan?">Reject</x-ui.button>
             @endif
 
-            @if($loan->status === LoanStatus::APPROVED)
+            @if($loan->status === LoanStatus::Approved)
                 <x-ui.button wire:click="disburse" variant="primary" icon="banknotes">Disburse Funds</x-ui.button>
             @endif
 
-            @if($loan->status === LoanStatus::ACTIVE)
+            @if($loan->status === LoanStatus::Active)
                 <x-ui.button wire:click="markAsDefaulted" variant="outline" color="red" icon="shield-exclamation" wire:confirm="Mark this loan as defaulted?">Mark Defaulted</x-ui.button>
             @endif
 

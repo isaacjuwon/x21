@@ -58,12 +58,12 @@ new class extends Component
 
     public function approve()
     {
-        if ($this->share->status !== \App\Enums\ShareStatus::PENDING) {
+        if ($this->share->status !== \App\Enums\ShareStatus::Pending) {
             return;
         }
 
         $this->share->update([
-            'status' => \App\Enums\ShareStatus::APPROVED,
+            'status' => \App\Enums\ShareStatus::Approved,
             'approved_at' => now(),
         ]);
 
@@ -84,12 +84,12 @@ new class extends Component
 
     public function reject()
     {
-        if ($this->share->status !== \App\Enums\ShareStatus::PENDING) {
+        if ($this->share->status !== \App\Enums\ShareStatus::Pending) {
             return;
         }
 
         $this->share->update([
-            'status' => \App\Enums\ShareStatus::REJECTED,
+            'status' => \App\Enums\ShareStatus::Rejected,
         ]);
 
         // Balance doesn't change on rejection, but we still need to pass it
@@ -138,7 +138,7 @@ new class extends Component
     >
         <x-slot:actions>
             <div class="flex items-center gap-3">
-                @if($share->status === \App\Enums\ShareStatus::PENDING)
+                @if($share->status === \App\Enums\ShareStatus::Pending)
                     <x-ui.button 
                         type="button" 
                         wire:click="approve" 

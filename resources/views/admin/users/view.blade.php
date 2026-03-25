@@ -90,7 +90,7 @@ new class extends Component {
                 <div>
                     <h3 class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Active Loans</h3>
                     <p class="text-xl font-bold text-neutral-900 dark:text-white">
-                        {{ $user->loans()->where('status', \App\Enums\LoanStatus::ACTIVE)->count() }}
+                        {{ $user->loans()->where('status', \App\Enums\LoanStatus::Active)->count() }}
                     </p>
                 </div>
             </div>
@@ -164,7 +164,7 @@ new class extends Component {
                                 {{ number_format($share->quantity) }}
                             </td>
                             <td class="px-6 py-4">
-                                <x-ui.badge :color="$share->status === \App\Enums\ShareStatus::APPROVED ? 'success' : ($share->status === \App\Enums\ShareStatus::PENDING ? 'warning' : 'danger')" class="text-[10px]">
+                                <x-ui.badge :color="$share->status === \App\Enums\ShareStatus::Approved ? 'success' : ($share->status === \App\Enums\ShareStatus::Pending ? 'warning' : 'danger')" class="text-[10px]">
                                     {{ $share->status->name }}
                                 </x-ui.badge>
                             </td>

@@ -30,7 +30,7 @@ new class extends Component {
             'holder_id' => $user->id,
             'quantity' => $this->quantity,
             'currency' => $this->currency,
-            'status' => \App\Enums\ShareStatus::APPROVED, // Admin created shares are approved by default
+            'status' => \App\Enums\ShareStatus::Approved, // Admin created shares are approved by default
             'approved_at' => now(),
         ]);
 

@@ -19,7 +19,7 @@ return new class extends Migration {
         });
 
         // For existing approved shares, set approved_at to created_at
-        \App\Models\Share::where('status', \App\Enums\ShareStatus::APPROVED)
+        \App\Models\Share::where('status', \App\Enums\ShareStatus::Approved)
             ->whereNull('approved_at')
             ->update(['approved_at' => DB::raw('created_at')]);
     }

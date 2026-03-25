@@ -72,7 +72,7 @@ new class extends Component
         $shareSettings = app(ShareSettings::class);
         $revenueData = [
             'loan_interest' => LoanPayment::sum('amount') - Loan::sum('amount'),
-            'share_purchases' => Share::where('status', ShareStatus::APPROVED)->sum('quantity') * $shareSettings->share_price,
+            'share_purchases' => Share::where('status', ShareStatus::Approved)->sum('quantity') * $shareSettings->share_price,
             'transactions' => Transaction::where('status', TransactionStatus::Success)
                 ->whereIn('transactable_type', [
                     AirtimePlan::class,
