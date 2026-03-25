@@ -134,8 +134,8 @@ class Dividend extends Model
         return [
             'total_shareholders' => $this->payments()->count(),
             'total_shares' => $this->payments()->sum('shares_held'),
-            'total_payout' => $this->payments()->sum('total_amount'),
-            'average_per_shareholder' => $this->payments()->avg('total_amount'),
+            'total_payout' => (float) $this->payments()->sum('total_amount'),
+            'average_per_shareholder' => (float) ($this->payments()->avg('total_amount') ?? 0),
         ];
     }
 }
