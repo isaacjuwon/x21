@@ -6,13 +6,10 @@ use Spatie\LaravelSettings\Settings;
 
 class ShareSettings extends Settings
 {
-    public bool $require_admin_approval;
-
-    public float $share_price;
-
-    public float $share_interest_rate;
-
-    public int $holding_period;
+    public float $price_per_share;
+    public int $min_shares_purchase;
+    public int $max_shares_per_user;
+    public int $holding_period_days;
 
     public static function group(): string
     {

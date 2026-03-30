@@ -1,125 +1,152 @@
 <?php
 
-use Livewire\Attributes\Layout;
+use App\Models\Transaction;
+use App\Models\Wallet;
+use App\Enums\Wallets\TransactionType;
+use App\Enums\Wallets\WalletType;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Defer;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
-new #[Layout('layouts.app')] class extends Component
-{
-    //
+new #[Title('My Wallet'), Defer] class extends Component {
+    use WithPagination;
+
+    #[Url(as: 'page')]
+    public $page = 1;
+
+    #[Url]
+    public $sortBy = 'created_at';
+
+    #[Url]
+    public $sortDirection = 'desc';
+
+    public function sort($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    #[Computed]
+    public function wallet(): Wallet
+    {
+        return Auth::user()->getWallet(WalletType::General);
+    }
+
+    #[Computed]
+    public function transactions()
+    {
+        return Auth::user()->transactions()
+            ->orderBy($this->sortBy, $this->sortDirection)
+            ->paginate(10);
+    }
+
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="space-y-6 animate-pulse">
+            <div class="flex items-center justify-between">
+                <div class="h-8 w-32 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                <div class="flex space-x-2">
+                    <div class="h-10 w-24 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                    <div class="h-10 w-24 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+            </div>
+            <div class="h-64 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+        </div>
+        HTML;
+    }
 }; ?>
 
-<div class="max-w-6xl mx-auto p-6 space-y-6">
-    <x-page-header 
-        heading="My Wallet" 
-        description="Manage your wallet balance and transactions"
-    />
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <flux:heading size="xl">{{ __('My Wallet') }}</flux:heading>
 
-    <x-wallet.card :balance="auth()->user()->wallet_balance" variant="full">
-        <div class="flex flex-col sm:flex-row gap-3">
-            <x-ui.button 
-                tag="a" 
-                href="{{ route('wallet.fund') }}" 
-                variant="outline"
-                icon="plus-circle"
-                size="lg"
-                class="justify-center shadow-lg hover:shadow-xl transition-shadow border-white/20 hover:bg-white/10 text-white font-bold"
-            >
-                Fund Wallet
-            </x-ui.button>
+        <div class="flex space-x-2">
+            <flux:button href="{{ route('wallet.transfer') }}" variant="outline" icon="plus" wire:navigate>
+                {{ __('Transfer') }}
+            </flux:button>
+            <flux:button href="{{ route('wallet.withdraw') }}" variant="primary" icon="banknotes" wire:navigate>
+                {{ __('Withdraw') }}
+            </flux:button>
         </div>
-    </x-wallet.card>
+    </div>
 
-    <!-- Main Action Cards -->
-    <div class="grid gap-4 md:grid-cols-2">
-        <!-- Transfer Fund Card -->
-        <a href="{{ route('wallet.transfer') }}" class="group block">
-            <div class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 hover:border-primary transition-all hover:shadow-md">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="p-3 bg-primary/10 rounded-[--radius-field] group-hover:bg-primary/20 transition-colors">
-                                <x-ui.icon name="arrow-up-tray" variant="solid" class="size-6 text-primary" />
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Total Balance') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency($this->wallet->balance) }}
+            </flux:text>
+        </flux:card>
+
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Available Balance') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency($this->wallet->available_balance) }}
+            </flux:text>
+        </flux:card>
+
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Held Balance') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency($this->wallet->held_balance) }}
+            </flux:text>
+        </flux:card>
+    </div>
+
+    <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+        <flux:table :paginate="$this->transactions">
+            <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
+                <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'amount'" :direction="$sortDirection" wire:click="sort('amount')" align="end">{{ __('Amount') }}</flux:table.column>
+                <flux:table.column>{{ __('Status') }}</flux:table.column>
+                <flux:table.column>{{ __('Reference') }}</flux:table.column>
+            </flux:table.columns>
+
+            <flux:table.rows>
+                @foreach ($this->transactions as $transaction)
+                    <flux:table.row :key="$transaction->id">
+                        <flux:table.cell class="text-zinc-500 whitespace-nowrap">
+                            {{ $transaction->created_at->format('M j, Y H:i') }}
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            <div class="flex items-center gap-2">
+                                <flux:icon :name="$transaction->type->getIcon()" class="size-4 text-zinc-400" />
+                                <span>{{ $transaction->type->getLabel() }}</span>
                             </div>
-                            <h3 class="text-base font-bold text-neutral-900 dark:text-white">Transfer Funds</h3>
-                        </div>
-                        <p class="text-xs text-neutral-500 dark:text-neutral-400">
-                            Send money to other users instantly using their phone number
-                        </p>
-                    </div>
-                    <x-ui.icon name="chevron-right" class="size-5 text-neutral-400 group-hover:text-primary transition-colors mt-1" />
-                </div>
-            </div>
-        </a>
+                        </flux:table.cell>
 
-        <!-- Withdraw Card -->
-        <a href="{{ route('wallet.withdraw') }}" class="group block">
-            <div class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 hover:border-primary transition-all hover:shadow-md">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="p-3 bg-secondary/10 rounded-[--radius-field] group-hover:bg-secondary/20 transition-colors">
-                                <x-ui.icon name="arrow-down-tray" variant="solid" class="size-6 text-secondary" />
-                            </div>
-                            <h3 class="text-base font-bold text-neutral-900 dark:text-white">Withdraw Funds</h3>
-                        </div>
-                        <p class="text-xs text-neutral-500 dark:text-neutral-400">
-                            Withdraw money to your bank account securely
-                        </p>
-                    </div>
-                    <x-ui.icon name="chevron-right" class="size-5 text-neutral-400 group-hover:text-primary transition-colors mt-1" />
-                </div>
-            </div>
-        </a>
-    </div>
+                        <flux:table.cell align="end" variant="strong" class="{{ $transaction->amount > 0 ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $transaction->amount > 0 ? '+' : '' }}{{ Number::currency($transaction->amount) }}
+                        </flux:table.cell>
 
-    <!-- Wallet Info & Stats -->
-    <div class="grid gap-6 md:grid-cols-3">
-        <div class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-success/10 rounded-[--radius-field]">
-                    <x-ui.icon name="check-circle" variant="solid" class="size-5 text-success" />
-                </div>
-                <h4 class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Status</h4>
-            </div>
-            <p class="text-base font-bold text-neutral-900 dark:text-white">Active</p>
-        </div>
+                        <flux:table.cell>
+                            <flux:badge :color="$transaction->status->getColor()" size="sm" inset="top bottom">
+                                {{ $transaction->status->getLabel() }}
+                            </flux:badge>
+                        </flux:table.cell>
 
-        <div class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-info/10 rounded-[--radius-field]">
-                    <x-ui.icon name="currency-dollar" variant="solid" class="size-5 text-info" />
-                </div>
-                <h4 class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Currency</h4>
-            </div>
-            <p class="text-base font-bold text-neutral-900 dark:text-white">NGN</p>
-            <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 uppercase tracking-wider font-bold">Nigerian Naira</p>
-        </div>
-
-        <div class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-accent/10 rounded-[--radius-field]">
-                    <x-ui.icon name="clock" variant="solid" class="size-5 text-accent" />
-                </div>
-                <h4 class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Last Activity</h4>
-            </div>
-            <p class="text-base font-bold text-neutral-900 dark:text-white">Today</p>
-        </div>
-    </div>
-
-    <!-- Recent Transactions -->
-    <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
-        <div class="p-6 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
-            <h3 class="font-bold text-neutral-900 dark:text-white">Recent Transactions</h3>
-            <x-ui.button tag="a" href="#" variant="ghost" size="sm" class="text-neutral-500 font-bold hover:text-neutral-900 dark:hover:text-white">
-                View All
-            </x-ui.button>
-        </div>
-        <div class="p-12 text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-neutral-50 dark:bg-neutral-700/50 rounded-full mb-4">
-                <x-ui.icon name="inbox" class="size-8 text-neutral-300 dark:text-neutral-500" />
-            </div>
-            <p class="text-neutral-900 dark:text-white font-bold">No transactions yet</p>
-            <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Your transaction history will appear here</p>
-        </div>
-    </div>
+                        <flux:table.cell class="text-zinc-500 text-sm font-mono">
+                            {{ $transaction->reference }}
+                        </flux:table.cell>
+                    </flux:row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:card>
 </div>

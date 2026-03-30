@@ -2,7 +2,14 @@
 
 namespace App\Events\Loans;
 
-class LoanRejected extends LoanEvent
+use App\Models\Loan;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class LoanRejected
 {
-    //
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public function __construct(public Loan $loan) {}
 }

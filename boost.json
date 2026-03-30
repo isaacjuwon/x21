@@ -2,10 +2,17 @@
     "agents": [
         "gemini"
     ],
-    "editors": [
-        "gemini"
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "packages": [
+        "filament/filament"
     ],
-    "guidelines": [
-        "laravel/fortify"
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "fluxui-development",
+        "livewire-development",
+        "pest-testing"
     ]
 }

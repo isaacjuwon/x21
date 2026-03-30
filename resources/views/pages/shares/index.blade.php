@@ -1,175 +1,185 @@
 <?php
 
+use App\Models\ShareHolding;
 use App\Settings\ShareSettings;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Defer;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
-new class extends Component
+new #[Title('My Shares'), Defer] class extends Component
 {
-    public float $pricePerShare;
+    use WithPagination;
 
-    public int $holdingPeriodDays;
+    #[Url(as: 'page')]
+    public $page = 1;
 
-    public function mount(ShareSettings $settings): void
+    #[Url]
+    public $sortBy = 'created_at';
+
+    #[Url]
+    public $sortDirection = 'desc';
+
+    public function sort($column)
     {
-        $this->pricePerShare = $settings->share_price;
-        $this->holdingPeriodDays = $settings->holding_period;
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    #[On('share-order-placed')]
+    public function refresh()
+    {
+        // This will trigger a re-render and update computed properties
     }
 
     #[Computed]
-    public function shares()
+    public function shareHolding(): ?ShareHolding
     {
-        return Auth::user()->shares()
-            ->where('quantity', '>', 0)
-            ->latest()
-            ->get();
+        return Auth::user()->shareHolding;
     }
 
     #[Computed]
-    public function totalShares()
+    public function shareSettings(): ShareSettings
     {
-        return $this->shares->sum('quantity');
+        return app(ShareSettings::class);
     }
 
     #[Computed]
-    public function approvedSharesCount()
+    public function shareOrders()
     {
-        return $this->shares->where('status', \App\Enums\ShareStatus::Approved)->sum('quantity');
+        return Auth::user()->shareOrders()
+            ->orderBy($this->sortBy, $this->sortDirection)
+            ->paginate(10);
     }
 
-    #[Computed]
-    public function matureSharesCount()
+    public function placeholder()
     {
-        $eligibilityDate = now()->subDays($this->holdingPeriodDays);
-
-        return $this->shares
-            ->where('status', \App\Enums\ShareStatus::Approved)
-            ->filter(fn ($share) => $share->approved_at?->lte($eligibilityDate))
-            ->sum('quantity');
-    }
-
-    #[Computed]
-    public function totalValue()
-    {
-        return $this->totalShares * $this->pricePerShare;
-    }
-
-    public function render()
-    {
-        return $this->view()
-            ->title('My Shares')
-            ->layout('layouts::app');
-    }
-};
-?>
-
-<div class="max-w-4xl mx-auto p-6">
-    <x-page-header 
-        heading="My Shares" 
-        description="View and manage your share portfolio"
-    >
-        <x-slot name="actions">
-            <x-ui.button wire:navigate href="{{ route('shares.buy') }}">
-                Buy Shares
-            </x-ui.button>
-            <x-ui.button variant="outline" wire:navigate href="{{ route('shares.sell') }}">
-                Sell Shares
-            </x-ui.button>
-        </x-slot>
-    </x-page-header>
-
-    <x-ui.card>
-
-        <div class="mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <x-ui.card class="bg-primary/5 border-primary/20 overflow-hidden shadow-none">
-                    <div class="text-center">
-                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Total Portfolio</span>
-                        <span class="block text-xl font-bold text-primary truncate" title="{{ number_format($this->totalShares) }}">{{ number_format($this->totalShares) }}</span>
-                    </div>
-                </x-ui.card>
-                <x-ui.card class="bg-success/5 border-success/20 overflow-hidden shadow-none">
-                    <div class="text-center">
-                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Mature Shares</span>
-                        <span class="block text-xl font-bold text-success truncate" title="{{ number_format($this->matureSharesCount) }}">{{ number_format($this->matureSharesCount) }}</span>
-                        <span class="text-[10px] text-success/70 font-bold uppercase tracking-widest">Eligible Dividend</span>
-                    </div>
-                </x-ui.card>
-                <x-ui.card class="overflow-hidden border-neutral-100 dark:border-neutral-700 shadow-none bg-neutral-50 dark:bg-neutral-900/50">
-                    <div class="text-center">
-                        <span class="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Estimated Value</span>
-                        <span class="block text-xl font-bold text-neutral-900 dark:text-white truncate" title="{{ Number::currency($this->totalValue) }}">{{ Number::currency($this->totalValue) }}</span>
-                    </div>
-                </x-ui.card>
+        return <<<'HTML'
+        <div class="space-y-6 animate-pulse">
+            <div class="flex items-center justify-between">
+                <div class="h-8 w-32 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                <div class="flex space-x-2">
+                    <div class="h-10 w-24 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                </div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+            </div>
+            <div class="h-64 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+        </div>
+        HTML;
+    }
+}; ?>
+
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <flux:heading size="xl">{{ __('My Shares') }}</flux:heading>
+
+        <div class="flex space-x-2">
+            <flux:modal.trigger name="sell-shares">
+                <flux:button variant="outline" icon="minus">
+                    {{ __('Sell Shares') }}
+                </flux:button>
+            </flux:modal.trigger>
+
+            <flux:modal.trigger name="buy-shares">
+                <flux:button variant="primary" icon="plus">
+                    {{ __('Buy Shares') }}
+                </flux:button>
+            </flux:modal.trigger>
+        </div>
+    </div>
+
+    <livewire:shares.buy-modal />
+    <livewire:shares.sell-modal />
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Total Shares') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ number_format($this->shareHolding?->quantity ?? 0) }}
+            </flux:text>
+        </flux:card>
+
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Current Value') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency(($this->shareHolding?->quantity ?? 0) * $this->shareSettings->price_per_share) }}
+            </flux:text>
+        </flux:card>
+
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Price per Share') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency($this->shareSettings->price_per_share) }}
+            </flux:text>
+        </flux:card>
+    </div>
+
+    <flux:card class="p-0! overflow-hidden border-zinc-200 dark:border-zinc-800">
+        <div class="p-6 border-b border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="lg">{{ __('Share Orders') }}</flux:heading>
+            <flux:subheading>{{ __('History of your share purchase and sell orders.') }}</flux:subheading>
         </div>
 
-        @if($this->holdingPeriodDays > 0)
-            <x-ui.alerts type="info" class="mb-6">
-                <strong>Dividend Policy:</strong> Shares must be held for at least <strong>{{ $this->holdingPeriodDays }} days</strong> after approval to be eligible for dividends.
-            </x-ui.alerts>
-        @endif
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column align="end">{{ __('Quantity') }}</flux:table.column>
+                <flux:table.column align="end">{{ __('Price') }}</flux:table.column>
+                <flux:table.column align="end">{{ __('Total') }}</flux:table.column>
+                <flux:table.column align="end">{{ __('Status') }}</flux:table.column>
+            </flux:table.columns>
 
-        @if($this->shares->isEmpty())
-            <x-ui.alerts type="info" class="mb-6">
-                You don't own any shares yet.
-            </x-ui.alerts>
-        @else
-            <div class="overflow-x-auto mb-6">
-                <table class="min-w-full divide-y border border-neutral-100 dark:border-neutral-700 divide-neutral-100 dark:divide-neutral-700">
-                    <thead class="bg-neutral-50 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 uppercase tracking-widest text-[10px] font-bold">
-                        <tr>
-                            <th scope="col" class="px-6 py-4 text-left">Allocation Date</th>
-                            <th scope="col" class="px-6 py-4 text-left">Quantity</th>
-                            <th scope="col" class="px-6 py-4 text-left">Status</th>
-                            <th scope="col" class="px-6 py-4 text-left">Maturity</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-700">
-                        @foreach($this->shares as $share)
-                            @php
-                                $isMature = $share->status === \App\Enums\ShareStatus::Approved && 
-                                           $share->approved_at?->lte(now()->subDays($this->holdingPeriodDays));
-                                $daysUntilMature = $share->approved_at 
-                                    ? max(0, $this->holdingPeriodDays - $share->approved_at->diffInDays(now()))
-                                    : null;
-                            @endphp
-                            <tr>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400 font-bold">
-                                    {{ $share->created_at->format('M d, Y') }}
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
-                                    {{ number_format($share->quantity) }} Units
-                                    <div class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-1 truncate max-w-[120px]" title="Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}">
-                                        Value: {{ Number::currency($share->quantity * $this->pricePerShare) }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap">
-                                    <x-ui.badge :color="$share->status->getColor()" class="text-[10px] font-bold uppercase tracking-widest">
-                                        {{ $share->status->getLabel() }}
-                                    </x-ui.badge>
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold uppercase tracking-widest">
-                                    @if($share->status === \App\Enums\ShareStatus::Pending)
-                                        <span class="text-neutral-400 italic">Awaiting Approval</span>
-                                    @elseif($isMature)
-                                        <span class="text-success font-bold inline-flex items-center">
-                                            <x-ui.icon name="check-circle" class="w-4 h-4 mr-1" />
-                                            Mature
-                                        </span>
-                                    @else
-                                        <div class="flex flex-col">
-                                            <span class="text-amber-500 font-bold">Immature</span>
-                                            <span class="text-[10px] text-neutral-500 lowercase">in {{ $daysUntilMature }} days</span>
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <flux:table.rows>
+                @forelse ($this->shareOrders as $order)
+                    <flux:table.row :key="$order->id">
+                        <flux:table.cell class="text-zinc-500">
+                            {{ $order->created_at->format('M j, Y') }}
+                        </flux:table.cell>
+                        <flux:table.cell>
+                            <flux:badge :color="$order->type->getColor()" size="sm">{{ $order->type->getLabel() }}</flux:badge>
+                        </flux:table.cell>
+                        <flux:table.cell align="end">
+                            {{ number_format($order->quantity) }}
+                        </flux:table.cell>
+                        <flux:table.cell align="end">
+                            {{ Number::currency($order->price_per_share) }}
+                        </flux:table.cell>
+                        <flux:table.cell align="end" class="font-medium text-zinc-900 dark:text-white">
+                            {{ Number::currency($order->total_amount) }}
+                        </flux:table.cell>
+                        <flux:table.cell align="end">
+                            <flux:badge :color="$order->status->getColor()" inset="top bottom">
+                                {{ $order->status->getLabel() }}
+                            </flux:badge>
+                        </flux:table.cell>
+                    </flux:table.row>
+                @empty
+                    <flux:table.row>
+                        <flux:table.cell colspan="6" class="text-center py-10 text-zinc-500">
+                            {{ __('No share orders found.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforelse
+            </flux:table.rows>
+        </flux:table>
+
+        @if ($this->shareOrders->hasPages())
+            <div class="p-6 border-t border-zinc-200 dark:border-zinc-800">
+                {{ $this->shareOrders->links() }}
             </div>
         @endif
-    </x-ui.card>
+    </flux:card>
 </div>

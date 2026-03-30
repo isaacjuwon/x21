@@ -35,22 +35,4 @@ return [
         ],
     ],
 
-    'paystack' => [
-        'public_key' => env('PAYSTACK_PUBLIC_KEY'),
-        'secret_key' => env('PAYSTACK_SECRET_KEY'),
-        'url' => env('PAYSTACK_URL', 'https://api.paystack.co'),
-    ],
-
-    'epins' => [
-        'api_key' => env('EPINS_API_KEY'),
-        'url' => env('EPINS_URL', 'https://api.epins.com.ng/core'),
-        'sandbox_url' => env('EPINS_SANDBOX_URL', 'https://sandbox.epins.com.ng/core'),
-    ],
-
-    'dojah' => [
-        'api_key' => env('DOJAH_API_KEY'),
-        'app_id' => env('DOJAH_APP_ID'),
-        'base_url' => env('DOJAH_BASE_URL', 'https://api.dojah.io'),
-    ],
-
 ];

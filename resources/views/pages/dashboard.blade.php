@@ -1,293 +1,273 @@
 <?php
 
+use App\Models\Loan;
+use App\Models\ShareHolding;
+use App\Models\Transaction;
+use App\Models\Wallet;
+use App\Settings\ShareSettings;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Defer;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new class extends Component
-{
+new #[Title('Dashboard'), Defer] class extends Component {
+    /**
+     * Get the user's wallet.
+     */
     #[Computed]
-    public function walletBalance()
+    public function wallet(): ?Wallet
     {
-        return auth()->user()->wallet_balance;
+        return Auth::user()->wallet;
     }
 
+    /**
+     * Get the user's share holdings.
+     */
     #[Computed]
-    public function sharesValue()
+    public function shareHolding(): ?ShareHolding
     {
-        return auth()->user()->getSharesValue();
+        return Auth::user()->shareHolding;
     }
 
+    /**
+     * Get the user's active loans.
+     */
     #[Computed]
-    public function totalShares()
+    public function activeLoans()
     {
-        return auth()->user()->shares()->where('quantity', '>', 0)->sum('quantity');
+        return Auth::user()->loans()->where('status', 'active')->get();
     }
 
+    /**
+     * Get the total loan balance.
+     */
     #[Computed]
-    public function activeLoan()
+    public function loanBalance(): float
     {
-        return auth()->user()->activeLoan();
+        return $this->activeLoans->sum('outstanding_balance');
     }
 
+    /**
+     * Get the share price.
+     */
     #[Computed]
-    public function loanEligibility()
+    public function sharePrice(): float
     {
-        return auth()->user()->getLoanEligibilityAmount();
+        return app(ShareSettings::class)->price_per_share;
     }
 
-    public function render()
+    /**
+     * Get the total value of shares.
+     */
+    #[Computed]
+    public function sharesValue(): float
     {
-        return $this->view()
-            ->title('Dashboard')
-            ->layout('layouts::app');
+        return ($this->shareHolding?->quantity ?? 0) * $this->sharePrice;
     }
-};
-?>
 
-<div class="min-h-screen bg-background text-foreground">
-    <div class="max-w-7xl mx-auto p-6 space-y-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Dashboard</h1>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Welcome back, <span class="font-bold text-neutral-900 dark:text-white">{{ auth()->user()->name }}</span></p>
+    /**
+     * Get recent transactions.
+     */
+    #[Computed]
+    public function recentTransactions()
+    {
+        return Auth::user()->transactions()->latest()->take(5)->get();
+    }
+
+    /**
+     * Get quick stats.
+     */
+    #[Computed]
+    public function stats(): array
+    {
+        return [
+            [
+                'label' => 'Total Balance',
+                'value' => Number::currency($this->wallet?->balance ?? 0),
+                'description' => 'Available in your wallet',
+                'icon' => 'wallet',
+                'color' => 'primary',
+            ],
+            [
+                'label' => 'Active Loans',
+                'value' => Number::currency($this->loanBalance),
+                'description' => $this->activeLoans->count().' active loan(s)',
+                'icon' => 'banknotes',
+                'color' => 'orange',
+            ],
+            [
+                'label' => 'Shares Value',
+                'value' => Number::currency($this->sharesValue),
+                'description' => number_format($this->shareHolding?->quantity ?? 0).' share(s) held',
+                'icon' => 'chart-bar',
+                'color' => 'green',
+            ],
+        ];
+    }
+
+    public function placeholder()
+    {
+        return <<<'HTML'
+            <div class="flex h-full w-full flex-1 flex-col gap-4">
+                <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                    <div class="h-32 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
+                    <div class="h-32 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
+                    <div class="h-32 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
                 </div>
-                
-                @role('admin')
-                    <x-ui.button 
-                        tag="a"
-                        href="{{ route('admin.dashboard') }}"
-                        variant="outline"
-                        size="sm"
-                        icon="cog-6-tooth"
-                        wire:navigate
-                    >
-                        Admin Dashboard
-                    </x-ui.button>
-                @endrole
+                <div class="h-64 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
+            </div>
+        HTML;
+    }
+}; ?>
+
+<div class="flex h-full w-full flex-1 flex-col gap-8">
+    <!-- Header with Quick Actions -->
+    <div class="space-y-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <flux:heading size="xl" level="1">Welcome back, {{ auth()->user()->name }}</flux:heading>
+                <flux:subheading>Here is what's happening with your account today.</flux:subheading>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:button icon="plus" variant="primary" href="{{ route('wallet.transfer') }}" wire:navigate>Transfer</flux:button>
+                <flux:button icon="banknotes" href="{{ route('loan.apply') }}" wire:navigate>Apply for Loan</flux:button>
             </div>
         </div>
 
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <x-wallet.card :balance="auth()->user()->wallet_balance" />
+        @if(!$this->wallet || $this->wallet->balance == 0)
+            <flux:callout icon="information-circle" color="blue" variant="secondary">
+                <flux:callout.heading>Your wallet is empty</flux:callout.heading>
+                <flux:callout.text>Add funds to your wallet to start using our services like airtime, data, and bill payments.</flux:callout.text>
+                <x-slot name="actions">
+                    <flux:button size="sm" href="{{ route('wallet.transfer') }}" wire:navigate>Add Funds</flux:button>
+                </x-slot>
+            </flux:callout>
+        @endif
+    </div>
+
+    <!-- Summary Widgets -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @foreach($this->stats as $stat)
+            <flux:card class="p-6 flex items-center gap-4 border-zinc-200 dark:border-zinc-800">
+                <div class="p-3 bg-{{ $stat['color'] }}-500/10 rounded-xl">
+                    <flux:icon :name="$stat['icon']" class="size-6 text-{{ $stat['color'] }}-500" />
+                </div>
+                <div>
+                    <flux:text class="text-xs font-medium uppercase tracking-wider text-zinc-500">{{ $stat['label'] }}</flux:text>
+                    <div class="text-2xl font-bold tracking-tight">{{ $stat['value'] }}</div>
+                    <flux:text class="text-xs text-zinc-400">{{ $stat['description'] }}</flux:text>
+                </div>
+            </flux:card>
+        @endforeach
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content: Recent Transactions -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="flex justify-between items-center">
+                <flux:heading size="lg">Recent Transactions</flux:heading>
+                <flux:button variant="ghost" size="sm" href="{{ route('wallet.index') }}" wire:navigate>View All</flux:button>
+            </div>
+
+            <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+                @if($this->recentTransactions->count() > 0)
+                    <flux:table>
+                        <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
+                            <flux:table.column>Type</flux:table.column>
+                            <flux:table.column align="end">Amount</flux:table.column>
+                            <flux:table.column>Status</flux:table.column>
+                            <flux:table.column>Date</flux:table.column>
+                        </flux:table.columns>
+
+                        <flux:table.rows>
+                            @foreach($this->recentTransactions as $transaction)
+                                <flux:table.row :key="$transaction->id">
+                                    <flux:table.cell class="flex items-center gap-2">
+                                        <flux:icon :name="$transaction->type->getIcon()" class="size-4 text-zinc-400" />
+                                        <span>{{ $transaction->type->getLabel() }}</span>
+                                    </flux:table.cell>
+                                    <flux:table.cell align="end" variant="strong" class="{{ $transaction->amount > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                        {{ $transaction->amount > 0 ? '+' : '' }}{{ Number::currency($transaction->amount) }}
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <flux:badge :color="$transaction->status->getColor()" size="sm" inset="top bottom">
+                                            {{ $transaction->status->getLabel() }}
+                                        </flux:badge>
+                                    </flux:table.cell>
+                                    <flux:table.cell class="text-zinc-500 text-sm whitespace-nowrap">
+                                        {{ $transaction->created_at->diffForHumans() }}
+                                    </flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        </flux:table.rows>
+                    </flux:table>
+                @else
+                    <div class="p-12 text-center">
+                        <flux:icon.layout-grid class="size-12 text-zinc-200 dark:text-zinc-800 mx-auto mb-4" />
+                        <flux:text>No transactions found.</flux:text>
+                    </div>
+                @endif
+            </flux:card>
+        </div>
+
+        <!-- Sidebar: Product Cards -->
+        <div class="space-y-6">
+            <!-- Wallet Card -->
+            <flux:card class="p-6 space-y-4 bg-primary-color/5 border-primary-color/20">
+                <div class="flex justify-between items-start">
+                    <flux:heading size="sm" class="text-primary-color uppercase tracking-widest font-bold">Wallet</flux:heading>
+                    <flux:icon.wallet class="size-5 text-primary-color" />
+                </div>
+                <div>
+                    <div class="text-3xl font-bold tracking-tight text-primary-color">{{ Number::currency($this->wallet?->balance ?? 0) }}</div>
+                    <flux:text class="text-xs text-primary-color/60">Available Balance</flux:text>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <flux:button variant="primary" size="sm" class="flex-1" href="{{ route('wallet.transfer') }}" wire:navigate>Transfer</flux:button>
+                    <flux:button variant="outline" size="sm" class="flex-1" href="{{ route('wallet.withdraw') }}" wire:navigate>Withdraw</flux:button>
+                </div>
+            </flux:card>
 
             <!-- Shares Card -->
-            <div class="relative overflow-hidden bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between mb-4">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Shares Portfolio</p>
-                        <div class="p-2 bg-primary/10 rounded-[--radius-field]">
-                            <x-ui.icon name="chart-bar" variant="solid" class="size-5 text-primary" />
-                        </div>
-                    </div>
-                    <p class="text-2xl font-bold text-neutral-900 dark:text-white mb-1 truncate" title="{{ Number::currency($this->sharesValue) }}">{{ Number::currency($this->sharesValue) }}</p>
-                    <p class="text-neutral-500 dark:text-neutral-400 text-xs mb-6">{{ $this->totalShares }} shares owned</p>
-                    <x-ui.button 
-                        size="sm" 
-                        variant="primary"
-                        class="w-full justify-center" 
-                        wire:navigate 
-                        href="/shares"
-                    >
-                        View Portfolio
-                    </x-ui.button>
+            <flux:card class="p-6 space-y-4 border-zinc-200 dark:border-zinc-800">
+                <div class="flex justify-between items-start">
+                    <flux:heading size="sm" class="uppercase tracking-widest font-bold text-zinc-500">Shares</flux:heading>
+                    <flux:icon.chart-bar class="size-5 text-green-500" />
                 </div>
-            </div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <div class="text-2xl font-bold tracking-tight">{{ number_format($this->shareHolding?->quantity ?? 0) }}</div>
+                        <flux:text class="text-xs text-zinc-400">Total Units</flux:text>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold text-green-600">{{ Number::currency($this->sharesValue) }}</div>
+                        <flux:text class="text-xs text-zinc-400">Market Value</flux:text>
+                    </div>
+                </div>
+                <flux:button variant="outline" size="sm" class="w-full" href="#">Manage Portfolio</flux:button>
+            </flux:card>
 
             <!-- Loan Card -->
-            <div class="relative overflow-hidden bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between mb-4">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
-                            @if($this->activeLoan)
-                                Active Loan
-                            @else
-                                Loan Eligibility
-                            @endif
-                        </p>
-                        <div class="p-2 bg-accent/10 rounded-[--radius-field]">
-                            <x-ui.icon name="banknotes" variant="solid" class="size-5 text-accent" />
-                        </div>
-                    </div>
-                    @if($this->activeLoan)
-                        <p class="text-2xl font-bold text-neutral-900 dark:text-white mb-1 truncate" title="{{ Number::currency($this->activeLoan->balance_remaining) }}">{{ Number::currency($this->activeLoan->balance_remaining) }}</p>
-                        <p class="text-neutral-500 dark:text-neutral-400 text-xs mb-6">{{ number_format($this->activeLoan->progress_percentage, 1) }}% paid</p>
-                        <x-ui.button 
-                            size="sm" 
-                            variant="primary"
-                            class="w-full justify-center" 
-                            wire:navigate 
-                            href="/loans/{{ $this->activeLoan->id }}"
-                        >
-                            View Loan
-                        </x-ui.button>
-                    @else
-                        <p class="text-2xl font-bold text-neutral-900 dark:text-white mb-1 truncate" title="{{ Number::currency($this->loanEligibility) }}">{{ Number::currency($this->loanEligibility) }}</p>
-                        <p class="text-neutral-500 dark:text-neutral-400 text-xs mb-6">Available to borrow</p>
-                        <x-ui.button 
-                            size="sm" 
-                            variant="outline"
-                            class="w-full justify-center" 
-                            wire:navigate 
-                            href="/loans/apply"
-                        >
-                            Apply Now
-                        </x-ui.button>
-                    @endif
+            <flux:card class="p-6 space-y-4 border-zinc-200 dark:border-zinc-800">
+                <div class="flex justify-between items-start">
+                    <flux:heading size="sm" class="uppercase tracking-widest font-bold text-zinc-500">Loans</flux:heading>
+                    <flux:icon.banknotes class="size-5 text-orange-500" />
                 </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 p-6">
-            <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Quick Actions</h2>
-            
-            <div class="grid grid-cols-3 lg:grid-cols-6 gap-4">
-                <!-- Airtime -->
-                <a wire:navigate href="{{ route('airtime') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-primary/10 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="device-phone-mobile" variant="solid" class="w-7 h-7 text-primary" />
+                @if($this->activeLoans->count() > 0)
+                    <div>
+                        <div class="text-2xl font-bold tracking-tight text-orange-600">{{ Number::currency($this->loanBalance) }}</div>
+                        <flux:text class="text-xs text-zinc-400">Total Outstanding</flux:text>
                     </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Airtime</span>
-                </a>
-
-                <!-- Education -->
-                <a wire:navigate href="{{ route('education') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-success/10 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="academic-cap" variant="solid" class="w-7 h-7 text-success" />
-                    </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Education</span>
-                </a>
-
-                <!-- Electricity -->
-                <a wire:navigate href="{{ route('electricity') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-warning/10 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="bolt" variant="solid" class="w-7 h-7 text-warning" />
-                    </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Electricity</span>
-                </a>
-
-                <!-- Cable -->
-                <a wire:navigate href="{{ route('cable') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-info/10 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="tv" variant="solid" class="w-7 h-7 text-info" />
-                    </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Cable TV</span>
-                </a>
-
-                <!-- Data -->
-                <a wire:navigate href="{{ route('data') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-info/10 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="signal" variant="solid" class="w-7 h-7 text-info" />
-                    </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Internet Data</span>
-                </a>
-
-                <!-- Others -->
-                <a wire:navigate href="{{ route('wallet.index') }}" class="group flex flex-col items-center p-4 rounded-[--radius-box] hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all">
-                    <div class="w-14 h-14 bg-neutral-100 dark:bg-neutral-700 rounded-[--radius-field] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <x-ui.icon name="squares-2x2" variant="solid" class="w-7 h-7 text-neutral-500 dark:text-neutral-400" />
-                    </div>
-                    <span class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 text-center uppercase tracking-widest">Others</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Recent Loans -->
-            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
-                <div class="p-6 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
-                    <h3 class="text-base font-bold text-neutral-900 dark:text-white">Recent Loans</h3>
-                    <x-ui.button size="sm" variant="ghost" wire:navigate href="/loans" class="font-bold">
-                        View All
-                    </x-ui.button>
-                </div>
-
-                @php
-                    $recentLoans = auth()->user()->loans()->latest()->take(3)->get();
-                @endphp
-
-                @if($recentLoans->count() > 0)
-                    <div class="p-6 space-y-3">
-                        @foreach($recentLoans as $loan)
-                            <a wire:navigate href="/loans/{{ $loan->id }}" class="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-[--radius-box] hover:bg-white dark:hover:bg-neutral-800 transition-colors border border-transparent hover:border-neutral-100 dark:hover:border-neutral-700 group">
-                                <div class="flex items-center gap-4">
-                                    <div class="p-2 bg-warning/10 rounded-[--radius-field]">
-                                        <x-ui.icon name="banknotes" variant="solid" class="w-5 h-5 text-warning" />
-                                    </div>
-                                    <div>
-                                        <p class="font-bold text-neutral-900 dark:text-white truncate max-w-[120px]" title="{{ Number::currency($loan->amount) }}">{{ Number::currency($loan->amount) }}</p>
-                                        <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $loan->applied_at?->format('M d, Y') }}</p>
-                                    </div>
-                                </div>
-                                <x-ui.badge :color="$loan->status_badge" class="text-[10px]">
-                                    {{$loan->status }}
-                                </x-ui.badge>
-                            </a>
-                        @endforeach
-                    </div>
+                    <flux:button variant="outline" size="sm" class="w-full" href="{{ route('loan.index') }}" wire:navigate>View Details</flux:button>
                 @else
-                    <div class="p-12 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-neutral-50 dark:bg-neutral-700/50 rounded-full mb-4">
-                            <x-ui.icon name="banknotes" class="size-8 text-neutral-300 dark:text-neutral-500" />
-                        </div>
-                        <p class="text-neutral-500 dark:text-neutral-400 font-bold mb-3">No loans yet</p>
-                        <x-ui.button size="sm" wire:navigate href="/loans/apply">
-                            Apply for Loan
-                        </x-ui.button>
+                    <div class="py-2">
+                        <flux:text class="text-sm">No active loans. Need extra funds?</flux:text>
                     </div>
+                    <flux:button variant="primary" size="sm" class="w-full" href="{{ route('loan.apply') }}" wire:navigate>Apply Now</flux:button>
                 @endif
-            </div>
-
-            <!-- Shares Summary -->
-            <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
-                <div class="p-6 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
-                    <h3 class="text-base font-bold text-neutral-900 dark:text-white">Shares Summary</h3>
-                    <x-ui.button size="sm" variant="ghost" wire:navigate href="/shares" class="font-bold">
-                        View All
-                    </x-ui.button>
-                </div>
-
-                @php
-                    $userShares = auth()->user()->shares()->where('quantity', '>', 0)->get();
-                @endphp
-
-                @if($userShares->count() > 0)
-                    <div class="p-6 space-y-6">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="text-center p-4 bg-success/10 rounded-[--radius-box]">
-                                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Total Shares</p>
-                                <p class="text-2xl font-bold text-success truncate" title="{{ $this->totalShares }}">{{ $this->totalShares }}</p>
-                            </div>
-                            <div class="text-center p-4 bg-info/10 rounded-[--radius-box]">
-                                <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Total Value</p>
-                                <p class="text-2xl font-bold text-info truncate" title="{{ Number::currency($this->sharesValue) }}">{{ Number::currency($this->sharesValue) }}</p>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-neutral-100 dark:border-neutral-700 space-y-3">
-                            @foreach($userShares as $share)
-                                <div class="flex items-center justify-between py-2">
-                                    <span class="text-xs font-bold text-neutral-900 dark:text-white">{{ $share->currency }}</span>
-                                    <span class="text-xs text-neutral-500 dark:text-neutral-400">{{ $share->quantity }} shares</span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @else
-                    <div class="p-12 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-neutral-50 dark:bg-neutral-700/50 rounded-full mb-4">
-                            <x-ui.icon name="chart-bar" class="size-8 text-neutral-300 dark:text-neutral-500" />
-                        </div>
-                        <p class="text-neutral-500 dark:text-neutral-400 font-bold mb-3">No shares yet</p>
-                        <x-ui.button size="sm" wire:navigate href="/shares/buy">
-                            Buy Shares
-                        </x-ui.button>
-                    </div>
-                @endif
-            </div>
+            </flux:card>
         </div>
     </div>
 </div>

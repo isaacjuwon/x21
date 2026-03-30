@@ -3,62 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DataPlan extends Model
 {
     protected $fillable = [
-        'name',
-        'description',
-        'status',
-        'api_code',
-        'service_id',
-        'reference',
-        'type',
-        'duration',
-        'price',
-        'discounted_price',
         'brand_id',
+        'type',
+        'api_code',
+        'price',
+        'duration',
+        'status',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'status' => 'boolean',
-            'price' => 'decimal:2',
-            'discounted_price' => 'decimal:2',
-        ];
-    }
+    protected $casts = [
+        'price' => 'decimal:2',
+        'status' => 'boolean',
+    ];
 
-    /**
-     * brand
-     */
-    public function brand(): BelongsTo
+    public function brand()
     {
-        return $this->belongsTo(
-            related: Brand::class,
-            foreignKey: 'brand_id'
-        );
-    }
-
-    /**
-     * description
-     */
-    protected function description(): Attribute
-    {
-       return Attribute::make(
-           get: fn (): string => sprintf('%s %s', $this->name, $this->duration),
-       );
-    }
-
-    /**
-     * Image
-     */
-    protected function Image(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->brand->image,
-        );
+        return $this->belongsTo(Brand::class);
     }
 }

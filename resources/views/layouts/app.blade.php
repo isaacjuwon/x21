@@ -1,4 +1,5 @@
-<x-layouts.app.sidebar :title="$title ?? null">
+<x-layouts::app.sidebar :title="$title ?? null">
+    <flux:main>
         {{ $slot }}
-         <x-ui.toast position="top-right" maxToasts="5" progressBarVariant="full" progressBarAlignment="bottom" />
-</x-layouts.app.sidebar>
+    </flux:main>
+</x-layouts::app.sidebar>

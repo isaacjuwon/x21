@@ -3,52 +3,54 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Concerns\HasLoans;
-use App\Concerns\HasShares;
-use App\Models\Concerns\IsVerified;
-use App\Concerns\Wallet\ManagesWallet;
+use App\Concerns\HasWallets;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\MediaLibrary\HasMedia;
-use App\Concerns\HasReferrals;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use App\Enums\Media\MediaCollectionType;
+use App\Enums\Kyc\KycType;
 
-class User extends Authenticatable implements HasMedia
+#[Fillable(['name', 'email', 'password'])]
+#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, HasLoans, HasReferrals, HasRoles, HasShares, IsVerified, ManagesWallet, Notifiable, TwoFactorAuthenticatable;
-    use InteractsWithMedia;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, HasRoles, HasWallets, Notifiable, TwoFactorAuthenticatable;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return $this->hasRole('super_admin') || $this->hasPermissionTo('view_admin_panel');
+        }
+
+        return true;
+    }
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Boot the model.
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'phone_number',
-        'password',
-        'loan_level_id',
-    ];
+    protected static function boot(): void
+    {
+        parent::boot();
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
-        'remember_token',
-    ];
+        static::created(function (User $user) {
+            $basicLevel = LoanLevel::where('name', 'Basic')->first();
+            if ($basicLevel) {
+                $user->loanLevel()->associate($basicLevel)->save();
+            }
+        });
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -63,6 +65,56 @@ class User extends Authenticatable implements HasMedia
         ];
     }
 
+    public function transactions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Transaction::class, Wallet::class);
+    }
+
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
+    }
+
+    public function loanLevel(): BelongsTo
+    {
+        return $this->belongsTo(LoanLevel::class);
+    }
+
+    public function shareHolding(): HasOne
+    {
+        return $this->hasOne(ShareHolding::class);
+    }
+
+    public function shareOrders(): HasMany
+    {
+        return $this->hasMany(ShareOrder::class);
+    }
+
+    public function dividendPayouts(): HasMany
+    {
+        return $this->hasMany(DividendPayout::class);
+    }
+
+    public function kycs(): HasMany
+    {
+        return $this->hasMany(Kyc::class);
+    }
+
+    public function getKyc(KycType $type): ?Kyc
+    {
+        return $this->kycs()->where('type', $type)->first();
+    }
+
+    public function isKycVerified(?KycType $type = null): bool
+    {
+        if ($type) {
+            return $this->getKyc($type)?->isVerified() ?? false;
+        }
+
+        // Global check: user is considered verified if they have at least simple (NIN) verification
+        return $this->isKycVerified(KycType::Nin);
+    }
+
     /**
      * Get the user's initials
      */
@@ -73,57 +125,5 @@ class User extends Authenticatable implements HasMedia
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection(MediaCollectionType::Avatar->value)
-            ->singleFile();
-    }
-
-    public function getAvatarUrlAttribute(): ?string
-    {
-        return $this->getFirstMediaUrl(MediaCollectionType::Avatar->value);
-    }
-
-    /**
-     * Get the user's loan level
-     */
-    public function loanLevel()
-    {
-        return $this->belongsTo(LoanLevel::class);
-    }
-
-    /**
-     * Get the user's tickets
-     */
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class);
-    }
-
-    /**
-     * Boot the model
-     */
-    protected static function booted(): void
-    {
-        static::created(function (User $user) {
-            // Assign default 'user' role to newly created users
-            if (!$user->referral_code) {
-                $user->referral_code = static::generateReferralCode();
-                $user->saveQuietly();
-            }
-
-            $user->assignRole('user');
-
-            // Assign default 'Basic' loan level to newly created users
-            if (!$user->loan_level_id) {
-                $basicLevel = LoanLevel::where('slug', 'basic')->first();
-                if ($basicLevel) {
-                    $user->loan_level_id = $basicLevel->id;
-                    $user->saveQuietly();
-                }
-            }
-        });
     }
 }

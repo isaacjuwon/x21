@@ -2,39 +2,47 @@
 
 namespace App\Actions\Loans;
 
-use App\Enums\LoanStatus;
-use App\Enums\WalletType;
+use App\Enums\Loans\LoanStatus;
+use App\Enums\Wallets\WalletType;
 use App\Events\Loans\LoanDisbursed;
+use App\Exceptions\Loans\InvalidLoanStateException;
+use App\Jobs\GenerateLoanScheduleJob;
 use App\Models\Loan;
+use App\Models\LoanStatusHistory;
+use App\Models\User;
+use App\Notifications\Loans\LoanDisbursedNotification;
 
 class DisburseLoanAction
 {
-    /**
-     * Disburse approved loan to user's wallet
-     */
-    public function execute(Loan $loan): void
+    public function handle(Loan $loan, User $actor, ?string $notes = null): Loan
     {
-        // Only disburse approved loans
         if ($loan->status !== LoanStatus::Approved) {
-            throw new \Exception('Only approved loans can be disbursed.');
+            throw new InvalidLoanStateException('Loan must be in approved status to be disbursed.');
         }
 
-        $user = $loan->user;
+        $fromStatus = $loan->status->value;
 
-        // Deposit to user's main wallet
-        $user->deposit(WalletType::Main, $loan->amount, "Loan disbursement for Loan #{$loan->id}");
+        $loan->user->deposit((float) $loan->principal_amount, WalletType::General);
 
-        // Update loan status
-        $loan->update([
-            'status' => LoanStatus::Active,
-            'disbursed_at' => now(),
-        ]);
-
-        // Sync next payment date correctly based on disbursement
-        $loan->syncNextPaymentDate();
+        $loan->status = LoanStatus::Disbursed;
+        $loan->disbursed_at = now();
+        $loan->notes = $notes;
         $loan->save();
 
-        // Dispatch event
-        event(new LoanDisbursed($loan, $user, $loan->amount));
+        LoanStatusHistory::create([
+            'loan_id' => $loan->id,
+            'from_status' => $fromStatus,
+            'to_status' => LoanStatus::Disbursed->value,
+            'actor_user_id' => $actor->id,
+            'notes' => $notes,
+        ]);
+
+        LoanDisbursed::dispatch($loan);
+
+        GenerateLoanScheduleJob::dispatch($loan);
+
+        $loan->user->notify(new LoanDisbursedNotification($loan));
+
+        return $loan;
     }
 }

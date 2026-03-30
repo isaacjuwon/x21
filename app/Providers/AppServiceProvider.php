@@ -2,61 +2,94 @@
 
 namespace App\Providers;
 
+use App\Loans\LoanEligibilityChecker;
+use App\Loans\Specifications\UserDurationSpecification;
+use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
+
+use App\Managers\ApiManager;
+use App\Settings\GeneralSettings;
+use App\Settings\LayoutSettings;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register(): void {}
+    public function register(): void
+    {
+        $this->app->singleton(ApiManager::class, fn ($app) => new ApiManager($app));
+    }
 
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
-        //
-        \App\Enums\Connectors\PaymentConnector::register($this->app);
-        \App\Enums\Connectors\VtuConnector::register($this->app);
+        $this->configureDefaults();
+        $this->configureCurrency();
+        $this->configureRateLimiting();
+        $this->shareSettings();
+    }
 
-        \Illuminate\Support\Number::useCurrency('NGN');
+    /**
+     * Configure default currency using Number facade.
+     */
+    protected function configureCurrency(): void
+    {
+        Number::useCurrency(app(GeneralSettings::class)->currency ?? 'NGN');
+    }
 
-        // Share all settings with views
-        view()->composer('*', function ($view) {
-            try {
-                $view->with([
-                    'generalSettings' => app(\App\Settings\GeneralSettings::class),
-                    'loanSettings' => app(\App\Settings\LoanSettings::class),
-                    'shareSettings' => app(\App\Settings\ShareSettings::class),
-                    'walletSettings' => app(\App\Settings\WalletSettings::class),
-                    'layoutSettings' => app(\App\Settings\LayoutSettings::class),
-                    'integrationSettings' => app(\App\Settings\IntegrationSettings::class),
-                ]);
-            } catch (\Exception $e) {
-                // Settings table likely doesn't exist yet
-            }
-        });
-
-        // Override config with settings
-        try {
-            $settings = app(\App\Settings\IntegrationSettings::class);
-
-            config([
-                'services.paystack.public_key' => $settings->paystack_public_key,
-                'services.paystack.secret_key' => $settings->paystack_secret_key,
-                'services.paystack.url' => $settings->paystack_url,
-
-                'services.epins.api_key' => $settings->epins_api_key,
-                'services.epins.url' => $settings->epins_url,
-                'services.epins.sandbox_url' => $settings->epins_sandbox_url,
-
-                'services.dojah.api_key' => $settings->dojah_api_key,
-                'services.dojah.app_id' => $settings->dojah_app_id,
-                'services.dojah.base_url' => $settings->dojah_base_url,
+    /**
+     * Share settings with all views.
+     */
+    protected function shareSettings(): void
+    {
+        View::composer('*', function ($view) {
+            $view->with([
+                'generalSettings' => app(GeneralSettings::class),
+                'layoutSettings' => app(LayoutSettings::class),
             ]);
-        } catch (\Exception $e) {
-            // Settings table likely doesn't exist yet (migration running)
-        }
+        });
+    }
+
+    /**
+     * Configure rate limiters for the application.
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('loan-applications', function (Request $request) {
+            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+        });
+    }
+
+    /**
+     * Configure default behaviors for production-ready applications.
+     */
+    protected function configureDefaults(): void
+    {
+        Date::use(CarbonImmutable::class);
+
+        DB::prohibitDestructiveCommands(
+            app()->isProduction(),
+        );
+
+        Password::defaults(fn (): ?Password => app()->isProduction()
+            ? Password::min(12)
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised()
+            : null,
+        );
     }
 }

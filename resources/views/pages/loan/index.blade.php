@@ -1,171 +1,151 @@
 <?php
 
+use App\Models\Loan;
+use App\Enums\Loans\LoanStatus;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Defer;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new class extends Component
-{
+new #[Title('My Loans'), Defer] class extends Component {
     use WithPagination;
 
-    #[Computed]
-    public function activeLoan()
+    #[Url(as: 'page')]
+    public $page = 1;
+
+    #[Url]
+    public $sortBy = 'created_at';
+
+    #[Url]
+    public $sortDirection = 'desc';
+
+    public function sort($column)
     {
-        return auth()->user()->activeLoan();
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
     }
 
     #[Computed]
     public function loans()
     {
-        return auth()->user()->loans()
-            ->with('loanLevel')
-            ->latest()
+        return Auth::user()->loans()
+            ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate(10);
     }
 
-    public function render()
+    #[Computed]
+    public function activeLoansCount(): int
     {
-        return $this->view()
-            ->title('My Loans')
-            ->layout('layouts::app');
+        return Auth::user()->loans()
+            ->whereIn('status', [LoanStatus::Active, LoanStatus::Disbursed])
+            ->count();
     }
-};
-?>
 
-<div class="max-w-6xl mx-auto p-6">
-    <x-page-header 
-        heading="My Loans" 
-        description="Manage your loan applications and payments"
-    >
-        <x-slot name="actions">
-            <x-ui.button wire:navigate href="/loans/apply">
-                Apply for Loan
-            </x-ui.button>
-        </x-slot>
-    </x-page-header>
+    #[Computed]
+    public function totalOutstandingBalance(): float
+    {
+        return (float) Auth::user()->loans()
+            ->where('status', LoanStatus::Disbursed)
+            ->sum('outstanding_balance');
+    }
 
-    @if (session()->has('success'))
-        <x-ui.alerts type="success" class="mb-4">
-            {{ session('success') }}
-        </x-ui.alerts>
-    @endif
-
-    <!-- Active Loan -->
-    @if ($this->activeLoan)
-        <x-ui.card class="mb-6 border-2 border-primary/20 shadow-lg shadow-primary/5 bg-white dark:bg-neutral-800 rounded-[--radius-box]">
-            <x-slot name="header">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Active Loan</h3>
-                    <x-ui.badge :color="$this->activeLoan->status_badge" class="text-[10px] font-bold uppercase tracking-widest">
-                        {{ $this->activeLoan->status->getLabel() }}
-                    </x-ui.badge>
-                </div>
-            </x-slot>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-                <div>
-                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Loan Amount</p>
-                    <p class="text-lg font-bold text-neutral-900 dark:text-white">{{ Number::currency($this->activeLoan->amount, 'NGN') }}</p>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Amount Paid</p>
-                    <p class="text-lg font-bold text-success">{{ Number::currency($this->activeLoan->amount_paid, 'NGN') }}</p>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Remaining</p>
-                    <p class="text-lg font-bold text-amber-500">{{ Number::currency($this->activeLoan->balance_remaining, 'NGN') }}</p>
-                </div>
-                <div>
-                    <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Progress</p>
-                    <p class="text-lg font-bold text-neutral-900 dark:text-white">{{ number_format($this->activeLoan->progress_percentage, 1) }}%</p>
-                </div>
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="space-y-6 animate-pulse">
+            <div class="flex items-center justify-between">
+                <div class="h-8 w-32 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+                <div class="h-10 w-36 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+                <div class="h-24 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+            </div>
+            <div class="h-64 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+        </div>
+        HTML;
+    }
+}; ?>
 
-            <!-- Progress Bar -->
-            <div class="mb-6">
-                <div class="w-full bg-neutral-100 dark:bg-neutral-700 rounded-full h-2 overflow-hidden">
-                    <div class="bg-primary h-full rounded-full transition-all duration-500" style="width: {{ $this->activeLoan->progress_percentage }}%"></div>
-                </div>
-            </div>
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <flux:heading size="xl">{{ __('My Loans') }}</flux:heading>
 
-            <div class="flex gap-4">
-                <x-ui.button wire:navigate href="/loans/{{ $this->activeLoan->id }}" class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
-                    View Details
-                </x-ui.button>
-                <x-ui.button variant="outline" wire:navigate href="/loans/{{ $this->activeLoan->id }}/payment" class="flex-1 h-12 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
-                    Make Payment
-                </x-ui.button>
-            </div>
-        </x-ui.card>
-    @else
-        <x-ui.card class="mb-6 bg-neutral-50 dark:bg-neutral-900/50 border-neutral-100 dark:border-neutral-700 shadow-none rounded-[--radius-box]">
-            <div class="text-center py-10">
-                <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-6">You don't have an active loan</p>
-                <x-ui.button wire:navigate href="/loans/apply" class="h-12 px-8 rounded-[--radius-box] font-bold uppercase tracking-widest text-xs">
-                    Apply for Loan
-                </x-ui.button>
-            </div>
-        </x-ui.card>
-    @endif
+        <flux:button href="{{ route('loan.apply') }}" variant="primary" icon="plus">
+            {{ __('Apply for Loan') }}
+        </flux:button>
+    </div>
 
-    <!-- Loan History -->
-    <x-ui.card class="bg-white dark:bg-neutral-800 rounded-[--radius-box] border-neutral-100 dark:border-neutral-700 shadow-none">
-        <x-slot name="header">
-            <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Loan History</h3>
-        </x-slot>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Active Loans') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ $this->activeLoansCount }}
+            </flux:text>
+        </flux:card>
 
-        @if ($this->loans->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y border border-neutral-100 dark:border-neutral-700 divide-neutral-100 dark:divide-neutral-700">
-                    <thead class="bg-neutral-50 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 uppercase tracking-widest text-[10px] font-bold">
-                        <tr>
-                            <th class="px-6 py-4 text-left">Date Applied</th>
-                            <th class="px-6 py-4 text-left">Amount</th>
-                            <th class="px-6 py-4 text-left">Level</th>
-                            <th class="px-6 py-4 text-left">Status</th>
-                            <th class="px-6 py-4 text-left">Progress</th>
-                            <th class="px-6 py-4 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-700">
-                        @foreach ($this->loans as $loan)
-                            <tr>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400 font-bold">
-                                    {{ $loan->applied_at?->format('M d, Y') ?? 'N/A' }}
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
-                                    {{ Number::currency($loan->amount, 'NGN') }}
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
-                                    {{ $loan->loanLevel?->name ?? 'Default' }}
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap">
-                                    <x-ui.badge :color="$loan->status_badge" class="text-[10px] font-bold uppercase tracking-widest">
-                                        {{ $loan->status->getLabel() }}
-                                    </x-ui.badge>
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap text-xs font-bold text-neutral-900 dark:text-white">
-                                    {{ number_format($loan->progress_percentage, 1) }}%
-                                </td>
-                                <td class="px-6 py-5 whitespace-nowrap">
-                                    <x-ui.button size="xs" variant="outline" wire:navigate href="/loans/{{ $loan->id }}" class="rounded-[--radius-field] font-bold uppercase tracking-widest">
-                                        View
-                                    </x-ui.button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
+            <flux:heading size="sm" class="text-zinc-500">{{ __('Total Outstanding') }}</flux:heading>
+            <flux:text size="xl" weight="semibold">
+                {{ Number::currency($this->totalOutstandingBalance) }}
+            </flux:text>
+        </flux:card>
+    </div>
 
-            <div class="mt-4">
-                {{ $this->loans->links() }}
-            </div>
-        @else
-            <div class="text-center py-10 bg-neutral-50/50 dark:bg-neutral-900/20 rounded-[--radius-box] border-2 border-dashed border-neutral-100 dark:border-neutral-700">
-                <x-ui.icon name="inbox" class="w-12 h-12 text-neutral-200 dark:text-neutral-700 mx-auto mb-4" />
-                <p class="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">No loan history found</p>
-            </div>
-        @endif
-    </x-ui.card>
+    <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+        <flux:table :paginate="$this->loans">
+            <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
+                <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date Applied') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'principal_amount'" :direction="$sortDirection" wire:click="sort('principal_amount')">{{ __('Amount') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'interest_rate'" :direction="$sortDirection" wire:click="sort('interest_rate')">{{ __('Rate') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'repayment_term_months'" :direction="$sortDirection" wire:click="sort('repayment_term_months')">{{ __('Term') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'outstanding_balance'" :direction="$sortDirection" wire:click="sort('outstanding_balance')">{{ __('Outstanding') }}</flux:table.column>
+                <flux:table.column sortable :sorted="$sortBy === 'status'" :direction="$sortDirection" wire:click="sort('status')">{{ __('Status') }}</flux:table.column>
+                <flux:table.column align="end"></flux:table.column>
+            </flux:table.columns>
+
+            <flux:table.rows>
+                @foreach ($this->loans as $loan)
+                    <flux:table.row :key="$loan->id">
+                        <flux:table.cell class="text-zinc-500 whitespace-nowrap">
+                            {{ $loan->created_at->format('M j, Y') }}
+                        </flux:table.cell>
+
+                        <flux:table.cell class="font-medium">
+                            {{ Number::currency($loan->principal_amount) }}
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            {{ number_format($loan->interest_rate, 2) }}%
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            {{ $loan->repayment_term_months }} {{ str('month')->plural($loan->repayment_term_months) }}
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            {{ Number::currency($loan->outstanding_balance ?? 0) }}
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            <flux:badge :color="$loan->status->getColor()" :icon="$loan->status->getIcon()" size="sm" variant="subtle">
+                                {{ $loan->status->getLabel() }}
+                            </flux:badge>
+                        </flux:table.cell>
+
+                        <flux:table.cell align="end">
+                            <flux:button :href="route('loan.view', $loan)" size="sm" variant="ghost" icon="eye" inset="top bottom" />
+                        </flux:table.cell>
+                    </flux:row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:card>
 </div>

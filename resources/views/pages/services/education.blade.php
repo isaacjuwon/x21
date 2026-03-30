@@ -1,382 +1,188 @@
 <?php
 
-use App\Actions\GenerateReferenceAction;
-use App\Actions\Services\EducationPurchaseAction;
-use App\Livewire\Concerns\HasToast;
-use App\Livewire\Concerns\WithConfirmation;
 use App\Models\Brand;
 use App\Models\EducationPlan;
+use App\Models\TopupTransaction;
+use App\Enums\Wallets\WalletType;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
+use Flux\Flux;
 
-new class extends Component
-{
-    use HasToast, WithConfirmation;
+new #[Title('Education Pins')] class extends Component {
+    public $brand_id;
+    public $plan_id;
+    public $quantity = 1;
 
-    #[Rule('required')]
-    public string|int $operator_id = '';
-
-    #[Rule('required')]
-    public string|int $plan_id = '';
-
-    #[Rule('required|email')]
-    public $email;
-
-    public $plan;
-
-    #[On('form-confirmed-purchase')]
-    public function save(EducationPurchaseAction $educationPurchaseAction, GenerateReferenceAction $generateReferenceAction)
-    {
-        $this->validate();
-
-        if (! $this->ensureConfirmation('purchase')) {
-            return;
-        }
-
-        // Prepare data for the action
-        $data = [
-            'operator_name' => $this->selectedOperator->name,
-            'plan_code' => $this->plan->planCode ?? $this->plan->id,
-            'plan_id' => $this->plan->planCode ?? $this->plan->id,
-            'reference' => $generateReferenceAction->handle('EDUCATION'),
-            'amount' => $this->plan->price,
-        ];
-
-        // Call the action
-        $result = $educationPurchaseAction->handle($data);
-
-        if ($result->isError()) {
-            $this->toastError($result->error->getMessage());
-
-            return;
-        }
-
-        // If we get here, the result is OK
-        $responseData = $result->unwrap();
-        $this->toastSuccess($responseData['message'] ?? 'Education purchase successful.');
-
-        // Reset form fields
-        $this->reset(['operator_id', 'plan_id', 'email']);
-    }
+    protected $rules = [
+        'brand_id' => 'required|exists:brands,id',
+        'plan_id' => 'required|exists:education_plans,id',
+        'quantity' => 'required|integer|min:1|max:5',
+    ];
 
     #[Computed]
-    public function selectedOperator()
+    public function brands()
     {
-        return $this->operators->firstWhere('id', $this->operator_id);
-    }
-
-    #[Computed]
-    public function operators()
-    {
-        return Brand::active()
-            ->whereHas('educationPlans', function ($query) {
-                $query->where('status', true);
-            })
-            ->orderBy('name')
+        return Brand::whereHas('educationPlans', fn($q) => $q->where('status', true))
+            ->where('status', true)
             ->get();
     }
 
     #[Computed]
     public function plans()
     {
-        if (! $this->operator_id) {
-            return collect();
-        }
+        if (!$this->brand_id) return collect();
 
-        return EducationPlan::where('brand_id', $this->operator_id)
+        return EducationPlan::where('brand_id', $this->brand_id)
             ->where('status', true)
-            ->orderBy('name')
             ->get();
     }
 
-    public function updated($property, $value): void
+    #[Computed]
+    public function selectedPlan()
     {
-        if ($property === 'operator_id') {
-            $this->plan_id = '';
-            $this->plan = null;
-        }
-
-        if ($property === 'plan_id') {
-            $this->plan = EducationPlan::find($value);
-        }
+        if (!$this->plan_id) return null;
+        return EducationPlan::find($this->plan_id);
     }
 
-    public function render()
+    #[Computed]
+    public function totalAmount()
     {
-        return $this->view()
-            ->title('Education Services')
-            ->layout('layouts::app');
+        if (!$this->selectedPlan) return 0;
+        return $this->selectedPlan->price * $this->quantity;
+    }
+
+    public function updatedBrandId()
+    {
+        $this->reset('plan_id');
+    }
+
+    public function buy()
+    {
+        $this->validate();
+
+        $user = Auth::user();
+        $plan = $this->selectedPlan;
+        $total = $this->totalAmount;
+
+        if ($user->wallet->available_balance < $total) {
+            $this->addError('plan_id', 'Insufficient wallet balance.');
+            return;
+        }
+
+        try {
+            DB::transaction(function () use ($user, $plan, $total) {
+                $user->withdraw($total, WalletType::General, "Education Pin: {$plan->brand->name} {$plan->type} x{$this->quantity}");
+
+                TopupTransaction::create([
+                    'user_id' => $user->id,
+                    'brand_id' => $plan->brand_id,
+                    'plan_id' => $plan->id,
+                    'plan_type' => EducationPlan::class,
+                    'amount' => $total,
+                    'quantity' => $this->quantity,
+                    'status' => 'pending',
+                    'reference' => 'EDU-'.strtoupper(Str::random(10)),
+                ]);
+            });
+
+            Flux::toast('Purchase initiated successfully.');
+            $this->reset(['plan_id', 'quantity', 'brand_id']);
+        } catch (\Exception $e) {
+            $this->addError('plan_id', 'An error occurred during the transaction.');
+        }
     }
 }; ?>
 
+<div class="max-w-2xl mx-auto space-y-6">
+    <flux:heading size="xl">Education PINs</flux:heading>
+    <flux:subheading>Buy exam result checker PINs (WAEC, JAMB, etc.).</flux:subheading>
 
-<div class="max-w-4xl mx-auto p-6">
-    <x-page-header 
-        heading="Education PINs" 
-        description="Purchase WAEC, NECO, JAMB and other exam scratch cards instantly"
-    />
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Form Content -->
-        <div class="lg:col-span-2">
-            <div data-slot="card" class="p-6 bg-background-content rounded-3xl border border-border space-y-10">
-                <!-- Step 1: Exam Selection -->
-                <section class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">1. Select Exam Body</h3>
-                        @if($this->operator_id)
-                            <span class="text-[10px] text-primary font-bold flex items-center uppercase tracking-widest">
-                                <x-ui.icon name="check-circle" class="size-4 mr-1" />
-                                {{ $this->selectedOperator?->name }}
-                            </span>
-                        @endif
-                    </div>
-                    
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        @foreach ($this->operators as $operator)
-                            <button 
-                                type="button"
-                                wire:click="$set('operator_id', {{ $operator->id }})"
-                                @class([
-                                    'relative flex flex-col items-center p-4 rounded-[--radius-box] border-2 transition-all group',
-                                    'border-primary bg-primary/5 ring-4 ring-primary/10' => $this->operator_id == $operator->id,
-                                    'border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 hover:border-primary/50' => $this->operator_id != $operator->id
-                                ])
-                            >
-                                <div class="size-16 rounded-[--radius-field] overflow-hidden mb-3 group-hover:scale-110 transition-transform">
-                                    <img src="{{ $operator->image_url }}" alt="{{ $operator->name }}" class="size-full object-cover">
-                                </div>
-                                <span @class([
-                                    'text-[10px] font-bold uppercase tracking-widest',
-                                    'text-primary' => $this->operator_id == $operator->id,
-                                    'text-neutral-500 dark:text-neutral-400' => $this->operator_id != $operator->id
-                                ])>{{ $operator->name }}</span>
-                                
-                                @if($this->operator_id == $operator->id)
-                                    <div class="absolute -top-2 -right-2 size-6 bg-primary text-white rounded-full flex items-center justify-center shadow-lg">
-                                        <x-ui.icon name="check" class="size-4" />
+    <flux:card>
+        <form wire:submit="buy" class="space-y-6">
+            <!-- Brand Selection -->
+            <flux:field>
+                <flux:label>Select Exam Body</flux:label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    @foreach($this->brands as $brand)
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" wire:model.live="brand_id" value="{{ $brand->id }}" class="sr-only peer">
+                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                @if($brand->hasMedia('logo'))
+                                    <img src="{{ $brand->getFirstMediaUrl('logo') }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
+                                @else
+                                    <div class="h-10 w-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-primary-color">
+                                        {{ substr($brand->name, 0, 1) }}
                                     </div>
                                 @endif
-                            </button>
+                                <span class="text-sm font-medium">{{ $brand->name }}</span>
+                            </div>
+                        </label>
+                    @endforeach
+                </div>
+                <flux:error name="brand_id" />
+            </flux:field>
+
+            @if($brand_id)
+                <!-- Plan Selection -->
+                <flux:field>
+                    <flux:label>Select Pin Type</flux:label>
+                    <div class="grid grid-cols-1 gap-3">
+                        @foreach($this->plans as $plan)
+                            <label class="relative cursor-pointer">
+                                <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
+                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-lg">{{ $plan->type }}</span>
+                                        <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xl font-black text-primary-color">{{ Number::currency($plan->price) }}</div>
+                                    </div>
+                                </div>
+                            </label>
                         @endforeach
                     </div>
-                    @error('operator_id')
-                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </section>
+                    <flux:error name="plan_id" />
+                </flux:field>
+            @endif
 
-                <!-- Step 2: Product/Pin Selection -->
-                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->operator_id])>
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">2. Select Product Type</h3>
-                    </div>
- 
-                    <div class="grid grid-cols-1 gap-3">
-                        @forelse ($this->plans as $p)
-                            <button 
-                                type="button"
-                                wire:click="$set('plan_id', {{ $p->id }})"
-                                @class([
-                                    'flex items-center justify-between p-5 rounded-[--radius-box] border-2 text-left transition-all',
-                                    'border-primary bg-primary/5 ring-2 ring-primary/5' => $this->plan_id == $p->id,
-                                    'border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 hover:border-primary/50' => $this->plan_id != $p->id
-                                ])
-                            >
-                                <div class="flex items-center gap-4">
-                                    <div @class([
-                                        'size-12 rounded-full flex items-center justify-center',
-                                        'bg-primary text-white shadow-lg' => $this->plan_id == $p->id,
-                                        'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400' => $this->plan_id != $p->id
-                                    ])>
-                                        <x-ui.icon name="academic-cap" variant="solid" class="size-6" />
-                                    </div>
-                                    <div class="space-y-0.5">
-                                        <p @class([
-                                            'text-base font-bold',
-                                            'text-primary' => $this->plan_id == $p->id,
-                                            'text-neutral-900 dark:text-white' => $this->plan_id != $p->id
-                                        ])>{{ $p->name }}</p>
-                                        <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Instant Delivery • Official Board E-PIN</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span @class([
-                                        'text-lg font-bold',
-                                        'text-primary' => $this->plan_id == $p->id,
-                                        'text-neutral-900 dark:text-white' => $this->plan_id != $p->id
-                                    ])>{{ Number::currency($p->price) }}</span>
-                                </div>
-                            </button>
-                        @empty
-                            <div class="py-12 text-center bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] border-2 border-dashed border-neutral-100 dark:border-neutral-700 opacity-50">
-                                <x-ui.icon name="sparkles" class="size-10 mx-auto text-neutral-300 dark:text-neutral-500 mb-3" />
-                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Select exam body to view pins</p>
-                            </div>
-                        @endforelse
-                    </div>
-                    @error('plan_id')
-                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </section>
+            <!-- Quantity -->
+            <flux:input 
+                wire:model.live="quantity" 
+                label="Quantity" 
+                type="number" 
+                min="1" 
+                max="5"
+                placeholder="1" 
+                icon="shopping-cart"
+            />
 
-                <!-- Step 3: Delivery Details -->
-                <section @class(['space-y-4 transition-all duration-500', 'opacity-50 pointer-events-none' => !$this->plan_id])>
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">3. E-Pin Quantity</h3>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-neutral-400">
-                            <x-ui.icon name="ticket" class="size-6" />
-                        </div>
-                        <input 
-                            type="number" 
-                            wire:model.live.debounce.50ms="quantity"
-                            placeholder="How many PINs?" 
-                            @class([
-                                'w-full pl-14 pr-4 py-5 bg-neutral-50 dark:bg-neutral-900/50 border-2 rounded-[--radius-box] focus:ring-4 focus:ring-primary/10 transition-all text-base font-bold tracking-widest placeholder:text-neutral-500/50',
-                                'border-neutral-100 dark:border-neutral-700 focus:border-primary' => !$errors->has('quantity'),
-                                'border-error focus:border-error' => $errors->has('quantity'),
-                            ])
-                        >
-                    </div>
-                    @error('quantity')
-                        <p class="mt-1 text-[10px] text-red-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                            <x-ui.icon name="exclamation-circle" class="w-3 h-3" />
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </section>
+            @if($this->selectedPlan)
+                <flux:card class="bg-zinc-50 dark:bg-zinc-900 border-dashed p-4 flex justify-between items-center">
+                    <div class="text-sm font-medium">Total Cost:</div>
+                    <div class="text-lg font-bold text-primary-color">{{ Number::currency($this->totalAmount) }}</div>
+                </flux:card>
+            @endif
+
+            <div class="pt-4">
+                <flux:button type="submit" variant="primary" class="w-full" wire:loading.attr="disabled">
+                    <span wire:loading.remove>Purchase PIN</span>
+                    <span wire:loading>Processing...</span>
+                </flux:button>
             </div>
+        </form>
+    </flux:card>
+
+    <!-- Wallet Summary -->
+    <flux:card class="bg-primary-color/5 border-primary-color/20 flex items-center justify-between p-4">
+        <div class="flex items-center gap-3">
+            <flux:icon.wallet class="size-5 text-primary-color" />
+            <flux:text class="font-medium">Wallet Balance</flux:text>
         </div>
-
-        <!-- Sidebar Summary -->
-        <div class="lg:col-span-1">
-            <div class="sticky top-24 space-y-6">
-                <div class="bg-white dark:bg-neutral-800 rounded-[--radius-box] shadow-xl overflow-hidden border border-neutral-100 dark:border-neutral-700">
-                    <div class="p-6 bg-primary border-b border-white/10">
-                        <h4 class="text-white font-bold uppercase tracking-widest text-[10px]">Checkout Summary</h4>
-                    </div>
-                    
-                    <div class="p-6 space-y-6">
-                        @if($this->selectedOperator)
-                            <div class="flex items-center gap-4">
-                                <div class="size-14 rounded-[--radius-field] bg-neutral-50 dark:bg-neutral-900/50 p-2 flex items-center justify-center border border-neutral-100 dark:border-neutral-700 overflow-hidden shadow-inner">
-                                    <img src="{{ $this->selectedOperator->image_url }}" alt="" class="size-full object-cover rounded-[--radius-field]">
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Exam Body</p>
-                                    <p class="font-bold text-neutral-900 dark:text-white uppercase text-base leading-tight">{{ $this->selectedOperator->name }}</p>
-                                </div>
-                            </div>
-                        @endif
-
-                        @if($this->plan)
-                            <div class="space-y-1">
-                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Selected Pin</p>
-                                <p class="font-bold text-neutral-900 dark:text-white text-lg leading-tight">{{ $this->plan->name }}</p>
-                                <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 bg-error/10 rounded text-[10px] font-bold text-error uppercase tracking-widest">Digital Delivery</span>
-                                </div>
-                            </div>
-
-                            <div class="pt-6 border-t border-neutral-100 dark:border-neutral-700">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-neutral-500 dark:text-neutral-400 font-bold text-[10px] uppercase tracking-widest">Total Price</span>
-                                    <span class="text-xl font-bold text-primary">{{ Number::currency($this->plan->price) }}</span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="py-12 text-center">
-                                <div class="size-16 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-neutral-100 dark:border-neutral-700">
-                                    <x-ui.icon name="academic-cap" class="size-8 text-neutral-300 dark:text-neutral-500" />
-                                </div>
-                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold max-w-[150px] mx-auto uppercase tracking-widest">Selected items will appear here</p>
-                            </div>
-                        @endif
-
-                        <x-ui.button 
-                            wire:click="save"
-                            variant="primary" 
-                            icon="sparkles"
-                            class="w-full h-14 rounded-[--radius-box] font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:grayscale transition-all"
-                            :disabled="!$this->plan_id || !$this->email"
-                        >
-                            <span>Purchase Card</span>
-                        </x-ui.button>
-                        
-                        <p class="text-[10px] text-neutral-500 dark:text-neutral-400 text-center font-bold uppercase tracking-widest leading-relaxed px-2">
-                            PINs are typically delivered within 60 seconds. Check your spam folder if you don't receive it.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Wallet info quick display -->
-                <div class="bg-accent rounded-[--radius-box] p-5 text-white shadow-lg overflow-hidden relative group">
-                    <div class="relative z-10">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/80 mb-1">Available Funds</p>
-                        <p class="text-2xl font-bold">{{ Number::currency(auth()->user()->wallet_balance) }}</p>
-                    </div>
-                    <x-ui.icon name="wallet" class="absolute -right-6 -bottom-6 size-28 text-white/10 group-hover:scale-110 transition-transform" />
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal Refined -->
-    <x-ui.modal id="confirm-purchase" heading="Review Education Order">
-        <div class="space-y-6">
-            <div class="p-5 bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700">
-                <div class="flex items-center gap-5 mb-8">
-                    <div class="size-20 rounded-[--radius-field] bg-white dark:bg-neutral-800 p-2 shadow-sm border border-neutral-100 dark:border-neutral-700 overflow-hidden">
-                        <img src="{{ $this->selectedOperator?->image_url }}" alt="" class="size-full object-cover rounded-[--radius-field]">
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest mb-1">Exam Body</p>
-                        <h4 class="text-xl font-bold text-neutral-900 dark:text-white leading-tight mb-1">{{ $this->selectedOperator?->name }}</h4>
-                        <span class="px-2 py-1 rounded-[--radius-field] bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-widest">{{ $this->plan?->name }}</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-y-6">
-                    <div class="space-y-1 col-span-2">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Delivery Email</p>
-                        <p class="text-lg font-bold text-neutral-900 dark:text-white truncate">{{ $this->email }}</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Product Type</p>
-                        <p class="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest">ECard / PIN</p>
-                    </div>
-                    <div class="space-y-1 text-right">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Status</p>
-                        <span class="text-[10px] font-bold text-success uppercase tracking-widest">IN STOCK</span>
-                    </div>
-                    <div class="col-span-2 pt-6 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
-                        <p class="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Amount Due</p>
-                        <p class="text-2xl font-bold text-primary">{{ Number::currency($this->plan?->price ?? 0) }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <x-ui.alerts type="info" class="rounded-2xl text-[11px] leading-relaxed">
-                Confirming this will debit your wallet and send the <strong>{{ $this->plan?->name }}</strong> PIN to <strong>{{ $this->email }}</strong>.
-            </x-ui.alerts>
-        </div>
-        
-        <x-slot name="footer">
-            <div class="flex gap-4 w-full">
-                <x-ui.button x-on:click="$data.close();" variant="outline" class="flex-1 h-14 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px]">
-                    Cancel
-                </x-ui.button>
-                <x-ui.button x-on:click="$wire.confirmation()" variant="primary" class="flex-1 h-14 rounded-[--radius-field] font-bold uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20">
-                    Pay & Deliver
-                </x-ui.button>
-            </div>
-        </x-slot>
-    </x-ui.modal>
+        <flux:text class="text-lg font-bold text-primary-color">
+            {{ Number::currency(auth()->user()->wallet->available_balance) }}
+        </flux:text>
+    </flux:card>
 </div>

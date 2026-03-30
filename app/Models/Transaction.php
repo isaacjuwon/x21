@@ -2,91 +2,85 @@
 
 namespace App\Models;
 
-use App\Enums\Transaction\Status;
-use App\Enums\Transaction\Type;
-use App\Models\Builders\TransactionBuilder;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use App\Enums\Wallets\TransactionStatus;
+use App\Enums\Wallets\TransactionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class Transaction extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'wallet_id',
         'amount',
-        'description',
-        'recipient',
-        'status',
         'type',
+        'status',
         'reference',
-        'response',
+        'notes',
         'meta',
-        'payment_method',
-        'archived',
-        'user_id',
-        'transactable_type',
-        'transactable_id',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            'status' => Status::class,
-            'type' => Type::class,
+            'type' => TransactionType::class,
+            'status' => TransactionStatus::class,
+            'amount' => 'decimal:2',
             'meta' => 'array',
         ];
     }
 
-    public function user(): BelongsTo
+    public function wallet(): BelongsTo
     {
-        return $this->belongsTo(
-            related: User::class,
-            foreignKey: 'user_id',
-        );
+        return $this->belongsTo(Wallet::class);
     }
 
-    public function markAsFailed(): void
+    /**
+     * Confirm a pending hold transaction.
+     */
+    public function confirm(?string $notes = null): bool
     {
-        $this->update(['status' => Status::Failed]);
+        if ($this->status !== TransactionStatus::Pending || $this->type !== TransactionType::Hold) {
+            return false;
+        }
+
+        return DB::transaction(function () use ($notes) {
+            $wallet = $this->wallet;
+
+            // Debit from balance and release hold
+            $wallet->decrement('balance', $this->amount);
+            $wallet->decrement('held_balance', $this->amount);
+
+            $this->update([
+                'status' => TransactionStatus::Completed,
+                'notes' => $notes ?? $this->notes,
+            ]);
+
+            return true;
+        });
     }
 
-    public function markAsSuccess(): void
+    /**
+     * Void a pending hold transaction.
+     */
+    public function void(?string $notes = null): bool
     {
-        $this->update(['status' => Status::Success]);
-    }
+        if ($this->status !== TransactionStatus::Pending || $this->type !== TransactionType::Hold) {
+            return false;
+        }
 
-    public function markAsPending(): void
-    {
-        $this->update(['status' => Status::Pending]);
-    }
+        return DB::transaction(function () use ($notes) {
+            $wallet = $this->wallet;
 
-    public function newEloquentBuilder($query): BuilderContract
-    {
-        return new TransactionBuilder(
-            query: $query
-        );
-    }
+            // Simply release the hold
+            $wallet->decrement('held_balance', $this->amount);
 
-    public function generateCheckInCode(): string
-    {
-        return Str::random(
-            length: 6,
-        );
-    }
+            $this->update([
+                'status' => TransactionStatus::Voided,
+                'notes' => $notes ?? $this->notes,
+            ]);
 
-    public function transactable(): MorphTo
-    {
-        return $this->morphTo();
+            return true;
+        });
     }
 }

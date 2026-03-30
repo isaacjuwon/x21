@@ -3,15 +3,13 @@
 namespace App\Events\Loans;
 
 use App\Models\Loan;
-use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-class LoanDisbursed extends LoanEvent
+class LoanDisbursed
 {
-    public function __construct(
-        Loan $loan,
-        User $user,
-        public float $amount,
-    ) {
-        parent::__construct($loan, $user);
-    }
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public function __construct(public Loan $loan) {}
 }

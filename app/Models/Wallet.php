@@ -1,47 +1,45 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-use App\Enums\WalletType;
-use App\Concerns\Wallet\BalanceOperation;
-use App\Concerns\Wallet\Loggable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\Wallets\WalletType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
-final class Wallet extends Model
+class Wallet extends Model
 {
-    use BalanceOperation;
-    use HasFactory;
-    use Loggable;
-
     protected $fillable = [
-        'owner_type',
-        'owner_id',
+        'user_id',
         'type',
         'balance',
+        'held_balance',
     ];
 
-    protected $casts = [
-        'type' => WalletType::class,
-        'balance' => 'decimal:2',
-    ];
-
-    public function owner(): MorphTo
+    protected function casts(): array
     {
-        return $this->morphTo();
+        return [
+            'type' => WalletType::class,
+            'balance' => 'decimal:2',
+            'held_balance' => 'decimal:2',
+        ];
     }
 
-    public function hasSufficientBalance(float $amount): bool
+    public function user(): BelongsTo
     {
-        return $this->balance >= $amount;
+        return $this->belongsTo(User::class);
     }
 
-    public function getFormattedBalanceAttribute(): string
+    public function transactions(): HasMany
     {
-        return number_format($this->balance, 2);
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get available balance (Total balance - Held balance)
+     */
+    public function getAvailableBalanceAttribute(): float
+    {
+        return (float) ($this->balance - $this->held_balance);
     }
 }

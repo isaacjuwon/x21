@@ -1,218 +1,124 @@
 <?php
 
-use App\Actions\Wallet\TransferFundAction;
-use App\Livewire\Concerns\HasToast;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use App\Models\User;
+use App\Enums\Wallets\WalletType;
+use App\Exceptions\Wallets\InsufficientFundsException;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Defer;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
-new #[Layout('layouts::app')] class extends Component
-{
-    use HasToast;
+new #[Title('Transfer Funds'), Defer] class extends Component {
+    #[Url]
+    public ?int $recipient_id = null;
 
-    #[Rule('required|string|regex:/^[0-9]{10,11}$/')]
-    public string $phone_number = '';
+    public ?float $amount = null;
+    public string $notes = '';
 
-    #[Rule('required|numeric|min:1')]
-    public float|int $amount = 0;
-
-    #[Rule('nullable|string|max:255')]
-    public ?string $notes = null;
-
-    public ?array $recipientData = null;
-
-    public function validateRecipient(TransferFundAction $transferAction)
+    /**
+     * Get all users except the current one for the transfer.
+     */
+    #[Computed]
+    public function users()
     {
-        $this->normalizePhoneNumber();
+        return User::where('id', '!=', Auth::id())
+            ->orderBy('name')
+            ->get();
+    }
 
+    /**
+     * Perform the transfer.
+     */
+    public function transfer(): void
+    {
         $this->validate([
-            'phone_number' => 'required|string|regex:/^[0-9]{10,11}$/',
+            'recipient_id' => ['required', 'exists:users,id'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
+            'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $result = $transferAction->validateRecipient($this->phone_number);
+        $sender = Auth::user();
+        $recipient = User::find($this->recipient_id);
 
-        if ($result->isError()) {
-            $this->toastError($result->error->getMessage());
-            $this->recipientData = null;
+        try {
+            $sender->transfer($this->amount, $recipient, WalletType::General, $this->notes);
 
-            return;
+            Flux::toast(
+                text: __('Successfully transferred :amount to :name', [
+                    'amount' => Number::currency($this->amount),
+                    'name' => $recipient->name,
+                ]),
+                variant: 'success',
+            );
+
+            $this->redirect(route('wallet.index'), navigate: true);
+        } catch (InsufficientFundsException $e) {
+            $this->addError('amount', __('Insufficient funds in your wallet.'));
+        } catch (\Exception $e) {
+            Flux::toast(
+                text: __('An error occurred during the transfer.'),
+                variant: 'danger',
+            );
         }
-
-        $this->recipientData = $result->unwrap();
-        $this->toastSuccess('Recipient found: '.$this->recipientData['name']);
     }
 
-    public function openConfirmModal()
+    public function placeholder()
     {
-        $this->validate();
-
-        if (! $this->recipientData) {
-            $this->toastError('Please validate recipient first.');
-
-            return;
-        }
-
-        $this->dispatch('open-modal', id: 'confirm-transfer');
-    }
-
-    public function confirmTransfer(TransferFundAction $transferAction)
-    {
-        $this->normalizePhoneNumber();
-
-        $this->validate();
-
-        $data = [
-            'phone_number' => $this->phone_number,
-            'amount' => $this->amount,
-            'notes' => $this->notes,
-        ];
-
-        $result = $transferAction->handle(auth()->user(), $data);
-
-        if ($result->isError()) {
-            $this->dispatch('close-modal', id: 'confirm-transfer');
-            $this->toastError($result->error->getMessage());
-
-            return;
-        }
-
-        $response = $result->unwrap();
-
-        $this->dispatch('close-modal', id: 'confirm-transfer');
-        $this->toastSuccess($response['message']);
-
-        // Reset form
-        $this->reset(['phone_number', 'amount', 'notes', 'recipientData']);
-
-        // Redirect to wallet index
-        return $this->redirect(route('wallet.index'));
-    }
-    protected function normalizePhoneNumber(): void
-    {
-        if (strlen($this->phone_number) === 10 && ! str_starts_with($this->phone_number, '0')) {
-            $this->phone_number = '0'.$this->phone_number;
-        }
+        return <<<'HTML'
+        <div class="max-w-2xl mx-auto space-y-6 animate-pulse">
+            <div class="flex items-center space-x-4">
+                <div class="h-10 w-10 bg-zinc-200 dark:bg-zinc-700 rounded-lg"></div>
+                <div class="h-8 w-48 bg-zinc-200 dark:bg-zinc-700 rounded"></div>
+            </div>
+            <div class="h-96 bg-zinc-200 dark:bg-zinc-700 rounded-xl"></div>
+        </div>
+        HTML;
     }
 }; ?>
 
-<div class="max-w-xl mx-auto p-6">
-    <x-page-header 
-        heading="Transfer Funds" 
-        description="Transfer funds to another user via phone number"
-    />
-
-    <x-ui.alerts type="info" class="mb-6">
-        <x-slot:heading>
-            {{ __('Phone Number Format') }}
-        </x-slot:heading>
-        <x-slot:content>
-            {{ __('You can enter the recipient\'s 11-digit phone number starting with 0, or simply enter the 10 digits without the leading 0 (e.g., 80XXXXXXXX).') }}
-        </x-slot:content>
-    </x-ui.alerts>
-
-    <div data-slot="card" class="p-6 bg-white dark:bg-neutral-800 rounded-[--radius-box] border border-neutral-100 dark:border-neutral-700 shadow-sm">
-        <form wire:submit="openConfirmModal" class="space-y-6">
-            <x-ui.field>
-                <x-ui.label>{{ __('Recipient Phone Number') }}</x-ui.label>
-                <div class="flex gap-2">
-                    <x-ui.input 
-                        wire:model="phone_number" 
-                        type="text"
-                        autofocus
-                        placeholder="08012345678"
-                        class="flex-1 bg-neutral-50 dark:bg-neutral-900/50 font-bold"
-                     />
-                    <x-ui.button 
-                        type="button" 
-                        wire:click="validateRecipient" 
-                        variant="outline"
-                        class="font-bold"
-                    >
-                        Verify
-                    </x-ui.button>
-                </div>
-                <x-ui.error name="phone_number" />
-                @if($recipientData)
-                    <p class="text-sm text-success mt-1">
-                        ✓ {{ $recipientData['name'] }}
-                    </p>
-                @endif
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>{{ __('Amount (NGN)') }}</x-ui.label>
-                <x-ui.input 
-                    wire:model="amount" 
-                    type="number"
-                    min="1"
-                    placeholder="Enter amount to transfer"
-                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
-                 />
-                <x-ui.error name="amount" />
-                <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 font-bold uppercase tracking-widest">Minimum transfer amount is ₦1</p>
-            </x-ui.field>
-
-            <x-ui.field>
-                <x-ui.label>{{ __('Notes (Optional)') }}</x-ui.label>
-                <x-ui.textarea 
-                    wire:model="notes" 
-                    placeholder="Add a note for this transfer"
-                    rows="3"
-                    class="bg-neutral-50 dark:bg-neutral-900/50 font-bold"
-                 />
-                <x-ui.error name="notes" />
-            </x-ui.field>
-
-            <div class="flex justify-end gap-3">
-                <x-ui.button tag="a" href="{{ route('wallet.index') }}" variant="outline" class="font-bold">
-                    Cancel
-                </x-ui.button>
-                <x-ui.button type="submit" variant="primary" :disabled="!$recipientData" class="font-bold">
-                    Transfer Funds
-                </x-ui.button>
-            </div>
-        </form>
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center space-x-4">
+        <flux:button :href="route('wallet.index')" variant="ghost" icon="heroicon-o-arrow-left" inset="left" />
+        <flux:heading size="xl">{{ __('Transfer Funds') }}</flux:heading>
     </div>
 
-    {{-- Confirmation Modal --}}
-    <x-ui.modal 
-        id="confirm-transfer"
-        heading="Confirm Transfer" 
-        description="Please review the transfer details before confirming"
-        width="md"
-    >
-        <div class="space-y-4">
-            <div class="bg-neutral-50 dark:bg-neutral-900/50 rounded-[--radius-box] p-4 space-y-3 border border-neutral-100 dark:border-neutral-700">
-                <div class="flex justify-between text-xs">
-                    <span class="text-neutral-500 dark:text-neutral-400">Recipient:</span>
-                    <span class="font-bold text-neutral-900 dark:text-white">{{ $recipientData['name'] ?? '' }}</span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-neutral-500 dark:text-neutral-400">Phone:</span>
-                    <span class="font-bold text-neutral-900 dark:text-white">{{ $phone_number }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-xs text-neutral-500 dark:text-neutral-400">Amount:</span>
-                    <span class="font-bold text-xl text-success">
-                        {{ Number::currency($amount) }}
-                    </span>
-                </div>
-                @if($notes)
-                <div class="pt-2 border-t border-neutral-100 dark:border-neutral-700">
-                    <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-widest">Notes:</p>
-                    <p class="text-xs text-neutral-900 dark:text-white mt-1">{{ $notes }}</p>
-                </div>
-                @endif
-            </div>
+    <flux:card>
+        <form wire:submit="transfer" class="space-y-6">
+            <flux:select wire:model="recipient_id" :label="__('Recipient')" placeholder="{{ __('Select a recipient...') }}" searchable>
+                @foreach ($this->users as $user)
+                    <flux:select.option :value="$user->id">{{ $user->name }} ({{ $user->email }})</flux:select.option>
+                @endforeach
+            </flux:select>
 
-            <div class="flex justify-end gap-3 pt-2">
-                <x-ui.button type="button" x-on:click="$dispatch('close-modal', {id: 'confirm-transfer'})" variant="outline">
-                    Cancel
-                </x-ui.button>
-                <x-ui.button type="button" wire:click="confirmTransfer" variant="primary">
-                    Confirm Transfer
-                </x-ui.button>
+            <flux:input
+                wire:model="amount"
+                type="number"
+                step="0.01"
+                :label="__('Amount')"
+                placeholder="0.00"
+                icon="heroicon-o-currency-naira"
+            />
+
+            <flux:textarea
+                wire:model="notes"
+                :label="__('Notes (Optional)')"
+                placeholder="{{ __('What is this transfer for?') }}"
+                rows="3"
+            />
+
+            <div class="flex justify-end space-x-2">
+                <flux:button :href="route('wallet.index')" variant="ghost">{{ __('Cancel') }}</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('Send Transfer') }}</flux:button>
             </div>
-        </div>
-    </x-ui.modal>
+        </form>
+    </flux:card>
+
+    <flux:card class="bg-zinc-50 dark:bg-zinc-900 border-dashed">
+        <flux:heading size="sm" class="mb-2">{{ __('Transfer Information') }}</flux:heading>
+        <flux:text size="sm" class="text-zinc-500">
+            {{ __('Transfers are processed immediately. Please ensure the recipient and amount are correct before sending.') }}
+        </flux:text>
+    </flux:card>
 </div>
