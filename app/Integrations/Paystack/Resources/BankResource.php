@@ -25,7 +25,7 @@ final readonly class BankResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::GET,
+                method: Method::Get,
                 uri: '/bank',
                 options: ['country' => $country],
             );
@@ -44,7 +44,7 @@ final readonly class BankResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::GET,
+                method: Method::Get,
                 uri: '/bank/resolve',
                 options: [
                     'account_number' => $accountNumber,

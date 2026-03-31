@@ -34,4 +34,20 @@ enum DividendStatus: string implements HasColor, HasIcon, HasLabel
             self::Distributed => 'heroicon-o-check-circle',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Distributed => 'green',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Pending => 'clock',
+            self::Distributed => 'check-circle',
+        };
+    }
 }

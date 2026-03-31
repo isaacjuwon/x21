@@ -4,6 +4,7 @@ namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
 use App\Integrations\Epins\Entities\PurchaseData as PurchaseDataEntity;
+use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
@@ -18,15 +19,14 @@ class PurchaseDataAction
     /**
      * Purchase data bundle using the configured VTU provider.
      *
-     * @param TopupTransaction $transaction
-     * @return \App\Integrations\Epins\Entities\ServiceResponse
+     * @return ServiceResponse
      */
     public function handle(TopupTransaction $transaction)
     {
         $purchaseData = new PurchaseDataEntity(
             network: $transaction->brand->network_code, // Assuming mapping exists
             mobileNumber: $transaction->phone_number,
-            dataCode: $transaction->plan->variation_code,
+            dataCode: $transaction->plan->api_code,
             reference: $transaction->reference
         );
 
@@ -55,9 +55,9 @@ class PurchaseDataAction
             return $response;
 
         } catch (\Exception $e) {
-            Log::error("Data purchase failed: " . $e->getMessage(), [
+            Log::error('Data purchase failed: '.$e->getMessage(), [
                 'transaction_id' => $transaction->id,
-                'reference' => $transaction->reference
+                'reference' => $transaction->reference,
             ]);
 
             $transaction->update(['status' => 'failed']);

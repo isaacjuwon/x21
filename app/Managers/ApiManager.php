@@ -4,10 +4,12 @@ namespace App\Managers;
 
 use App\Integrations\Contracts\Providers\AccountProvider;
 use App\Integrations\Contracts\Providers\PaymentProvider;
+use App\Integrations\Contracts\Providers\VerificationProvider;
 use App\Integrations\Contracts\Providers\VtuProvider;
+use App\Integrations\Dojah\DojahConnector;
+use App\Integrations\Dojah\DojahProvider;
 use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\Epins\EpinsProvider;
-use App\Integrations\Monnify\MonnifyProvider;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Integrations\Paystack\PaystackProvider;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -92,6 +94,20 @@ class ApiManager extends MultipleInstanceManager
     }
 
     /**
+     * Get a verification provider instance by name.
+     *
+     * @throws LogicException
+     */
+    public function verificationProvider(?string $name = null): VerificationProvider
+    {
+        return tap($this->instance($name), function ($instance) {
+            if (! $instance instanceof VerificationProvider) {
+                throw new LogicException('Provider ['.get_class($instance).'] does not support verification.');
+            }
+        });
+    }
+
+    /**
      * Get a fakeable account provider instance.
      */
     public function fakeableAccountProvider(?string $name = null): AccountProvider
@@ -116,6 +132,18 @@ class ApiManager extends MultipleInstanceManager
     }
 
     /**
+     * Create a Dojah powered instance.
+     */
+    public function createDojahDriver(array $config): DojahProvider
+    {
+        return new DojahProvider(
+            $config,
+            $this->app->make(Dispatcher::class),
+            $this->app->make(DojahConnector::class)
+        );
+    }
+
+    /**
      * Create an Epins powered instance.
      */
     public function createEpinsDriver(array $config): EpinsProvider
@@ -126,20 +154,7 @@ class ApiManager extends MultipleInstanceManager
     }
 
     /**
-     * Create a Monnify powered instance.
-     */
-    public function createMonnifyDriver(array $config): MonnifyProvider
-    {
-        return new MonnifyProvider(
-            $config,
-            $this->app->make(Dispatcher::class)
-        );
-    }
-
-    /**
      * Get the default instance name.
-     *
-     * @return string
      */
     public function getDefaultInstance(): string
     {
@@ -150,7 +165,6 @@ class ApiManager extends MultipleInstanceManager
      * Set the default instance name.
      *
      * @param  string  $name
-     * @return void
      */
     public function setDefaultInstance($name): void
     {
@@ -161,7 +175,6 @@ class ApiManager extends MultipleInstanceManager
      * Get the instance specific configuration.
      *
      * @param  string  $name
-     * @return array
      */
     public function getInstanceConfig($name): array
     {

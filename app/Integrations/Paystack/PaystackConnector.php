@@ -47,7 +47,7 @@ final readonly class PaystackConnector
 
     public function send(Method $method, string $uri, array $options = []): Response
     {
-        if ($method === Method::GET && ! empty($options) && ! isset($options['query'])) {
+        if ($method === Method::Get && ! empty($options) && ! isset($options['query'])) {
             $options = ['query' => $options];
         }
 
@@ -62,15 +62,19 @@ final readonly class PaystackConnector
     {
         $app->bind(
             abstract: PaystackConnector::class,
-            concrete: fn () => new PaystackConnector(
-                request: Http::baseUrl(
-                    url: app(\App\Settings\IntegrationSettings::class)->paystack_url ?? config('services.paystack.url'),
-                )->timeout(
-                    seconds: 30,
-                )->withToken(
-                    token: app(\App\Settings\IntegrationSettings::class)->paystack_secret_key ?? config('services.paystack.secret_key'),
-                )->asJson()->acceptJson(),
-            ),
+            concrete: function () {
+                $settings = app(\App\Settings\IntegrationSettings::class);
+
+                return new PaystackConnector(
+                    request: Http::baseUrl(
+                        url: ! blank($settings->paystack_url) ? $settings->paystack_url : config('services.paystack.url'),
+                    )->timeout(
+                        seconds: 30,
+                    )->withToken(
+                        token: ! blank($settings->paystack_secret_key) ? $settings->paystack_secret_key : config('services.paystack.secret_key'),
+                    )->asJson()->acceptJson(),
+                );
+            },
         );
     }
 }

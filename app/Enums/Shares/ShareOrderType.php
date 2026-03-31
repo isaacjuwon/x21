@@ -34,4 +34,20 @@ enum ShareOrderType: string implements HasColor, HasIcon, HasLabel
             self::Sell => 'heroicon-o-arrow-up-circle',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Buy => 'green',
+            self::Sell => 'red',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Buy => 'arrow-down-circle',
+            self::Sell => 'arrow-up-circle',
+        };
+    }
 }

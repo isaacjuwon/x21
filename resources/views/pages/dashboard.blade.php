@@ -171,7 +171,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
                 <flux:button variant="ghost" size="sm" href="{{ route('wallet.index') }}" wire:navigate>View All</flux:button>
             </div>
 
-            <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+            <flux:card class="p-2 overflow-hidden border-zinc-200 dark:border-zinc-800">
                 @if($this->recentTransactions->count() > 0)
                     <flux:table>
                         <flux:table.columns sticky class="bg-white dark:bg-zinc-900">

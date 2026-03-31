@@ -240,45 +240,45 @@ Implement a backend website shares system on Laravel 13 / PHP 8.4 with SQLite an
     - Expose: `id`, `amount`, `created_at`, and nested `dividend` with `total_amount` and `declared_at`
     - _Requirements: 12.2_
 
-- [ ] 12. Controllers under `App\Http\Controllers\Api\V1\Shares\`
-  - [ ] 12.1 Create `ShareListingController`
+- [x] 12. Controllers under `App\Http\Controllers\Api\V1\Shares\`
+  - [x] 12.1 Create `ShareListingController`
     - `show`: return `ShareListingResource` for the current listing (first or fail)
     - `update`: authorize `updatePrice`, use `UpdateSharePriceRequest`, call `UpdateSharePriceAction`, return `ShareListingResource`
     - _Requirements: 1.2, 1.3_
 
-  - [ ] 12.2 Create `ShareOrderController`
+  - [x] 12.2 Create `ShareOrderController`
     - `index`: return `ShareOrderResource::collection(auth()->user()->shareOrders()->latest()->paginate(15))`
     - `show`: authorize ownership (return 404 if not owner), return `ShareOrderResource`
     - `buy`: use `StoreBuyOrderRequest`, call `PlaceBuyOrderAction`, return `ShareOrderResource` with 201
     - `sell`: use `StoreSellOrderRequest`, call `PlaceSellOrderAction`, return `ShareOrderResource` with 201
     - _Requirements: 2.1, 3.1, 9.1, 9.3, 9.4_
 
-  - [ ] 12.3 Create `ShareOrderApprovalController`
+  - [x] 12.3 Create `ShareOrderApprovalController`
     - `store`: authorize `approve` on the order, call `ApproveBuyOrderAction` or `ApproveSellOrderAction` based on order type, return `ShareOrderResource`
     - _Requirements: 4.1, 5.1_
 
-  - [ ] 12.4 Create `ShareOrderRejectionController`
+  - [x] 12.4 Create `ShareOrderRejectionController`
     - `store`: authorize `reject` on the order, use `StoreShareOrderRejectionRequest`, call `RejectShareOrderAction`, return `ShareOrderResource`
     - _Requirements: 6.1_
 
-  - [ ] 12.5 Create `ShareHoldingController`
+  - [x] 12.5 Create `ShareHoldingController`
     - `show`: return `ShareHoldingResource` for the authenticated user's holding (or empty holding with quantity 0 if none exists)
     - _Requirements: 8.1, 8.2, 8.3_
 
-  - [ ] 12.6 Create `SharePriceHistoryController`
+  - [x] 12.6 Create `SharePriceHistoryController`
     - `index`: return `SharePriceHistoryResource::collection(SharePriceHistory::latest('created_at')->paginate(15))`
     - _Requirements: 10.2, 10.3_
 
-  - [ ] 12.7 Create `DividendController`
+  - [x] 12.7 Create `DividendController`
     - `store`: authorize `declareDividend`, use `StoreDividendRequest`, call `DeclareDividendAction`, return JSON 201
     - _Requirements: 11.1_
 
-  - [ ] 12.8 Create `DividendPayoutController`
+  - [x] 12.8 Create `DividendPayoutController`
     - `index`: return `DividendPayoutResource::collection(auth()->user()->dividendPayouts()->latest()->paginate(15))`
     - _Requirements: 12.1, 12.3_
 
-- [ ] 13. Routes
-  - [ ] 13.1 Add share routes to `routes/api.php`
+- [x] 13. Routes
+  - [x] 13.1 Add share routes to `routes/api.php`
     - Add under the existing `auth:sanctum` + `v1` group:
     - `GET shares/listing` → `ShareListingController@show`
     - `PUT shares/listing/price` → `ShareListingController@update`

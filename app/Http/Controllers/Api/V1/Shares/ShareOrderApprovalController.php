@@ -5,14 +5,25 @@ namespace App\Http\Controllers\Api\V1\Shares;
 use App\Actions\Shares\ApproveBuyOrderAction;
 use App\Actions\Shares\ApproveSellOrderAction;
 use App\Enums\Shares\ShareOrderType;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Shares\ShareOrderResource;
 use App\Models\ShareOrder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Knuckles\Scribe\Attributes\Authenticated;
+use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\Response;
+use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 
-class ShareOrderApprovalController extends Controller
+#[Group('Shares', 'Share orders and holdings')]
+#[Authenticated]
+class ShareOrderApprovalController
 {
-    public function store(
+    use AuthorizesRequests;
+
+    #[ResponseFromApiResource(ShareOrderResource::class, ShareOrder::class)]
+    #[Response(['message' => 'Order is not in a pending state.'], status: 422)]
+    #[Response(['message' => 'This action is unauthorized.'], status: 403)]
+    public function __invoke(
         Request $request,
         ShareOrder $order,
         ApproveBuyOrderAction $buyAction,
@@ -20,11 +31,9 @@ class ShareOrderApprovalController extends Controller
     ): ShareOrderResource {
         $this->authorize('approve', $order);
 
-        if ($order->type === ShareOrderType::Buy) {
-            $order = $buyAction->handle($order, auth()->user());
-        } else {
-            $order = $sellAction->handle($order, auth()->user());
-        }
+        $order = $order->type === ShareOrderType::Buy
+            ? $buyAction->handle($order, $request->user())
+            : $sellAction->handle($order, $request->user());
 
         return new ShareOrderResource($order);
     }

@@ -19,7 +19,7 @@ final readonly class WalletResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::GET,
+                method: Method::Get,
                 uri: '/account/',
             );
         } catch (Throwable $exception) {

@@ -5,17 +5,20 @@ namespace App\Filament\Clusters\Settings\Pages;
 use App\Enums\Loans\InterestMethod;
 use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Settings\LoanSettings;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Pages\SettingsPage;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Number;
 
 class LoanSettingsPage extends SettingsPage
 {
+    use HasPageShield;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     protected static string $settings = LoanSettings::class;

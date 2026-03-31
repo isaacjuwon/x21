@@ -126,7 +126,7 @@ new #[Title('My Shares'), Defer] class extends Component
         </flux:card>
     </div>
 
-    <flux:card class="p-0! overflow-hidden border-zinc-200 dark:border-zinc-800">
+    <flux:card class="p-2! overflow-hidden border-zinc-200 dark:border-zinc-800">
         <div class="p-6 border-b border-zinc-200 dark:border-zinc-800">
             <flux:heading size="lg">{{ __('Share Orders') }}</flux:heading>
             <flux:subheading>{{ __('History of your share purchase and sell orders.') }}</flux:subheading>
@@ -149,7 +149,7 @@ new #[Title('My Shares'), Defer] class extends Component
                             {{ $order->created_at->format('M j, Y') }}
                         </flux:table.cell>
                         <flux:table.cell>
-                            <flux:badge :color="$order->type->getColor()" size="sm">{{ $order->type->getLabel() }}</flux:badge>
+                            <flux:badge :color="$order->type->getFluxColor()" size="sm">{{ $order->type->getLabel() }}</flux:badge>
                         </flux:table.cell>
                         <flux:table.cell align="end">
                             {{ number_format($order->quantity) }}
@@ -161,7 +161,7 @@ new #[Title('My Shares'), Defer] class extends Component
                             {{ Number::currency($order->total_amount) }}
                         </flux:table.cell>
                         <flux:table.cell align="end">
-                            <flux:badge :color="$order->status->getColor()" inset="top bottom">
+                            <flux:badge :color="$order->status->getFluxColor()" inset="top bottom">
                                 {{ $order->status->getLabel() }}
                             </flux:badge>
                         </flux:table.cell>

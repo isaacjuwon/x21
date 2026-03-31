@@ -4,6 +4,7 @@ namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
 use App\Integrations\Epins\Entities\PurchaseCable as PurchaseCableEntity;
+use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
@@ -18,15 +19,14 @@ class PurchaseCableAction
     /**
      * Purchase cable subscription using the configured VTU provider.
      *
-     * @param TopupTransaction $transaction
-     * @return \App\Integrations\Epins\Entities\ServiceResponse
+     * @return ServiceResponse
      */
     public function handle(TopupTransaction $transaction)
     {
         $purchaseData = new PurchaseCableEntity(
             service: $transaction->brand->slug, // e.g., dstv
             smartcardNumber: $transaction->smart_card_number,
-            variationCode: $transaction->plan->variation_code,
+            variationCode: $transaction->plan->api_code,
             reference: $transaction->reference,
             phone: $transaction->user->phone
         );
@@ -56,9 +56,9 @@ class PurchaseCableAction
             return $response;
 
         } catch (\Exception $e) {
-            Log::error("Cable purchase failed: " . $e->getMessage(), [
+            Log::error('Cable purchase failed: '.$e->getMessage(), [
                 'transaction_id' => $transaction->id,
-                'reference' => $transaction->reference
+                'reference' => $transaction->reference,
             ]);
 
             $transaction->update(['status' => 'failed']);

@@ -14,6 +14,8 @@ class Dividend extends Model
     use HasFactory;
 
     protected $fillable = [
+        'percentage',
+        'share_price',
         'total_amount',
         'status',
         'declared_at',

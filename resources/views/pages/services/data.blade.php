@@ -4,7 +4,10 @@ use App\Models\Brand;
 use App\Models\DataPlan;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
+use App\Actions\Vtu\PurchaseDataAction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -52,7 +55,7 @@ new #[Title('Data Purchase')] class extends Component {
         $this->reset('plan_id');
     }
 
-    public function buy()
+    public function buy(PurchaseDataAction $purchaseAction)
     {
         $this->validate();
 
@@ -65,10 +68,8 @@ new #[Title('Data Purchase')] class extends Component {
         }
 
         try {
-            DB::transaction(function () use ($user, $plan) {
-                $user->withdraw($plan->price, WalletType::General, "Data Purchase: {$plan->brand->name} {$plan->type} ({$this->phone_number})");
-
-                TopupTransaction::create([
+            $transaction = DB::transaction(function () use ($user, $plan) {
+                $topup = TopupTransaction::create([
                     'user_id' => $user->id,
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
@@ -78,12 +79,18 @@ new #[Title('Data Purchase')] class extends Component {
                     'status' => 'pending',
                     'reference' => 'DAT-'.strtoupper(Str::random(10)),
                 ]);
+
+                $user->withdraw($plan->price, WalletType::General, "Data Purchase: {$plan->brand->name} {$plan->type} ({$this->phone_number})", $topup);
+
+                return $topup;
             });
+
+            $purchaseAction->handle($transaction);
 
             Flux::toast('Data purchase initiated successfully.');
             $this->reset(['plan_id', 'phone_number', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('plan_id', 'An error occurred during the transaction.');
+            $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
         }
     }
 }; ?>
@@ -101,7 +108,7 @@ new #[Title('Data Purchase')] class extends Component {
                     @foreach($this->brands as $brand)
                         <label class="relative cursor-pointer group">
                             <input type="radio" wire:model.live="brand_id" value="{{ $brand->id }}" class="sr-only peer">
-                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                 @if($brand->hasMedia('logo'))
                                     <img src="{{ $brand->getFirstMediaUrl('logo') }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
                                 @else
@@ -125,7 +132,7 @@ new #[Title('Data Purchase')] class extends Component {
                         @foreach($this->plans as $plan)
                             <label class="relative cursor-pointer">
                                 <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
-                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-lg">{{ $plan->type }}</span>
                                         <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>

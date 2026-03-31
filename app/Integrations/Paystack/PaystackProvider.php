@@ -10,7 +10,7 @@ use App\Integrations\Paystack\Entities\PaymentResponse;
 use App\Integrations\Paystack\Entities\RecipientResponse;
 use Illuminate\Contracts\Events\Dispatcher;
 
-class PaystackProvider implements PaymentProvider, AccountProvider
+class PaystackProvider implements AccountProvider, PaymentProvider
 {
     public function __construct(
         protected array $config,
@@ -21,6 +21,11 @@ class PaystackProvider implements PaymentProvider, AccountProvider
     public function initializePayment(InitializePayment $entity): PaymentResponse
     {
         return $this->connector->transactions()->initialize($entity);
+    }
+
+    public function verifyPayment(string $reference): PaymentResponse
+    {
+        return $this->connector->transactions()->verify($reference);
     }
 
     public function createRecipient(BankAccount $entity): RecipientResponse

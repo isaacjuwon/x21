@@ -5,6 +5,7 @@ namespace App\Notifications\Shares;
 use App\Models\DividendPayout;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class DividendPaidNotification extends Notification implements ShouldQueue
@@ -15,7 +16,17 @@ class DividendPaidNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Dividend Payment Received')
+            ->markdown('mail.shares.dividend-paid', [
+                'notifiable' => $notifiable,
+                'payout' => $this->payout,
+            ]);
     }
 
     public function toArray(object $notifiable): array

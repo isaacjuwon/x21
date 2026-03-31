@@ -8,4 +8,6 @@ use App\Integrations\Paystack\Entities\PaymentResponse;
 interface PaymentProvider
 {
     public function initializePayment(InitializePayment $entity): PaymentResponse;
+
+    public function verifyPayment(string $reference): PaymentResponse;
 }

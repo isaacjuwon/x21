@@ -5,6 +5,7 @@ namespace App\Notifications\Loans;
 use App\Models\Loan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class LoanApprovedNotification extends Notification implements ShouldQueue
@@ -15,7 +16,17 @@ class LoanApprovedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Your Loan Has Been Approved')
+            ->markdown('mail.loans.approved', [
+                'notifiable' => $notifiable,
+                'loan' => $this->loan,
+            ]);
     }
 
     public function toArray(object $notifiable): array

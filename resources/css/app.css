@@ -23,16 +23,38 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    /* Violet primary palette */
+    --color-violet-50: #f5f3ff;
+    --color-violet-100: #ede9fe;
+    --color-violet-200: #ddd6fe;
+    --color-violet-300: #c4b5fd;
+    --color-violet-400: #a78bfa;
+    --color-violet-500: #8b5cf6;
+    --color-violet-600: #7c3aed;
+    --color-violet-700: #6d28d9;
+    --color-violet-800: #5b21b6;
+    --color-violet-900: #4c1d95;
+    --color-violet-950: #2e1065;
+
+    /* Flux accent → violet */
+    --color-accent: var(--color-violet-600);
+    --color-accent-content: var(--color-violet-600);
     --color-accent-foreground: var(--color-white);
+
+    /* Expose as primary-color for use in Blade templates */
+    --color-primary: var(--color-violet-600);
+    --color-primary-hover: var(--color-violet-700);
+    --color-primary-light: var(--color-violet-100);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-violet-400);
+        --color-accent-content: var(--color-violet-400);
+        --color-accent-foreground: var(--color-violet-950);
+        --color-primary: var(--color-violet-400);
+        --color-primary-hover: var(--color-violet-300);
+        --color-primary-light: var(--color-violet-900);
     }
 }
 
@@ -64,3 +86,31 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* ── Flux component shape + color overrides ── */
+
+[data-flux-button] {
+    @apply rounded-xl bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-400;
+}
+
+[data-flux-input],
+[data-flux-select],
+[data-flux-textarea] {
+    @apply rounded-xl;
+}
+
+[data-flux-card] {
+    @apply rounded-2xl;
+}
+
+[data-flux-modal] {
+    @apply rounded-2xl;
+}
+
+[data-flux-dropdown] {
+    @apply rounded-xl;
+}
+
+[data-flux-badge] {
+    @apply rounded-full;
+}

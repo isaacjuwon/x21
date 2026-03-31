@@ -75,10 +75,13 @@ new #[Title('My Wallet'), Defer] class extends Component {
         <flux:heading size="xl">{{ __('My Wallet') }}</flux:heading>
 
         <div class="flex space-x-2">
+            <flux:button href="{{ route('wallet.fund') }}" variant="primary" icon="plus-circle" wire:navigate>
+                {{ __('Fund Wallet') }}
+            </flux:button>
             <flux:button href="{{ route('wallet.transfer') }}" variant="outline" icon="plus" wire:navigate>
                 {{ __('Transfer') }}
             </flux:button>
-            <flux:button href="{{ route('wallet.withdraw') }}" variant="primary" icon="banknotes" wire:navigate>
+            <flux:button href="{{ route('wallet.withdraw') }}" variant="outline" icon="banknotes" wire:navigate>
                 {{ __('Withdraw') }}
             </flux:button>
         </div>
@@ -107,7 +110,7 @@ new #[Title('My Wallet'), Defer] class extends Component {
         </flux:card>
     </div>
 
-    <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+    <flux:card class="p-2 overflow-hidden border-zinc-200 dark:border-zinc-800">
         <flux:table :paginate="$this->transactions">
             <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
                 <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date') }}</flux:table.column>
@@ -126,7 +129,7 @@ new #[Title('My Wallet'), Defer] class extends Component {
 
                         <flux:table.cell>
                             <div class="flex items-center gap-2">
-                                <flux:icon :name="$transaction->type->getIcon()" class="size-4 text-zinc-400" />
+                                <flux:icon :name="$transaction->type->getFluxIcon()" class="size-4 text-zinc-400" />
                                 <span>{{ $transaction->type->getLabel() }}</span>
                             </div>
                         </flux:table.cell>
@@ -136,7 +139,7 @@ new #[Title('My Wallet'), Defer] class extends Component {
                         </flux:table.cell>
 
                         <flux:table.cell>
-                            <flux:badge :color="$transaction->status->getColor()" size="sm" inset="top bottom">
+                            <flux:badge :color="$transaction->status->getFluxColor()" size="sm" inset="top bottom">
                                 {{ $transaction->status->getLabel() }}
                             </flux:badge>
                         </flux:table.cell>

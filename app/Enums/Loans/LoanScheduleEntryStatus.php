@@ -38,4 +38,22 @@ enum LoanScheduleEntryStatus: string implements HasColor, HasIcon, HasLabel
             self::Overdue => 'heroicon-o-exclamation-circle',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Paid => 'green',
+            self::Overdue => 'red',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Pending => 'clock',
+            self::Paid => 'check-circle',
+            self::Overdue => 'exclamation-circle',
+        };
+    }
 }

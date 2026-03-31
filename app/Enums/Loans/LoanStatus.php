@@ -42,4 +42,24 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Rejected => 'heroicon-o-x-circle',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Active => 'green',
+            self::Approved => 'blue',
+            self::Disbursed => 'violet',
+            self::Rejected => 'red',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Active => 'check-circle',
+            self::Approved => 'hand-thumb-up',
+            self::Disbursed => 'banknotes',
+            self::Rejected => 'x-circle',
+        };
+    }
 }

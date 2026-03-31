@@ -222,6 +222,9 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
                 'notes' => $this->notes,
             ]);
 
+            // Generate the initial schedule immediately on application
+            \App\Jobs\GenerateLoanScheduleJob::dispatch($loan);
+
             Flux::toast(
                 text: __('Loan application submitted successfully.'),
                 variant: 'success',
@@ -366,7 +369,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
             </flux:card>
         </div>
 
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 space-y-6 px-2">
             @if (count($this->previewSchedule) > 0)
                 <flux:card class="space-y-4">
                     <flux:heading size="lg">{{ __('Schedule Preview') }}</flux:heading>

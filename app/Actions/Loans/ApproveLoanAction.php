@@ -9,7 +9,6 @@ use App\Models\Loan;
 use App\Models\LoanStatusHistory;
 use App\Models\User;
 use App\Notifications\Loans\LoanApprovedNotification;
-use App\Actions\Loans\CheckLoanEligibilityAction;
 
 class ApproveLoanAction
 {
@@ -22,7 +21,7 @@ class ApproveLoanAction
         $eligibility = app(CheckLoanEligibilityAction::class)->handle($loan->user, (float) $loan->principal_amount);
 
         if (! $eligibility->passed) {
-            throw new \Exception('Borrower is no longer eligible for this loan: ' . $eligibility->failingSpecification->failureReason());
+            throw new \Exception('Borrower is no longer eligible for this loan: '.$eligibility->failingSpecification->failureReason());
         }
 
         $fromStatus = $loan->status->value;

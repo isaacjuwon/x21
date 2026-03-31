@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-use App\Enums\Topups\TopupType;
 use App\Enums\Topups\TopupTransactionStatus;
+use App\Enums\Topups\TopupType;
+use Database\Factories\TopupTransactionFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class TopupTransaction extends Model
 {
+    /** @use HasFactory<TopupTransactionFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'plan_id',

@@ -12,6 +12,9 @@ class GenerateLoanScheduleAction
 {
     public function handle(Loan $loan): void
     {
+        // Delete existing entries before regenerating (idempotent)
+        $loan->scheduleEntries()->delete();
+
         $entries = match ($loan->interest_method) {
             InterestMethod::FlatRate => $this->buildFlatRateSchedule($loan),
             InterestMethod::ReducingBalance => $this->buildReducingBalanceSchedule($loan),
@@ -21,13 +24,22 @@ class GenerateLoanScheduleAction
     }
 
     /**
+     * Use disbursed_at if available, otherwise use now() as the start date.
+     */
+    private function startDate(Loan $loan): Carbon
+    {
+        return $loan->disbursed_at ? Carbon::parse($loan->disbursed_at) : Carbon::now();
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     private function buildFlatRateSchedule(Loan $loan): array
     {
         $principal = (float) $loan->principal_amount;
-        $rate = (float) $loan->interest_rate;
+        $rate = (float) $loan->interest_rate / 100;
         $term = (int) $loan->repayment_term_months;
+        $start = $this->startDate($loan);
 
         $totalInterest = $principal * $rate * ($term / 12);
         $instalmentAmount = round(($principal + $totalInterest) / $term, 2);
@@ -43,11 +55,11 @@ class GenerateLoanScheduleAction
             $entries[] = [
                 'loan_id' => $loan->id,
                 'instalment_number' => $n,
-                'due_date' => $loan->disbursed_at->addMonths($n)->toDateString(),
+                'due_date' => $start->copy()->addMonths($n)->toDateString(),
                 'instalment_amount' => $instalmentAmount,
                 'principal_component' => $principalComponent,
                 'interest_component' => $interestComponent,
-                'outstanding_balance' => $outstandingBalance,
+                'outstanding_balance' => max(0, $outstandingBalance),
                 'status' => LoanScheduleEntryStatus::Pending->value,
                 'remaining_amount' => $instalmentAmount,
                 'paid_at' => null,
@@ -65,14 +77,14 @@ class GenerateLoanScheduleAction
     private function buildReducingBalanceSchedule(Loan $loan): array
     {
         $principal = (float) $loan->principal_amount;
-        $annualRate = (float) $loan->interest_rate;
+        $annualRate = (float) $loan->interest_rate / 100;
         $term = (int) $loan->repayment_term_months;
+        $start = $this->startDate($loan);
 
         $monthlyRate = $annualRate / 12;
-        $instalmentAmount = round(
-            $principal * $monthlyRate / (1 - (1 + $monthlyRate) ** (-$term)),
-            2
-        );
+        $instalmentAmount = $monthlyRate > 0
+            ? round($principal * $monthlyRate / (1 - (1 + $monthlyRate) ** (-$term)), 2)
+            : round($principal / $term, 2);
 
         $now = Carbon::now();
         $entries = [];
@@ -86,11 +98,11 @@ class GenerateLoanScheduleAction
             $entries[] = [
                 'loan_id' => $loan->id,
                 'instalment_number' => $n,
-                'due_date' => $loan->disbursed_at->addMonths($n)->toDateString(),
+                'due_date' => $start->copy()->addMonths($n)->toDateString(),
                 'instalment_amount' => $instalmentAmount,
                 'principal_component' => $principalComponent,
                 'interest_component' => $interestComponent,
-                'outstanding_balance' => $outstandingBalance,
+                'outstanding_balance' => max(0, $outstandingBalance),
                 'status' => LoanScheduleEntryStatus::Pending->value,
                 'remaining_amount' => $instalmentAmount,
                 'paid_at' => null,

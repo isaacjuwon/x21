@@ -41,7 +41,8 @@ class PlaceBuyOrderAction
 
         $totalCost = $quantity * $settings->price_per_share;
 
-        $holdTransaction = $user->hold($totalCost, WalletType::General);
+        // Debit wallet immediately — no hold, user is charged on placement
+        $withdrawTransaction = $user->withdraw($totalCost, WalletType::General, "Share purchase: {$quantity} shares @ {$settings->price_per_share}");
 
         $order = ShareOrder::create([
             'user_id' => $user->id,
@@ -50,7 +51,7 @@ class PlaceBuyOrderAction
             'price_per_share' => $settings->price_per_share,
             'total_amount' => $totalCost,
             'status' => ShareOrderStatus::Pending,
-            'hold_transaction_id' => $holdTransaction->id,
+            'hold_transaction_id' => $withdrawTransaction->id, // reusing column to store the debit transaction
         ]);
 
         ShareOrderPlaced::dispatch($order);

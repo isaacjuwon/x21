@@ -99,7 +99,7 @@ new #[Title('My Loans'), Defer] class extends Component {
         </flux:card>
     </div>
 
-    <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+    <flux:card class="p-2 overflow-hidden border-zinc-200 dark:border-zinc-800">
         <flux:table :paginate="$this->loans">
             <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
                 <flux:table.column sortable :sorted="$sortBy === 'created_at'" :direction="$sortDirection" wire:click="sort('created_at')">{{ __('Date Applied') }}</flux:table.column>
@@ -135,7 +135,7 @@ new #[Title('My Loans'), Defer] class extends Component {
                         </flux:table.cell>
 
                         <flux:table.cell>
-                            <flux:badge :color="$loan->status->getColor()" :icon="$loan->status->getIcon()" size="sm" variant="subtle">
+                            <flux:badge :color="$loan->status->getFluxColor()" :icon="$loan->status->getFluxIcon()" size="sm" variant="subtle">
                                 {{ $loan->status->getLabel() }}
                             </flux:badge>
                         </flux:table.cell>

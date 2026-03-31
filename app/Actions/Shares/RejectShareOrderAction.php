@@ -18,11 +18,23 @@ class RejectShareOrderAction
             throw new InvalidShareOrderStateException('Order is not in a pending state.');
         }
 
+        // For buy orders: the wallet was debited on placement.
+        // Mark the debit transaction as failed → TransactionFailed event →
+        // ReverseWalletTransactionJob will automatically refund the user.
         if ($order->type === ShareOrderType::Buy) {
-            $order->holdTransaction->void();
+            $order->loadMissing('holdTransaction');
+
+            if ($order->holdTransaction) {
+                $order->holdTransaction->fail(
+                    "Share buy order #{$order->id} rejected: {$rejectionReason}"
+                );
+            }
         }
 
-        $order->update(['status' => ShareOrderStatus::Rejected, 'rejection_reason' => $rejectionReason]);
+        $order->update([
+            'status' => ShareOrderStatus::Rejected,
+            'rejection_reason' => $rejectionReason,
+        ]);
 
         ShareOrderRejected::dispatch($order);
 

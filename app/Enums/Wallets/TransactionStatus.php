@@ -11,6 +11,8 @@ enum TransactionStatus: string implements HasColor, HasIcon, HasLabel
     case Pending = 'pending';
     case Completed = 'completed';
     case Voided = 'voided';
+    case Failed = 'failed';
+    case Refunded = 'refunded';
 
     public function getLabel(): string
     {
@@ -18,6 +20,8 @@ enum TransactionStatus: string implements HasColor, HasIcon, HasLabel
             self::Pending => 'Pending',
             self::Completed => 'Completed',
             self::Voided => 'Voided',
+            self::Failed => 'Failed',
+            self::Refunded => 'Refunded',
         };
     }
 
@@ -27,6 +31,19 @@ enum TransactionStatus: string implements HasColor, HasIcon, HasLabel
             self::Pending => 'warning',
             self::Completed => 'success',
             self::Voided => 'gray',
+            self::Failed => 'danger',
+            self::Refunded => 'info',
+        };
+    }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Completed => 'green',
+            self::Voided => 'zinc',
+            self::Failed => 'red',
+            self::Refunded => 'blue',
         };
     }
 
@@ -36,6 +53,25 @@ enum TransactionStatus: string implements HasColor, HasIcon, HasLabel
             self::Pending => 'heroicon-o-clock',
             self::Completed => 'heroicon-o-check-circle',
             self::Voided => 'heroicon-o-x-circle',
+            self::Failed => 'heroicon-o-exclamation-circle',
+            self::Refunded => 'heroicon-o-arrow-uturn-left',
         };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Pending => 'clock',
+            self::Completed => 'check-circle',
+            self::Voided => 'x-circle',
+            self::Failed => 'exclamation-circle',
+            self::Refunded => 'arrow-uturn-left',
+        };
+    }
+
+    /** Whether this status is terminal (no further transitions allowed). */
+    public function isTerminal(): bool
+    {
+        return in_array($this, [self::Completed, self::Voided, self::Failed, self::Refunded]);
     }
 }

@@ -30,4 +30,18 @@ enum WalletType: string implements HasColor, HasIcon, HasLabel
             self::General => 'heroicon-o-wallet',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::General => 'violet',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::General => 'wallet',
+        };
+    }
 }

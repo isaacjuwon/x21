@@ -19,6 +19,8 @@ class DividendFactory extends Factory
     public function definition(): array
     {
         return [
+            'percentage' => fake()->randomFloat(2, 1, 20),
+            'share_price' => fake()->randomFloat(2, 10, 500),
             'total_amount' => fake()->randomFloat(2, 100, 10000),
             'status' => DividendStatus::Pending,
             'declared_at' => now(),

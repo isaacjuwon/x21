@@ -23,9 +23,19 @@ class DividendsTable
                     ->label('ID')
                     ->sortable(),
 
+                TextColumn::make('percentage')
+                    ->label('Percentage')
+                    ->suffix('%')
+                    ->sortable(),
+
+                TextColumn::make('share_price')
+                    ->label('Share Price')
+                    ->money(fn () => Number::defaultCurrency())
+                    ->sortable(),
+
                 TextColumn::make('total_amount')
-                    ->label('Total Amount')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->label('Total Distributed')
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('status')
@@ -58,15 +68,15 @@ class DividendsTable
                     ->label('Declare Dividend')
                     ->icon(Heroicon::CurrencyDollar)
                     ->form([
-                        TextInput::make('total_amount')
-                            ->label('Total Amount')
+                        TextInput::make('percentage')
+                            ->label('Dividend Percentage')
                             ->numeric()
-                            ->prefix(Number::defaultCurrency())
+                            ->suffix('%')
                             ->minValue(0.01)
                             ->required(),
                     ])
                     ->action(function (array $data): void {
-                        app(DeclareDividendAction::class)->handle((float) $data['total_amount']);
+                        app(DeclareDividendAction::class)->handle((float) $data['percentage']);
                         Notification::make()->success()->title('Dividend declared and queued for distribution')->send();
                     }),
             ])

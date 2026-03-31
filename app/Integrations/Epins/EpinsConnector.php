@@ -65,15 +65,19 @@ final readonly class EpinsConnector
     {
         $app->bind(
             abstract: EpinsConnector::class,
-            concrete: fn () => new EpinsConnector(
-                request: Http::baseUrl(
-                    url: app(\App\Settings\IntegrationSettings::class)->epins_url ?? config('services.epins.url'),
-                )->timeout(
-                    seconds: 60,
-                )->withToken(
-                    token: app(\App\Settings\IntegrationSettings::class)->epins_api_key ?? config('services.epins.api_key'),
-                )->asJson()->acceptJson(),
-            ),
+            concrete: function () {
+                $settings = app(\App\Settings\IntegrationSettings::class);
+
+                return new EpinsConnector(
+                    request: Http::baseUrl(
+                        url: ! blank($settings->epins_url) ? $settings->epins_url : config('services.epins.url'),
+                    )->timeout(
+                        seconds: 60,
+                    )->withToken(
+                        token: ! blank($settings->epins_api_key) ? $settings->epins_api_key : config('services.epins.api_key'),
+                    )->asJson()->acceptJson(),
+                );
+            },
         );
     }
 }

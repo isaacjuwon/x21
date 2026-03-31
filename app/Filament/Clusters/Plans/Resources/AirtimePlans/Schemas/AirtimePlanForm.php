@@ -17,7 +17,7 @@ class AirtimePlanForm
                     ->relationship('brand', 'name')
                     ->required(),
                 TextInput::make('type')
-                    ->required(),
+                    ->nullable(),
                 TextInput::make('api_code')
                     ->required(),
                 Toggle::make('status')

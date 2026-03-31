@@ -4,7 +4,10 @@ use App\Models\Brand;
 use App\Models\EducationPlan;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
+use App\Actions\Vtu\PurchaseEducationAction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -58,7 +61,7 @@ new #[Title('Education Pins')] class extends Component {
         $this->reset('plan_id');
     }
 
-    public function buy()
+    public function buy(PurchaseEducationAction $purchaseAction)
     {
         $this->validate();
 
@@ -72,10 +75,8 @@ new #[Title('Education Pins')] class extends Component {
         }
 
         try {
-            DB::transaction(function () use ($user, $plan, $total) {
-                $user->withdraw($total, WalletType::General, "Education Pin: {$plan->brand->name} {$plan->type} x{$this->quantity}");
-
-                TopupTransaction::create([
+            $transaction = DB::transaction(function () use ($user, $plan, $total) {
+                $topup = TopupTransaction::create([
                     'user_id' => $user->id,
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
@@ -85,12 +86,18 @@ new #[Title('Education Pins')] class extends Component {
                     'status' => 'pending',
                     'reference' => 'EDU-'.strtoupper(Str::random(10)),
                 ]);
+
+                $user->withdraw($total, WalletType::General, "Education Pin: {$plan->brand->name} {$plan->type} x{$this->quantity}", $topup);
+
+                return $topup;
             });
 
-            Flux::toast('Purchase initiated successfully.');
+            $purchaseAction->handle($transaction);
+
+            Flux::toast('Education PIN purchase initiated successfully.');
             $this->reset(['plan_id', 'quantity', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('plan_id', 'An error occurred during the transaction.');
+            $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
         }
     }
 }; ?>
@@ -108,7 +115,7 @@ new #[Title('Education Pins')] class extends Component {
                     @foreach($this->brands as $brand)
                         <label class="relative cursor-pointer group">
                             <input type="radio" wire:model.live="brand_id" value="{{ $brand->id }}" class="sr-only peer">
-                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                 @if($brand->hasMedia('logo'))
                                     <img src="{{ $brand->getFirstMediaUrl('logo') }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
                                 @else
@@ -132,7 +139,7 @@ new #[Title('Education Pins')] class extends Component {
                         @foreach($this->plans as $plan)
                             <label class="relative cursor-pointer">
                                 <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
-                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-lg">{{ $plan->type }}</span>
                                         <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>

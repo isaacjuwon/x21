@@ -10,8 +10,8 @@ enum KycType: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::Nin => 'NIN (Simple Verification)',
-            self::Bvn => 'BVN (Advanced Verification)',
+            self::Nin => 'NIN Verification',
+            self::Bvn => 'BVN Verification',
         };
     }
 }

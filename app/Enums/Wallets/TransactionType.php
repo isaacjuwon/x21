@@ -38,4 +38,32 @@ enum TransactionType: string implements HasColor, HasIcon, HasLabel
             self::Hold => 'heroicon-o-lock-closed',
         };
     }
+
+    public function isWithdrawal(): bool
+    {
+        return $this === self::Withdrawal;
+    }
+
+    public function isDeposit(): bool
+    {
+        return $this === self::Deposit;
+    }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Deposit => 'green',
+            self::Withdrawal => 'red',
+            self::Hold => 'yellow',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Deposit => 'arrow-down-circle',
+            self::Withdrawal => 'arrow-up-circle',
+            self::Hold => 'lock-closed',
+        };
+    }
 }

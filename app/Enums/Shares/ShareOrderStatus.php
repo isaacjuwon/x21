@@ -38,4 +38,22 @@ enum ShareOrderStatus: string implements HasColor, HasIcon, HasLabel
             self::Rejected => 'heroicon-o-x-circle',
         };
     }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Approved => 'green',
+            self::Rejected => 'red',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Pending => 'clock',
+            self::Approved => 'check-circle',
+            self::Rejected => 'x-circle',
+        };
+    }
 }

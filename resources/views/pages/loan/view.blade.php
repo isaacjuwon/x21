@@ -125,7 +125,7 @@ new #[Title('Loan Details'), Defer] class extends Component {
             <flux:heading size="xl">{{ __('Loan Details') }} #{{ $loan->id }}</flux:heading>
         </div>
 
-        <flux:badge :color="$loan->status->getColor()" :icon="$loan->status->getIcon()" size="md">
+        <flux:badge :color="$loan->status->getFluxColor()" :icon="$loan->status->getFluxIcon()" size="md">
             {{ $loan->status->getLabel() }}
         </flux:badge>
     </div>
@@ -172,7 +172,7 @@ new #[Title('Loan Details'), Defer] class extends Component {
                 @endif
             </flux:card>
 
-            <flux:card class="p-0 overflow-hidden">
+            <flux:card class="p-2 overflow-hidden">
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.column>{{ __('#') }}</flux:column>

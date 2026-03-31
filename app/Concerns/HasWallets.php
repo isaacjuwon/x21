@@ -66,9 +66,9 @@ trait HasWallets
     /**
      * Deposit funds into a wallet.
      */
-    public function deposit(float $amount, WalletType $type, ?string $notes = null): Transaction
+    public function deposit(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
     {
-        return DB::transaction(function () use ($amount, $notes, $type) {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);
             $wallet->increment('balance', $amount);
 
@@ -78,6 +78,8 @@ trait HasWallets
                 'status' => TransactionStatus::Completed,
                 'reference' => 'DEP-'.strtoupper(Str::random(10)),
                 'notes' => $notes,
+                'transactionable_id' => $transactionable?->getKey(),
+                'transactionable_type' => $transactionable?->getMorphClass(),
             ]);
         });
     }
@@ -85,9 +87,9 @@ trait HasWallets
     /**
      * Immediate withdrawal (debit) from a wallet.
      */
-    public function withdraw(float $amount, WalletType $type, ?string $notes = null): Transaction
+    public function withdraw(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
     {
-        return DB::transaction(function () use ($amount, $notes, $type) {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);
 
             if ($wallet->available_balance < $amount) {
@@ -102,6 +104,8 @@ trait HasWallets
                 'status' => TransactionStatus::Completed,
                 'reference' => 'WTH-'.strtoupper(Str::random(10)),
                 'notes' => $notes,
+                'transactionable_id' => $transactionable?->getKey(),
+                'transactionable_type' => $transactionable?->getMorphClass(),
             ]);
         });
     }
@@ -109,9 +113,9 @@ trait HasWallets
     /**
      * Hold funds in a wallet (Pending debit).
      */
-    public function hold(float $amount, WalletType $type, ?string $notes = null): Transaction
+    public function hold(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
     {
-        return DB::transaction(function () use ($amount, $notes, $type) {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);
 
             if ($wallet->available_balance < $amount) {
@@ -126,6 +130,8 @@ trait HasWallets
                 'status' => TransactionStatus::Pending,
                 'reference' => 'HLD-'.strtoupper(Str::random(10)),
                 'notes' => $notes,
+                'transactionable_id' => $transactionable?->getKey(),
+                'transactionable_type' => $transactionable?->getMorphClass(),
             ]);
         });
     }

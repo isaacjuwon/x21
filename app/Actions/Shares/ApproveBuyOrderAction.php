@@ -19,7 +19,8 @@ class ApproveBuyOrderAction
             throw new InvalidShareOrderStateException('Order is not in a pending state.');
         }
 
-        $order->holdTransaction->confirm();
+        // Wallet was already debited on placement — no confirm() needed here.
+        // Just update holdings and listing.
 
         $holding = ShareHolding::firstOrCreate(
             ['user_id' => $order->user_id],

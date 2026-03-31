@@ -4,7 +4,10 @@ use App\Models\Brand;
 use App\Models\ElectricityPlan;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
+use App\Actions\Vtu\PurchaseElectricityAction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -31,7 +34,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
             ->get();
     }
 
-    public function pay()
+    public function pay(PurchaseElectricityAction $purchaseAction)
     {
         $this->validate();
 
@@ -50,10 +53,8 @@ new #[Title('Electricity Bill Payment')] class extends Component {
         }
 
         try {
-            DB::transaction(function () use ($user, $brand, $plan) {
-                $user->withdraw($this->amount, WalletType::General, "Electricity Payment: {$brand->name} {$this->meter_type} ({$this->meter_number})");
-
-                TopupTransaction::create([
+            $transaction = DB::transaction(function () use ($user, $brand, $plan) {
+                $topup = TopupTransaction::create([
                     'user_id' => $user->id,
                     'brand_id' => $brand->id,
                     'plan_id' => $plan->id,
@@ -64,12 +65,18 @@ new #[Title('Electricity Bill Payment')] class extends Component {
                     'status' => 'pending',
                     'reference' => 'ELE-'.strtoupper(Str::random(10)),
                 ]);
+
+                $user->withdraw($this->amount, WalletType::General, "Electricity Payment: {$brand->name} {$this->meter_type} ({$this->meter_number})", $topup);
+
+                return $topup;
             });
+
+            $purchaseAction->handle($transaction);
 
             Flux::toast('Electricity bill payment initiated successfully.');
             $this->reset(['amount', 'meter_number', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('amount', 'An error occurred during the transaction.');
+            $this->addError('amount', 'An error occurred during the transaction: ' . $e->getMessage());
         }
     }
 }; ?>
@@ -87,7 +94,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
                     @foreach($this->brands as $brand)
                         <label class="relative cursor-pointer group">
                             <input type="radio" wire:model.live="brand_id" value="{{ $brand->id }}" class="sr-only peer">
-                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                            <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                 @if($brand->hasMedia('logo'))
                                     <img src="{{ $brand->getFirstMediaUrl('logo') }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
                                 @else

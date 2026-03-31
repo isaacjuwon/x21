@@ -2,22 +2,25 @@
 
 namespace App\Providers;
 
-use App\Loans\LoanEligibilityChecker;
-use App\Loans\Specifications\UserDurationSpecification;
+use App\Events\Wallets\TransactionFailed;
+use App\Integrations\Dojah\DojahConnector;
+use App\Integrations\Epins\EpinsConnector;
+use App\Integrations\Paystack\PaystackConnector;
+use App\Listeners\Wallets\DispatchWalletReversalListener;
+use App\Managers\ApiManager;
+use App\Settings\GeneralSettings;
+use App\Settings\LayoutSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-
-use App\Managers\ApiManager;
-use App\Settings\GeneralSettings;
-use App\Settings\LayoutSettings;
-use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,10 +37,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerConnectors();
+        $this->registerEventListeners();
         $this->configureDefaults();
         $this->configureCurrency();
         $this->configureRateLimiting();
         $this->shareSettings();
+    }
+
+    /**
+     * Register integration connectors.
+     */
+    protected function registerConnectors(): void
+    {
+        PaystackConnector::register($this->app);
+        EpinsConnector::register($this->app);
+        DojahConnector::register($this->app);
+    }
+
+    protected function registerEventListeners(): void
+    {
+        Event::listen(TransactionFailed::class, DispatchWalletReversalListener::class);
     }
 
     /**

@@ -18,7 +18,7 @@ class CablePlanForm
                     ->relationship('brand', 'name')
                     ->required(),
                 TextInput::make('type')
-                    ->required(),
+                    ->nullable(),
                 TextInput::make('api_code')
                     ->required(),
                 TextInput::make('price')

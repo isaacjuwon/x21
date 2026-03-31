@@ -1,0 +1,422 @@
+name: Wallet
+description: 'Wallet balance and overview'
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/wallet
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"type":"general","balance":"5000.00","held_balance":"200.00","available_balance":4800,"updated_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Wallet balance'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/wallet/fund
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      amount:
+        custom: []
+        name: amount
+        description: 'Amount to fund in the smallest currency unit (min: 100)'
+        required: true
+        example: 5000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      amount: 5000
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"authorization_url":"https:\/\/checkout.paystack.com\/abc123","reference":"WFT-XXXXXXXXXX"}}'
+        headers: []
+        description: 'Paystack authorization URL'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"The amount field must be at least 100."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/wallet/fund/verify
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      reference:
+        custom: []
+        name: reference
+        description: 'The Paystack payment reference from the callback URL'
+        required: true
+        example: WFT-XXXXXXXXXX
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      reference: WFT-XXXXXXXXXX
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"WFT-XXXXXXXXXX","notes":"Wallet funding via Paystack","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Verified transaction'
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Not Found"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/wallet/transfer
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      recipient_email:
+        custom: []
+        name: recipient_email
+        description: 'Email address of the recipient'
+        required: true
+        example: recipient@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Amount to transfer (min: 1)'
+        required: true
+        example: 1000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: 'Optional transfer note'
+        required: false
+        example: 'Payment for services'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      recipient_email: recipient@example.com
+      amount: 1000
+      notes: 'Payment for services'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"data":{"id":1,"amount":"1000.00","type":"withdrawal","status":"completed","reference":"WTH-XXXXXXXXXX","notes":"Transfer to recipient@example.com","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Transfer initiated'
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Recipient not found."}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient funds."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/wallet/withdraw
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      amount:
+        custom: []
+        name: amount
+        description: 'Amount to withdraw (min: 1)'
+        required: true
+        example: 2000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: 'Optional withdrawal note'
+        required: false
+        example: 'Monthly withdrawal'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      amount: 2000
+      notes: 'Monthly withdrawal'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"data":{"id":1,"amount":"2000.00","type":"withdrawal","status":"completed","reference":"WTH-XXXXXXXXXX","notes":"Wallet withdrawal","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Withdrawal initiated'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient funds."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/wallet/transactions
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"DEP-XXXXXXXXXX","notes":null,"created_at":"2026-01-01T00:00:00.000000Z"}],"links":{"first":"...","last":"...","prev":null,"next":null},"meta":{"current_page":1,"per_page":15,"total":1}}'
+        headers: []
+        description: 'Paginated transactions'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/wallet/transactions/{id}'
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the transaction.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"DEP-XXXXXXXXXX","notes":null,"created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Not Found"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

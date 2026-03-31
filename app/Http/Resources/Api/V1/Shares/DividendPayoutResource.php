@@ -13,10 +13,13 @@ class DividendPayoutResource extends JsonResource
             'id' => $this->id,
             'amount' => $this->amount,
             'created_at' => $this->created_at,
-            'dividend' => [
+            'dividend' => $this->whenLoaded('dividend', fn () => [
                 'total_amount' => $this->dividend->total_amount,
                 'declared_at' => $this->dividend->declared_at,
-            ],
+            ], fn () => $this->dividend_id ? [
+                'total_amount' => $this->dividend?->total_amount,
+                'declared_at' => $this->dividend?->declared_at,
+            ] : null),
         ];
     }
 }

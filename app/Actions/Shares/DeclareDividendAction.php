@@ -6,13 +6,17 @@ use App\Enums\Shares\DividendStatus;
 use App\Events\Shares\DividendDeclared;
 use App\Jobs\ProcessDividendPayoutsJob;
 use App\Models\Dividend;
+use App\Settings\ShareSettings;
 
 class DeclareDividendAction
 {
-    public function handle(float $amount): Dividend
+    public function handle(float $percentage): Dividend
     {
+        $settings = app(ShareSettings::class);
+
         $dividend = Dividend::create([
-            'total_amount' => $amount,
+            'percentage' => $percentage,
+            'share_price' => $settings->price_per_share,
             'status' => DividendStatus::Pending,
             'declared_at' => now(),
         ]);
