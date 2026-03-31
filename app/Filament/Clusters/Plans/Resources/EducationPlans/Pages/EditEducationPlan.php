@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Plans\Resources\EducationPlans\Pages;
 
 use App\Filament\Clusters\Plans\Resources\EducationPlans\EducationPlanResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditEducationPlan extends EditRecord
@@ -12,7 +13,7 @@ class EditEducationPlan extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

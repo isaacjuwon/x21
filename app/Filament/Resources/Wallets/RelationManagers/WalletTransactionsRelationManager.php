@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\Wallets\RelationManagers;
 
-use App\Models\Transaction;
-use App\Enums\Wallets\TransactionType;
 use App\Enums\Wallets\TransactionStatus;
+use App\Enums\Wallets\TransactionType;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Support\Number;
 
 class WalletTransactionsRelationManager extends RelationManager
@@ -35,7 +34,7 @@ class WalletTransactionsRelationManager extends RelationManager
 
                 TextColumn::make('amount')
                     ->label('Amount')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('status')

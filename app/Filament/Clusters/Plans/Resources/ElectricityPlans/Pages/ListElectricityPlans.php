@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Plans\Resources\ElectricityPlans\Pages;
 
 use App\Filament\Clusters\Plans\Resources\ElectricityPlans\ElectricityPlanResource;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListElectricityPlans extends ListRecords
@@ -12,7 +13,7 @@ class ListElectricityPlans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

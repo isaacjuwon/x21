@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Plans\Resources\EducationPlans\Pages;
 
 use App\Filament\Clusters\Plans\Resources\EducationPlans\EducationPlanResource;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListEducationPlans extends ListRecords
@@ -12,7 +13,7 @@ class ListEducationPlans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

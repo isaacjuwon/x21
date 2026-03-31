@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\Shares\ShareOrderStatus;
 use App\Models\ShareOrder;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -39,7 +38,7 @@ class RecentShareOrders extends BaseWidget
 
                 TextColumn::make('total_amount')
                     ->label('Total')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('status')

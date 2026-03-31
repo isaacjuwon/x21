@@ -27,11 +27,11 @@ class LoanInfolist
                     Grid::make(3)->schema([
                         TextEntry::make('principal_amount')
                             ->label('Principal')
-                            ->money(fn() => Number::defaultCurrency()),
+                            ->money(fn () => Number::defaultCurrency()),
 
                         TextEntry::make('outstanding_balance')
                             ->label('Outstanding Balance')
-                            ->money(fn() => Number::defaultCurrency()),
+                            ->money(fn () => Number::defaultCurrency()),
 
                         TextEntry::make('interest_rate')
                             ->label('Interest Rate')

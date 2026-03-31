@@ -14,9 +14,9 @@ class WalletResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wallet';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Financial Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Finance';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 10;
 
     public static function getRelations(): array
     {

@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Plans\Resources\AirtimePlans\Pages;
 
 use App\Filament\Clusters\Plans\Resources\AirtimePlans\AirtimePlanResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAirtimePlan extends EditRecord
@@ -12,7 +13,7 @@ class EditAirtimePlan extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -30,8 +30,8 @@ class ShareOrderInfolist
                     ]),
 
                     Grid::make(3)->schema([
-                        TextEntry::make('price_per_share')->label('Price / Share')->money(fn() => Number::defaultCurrency()),
-                        TextEntry::make('total_amount')->label('Total Amount')->money(fn() => Number::defaultCurrency()),
+                        TextEntry::make('price_per_share')->label('Price / Share')->money(fn () => Number::defaultCurrency()),
+                        TextEntry::make('total_amount')->label('Total Amount')->money(fn () => Number::defaultCurrency()),
                         TextEntry::make('created_at')->label('Placed At')->dateTime(),
                     ]),
                 ]),

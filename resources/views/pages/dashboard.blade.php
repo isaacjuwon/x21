@@ -141,7 +141,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
                 <flux:callout.heading>Your wallet is empty</flux:callout.heading>
                 <flux:callout.text>Add funds to your wallet to start using our services like airtime, data, and bill payments.</flux:callout.text>
                 <x-slot name="actions">
-                    <flux:button size="sm" href="{{ route('wallet.transfer') }}" wire:navigate>Add Funds</flux:button>
+                    <flux:button size="sm" href="{{ route('wallet.fund') }}" wire:navigate>Add Funds</flux:button>
                 </x-slot>
             </flux:callout>
         @endif
@@ -185,14 +185,14 @@ new #[Title('Dashboard'), Defer] class extends Component {
                             @foreach($this->recentTransactions as $transaction)
                                 <flux:table.row :key="$transaction->id">
                                     <flux:table.cell class="flex items-center gap-2">
-                                        <flux:icon :name="$transaction->type->getIcon()" class="size-4 text-zinc-400" />
+                                        <flux:icon :name="$transaction->type->getFluxIcon()" class="size-4 text-zinc-400" />
                                         <span>{{ $transaction->type->getLabel() }}</span>
                                     </flux:table.cell>
                                     <flux:table.cell align="end" variant="strong" class="{{ $transaction->amount > 0 ? 'text-green-600' : 'text-red-600' }}">
                                         {{ $transaction->amount > 0 ? '+' : '' }}{{ Number::currency($transaction->amount) }}
                                     </flux:table.cell>
                                     <flux:table.cell>
-                                        <flux:badge :color="$transaction->status->getColor()" size="sm" inset="top bottom">
+                                        <flux:badge :color="$transaction->status->getFluxColor()" size="sm" inset="top bottom">
                                             {{ $transaction->status->getLabel() }}
                                         </flux:badge>
                                     </flux:table.cell>

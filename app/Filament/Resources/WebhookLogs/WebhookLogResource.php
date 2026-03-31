@@ -14,7 +14,6 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -24,7 +23,9 @@ class WebhookLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
+
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {
@@ -40,7 +41,7 @@ class WebhookLogResource extends Resource
                         TextInput::make('error_message')
                             ->columnSpanFull(),
                     ])->columns(2),
-                
+
                 Section::make('Payload & Headers')
                     ->schema([
                         KeyValue::make('headers'),

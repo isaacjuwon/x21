@@ -28,7 +28,7 @@ class DataPlansTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
                 TextColumn::make('duration')
                     ->sortable(),

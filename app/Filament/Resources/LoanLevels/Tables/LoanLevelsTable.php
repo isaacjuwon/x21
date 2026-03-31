@@ -23,12 +23,12 @@ class LoanLevelsTable
 
                 TextColumn::make('min_amount')
                     ->label('Min Amount')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('max_amount')
                     ->label('Max Amount')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('interest_rate')

@@ -28,7 +28,7 @@ class CablePlansTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
                 TextColumn::make('api_code')
                     ->searchable(),

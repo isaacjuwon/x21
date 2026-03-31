@@ -44,12 +44,12 @@ class ShareOrdersTable
 
                 TextColumn::make('price_per_share')
                     ->label('Price/Share')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('total_amount')
                     ->label('Total')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('status')

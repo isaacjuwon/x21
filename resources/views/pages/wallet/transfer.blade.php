@@ -24,6 +24,7 @@ new #[Title('Transfer Funds'), Defer] class extends Component {
     public function users()
     {
         return User::where('id', '!=', Auth::id())
+            ->whereDoesntHave('roles', fn ($q) => $q->whereIn('name', ['super_admin', 'admin']))
             ->orderBy('name')
             ->get();
     }

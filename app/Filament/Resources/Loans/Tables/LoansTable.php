@@ -35,12 +35,12 @@ class LoansTable
 
                 TextColumn::make('principal_amount')
                     ->label('Principal')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('outstanding_balance')
                     ->label('Balance')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('interest_rate')

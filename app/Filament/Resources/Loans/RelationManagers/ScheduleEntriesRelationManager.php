@@ -37,24 +37,24 @@ class ScheduleEntriesRelationManager extends RelationManager
 
                 TextColumn::make('instalment_amount')
                     ->label('Instalment')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('principal_component')
                     ->label('Principal')
-                    ->money(fn() => Number::defaultCurrency()),
+                    ->money(fn () => Number::defaultCurrency()),
 
                 TextColumn::make('interest_component')
                     ->label('Interest')
-                    ->money(fn() => Number::defaultCurrency()),
+                    ->money(fn () => Number::defaultCurrency()),
 
                 TextColumn::make('outstanding_balance')
                     ->label('Balance After')
-                    ->money(fn() => Number::defaultCurrency()),
+                    ->money(fn () => Number::defaultCurrency()),
 
                 TextColumn::make('remaining_amount')
                     ->label('Remaining')
-                    ->money(fn() => Number::defaultCurrency()),
+                    ->money(fn () => Number::defaultCurrency()),
 
                 TextColumn::make('status')
                     ->label('Status')

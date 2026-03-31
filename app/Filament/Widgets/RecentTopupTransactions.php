@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\Topups\TopupTransactionStatus;
 use App\Models\TopupTransaction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -39,7 +38,7 @@ class RecentTopupTransactions extends BaseWidget
 
                 TextColumn::make('amount')
                     ->label('Amount')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('status')

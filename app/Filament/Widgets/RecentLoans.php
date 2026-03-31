@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\Loans\LoanStatus;
 use App\Models\Loan;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -29,12 +28,12 @@ class RecentLoans extends BaseWidget
 
                 TextColumn::make('principal_amount')
                     ->label('Principal')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('outstanding_balance')
                     ->label('Balance')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('interest_rate')

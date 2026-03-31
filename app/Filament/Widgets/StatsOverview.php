@@ -4,10 +4,10 @@ namespace App\Filament\Widgets;
 
 use App\Enums\Loans\LoanStatus;
 use App\Enums\Shares\ShareOrderStatus;
+use App\Models\Dividend;
 use App\Models\Loan;
 use App\Models\ShareOrder;
 use App\Models\User;
-use App\Models\Dividend;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;

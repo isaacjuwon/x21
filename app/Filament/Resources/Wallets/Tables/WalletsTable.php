@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\Wallets\Tables;
 
-use App\Models\Wallet;
 use App\Enums\Wallets\WalletType;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Support\Number;
 
 class WalletsTable
@@ -33,17 +32,17 @@ class WalletsTable
 
                 TextColumn::make('balance')
                     ->label('Total Balance')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('held_balance')
                     ->label('Held')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->toggleable(),
 
                 TextColumn::make('available_balance')
                     ->label('Available')
-                    ->money(fn() => Number::defaultCurrency())
+                    ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
 
                 TextColumn::make('updated_at')

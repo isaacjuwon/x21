@@ -19,9 +19,9 @@ class KycResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::Identification;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Users & Access';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

@@ -4,13 +4,12 @@ namespace App\Filament\Resources\Wallets\Pages;
 
 use App\Filament\Resources\Wallets\WalletResource;
 use App\Models\Wallet;
-use App\Enums\Wallets\WalletType;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -45,7 +44,7 @@ class ViewWallet extends ViewRecord
                     Notification::make()
                         ->success()
                         ->title('Deposit successful')
-                        ->body(Number::currency($data['amount'], Number::defaultCurrency()) . " deposited into {$record->user->name}'s {$record->type->getLabel()} wallet.")
+                        ->body(Number::currency($data['amount'], Number::defaultCurrency())." deposited into {$record->user->name}'s {$record->type->getLabel()} wallet.")
                         ->send();
                 }),
 
@@ -72,7 +71,7 @@ class ViewWallet extends ViewRecord
                         Notification::make()
                             ->success()
                             ->title('Withdrawal successful')
-                            ->body(Number::currency($data['amount'], Number::defaultCurrency()) . " withdrawn from {$record->user->name}'s {$record->type->getLabel()} wallet.")
+                            ->body(Number::currency($data['amount'], Number::defaultCurrency())." withdrawn from {$record->user->name}'s {$record->type->getLabel()} wallet.")
                             ->send();
                     } catch (\Exception $e) {
                         Notification::make()
@@ -100,15 +99,15 @@ class ViewWallet extends ViewRecord
                         Grid::make(3)->schema([
                             TextEntry::make('balance')
                                 ->label('Total Balance')
-                                ->money(fn() => Number::defaultCurrency())
+                                ->money(fn () => Number::defaultCurrency())
                                 ->weight('bold'),
                             TextEntry::make('held_balance')
                                 ->label('Held Funds')
-                                ->money(fn() => Number::defaultCurrency())
+                                ->money(fn () => Number::defaultCurrency())
                                 ->color('warning'),
                             TextEntry::make('available_balance')
                                 ->label('Available to Use')
-                                ->money(fn() => Number::defaultCurrency())
+                                ->money(fn () => Number::defaultCurrency())
                                 ->color('success')
                                 ->weight('bold'),
                         ]),
