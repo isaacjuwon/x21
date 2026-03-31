@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Kycs;
 use App\Filament\Resources\Kycs\Pages\CreateKyc;
 use App\Filament\Resources\Kycs\Pages\EditKyc;
 use App\Filament\Resources\Kycs\Pages\ListKycs;
+use App\Filament\Resources\Kycs\Pages\ViewKyc;
 use App\Filament\Resources\Kycs\Schemas\KycForm;
 use App\Filament\Resources\Kycs\Tables\KycsTable;
 use App\Models\Kyc;
@@ -43,6 +44,7 @@ class KycResource extends Resource
         return [
             'index' => ListKycs::route('/'),
             'create' => CreateKyc::route('/create'),
+            'view' => ViewKyc::route('/{record}'),
             'edit' => EditKyc::route('/{record}/edit'),
         ];
     }

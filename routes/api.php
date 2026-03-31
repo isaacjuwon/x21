@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Support\FaqController;
 use App\Http\Controllers\Api\V1\Tickets\TicketController;
 use App\Http\Controllers\Api\V1\Tickets\TicketReplyController;
+use App\Http\Controllers\Api\V1\Kyc\KycController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
@@ -113,4 +114,22 @@ Route::middleware(['auth:sanctum', RequestId::class])
             Route::post('/electricity', ElectricityController::class)->name('electricity');
             Route::post('/cable-tv', CableTvController::class)->name('cable-tv');
         });
+
+        // --- KYC ---
+        Route::prefix('kyc')->name('kyc.')->group(function () {
+            Route::get('/', [KycController::class, 'index'])->name('index');
+            Route::post('/automatic', [KycController::class, 'automatic'])->name('automatic');
+            Route::post('/manual', [KycController::class, 'manual'])->name('manual');
+        });
+
+        // --- Tickets ---
+        Route::prefix('tickets')->name('tickets.')->group(function () {
+            Route::get('/', [TicketController::class, 'index'])->name('index');
+            Route::post('/', [TicketController::class, 'store'])->name('store');
+            Route::get('/{ticket}', [TicketController::class, 'show'])->name('show');
+            Route::post('/{ticket}/replies', [TicketReplyController::class, 'store'])->name('replies.store');
+        });
+
+        // --- FAQs (public within auth) ---
+        Route::get('faqs', [FaqController::class, 'index'])->name('faqs.index');
     });

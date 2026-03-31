@@ -8,6 +8,7 @@ use App\Models\Kyc;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
@@ -92,6 +93,7 @@ class KycsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
+            ->recordUrl(fn (Kyc $record) => \App\Filament\Resources\Kycs\KycResource::getUrl('view', ['record' => $record]))
             ->defaultSort('created_at', 'desc');
     }
 }

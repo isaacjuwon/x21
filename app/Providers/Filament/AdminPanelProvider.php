@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName(fn () => app(\App\Settings\GeneralSettings::class)->site_name ?? config('app.name'))
             ->colors([
                 'primary' => Color::Violet,
             ])

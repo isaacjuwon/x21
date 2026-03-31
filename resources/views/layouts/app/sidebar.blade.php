@@ -46,6 +46,9 @@
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Account')" class="grid">
+                    <flux:sidebar.item icon="identification" :href="route('kyc.index')" :current="request()->routeIs('kyc.*')" wire:navigate>
+                        {{ __('KYC Verification') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="user" :href="route('profile.edit')" :current="request()->routeIs('profile.*')" wire:navigate>
                         {{ __('My Profile') }}
                     </flux:sidebar.item>
