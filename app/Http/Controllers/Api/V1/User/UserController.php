@@ -22,8 +22,19 @@ class UserController
     #[ResponseFromApiResource(UserResource::class, \App\Models\User::class)]
     public function update(UpdateProfileRequest $request): UserResource
     {
-        $request->user()->update($request->validated());
+        $user = $request->user();
 
-        return new UserResource($request->user()->fresh());
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $validated = $request->safe()->except('avatar');
+        $user->fill($validated);
+        $user->save();
+
+        return new UserResource($user->fresh()->load('loanLevel', 'shareHolding'));
     }
 }

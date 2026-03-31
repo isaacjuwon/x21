@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Support\FaqController;
+use App\Http\Controllers\Api\V1\Tickets\TicketController;
+use App\Http\Controllers\Api\V1\Tickets\TicketReplyController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
