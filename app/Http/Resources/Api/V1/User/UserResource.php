@@ -15,7 +15,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone_number' => $this->phone_number,
             'avatar_url' => $this->avatar ? \Illuminate\Support\Facades\Storage::url($this->avatar) : null,
-            'is_admin' => $this->is_admin,
+            'roles' => $this->whenLoaded('roles', fn () => $this->roles->pluck('name')),
             'loan_level' => $this->whenLoaded('loanLevel', fn () => [
                 'id' => $this->loanLevel->id,
                 'name' => $this->loanLevel->name,

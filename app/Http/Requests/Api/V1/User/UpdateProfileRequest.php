@@ -21,7 +21,7 @@ class UpdateProfileRequest extends FormRequest
                 'string',
                 'min:10',
                 'max:15',
-                Rule::unique('users', 'phone_number')->ignore($this->user()->id),
+                Rule::unique('users', 'phone_number')->ignore($this->user()?->id),
             ],
             'avatar' => ['nullable', 'image', 'max:2048'],
         ];

@@ -16,7 +16,7 @@ class UserController
     #[ResponseFromApiResource(UserResource::class, \App\Models\User::class)]
     public function show(Request $request): UserResource
     {
-        return new UserResource($request->user()->load('loanLevel', 'shareHolding'));
+        return new UserResource($request->user()->load('loanLevel', 'shareHolding', 'roles'));
     }
 
     #[ResponseFromApiResource(UserResource::class, \App\Models\User::class)]
@@ -35,6 +35,6 @@ class UserController
         $user->fill($validated);
         $user->save();
 
-        return new UserResource($user->fresh()->load('loanLevel', 'shareHolding'));
+        return new UserResource($user->fresh()->load('loanLevel', 'shareHolding', 'roles'));
     }
 }
