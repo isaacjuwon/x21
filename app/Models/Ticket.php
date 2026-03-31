@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Enums\Tickets\TicketPriority;
 use App\Enums\Tickets\TicketStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'subject',
