@@ -6,8 +6,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsersTable
 {
@@ -25,20 +26,22 @@ class UsersTable
                     ->searchable()
                     ->sortable(),
 
-                IconColumn::make('is_admin')
-                    ->label('Admin')
-                    ->boolean()
-                    ->sortable(),
+                TextColumn::make('roles.name')
+                    ->label('Role')
+                    ->badge()
+                    ->separator(', ')
+                    ->color('violet')
+                    ->searchable(),
 
                 TextColumn::make('loans_count')
                     ->label('Loans')
                     ->counts('loans')
                     ->sortable(),
 
-                TextColumn::make('shareOrders_count')
-                    ->label('Share Orders')
-                    ->counts('shareOrders')
-                    ->sortable(),
+                IconColumn::make('is_kyc_verified')
+                    ->label('KYC Verified')
+                    ->state(fn ($record) => $record->isKycVerified())
+                    ->boolean(),
 
                 TextColumn::make('created_at')
                     ->label('Joined')
@@ -47,8 +50,13 @@ class UsersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TernaryFilter::make('is_admin')
-                    ->label('Administrators'),
+                Filter::make('has_role')
+                    ->label('Has Role')
+                    ->query(fn (Builder $query) => $query->whereHas('roles')),
+
+                Filter::make('no_role')
+                    ->label('No Role')
+                    ->query(fn (Builder $query) => $query->whereDoesntHave('roles')),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -16,9 +16,21 @@
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="wallet" :href="route('wallet.index')" :current="request()->routeIs('wallet.*')" wire:navigate>
-                        {{ __('Wallet') }}
-                    </flux:sidebar.item>
+                    <flux:sidebar.group expandable heading="{{ __('Services') }}" icon="layout-grid" :current="request()->routeIs('services.*')">
+                        <flux:sidebar.item :href="route('services.airtime')" :current="request()->routeIs('services.airtime')" wire:navigate>{{ __('Airtime') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('services.data')" :current="request()->routeIs('services.data')" wire:navigate>{{ __('Data') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('services.cable')" :current="request()->routeIs('services.cable')" wire:navigate>{{ __('Cable TV') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('services.electricity')" :current="request()->routeIs('services.electricity')" wire:navigate>{{ __('Electricity') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('services.education')" :current="request()->routeIs('services.education')" wire:navigate>{{ __('Education') }}</flux:sidebar.item>
+                    </flux:sidebar.group>
+
+                    <flux:sidebar.group expandable heading="{{ __('Wallet') }}" icon="wallet" :current="request()->routeIs('wallet.*')">
+                        <flux:sidebar.item :href="route('wallet.index')" :current="request()->routeIs('wallet.index')" wire:navigate>{{ __('Overview') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('wallet.transactions')" :current="request()->routeIs('wallet.transactions')" wire:navigate>{{ __('Transactions') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('wallet.fund')" :current="request()->routeIs('wallet.fund')" wire:navigate>{{ __('Fund Wallet') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('wallet.transfer')" :current="request()->routeIs('wallet.transfer')" wire:navigate>{{ __('Transfer') }}</flux:sidebar.item>
+                        <flux:sidebar.item :href="route('wallet.withdraw')" :current="request()->routeIs('wallet.withdraw')" wire:navigate>{{ __('Withdraw') }}</flux:sidebar.item>
+                    </flux:sidebar.group>
 
                     <flux:sidebar.item icon="banknotes" :href="route('loan.index')" :current="request()->routeIs('loan.*')" wire:navigate>
                         {{ __('Loans') }}
@@ -28,13 +40,9 @@
                         {{ __('Shares') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.group expandable heading="{{ __('Services') }}" icon="layout-grid" :current="request()->routeIs('services.*')">
-                        <flux:sidebar.item :href="route('services.airtime')" :current="request()->routeIs('services.airtime')" wire:navigate>{{ __('Airtime') }}</flux:sidebar.item>
-                        <flux:sidebar.item :href="route('services.data')" :current="request()->routeIs('services.data')" wire:navigate>{{ __('Data') }}</flux:sidebar.item>
-                        <flux:sidebar.item :href="route('services.cable')" :current="request()->routeIs('services.cable')" wire:navigate>{{ __('Cable TV') }}</flux:sidebar.item>
-                        <flux:sidebar.item :href="route('services.electricity')" :current="request()->routeIs('services.electricity')" wire:navigate>{{ __('Electricity') }}</flux:sidebar.item>
-                        <flux:sidebar.item :href="route('services.education')" :current="request()->routeIs('services.education')" wire:navigate>{{ __('Education') }}</flux:sidebar.item>
-                    </flux:sidebar.group>
+                    <flux:sidebar.item icon="ticket" :href="route('tickets.index')" :current="request()->routeIs('tickets.*')" wire:navigate>
+                        {{ __('Support') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Account')" class="grid">
@@ -61,6 +69,7 @@
             <flux:dropdown position="top" align="end">
                 <flux:profile
                     :initials="auth()->user()->initials()"
+                    :avatar="auth()->user()->avatar ? \Illuminate\Support\Facades\Storage::url(auth()->user()->avatar) : null"
                     icon-trailing="chevron-down"
                 />
 
@@ -69,6 +78,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <flux:avatar
+                                    :src="auth()->user()->avatar ? \Illuminate\Support\Facades\Storage::url(auth()->user()->avatar) : null"
                                     :name="auth()->user()->name"
                                     :initials="auth()->user()->initials()"
                                 />

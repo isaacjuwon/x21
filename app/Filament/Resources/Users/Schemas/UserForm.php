@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Users\Schemas;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -32,6 +31,12 @@ class UserForm
                     ]),
 
                     Grid::make(2)->schema([
+                        TextInput::make('phone_number')
+                            ->label('Phone Number')
+                            ->tel()
+                            ->unique(ignoreRecord: true)
+                            ->nullable(),
+
                         TextInput::make('password')
                             ->label('Password')
                             ->password()
@@ -39,10 +44,6 @@ class UserForm
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $operation) => $operation === 'create')
                             ->visible(fn () => auth()->user()?->hasRole('super_admin')),
-
-                        Toggle::make('is_admin')
-                            ->label('Administrator')
-                            ->inline(false),
                     ]),
                 ]),
 

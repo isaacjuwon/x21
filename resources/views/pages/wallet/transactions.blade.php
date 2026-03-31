@@ -131,7 +131,7 @@ new #[Title('Transactions'), Defer] class extends Component {
         @endif
     </div>
 
-    <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800">
+    <flux:card class="p-2 overflow-hidden border-zinc-200 dark:border-zinc-800">
         <flux:table :paginate="$this->transactions">
             <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
                 <flux:table.column

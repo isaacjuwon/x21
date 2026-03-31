@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Events\Tickets;
+
+use App\Enums\Tickets\TicketStatus;
+use App\Models\Ticket;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class TicketStatusChanged
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public function __construct(
+        public Ticket $ticket,
+        public TicketStatus $previousStatus,
+    ) {}
+}

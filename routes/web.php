@@ -13,3 +13,4 @@ require __DIR__.'/wallet.php';
 require __DIR__.'/loan.php';
 require __DIR__.'/shares.php';
 require __DIR__.'/services.php';
+require __DIR__.'/tickets.php';
