@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Kyc\KycController;
 use App\Http\Controllers\Api\V1\Loans\LoanApprovalController;
 use App\Http\Controllers\Api\V1\Loans\LoanController;
@@ -48,6 +50,8 @@ Route::prefix('v1/auth')->name('v1.auth.')->group(function () {
     Route::post('/login', LoginController::class)->name('login')->middleware('throttle:10,1');
     Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth:sanctum');
     Route::get('/me', MeController::class)->name('me')->middleware('auth:sanctum');
+    Route::post('/forgot-password', ForgotPasswordController::class)->name('password.forgot')->middleware('throttle:5,1');
+    Route::post('/reset-password', ResetPasswordController::class)->name('password.reset')->middleware('throttle:5,1');
 });
 
 // V1 API
