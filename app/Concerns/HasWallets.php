@@ -6,9 +6,11 @@ use App\Enums\Wallets\TransactionStatus;
 use App\Enums\Wallets\TransactionType;
 use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
+use App\Exceptions\Wallets\InvalidWalletTypeException;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +55,54 @@ trait HasWallets
     }
 
     /**
+     * Get the total balance across all wallet types.
+     */
+    public function getWalletBalanceAttribute(): float
+    {
+        $totalBalance = 0.0;
+
+        foreach (WalletType::cases() as $walletType) {
+            $totalBalance += $this->getWallet($walletType)->balance;
+        }
+
+        return $totalBalance;
+    }
+
+    /**
+     * Check if the user has sufficient total balance.
+     */
+    public function hasSufficientBalance(float $value): bool
+    {
+        return $this->walletBalance >= $value;
+    }
+
+    /**
+     * Get the balance for a specific wallet type.
+     *
+     * @throws InvalidWalletTypeException
+     */
+    public function getWalletBalanceByType(string|WalletType $walletType): float
+    {
+        $walletEnumType = $walletType instanceof WalletType
+            ? $walletType
+            : WalletType::tryFrom($walletType);
+
+        if (! $walletEnumType) {
+            throw new InvalidWalletTypeException("Invalid wallet type '{$walletType}'.");
+        }
+
+        return (float) $this->getWallet($walletEnumType)->balance;
+    }
+
+    /**
+     * Get the total wallet balance (alias for the attribute).
+     */
+    public function getWalletBalance(): float
+    {
+        return $this->walletBalance;
+    }
+
+    /**
      * Get or create a specific wallet.
      */
     public function getWallet(WalletType $type): Wallet
@@ -66,7 +116,7 @@ trait HasWallets
     /**
      * Deposit funds into a wallet.
      */
-    public function deposit(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
+    public function deposit(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
     {
         return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);
@@ -87,7 +137,7 @@ trait HasWallets
     /**
      * Immediate withdrawal (debit) from a wallet.
      */
-    public function withdraw(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
+    public function withdraw(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
     {
         return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);
@@ -113,7 +163,7 @@ trait HasWallets
     /**
      * Hold funds in a wallet (Pending debit).
      */
-    public function hold(float $amount, WalletType $type, ?string $notes = null, ?\Illuminate\Database\Eloquent\Model $transactionable = null): Transaction
+    public function hold(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
     {
         return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
             $wallet = $this->getWallet($type);

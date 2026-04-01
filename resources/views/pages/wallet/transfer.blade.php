@@ -5,12 +5,11 @@ use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-new #[Title('Transfer Funds'), Defer] class extends Component {
+new #[Title('Transfer Funds')] class extends Component {
     #[Url]
     public ?int $recipient_id = null;
 

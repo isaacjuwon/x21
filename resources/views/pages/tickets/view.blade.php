@@ -5,12 +5,11 @@ use App\Enums\Tickets\TicketStatus;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-new #[Title('Ticket Details'), Defer] class extends Component {
+new #[Title('Ticket Details')] class extends Component {
     public Ticket $ticket;
 
     #[Validate('required|string|min:5')]

@@ -1,9 +1,9 @@
 <?php
 
+use App\Enums\Loans\LoanStatus;
 use App\Models\Loan;
 use App\Models\ShareHolding;
 use App\Models\Transaction;
-use App\Models\Wallet;
 use App\Settings\ShareSettings;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -13,18 +13,18 @@ use Livewire\Component;
 
 new #[Title('Dashboard'), Defer] class extends Component {
     /**
-     * Get the user's wallet.
+     * Get the user's wallet balance.
      */
     #[Computed]
-    public function wallet(): ?Wallet
+    public function walletBalance(): float
     {
-        return Auth::user()->wallet;
+        return Auth::user()->getWalletBalance();
     }
 
     /**
      * Get the user's share holdings.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function shareHolding(): ?ShareHolding
     {
         return Auth::user()->shareHolding;
@@ -33,16 +33,18 @@ new #[Title('Dashboard'), Defer] class extends Component {
     /**
      * Get the user's active loans.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function activeLoans()
     {
-        return Auth::user()->loans()->where('status', 'active')->get();
+        return Auth::user()->loans()
+            ->whereIn('status', [LoanStatus::Active, LoanStatus::Disbursed])
+            ->get();
     }
 
     /**
      * Get the total loan balance.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function loanBalance(): float
     {
         return $this->activeLoans->sum('outstanding_balance');
@@ -69,7 +71,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
     /**
      * Get recent transactions.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function recentTransactions()
     {
         return Auth::user()->transactions()->latest()->take(5)->get();
@@ -84,7 +86,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
         return [
             [
                 'label' => 'Total Balance',
-                'value' => Number::currency($this->wallet?->balance ?? 0),
+                'value' => Number::currency($this->walletBalance),
                 'description' => 'Available in your wallet',
                 'icon' => 'wallet',
                 'color' => 'primary',
@@ -136,7 +138,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
             </div>
         </div>
 
-        @if(!$this->wallet || $this->wallet->balance == 0)
+        @if($this->walletBalance == 0)
             <flux:callout icon="information-circle" color="blue" variant="secondary">
                 <flux:callout.heading>Your wallet is empty</flux:callout.heading>
                 <flux:callout.text>Add funds to your wallet to start using our services like airtime, data, and bill payments.</flux:callout.text>
@@ -221,7 +223,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
                     <flux:icon.wallet class="size-5 text-primary-color" />
                 </div>
                 <div>
-                    <div class="text-3xl font-bold tracking-tight text-primary-color">{{ Number::currency($this->wallet?->balance ?? 0) }}</div>
+                    <div class="text-3xl font-bold tracking-tight text-primary-color">{{ Number::currency($this->walletBalance) }}</div>
                     <flux:text class="text-xs text-primary-color/60">Available Balance</flux:text>
                 </div>
                 <div class="flex gap-2 pt-2">

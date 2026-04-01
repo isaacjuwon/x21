@@ -18,7 +18,6 @@ class BrandForm
                     ->collection('logo')
                     ->image()
                     ->avatar()
-                    ->circle()
                     ->columnSpanFull(),
                 TextInput::make('name')
                     ->required(),

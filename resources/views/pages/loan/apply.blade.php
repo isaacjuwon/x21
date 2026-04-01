@@ -8,11 +8,10 @@ use App\Models\LoanLevel;
 use App\Settings\LoanSettings;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Apply for a Loan'), Defer] class extends Component {
+new #[Title('Apply for a Loan')] class extends Component {
     public ?float $amount = null;
 
     public ?int $term_months = null;
@@ -23,13 +22,13 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
 
     public function mount(LoanSettings $settings): void
     {
-        $this->interest_method = $settings->interest_method->value;
+        $this->interest_method = $settings->interest_method?->value ?? InterestMethod::FlatRate->value;
     }
 
     /**
      * Get the user's current loan level.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function loanLevel(): ?LoanLevel
     {
         return Auth::user()->loanLevel;
@@ -38,7 +37,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the interest rate.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function interestRate(): float
     {
         return $this->loanLevel?->interest_rate ?? app(LoanSettings::class)->default_interest_rate;
@@ -47,7 +46,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the minimum allowed amount.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function minAmount(): float
     {
         return $this->loanLevel?->min_amount ?? app(LoanSettings::class)->min_amount;
@@ -56,7 +55,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the maximum allowed amount.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function maxAmount(): float
     {
         return $this->loanLevel?->max_amount ?? app(LoanSettings::class)->max_amount;
@@ -65,7 +64,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the max term months.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function maxTermMonths(): int
     {
         return $this->loanLevel?->max_term_months ?? 60;
@@ -74,7 +73,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the loan level name.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function loanLevelName(): ?string
     {
         return $this->loanLevel?->name;
@@ -83,7 +82,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the auto-approval status.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function autoApprove(): bool
     {
         return app(LoanSettings::class)->auto_approve;
@@ -92,7 +91,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the share requirement percentage.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function minSharesPercentage(): float
     {
         return app(LoanSettings::class)->min_shares_percentage;
@@ -101,16 +100,17 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Get the current interest method label.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function interestMethodLabel(): string
     {
-        return InterestMethod::from($this->interest_method)->getLabel();
+        return InterestMethod::tryFrom($this->interest_method ?? '')
+            ?->getLabel() ?? InterestMethod::FlatRate->getLabel();
     }
 
     /**
      * Check current eligibility for the requested amount.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function eligibilityStatus(): array
     {
         $checkAction = app(CheckLoanEligibilityAction::class);
@@ -126,7 +126,7 @@ new #[Title('Apply for a Loan'), Defer] class extends Component {
     /**
      * Generate a preview of the loan schedule.
      */
-    #[Computed]
+    #[Computed(cache: false)]
     public function previewSchedule(): array
     {
         if (! $this->amount || ! $this->term_months || $this->amount <= 0 || $this->term_months <= 0) {

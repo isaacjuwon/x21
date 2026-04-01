@@ -10,24 +10,21 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 
-class BulkMail extends Page implements HasForms
+class BulkMail extends Page
 {
     use HasPageShield;
-    use InteractsWithForms;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
 
     protected static string|\UnitEnum|null $navigationGroup = 'System';
 
     protected static ?int $navigationSort = 20;
-
-    protected string $view = 'filament.pages.bulk-mail';
 
     public ?array $data = [];
 
@@ -36,9 +33,9 @@ class BulkMail extends Page implements HasForms
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 TextInput::make('subject')
                     ->required()
@@ -48,45 +45,43 @@ class BulkMail extends Page implements HasForms
                     ->columnSpanFull(),
                 Toggle::make('send_to_all')
                     ->label('Send to all users')
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) => $state ? $set('users', []) : null),
+                    ->live()
+                    ->afterStateUpdated(fn (Set $set, bool $state) => $state ? $set('users', []) : null),
                 Select::make('users')
                     ->label('Select Users')
                     ->multiple()
                     ->searchable()
                     ->options(User::query()->pluck('name', 'id'))
-                    ->hidden(fn (callable $get) => $get('send_to_all'))
-                    ->required(fn (callable $get) => ! $get('send_to_all')),
+                    ->hidden(fn (Get $get): bool => (bool) $get('send_to_all'))
+                    ->required(fn (Get $get): bool => ! $get('send_to_all')),
             ])
             ->statePath('data');
     }
 
-    protected function getFormActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Action::make('send')
                 ->label('Send Bulk Mail')
-                ->submit('send'),
+                ->icon('heroicon-o-paper-airplane')
+                ->action(function (): void {
+                    $data = $this->form->getState();
+
+                    $users = $data['send_to_all']
+                        ? User::all()
+                        : User::whereIn('id', $data['users'])->get();
+
+                    foreach ($users as $user) {
+                        SendBulkMailJob::dispatch($user, $data['subject'], $data['content']);
+                    }
+
+                    Notification::make()
+                        ->title('Bulk mail queued for '.$users->count().' recipient(s).')
+                        ->success()
+                        ->send();
+
+                    $this->form->fill();
+                }),
         ];
-    }
-
-    public function send(): void
-    {
-        $data = $this->form->getState();
-
-        $users = $data['send_to_all']
-            ? User::all()
-            : User::whereIn('id', $data['users'])->get();
-
-        foreach ($users as $user) {
-            SendBulkMailJob::dispatch($user, $data['subject'], $data['content']);
-        }
-
-        Notification::make()
-            ->title('Bulk mail queued')
-            ->success()
-            ->send();
-
-        $this->form->fill();
     }
 }

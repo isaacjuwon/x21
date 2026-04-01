@@ -8,12 +8,11 @@ use App\Enums\Kyc\KycType;
 use App\Models\Kyc;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-new #[Title('KYC Verification'), Defer] class extends Component {
+new #[Title('KYC Verification')] class extends Component {
     use WithFileUploads;
 
     public string $nin_number = '';
@@ -154,7 +153,7 @@ new #[Title('KYC Verification'), Defer] class extends Component {
                 <flux:heading size="lg">{{ __('NIN Verification') }}</flux:heading>
                 <flux:text class="text-zinc-500 text-sm">{{ __('National Identification Number') }}</flux:text>
             </div>
-            <x-kyc::badge :type="App\Enums\Kyc\KycType::Nin" />
+            <x-kyc.badge :type="App\Enums\Kyc\KycType::Nin" />
         </div>
 
         @if($this->ninKyc?->status === KycStatus::Verified)
@@ -229,7 +228,7 @@ new #[Title('KYC Verification'), Defer] class extends Component {
                 <flux:heading size="lg">{{ __('BVN Verification') }}</flux:heading>
                 <flux:text class="text-zinc-500 text-sm">{{ __('Bank Verification Number') }}</flux:text>
             </div>
-            <x-kyc::badge :type="App\Enums\Kyc\KycType::Bvn" />
+            <x-kyc.badge :type="App\Enums\Kyc\KycType::Bvn" />
         </div>
 
         @if($this->bvnKyc?->status === KycStatus::Verified)

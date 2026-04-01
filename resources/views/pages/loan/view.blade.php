@@ -6,11 +6,10 @@ use App\Enums\Loans\LoanStatus;
 use App\Enums\Wallets\WalletType;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Loan Details'), Defer] class extends Component {
+new #[Title('Loan Details')] class extends Component {
     public Loan $loan;
 
     public function mount(Loan $loan)

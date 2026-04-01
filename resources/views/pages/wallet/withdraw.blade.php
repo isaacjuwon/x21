@@ -5,11 +5,10 @@ use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Withdraw Funds'), Defer] class extends Component {
+new #[Title('Withdraw Funds')] class extends Component {
     public ?float $amount = null;
     public string $notes = '';
 
