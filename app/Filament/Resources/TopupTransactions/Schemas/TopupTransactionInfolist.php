@@ -6,6 +6,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Number;
 
 class TopupTransactionInfolist
 {
@@ -32,7 +33,7 @@ class TopupTransactionInfolist
                     Grid::make(3)->schema([
                         TextEntry::make('amount')
                             ->label('Amount')
-                            ->money('USD'),
+                            ->money(fn () => Number::defaultCurrency()),
 
                         TextEntry::make('user.name')
                             ->label('User'),
