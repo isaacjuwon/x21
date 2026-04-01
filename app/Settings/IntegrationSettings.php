@@ -22,6 +22,10 @@ class IntegrationSettings extends Settings
 
     public ?string $epins_api_key;
 
+    public ?string $openai_api_key;
+
+    public ?string $openai_model;
+
     public static function group(): string
     {
         return 'integrations';

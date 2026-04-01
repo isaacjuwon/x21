@@ -22,7 +22,7 @@ class DisburseLoanAction
 
         $fromStatus = $loan->status->value;
 
-        $loan->user->deposit((float) $loan->principal_amount, WalletType::General);
+        $loan->user->deposit((float) $loan->principal_amount, WalletType::General, "Loan disbursement #{$loan->id}", $loan);
 
         $loan->status = LoanStatus::Disbursed;
         $loan->disbursed_at = now();

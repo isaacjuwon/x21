@@ -15,3 +15,4 @@ require __DIR__.'/shares.php';
 require __DIR__.'/services.php';
 require __DIR__.'/tickets.php';
 require __DIR__.'/kyc.php';
+require __DIR__.'/support.php';

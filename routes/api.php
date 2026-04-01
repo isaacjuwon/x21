@@ -1,13 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Support\FaqController;
-use App\Http\Controllers\Api\V1\Tickets\TicketController;
-use App\Http\Controllers\Api\V1\Tickets\TicketReplyController;
-use App\Http\Controllers\Api\V1\Kyc\KycController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\V1\Kyc\KycController;
 use App\Http\Controllers\Api\V1\Loans\LoanApprovalController;
 use App\Http\Controllers\Api\V1\Loans\LoanController;
 use App\Http\Controllers\Api\V1\Loans\LoanDisbursementController;
@@ -27,6 +24,10 @@ use App\Http\Controllers\Api\V1\Shares\ShareOrderApprovalController;
 use App\Http\Controllers\Api\V1\Shares\ShareOrderController;
 use App\Http\Controllers\Api\V1\Shares\ShareOrderRejectionController;
 use App\Http\Controllers\Api\V1\Shares\SharePriceHistoryController;
+use App\Http\Controllers\Api\V1\Support\AiSupportController;
+use App\Http\Controllers\Api\V1\Support\FaqController;
+use App\Http\Controllers\Api\V1\Tickets\TicketController;
+use App\Http\Controllers\Api\V1\Tickets\TicketReplyController;
 use App\Http\Controllers\Api\V1\User\UserController;
 use App\Http\Controllers\Api\V1\Wallet\TransactionController;
 use App\Http\Controllers\Api\V1\Wallet\WalletController;
@@ -132,4 +133,7 @@ Route::middleware(['auth:sanctum', RequestId::class])
 
         // --- FAQs (public within auth) ---
         Route::get('faqs', [FaqController::class, 'index'])->name('faqs.index');
+
+        // --- AI Support ---
+        Route::post('support/chat', AiSupportController::class)->name('support.chat');
     });

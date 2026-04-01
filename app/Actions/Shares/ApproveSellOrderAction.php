@@ -19,7 +19,7 @@ class ApproveSellOrderAction
             throw new InvalidShareOrderStateException('Order is not in a pending state.');
         }
 
-        $order->user->deposit($order->total_amount, WalletType::General);
+        $order->user->deposit($order->total_amount, WalletType::General, "Share sell order approved #{$order->id}", $order);
 
         $order->user->shareHolding->decrement('quantity', $order->quantity);
 

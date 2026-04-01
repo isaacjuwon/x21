@@ -8,6 +8,7 @@ use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Listeners\Wallets\DispatchWalletReversalListener;
 use App\Managers\ApiManager;
+use App\Models\Faq;
 use App\Settings\GeneralSettings;
 use App\Settings\LayoutSettings;
 use Carbon\CarbonImmutable;
@@ -78,6 +79,10 @@ class AppServiceProvider extends ServiceProvider
                 'generalSettings' => app(GeneralSettings::class),
                 'layoutSettings' => app(LayoutSettings::class),
             ]);
+        });
+
+        View::composer('landing', function ($view) {
+            $view->with('faqs', Faq::active()->get());
         });
     }
 

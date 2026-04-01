@@ -20,6 +20,7 @@
                     <div class="hidden md:flex items-center gap-8 text-sm font-medium">
                         <a href="#features" class="hover:text-primary-color transition-colors">Features</a>
                         <a href="#about" class="hover:text-primary-color transition-colors">About</a>
+                        <a href="#faq" class="hover:text-primary-color transition-colors">FAQ</a>
                         <a href="#contact" class="hover:text-primary-color transition-colors">Contact</a>
                     </div>
 
@@ -163,6 +164,32 @@
                 </div>
             </div>
         </section>
+
+        <!-- FAQ Section -->
+        @if($faqs->isNotEmpty())
+        <section id="faq" class="py-20">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <p class="text-zinc-600 dark:text-zinc-400">Everything you need to know. Can't find the answer? <a href="{{ route('login') }}" class="text-primary-color hover:underline">Open a support ticket</a>.</p>
+                </div>
+
+                <div class="divide-y divide-zinc-200 dark:divide-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden">
+                    @foreach($faqs as $faq)
+                        <details class="group bg-white dark:bg-zinc-900">
+                            <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                                <span>{{ $faq->question }}</span>
+                                <flux:icon.chevron-down class="size-5 text-zinc-400 shrink-0 transition-transform group-open:rotate-180" />
+                            </summary>
+                            <div class="px-6 pb-5 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                {{ $faq->answer }}
+                            </div>
+                        </details>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        @endif
 
         <!-- Contact/Footer Section -->
         <footer id="contact" class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 pt-16 pb-8">

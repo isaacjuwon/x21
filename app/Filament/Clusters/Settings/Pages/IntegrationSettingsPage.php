@@ -64,6 +64,18 @@ class IntegrationSettingsPage extends SettingsPage
                             ->password()
                             ->revealable(),
                     ]),
+
+                Section::make('OpenAI Configuration')
+                    ->description('Used for the AI support assistant.')
+                    ->schema([
+                        TextInput::make('openai_api_key')
+                            ->label('API Key')
+                            ->password()
+                            ->revealable(),
+                        TextInput::make('openai_model')
+                            ->label('Model')
+                            ->placeholder('gpt-4o-mini'),
+                    ]),
             ]);
     }
 }

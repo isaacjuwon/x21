@@ -47,7 +47,7 @@ class ProcessDividendPayoutsJob implements ShouldQueue
                 continue;
             }
 
-            $transaction = $holding->user->deposit($payoutAmount, WalletType::General);
+            $transaction = $holding->user->deposit($payoutAmount, WalletType::General, "Dividend payout #{$this->dividend->id}", $this->dividend);
 
             $payout = DividendPayout::create([
                 'dividend_id' => $this->dividend->id,

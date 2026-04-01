@@ -41,7 +41,11 @@
                     </flux:sidebar.item>
 
                     <flux:sidebar.item icon="ticket" :href="route('tickets.index')" :current="request()->routeIs('tickets.*')" wire:navigate>
-                        {{ __('Support') }}
+                        {{ __('Support Tickets') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="sparkles" :href="route('support.chat')" :current="request()->routeIs('support.*')" wire:navigate>
+                        {{ __('AI Assistant') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 

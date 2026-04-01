@@ -28,7 +28,7 @@ class RepayLoanAction
             );
         }
 
-        $transaction = $loan->user->withdraw($amount, WalletType::General);
+        $transaction = $loan->user->withdraw($amount, WalletType::General, "Loan repayment #{$loan->id}", $loan);
 
         $repayment = LoanRepayment::create([
             'loan_id' => $loan->id,
