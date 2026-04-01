@@ -31,7 +31,9 @@ use App\Http\Controllers\Api\V1\Support\FaqController;
 use App\Http\Controllers\Api\V1\Tickets\TicketController;
 use App\Http\Controllers\Api\V1\Tickets\TicketReplyController;
 use App\Http\Controllers\Api\V1\User\UserController;
+use App\Http\Controllers\Api\V1\Wallet\BankListController;
 use App\Http\Controllers\Api\V1\Wallet\TransactionController;
+use App\Http\Controllers\Api\V1\Wallet\VerifyAccountController;
 use App\Http\Controllers\Api\V1\Wallet\WalletController;
 use App\Http\Controllers\Api\V1\Wallet\WalletFundController;
 use App\Http\Controllers\Api\V1\Wallet\WalletTransferController;
@@ -73,6 +75,8 @@ Route::middleware(['auth:sanctum', RequestId::class])
             Route::post('/fund/verify', [WalletFundController::class, 'verify'])->name('fund.verify');
             Route::post('/transfer', WalletTransferController::class)->name('transfer');
             Route::post('/withdraw', WalletWithdrawController::class)->name('withdraw');
+            Route::get('/banks', BankListController::class)->name('banks');
+            Route::get('/verify-account', VerifyAccountController::class)->name('verify-account');
             Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
             Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         });
