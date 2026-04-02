@@ -16,6 +16,9 @@ class ElectricityPlansTable
     {
         return $table
             ->columns([
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
                 SpatieMediaLibraryImageColumn::make('brand.logo')
                     ->collection('logo')
                     ->circular()

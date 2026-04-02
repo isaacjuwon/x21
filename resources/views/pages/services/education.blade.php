@@ -141,7 +141,7 @@ new #[Title('Education Pins')] class extends Component {
                                 <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
                                 <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-lg">{{ $plan->type }}</span>
+                                        <span class="font-bold text-lg">{{ $plan->name ?? $plan->type }}</span>
                                         <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
                                     </div>
                                     <div class="text-right">

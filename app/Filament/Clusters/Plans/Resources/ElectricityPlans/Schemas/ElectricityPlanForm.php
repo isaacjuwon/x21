@@ -13,6 +13,9 @@ class ElectricityPlanForm
     {
         return $schema
             ->components([
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
                 Select::make('brand_id')
                     ->relationship('brand', 'name')
                     ->required(),

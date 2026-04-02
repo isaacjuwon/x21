@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CablePlan extends Model
 {
     protected $fillable = [
+        'name',
         'brand_id',
         'type',
         'api_code',
