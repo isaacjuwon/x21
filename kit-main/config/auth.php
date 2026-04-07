@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 use App\Models\User;
 
 return [
@@ -40,11 +41,6 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'sanctum' => [
-            'driver' => 'sanctum',
             'provider' => 'users',
         ],
     ],
