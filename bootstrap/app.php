@@ -72,7 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
             return new JsonResponse(['message' => __('Unauthenticated.')], 401);
         });
 
-        $exceptions->render(function (AuthorizationException $exception, Request $request): ?JsonResponse {
+       /* $exceptions->render(function (AuthorizationException $exception, Request $request): ?JsonResponse {
             if (! $request->expectsJson()) {
                 return null;
             }
@@ -80,7 +80,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SecurityAudit::log('auth.forbidden', ['exception' => $exception::class]);
 
             return new JsonResponse(['message' => __('This action is unauthorized.')], 403);
-        });
+        }); */
 
         $exceptions->render(function (AccessDeniedHttpException $exception, Request $request): ?JsonResponse {
             if (! $request->expectsJson()) {
