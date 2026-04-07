@@ -1,56 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Http\Payloads\V1\Auth\ResetPasswordPayload;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Models\User;
+use App\Support\SecurityAudit;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Knuckles\Scribe\Attributes\BodyParam;
-use Knuckles\Scribe\Attributes\Group;
-use Knuckles\Scribe\Attributes\Response;
-use Knuckles\Scribe\Attributes\Unauthenticated;
+use Illuminate\Validation\ValidationException;
 
-#[Group('Authentication', 'Obtain and revoke Sanctum tokens')]
-#[Unauthenticated]
-class ResetPasswordController
+final class ResetPasswordController
 {
-    #[BodyParam('token', 'string', description: 'The password reset token from the email', required: true, example: 'abc123token')]
-    #[BodyParam('email', 'string', description: 'The user email address', required: true, example: 'user@example.com')]
-    #[BodyParam('password', 'string', description: 'New password', required: true, example: 'newpassword')]
-    #[BodyParam('password_confirmation', 'string', description: 'New password confirmation', required: true, example: 'newpassword')]
-    #[Response(['message' => 'Your password has been reset.'], status: 200)]
-    #[Response(['message' => 'This password reset token is invalid.'], status: 422)]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(ResetPasswordRequest $request): JsonResponse
     {
-        $request->validate([
-            'token' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $payload = ResetPasswordPayload::fromRequest($request);
+        $resetUserId = null;
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
+        $status = Password::broker()->reset(
+            [
+                'email' => $payload->email,
+                'password' => $payload->password,
+                'password_confirmation' => $payload->passwordConfirmation,
+                'token' => $payload->token,
+            ],
+            function (User $user, string $password) use (&$resetUserId): void {
                 $user->forceFill([
-                    'password' => Hash::make($password),
+                    'password' => $password,
                     'remember_token' => Str::random(60),
                 ])->save();
+
+                $resetUserId = (string) $user->getKey();
 
                 event(new PasswordReset($user));
             }
         );
 
         if ($status !== Password::PASSWORD_RESET) {
-            return response()->json([
-                'message' => __($status),
-            ], 422);
+            SecurityAudit::log('auth.password_reset.failed', [
+                'email_hash' => SecurityAudit::hashEmail($payload->email),
+            ]);
+
+            throw ValidationException::withMessages([
+                'email' => [__($status)],
+            ]);
         }
 
-        return response()->json([
-            'message' => __($status),
+        SecurityAudit::log('auth.password_reset.succeeded', [
+            'user_id' => $resetUserId,
         ]);
+
+        return response()->json(['message' => 'Your password has been reset.']);
     }
 }

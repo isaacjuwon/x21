@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\Auth\DeleteAllTokensController;
+use App\Http\Controllers\Api\V1\Auth\DeleteTokenController;
 use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Auth\ListTokensController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
@@ -63,8 +66,11 @@ Route::prefix('/auth')->name('auth.')->group(function (): void {
         ->name('password.reset');
 
     Route::middleware('auth:sanctum')->group(function (): void {
-        Route::post('/logout', LogoutController::class)->name('logout');
         Route::get('/me', MeController::class)->name('me');
+        Route::post('/logout', LogoutController::class)->name('logout');
+        Route::get('/tokens', ListTokensController::class)->name('tokens.index');
+        Route::delete('/tokens', DeleteAllTokensController::class)->name('tokens.destroy-all');
+        Route::delete('/tokens/{token_id}', DeleteTokenController::class)->name('tokens.destroy');
     });
 });
 

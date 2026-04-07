@@ -1,15 +1,74 @@
-name: Wallet
-description: 'Wallet balance and overview'
+name: Loans
+description: 'Loan application and management'
 endpoints:
   -
     custom: []
     httpMethods:
-      - GET
-    uri: api/v1/wallet
+      - POST
+    uri: api/v1/loans/eligibility
     metadata:
       custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      principal_amount:
+        custom: []
+        name: principal_amount
+        description: ''
+        required: true
+        example: 50000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      principal_amount: 50000
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"passed":true,"reason":null}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"passed":false,"reason":"Account must be at least 30 days old."}}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/loans
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -31,66 +90,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":1,"type":"general","balance":"5000.00","held_balance":"200.00","available_balance":4800,"updated_at":"2026-01-01T00:00:00.000000Z"}}'
-        headers: []
-        description: 'Wallet balance'
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/wallet/fund
-    metadata:
-      custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      amount:
-        custom: []
-        name: amount
-        description: 'Amount to fund in the smallest currency unit (min: 100)'
-        required: true
-        example: 5000
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      amount: 5000
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"authorization_url":"https:\/\/checkout.paystack.com\/abc123","reference":"WFT-XXXXXXXXXX"}}'
-        headers: []
-        description: 'Paystack authorization URL'
-      -
-        custom: []
-        status: 422
-        content: '{"message":"The amount field must be at least 100."}'
+        content: '{"data":[{"id":2,"user_id":5,"principal_amount":1097.52,"outstanding_balance":1097.52,"interest_rate":0.2934,"repayment_term_months":18,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:19.000000Z"},{"id":3,"user_id":6,"principal_amount":2349.31,"outstanding_balance":2349.31,"interest_rate":0.0611,"repayment_term_months":55,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:19.000000Z"}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
         headers: []
         description: ''
     responseFields: []
@@ -105,11 +105,11 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/wallet/fund/verify
+    uri: api/v1/loans
     metadata:
       custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
+      groupName: Loans
+      groupDescription: 'Loan application and management'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -125,83 +125,35 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      reference:
+      principal_amount:
         custom: []
-        name: reference
-        description: 'The Paystack payment reference from the callback URL'
+        name: principal_amount
+        description: 'Loan amount requested (min: 1)'
         required: true
-        example: WFT-XXXXXXXXXX
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      reference: WFT-XXXXXXXXXX
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"WFT-XXXXXXXXXX","notes":"Wallet funding via Paystack","created_at":"2026-01-01T00:00:00.000000Z"}}'
-        headers: []
-        description: 'Verified transaction'
-      -
-        custom: []
-        status: 404
-        content: '{"message":"Not Found"}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/wallet/transfer
-    metadata:
-      custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      recipient_email:
-        custom: []
-        name: recipient_email
-        description: 'Email address of the recipient'
-        required: true
-        example: recipient@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      amount:
-        custom: []
-        name: amount
-        description: 'Amount to transfer (min: 1)'
-        required: true
-        example: 1000
+        example: 50000
         type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      repayment_term_months:
+        custom: []
+        name: repayment_term_months
+        description: 'Repayment term in months (min: 1)'
+        required: true
+        example: 12
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      interest_method:
+        custom: []
+        name: interest_method
+        description: 'Interest method: FlatRate or ReducingBalance'
+        required: false
+        example: FlatRate
+        type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
@@ -209,109 +161,33 @@ endpoints:
       notes:
         custom: []
         name: notes
-        description: 'Optional transfer note'
+        description: 'Purpose of the loan'
         required: false
-        example: 'Payment for services'
+        example: 'Business expansion'
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      recipient_email: recipient@example.com
-      amount: 1000
-      notes: 'Payment for services'
+      principal_amount: 50000
+      repayment_term_months: 12
+      interest_method: FlatRate
+      notes: 'Business expansion'
     fileParameters: []
     responses:
       -
         custom: []
         status: 201
-        content: '{"data":{"id":1,"amount":"1000.00","type":"withdrawal","status":"completed","reference":"WTH-XXXXXXXXXX","notes":"Transfer to recipient@example.com","created_at":"2026-01-01T00:00:00.000000Z"}}'
-        headers: []
-        description: 'Transfer initiated'
-      -
-        custom: []
-        status: 404
-        content: '{"message":"Recipient not found."}'
+        content: '{"data":{"id":2,"user_id":5,"principal_amount":12966.66,"outstanding_balance":12966.66,"interest_rate":0.2089,"repayment_term_months":51,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:20.000000Z"}}'
         headers: []
         description: ''
       -
         custom: []
         status: 422
-        content: '{"message":"Insufficient funds."}'
+        content: '{"message":"You are not eligible for this loan."}'
         headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/wallet/withdraw
-    metadata:
-      custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      amount:
-        custom: []
-        name: amount
-        description: 'Amount to withdraw (min: 1)'
-        required: true
-        example: 2000
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      notes:
-        custom: []
-        name: notes
-        description: 'Optional withdrawal note'
-        required: false
-        example: 'Monthly withdrawal'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      amount: 2000
-      notes: 'Monthly withdrawal'
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 201
-        content: '{"data":{"id":1,"amount":"2000.00","type":"withdrawal","status":"completed","reference":"WTH-XXXXXXXXXX","notes":"Wallet withdrawal","created_at":"2026-01-01T00:00:00.000000Z"}}'
-        headers: []
-        description: 'Withdrawal initiated'
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Insufficient funds."}'
-        headers: []
-        description: ''
+        description: 'Eligibility failed'
     responseFields: []
     auth:
       - headers
@@ -324,52 +200,11 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: api/v1/wallet/transactions
+    uri: 'api/v1/loans/{id}'
     metadata:
       custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":[{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"DEP-XXXXXXXXXX","notes":null,"created_at":"2026-01-01T00:00:00.000000Z"}],"links":{"first":"...","last":"...","prev":null,"next":null},"meta":{"current_page":1,"per_page":15,"total":1}}'
-        headers: []
-        description: 'Paginated transactions'
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: 'api/v1/wallet/transactions/{id}'
-    metadata:
-      custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
+      groupName: Loans
+      groupDescription: 'Loan application and management'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -384,7 +219,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the transaction.'
+        description: 'The ID of the loan.'
         required: true
         example: 1
         type: integer
@@ -403,13 +238,380 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"DEP-XXXXXXXXXX","notes":null,"created_at":"2026-01-01T00:00:00.000000Z"}}'
+        content: '{"data":{"id":2,"user_id":5,"principal_amount":1097.52,"outstanding_balance":1097.52,"interest_rate":0.2934,"repayment_term_months":18,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:20.000000Z"}}'
         headers: []
         description: ''
       -
         custom: []
         status: 404
         content: '{"message":"Not Found"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/loans/{loan_id}/schedule'
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      loan_id:
+        custom: []
+        name: loan_id
+        description: 'The ID of the loan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      loan_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":1,"loan_id":2,"instalment_number":30,"due_date":"2026-04-28T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":2,"loan_id":3,"instalment_number":45,"due_date":"2026-06-20T00:00:00.000000Z","instalment_amount":1579.06,"principal_component":280.37,"interest_component":1298.69,"outstanding_balance":11744.34,"status":"Pending","remaining_amount":1579.06,"paid_at":null}]}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/loans/{loan_id}/repayments'
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      loan_id:
+        custom: []
+        name: loan_id
+        description: 'The ID of the loan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      loan_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      amount:
+        custom: []
+        name: amount
+        description: 'Repayment amount (min: 0.01, max: outstanding balance)'
+        required: true
+        example: 5000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      amount: 5000
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"data":{"id":1,"loan_id":2,"amount":4977.1,"transaction_id":null,"created_at":"2026-04-07T14:08:21.000000Z"}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient funds."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/loans/{loan_id}/approve'
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      loan_id:
+        custom: []
+        name: loan_id
+        description: 'The ID of the loan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      loan_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      notes:
+        custom: []
+        name: notes
+        description: 'Optional approval notes'
+        required: false
+        example: 'Approved after review'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      notes: 'Approved after review'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":2,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:21.000000Z"}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message":"This action is unauthorized."}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Loan must be in active status to be approved."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/loans/{loan_id}/disburse'
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      loan_id:
+        custom: []
+        name: loan_id
+        description: 'The ID of the loan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      loan_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      notes:
+        custom: []
+        name: notes
+        description: 'Optional disbursement notes'
+        required: false
+        example: 'Disbursed to account'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      notes: 'Disbursed to account'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":2,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:21.000000Z"}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message":"This action is unauthorized."}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Loan must be in approved status to be disbursed."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/loans/{loan_id}/reject'
+    metadata:
+      custom: []
+      groupName: Loans
+      groupDescription: 'Loan application and management'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      loan_id:
+        custom: []
+        name: loan_id
+        description: 'The ID of the loan.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      loan_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      rejection_reason:
+        custom: []
+        name: rejection_reason
+        description: 'Reason for rejecting the loan'
+        required: true
+        example: 'Insufficient income documentation'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: 'Optional internal notes'
+        required: false
+        example: 'Reviewed by compliance team'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      rejection_reason: 'Insufficient income documentation'
+      notes: 'Reviewed by compliance team'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":2,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":"2026-04-07T14:08:22.000000Z"}}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message":"This action is unauthorized."}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Loan cannot be rejected in its current status."}'
         headers: []
         description: ''
     responseFields: []

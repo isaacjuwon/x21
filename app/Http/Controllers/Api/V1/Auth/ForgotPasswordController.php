@@ -1,38 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Http\Payloads\V1\Auth\ForgotPasswordPayload;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Support\SecurityAudit;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Knuckles\Scribe\Attributes\BodyParam;
-use Knuckles\Scribe\Attributes\Group;
-use Knuckles\Scribe\Attributes\Response;
-use Knuckles\Scribe\Attributes\Unauthenticated;
 
-#[Group('Authentication', 'Obtain and revoke Sanctum tokens')]
-#[Unauthenticated]
-class ForgotPasswordController
+final class ForgotPasswordController
 {
-    #[BodyParam('email', 'string', description: 'The email address to send the reset link to', required: true, example: 'user@example.com')]
-    #[Response(['message' => 'We have emailed your password reset link.'], status: 200)]
-    #[Response(['message' => 'We can\'t find a user with that email address.'], status: 422)]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(ForgotPasswordRequest $request): JsonResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
+        $payload = ForgotPasswordPayload::fromRequest($request);
+
+        Password::broker()->sendResetLink(['email' => $payload->email]);
+
+        SecurityAudit::log('auth.password_reset.requested', [
+            'email_hash' => SecurityAudit::hashEmail($payload->email),
         ]);
 
-        $status = Password::sendResetLink($request->only('email'));
-
-        if ($status !== Password::RESET_LINK_SENT) {
-            return response()->json([
-                'message' => __($status),
-            ], 422);
-        }
-
         return response()->json([
-            'message' => __($status),
+            'message' => 'If the account exists, a password reset link has been sent.',
         ]);
     }
 }

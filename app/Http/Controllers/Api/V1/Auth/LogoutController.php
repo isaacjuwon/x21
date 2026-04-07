@@ -1,22 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use Illuminate\Http\JsonResponse;
+use App\Support\SecurityAudit;
 use Illuminate\Http\Request;
-use Knuckles\Scribe\Attributes\Authenticated;
-use Knuckles\Scribe\Attributes\Group;
-use Knuckles\Scribe\Attributes\Response;
+use Illuminate\Http\Response;
+use Laravel\Sanctum\PersonalAccessToken;
 
-#[Group('Authentication', 'Obtain and revoke Sanctum tokens')]
-#[Authenticated]
-class LogoutController
+final class LogoutController
 {
-    #[Response(['message' => 'Logged out successfully.'], status: 200)]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): Response
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
 
-        return response()->json(['message' => 'Logged out successfully.']);
+        /** @var PersonalAccessToken|null $token */
+        $token = $user?->currentAccessToken();
+
+        if ($token) {
+            SecurityAudit::log('auth.logout.succeeded', [
+                'user_id' => (string) $user->getKey(),
+                'token_id' => (string) $token->getKey(),
+            ]);
+
+            $token->delete();
+        }
+
+        return response()->noContent();
     }
 }

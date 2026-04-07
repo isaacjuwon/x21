@@ -1,47 +1,67 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Actions\Fortify\CreateNewUser;
+use App\Http\Payloads\V1\Auth\RegisterPayload;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\Api\V1\User\UserResource;
+use App\Models\User;
+use App\Support\SecurityAudit;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Knuckles\Scribe\Attributes\BodyParam;
-use Knuckles\Scribe\Attributes\Group;
-use Knuckles\Scribe\Attributes\Response;
-use Knuckles\Scribe\Attributes\Unauthenticated;
+use Illuminate\Support\Carbon;
 
-#[Group('Authentication', 'Obtain and revoke Sanctum tokens')]
-#[Unauthenticated]
-class RegisterController
+final class RegisterController
 {
-    #[BodyParam('name', 'string', description: 'Full name', required: true, example: 'John Doe')]
-    #[BodyParam('email', 'string', description: 'Email address', required: true, example: 'user@example.com')]
-    #[BodyParam('password', 'string', description: 'Password (min 8 chars)', required: true, example: 'password')]
-    #[BodyParam('password_confirmation', 'string', description: 'Password confirmation', required: true, example: 'password')]
-    #[BodyParam('device_name', 'string', description: 'Device name for the token', required: true, example: 'mobile')]
-    #[Response([
-        'data' => [
-            'token' => '1|abc123...',
-            'user' => ['id' => 1, 'name' => 'John Doe', 'email' => 'user@example.com'],
-        ],
-    ], status: 201, description: 'Registration successful')]
-    #[Response(['message' => 'The email has already been taken.'], status: 422)]
-    public function __invoke(Request $request, CreateNewUser $createUser): JsonResponse
+    public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $request->validate([
-            'device_name' => ['required', 'string', 'max:255'],
+        $payload = RegisterPayload::fromRequest($request);
+
+        $user = User::create([
+            'name' => $payload->name,
+            'email' => $payload->email,
+            'password' => $payload->password,
         ]);
 
-        $user = $createUser->create($request->all());
+        event(new Registered($user));
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        [$token, $expiresAt] = $this->issueToken($user, $payload->deviceName);
+
+        SecurityAudit::log('auth.register.succeeded', [
+            'user_id' => (string) $user->getKey(),
+            'device_name' => $payload->deviceName,
+        ]);
 
         return response()->json([
-            'data' => [
+            'data' => new UserResource($user),
+            'meta' => [
                 'token' => $token,
-                'user' => new UserResource($user),
+                'token_type' => 'Bearer',
+                'expires_at' => $expiresAt?->toAtomString(),
             ],
         ], 201);
+    }
+
+    /**
+     * @return array{0:string,1:Carbon|null}
+     */
+    private function issueToken(User $user, string $deviceName): array
+    {
+        $configuredExpiration = config('sanctum.expiration');
+        $expirationMinutes = filter_var(
+            $configuredExpiration,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]],
+        );
+
+        $expiresAt = $expirationMinutes !== false
+            ? now()->addMinutes($expirationMinutes)
+            : null;
+
+        $token = $user->createToken($deviceName, ['*'], $expiresAt);
+
+        return [$token->plainTextToken, $expiresAt];
     }
 }

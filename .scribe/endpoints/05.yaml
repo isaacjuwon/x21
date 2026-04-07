@@ -1,56 +1,15 @@
-name: Shares
-description: 'Share orders and holdings'
+name: Services
+description: 'VTU and bill payment services'
 endpoints:
   -
     custom: []
     httpMethods:
-      - GET
-    uri: api/v1/shares/listing
+      - POST
+    uri: api/v1/services/airtime
     metadata:
       custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"id":2,"price":"10.98","total_shares":1000,"available_shares":1000,"updated_at":"2026-03-31T12:15:31.000000Z"}}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - PUT
-    uri: api/v1/shares/listing/price
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
+      groupName: Services
+      groupDescription: 'VTU and bill payment services'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -66,196 +25,61 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      price:
+      brand_id:
         custom: []
-        name: price
-        description: 'New share price (min: 0.01)'
+        name: brand_id
+        description: 'Network provider brand ID'
         required: true
-        example: 150.0
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Recipient phone number'
+        required: true
+        example: '08012345678'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Airtime amount (min: 50)'
+        required: true
+        example: 200
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      price: 150.0
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"id":2,"price":"497.71","total_shares":1000,"available_shares":1000,"updated_at":"2026-03-31T12:15:31.000000Z"}}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 403
-        content: '{"message":"This action is unauthorized."}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/v1/shares/orders
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":[{"id":3,"user_id":5,"type":"buy","quantity":81,"price_per_share":487.1,"total_amount":39455.1,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"},{"id":4,"user_id":6,"type":"buy","quantity":28,"price_per_share":23.49,"total_amount":657.72,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: 'api/v1/shares/orders/{id}'
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        custom: []
-        name: id
-        description: 'The ID of the order.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"id":3,"user_id":5,"type":"buy","quantity":81,"price_per_share":487.1,"total_amount":39455.1,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"}}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 404
-        content: '{"message":"Not Found"}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/shares/orders/buy
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      quantity:
-        custom: []
-        name: quantity
-        description: 'Number of shares to buy (min: 1)'
-        required: true
-        example: 10
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      quantity: 10
+      brand_id: 1
+      phone_number: '08012345678'
+      amount: 200
     fileParameters: []
     responses:
       -
         custom: []
         status: 201
-        content: '{"data":{"id":3,"user_id":5,"type":"buy","quantity":72,"price_per_share":129.67,"total_amount":9336.24,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"}}'
+        content: '{"data":{"id":1,"reference":"AIR-XXXXXXXXXX","amount":"200.00","status":"completed","type":null,"response_message":"Transaction successful","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Airtime purchase initiated'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient wallet balance."}'
         headers: []
         description: ''
       -
         custom: []
         status: 422
-        content: '{"message":"Insufficient available shares."}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Insufficient funds."}'
+        content: '{"message":"No active airtime plan found for this brand."}'
         headers: []
         description: ''
     responseFields: []
@@ -270,11 +94,11 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/shares/orders/sell
+    uri: api/v1/services/data
     metadata:
       custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
+      groupName: Services
+      groupDescription: 'VTU and bill payment services'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -290,71 +114,10 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      quantity:
+      brand_id:
         custom: []
-        name: quantity
-        description: 'Number of shares to sell (min: 1)'
-        required: true
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      quantity: 5
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 201
-        content: '{"data":{"id":3,"user_id":5,"type":"buy","quantity":72,"price_per_share":129.67,"total_amount":9336.24,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"}}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Insufficient shares."}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Holding period not met.","earliest_sell_date":"2025-01-01"}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: 'api/v1/shares/orders/{order_id}/approve'
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order_id:
-        custom: []
-        name: order_id
-        description: 'The ID of the order.'
+        name: brand_id
+        description: 'Network provider brand ID'
         required: true
         example: 1
         type: integer
@@ -362,183 +125,44 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-    cleanUrlParameters:
-      order_id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
+      plan_id:
         custom: []
-        status: 200
-        content: '{"data":{"id":3,"user_id":5,"type":"buy","quantity":81,"price_per_share":487.1,"total_amount":39455.1,"status":"pending","rejection_reason":null,"created_at":"2026-03-31T12:15:31.000000Z"}}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 403
-        content: '{"message":"This action is unauthorized."}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Order is not in a pending state."}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: 'api/v1/shares/orders/{order_id}/reject'
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order_id:
-        custom: []
-        name: order_id
-        description: 'The ID of the order.'
+        name: plan_id
+        description: 'Data plan ID'
         required: true
-        example: 1
+        example: 3
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-    cleanUrlParameters:
-      order_id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      rejection_reason:
+      phone_number:
         custom: []
-        name: rejection_reason
-        description: 'Reason for rejecting the share order'
+        name: phone_number
+        description: 'Recipient phone number'
         required: true
-        example: 'Insufficient documentation'
+        example: '08012345678'
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      rejection_reason: 'Insufficient documentation'
+      brand_id: 1
+      plan_id: 3
+      phone_number: '08012345678'
     fileParameters: []
     responses:
       -
         custom: []
-        status: 403
-        content: '{"message":"This action is unauthorized."}'
+        status: 201
+        content: '{"data":{"id":1,"reference":"DAT-XXXXXXXXXX","amount":"500.00","status":"completed","type":null,"response_message":"Transaction successful","created_at":"2026-01-01T00:00:00.000000Z"}}'
         headers: []
-        description: ''
+        description: 'Data purchase initiated'
       -
         custom: []
         status: 422
-        content: '{"message":"Order is not in a pending state."}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/v1/shares/holdings
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":{"quantity":681,"acquired_at":"2026-01-30T12:15:31.000000Z","market_value":6810,"eligible_for_sale":true}}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/v1/shares/price-history
-    metadata:
-      custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"data":[{"id":1,"old_price":10.98,"new_price":487.1,"created_at":"2026-01-30 12:15:31"},{"id":2,"old_price":334.4,"new_price":218.45,"created_at":"2026-02-19 12:15:31"}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
+        content: '{"message":"Insufficient wallet balance."}'
         headers: []
         description: ''
     responseFields: []
@@ -553,11 +177,11 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/shares/dividends
+    uri: api/v1/services/electricity
     metadata:
       custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
+      groupName: Services
+      groupDescription: 'VTU and bill payment services'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -573,31 +197,73 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      total_amount:
+      brand_id:
         custom: []
-        name: total_amount
-        description: 'Total dividend amount to distribute (min: 0.01)'
+        name: brand_id
+        description: 'Electricity provider brand ID'
         required: true
-        example: 50000
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      meter_number:
+        custom: []
+        name: meter_number
+        description: 'Meter number (min: 8 chars)'
+        required: true
+        example: '12345678901'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      meter_type:
+        custom: []
+        name: meter_type
+        description: 'Meter type: Prepaid or Postpaid'
+        required: true
+        example: Prepaid
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      amount:
+        custom: []
+        name: amount
+        description: 'Amount to pay (min: 500)'
+        required: true
+        example: 2000
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      total_amount: 50000
+      brand_id: 2
+      meter_number: '12345678901'
+      meter_type: Prepaid
+      amount: 2000
     fileParameters: []
     responses:
       -
         custom: []
         status: 201
-        content: '{"message":"Dividend declared successfully."}'
+        content: '{"data":{"id":1,"reference":"ELE-XXXXXXXXXX","amount":"2000.00","status":"completed","type":null,"response_message":"Transaction successful","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Electricity payment initiated'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient wallet balance."}'
         headers: []
         description: ''
       -
         custom: []
-        status: 403
-        content: '{"message":"This action is unauthorized."}'
+        status: 422
+        content: '{"message":"No active electricity plan found for this provider."}'
         headers: []
         description: ''
     responseFields: []
@@ -611,12 +277,12 @@ endpoints:
   -
     custom: []
     httpMethods:
-      - GET
-    uri: api/v1/shares/dividends/payouts
+      - POST
+    uri: api/v1/services/cable-tv
     metadata:
       custom: []
-      groupName: Shares
-      groupDescription: 'Share orders and holdings'
+      groupName: Services
+      groupDescription: 'VTU and bill payment services'
       subgroup: ''
       subgroupDescription: ''
       title: ''
@@ -631,14 +297,56 @@ endpoints:
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+    bodyParameters:
+      brand_id:
+        custom: []
+        name: brand_id
+        description: 'Cable TV provider brand ID'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      plan_id:
+        custom: []
+        name: plan_id
+        description: 'Cable TV plan ID'
+        required: true
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      smart_card_number:
+        custom: []
+        name: smart_card_number
+        description: 'Smart card / IUC number (min: 10 chars)'
+        required: true
+        example: '1234567890'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      brand_id: 3
+      plan_id: 7
+      smart_card_number: '1234567890'
     fileParameters: []
     responses:
       -
         custom: []
-        status: 200
-        content: '{"data":[{"id":1,"amount":2.99,"created_at":"2026-03-31T12:15:31.000000Z","dividend":{"total_amount":6654.11,"declared_at":"2026-03-31T12:15:31.000000Z"}},{"id":2,"amount":866.41,"created_at":"2026-03-31T12:15:31.000000Z","dividend":{"total_amount":9064.05,"declared_at":"2026-03-31T12:15:31.000000Z"}}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
+        status: 201
+        content: '{"data":{"id":1,"reference":"CAB-XXXXXXXXXX","amount":"3500.00","status":"completed","type":null,"response_message":"Transaction successful","created_at":"2026-01-01T00:00:00.000000Z"}}'
+        headers: []
+        description: 'Cable TV subscription initiated'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"Insufficient wallet balance."}'
         headers: []
         description: ''
     responseFields: []
