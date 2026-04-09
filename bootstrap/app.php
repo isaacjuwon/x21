@@ -60,6 +60,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToGroup('api', EnforceTransportSecurity::class);
         $middleware->prependToGroup('api', SetRequestLocale::class);
         $middleware->prependToGroup('api', AttachRequestId::class);
+        $middleware->prependToGroup('api', \Illuminate\Http\Middleware\HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $exception, Request $request): ?JsonResponse {
