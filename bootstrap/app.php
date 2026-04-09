@@ -62,7 +62,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToGroup('api', AttachRequestId::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-      /*  $exceptions->render(function (AuthenticationException $exception, Request $request): ?JsonResponse {
+        $exceptions->render(function (AuthenticationException $exception, Request $request): ?JsonResponse {
             if (! $request->expectsJson()) {
                 return null;
             }
@@ -71,7 +71,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return new JsonResponse(['message' => __('Unauthenticated.')], 401);
         });
-      */
         $exceptions->render(function (AuthorizationException $exception, Request $request): ?JsonResponse {
             if (! $request->expectsJson()) {
                 return null;
