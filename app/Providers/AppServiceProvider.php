@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
         $this->configureCurrency();
         $this->configureRateLimiting();
         $this->shareSettings();
-        $this->configureSanctum();
     }
 
     /**
@@ -95,31 +93,6 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('loan-applications', function (Request $request) {
             return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
-        });
-    }
-
-    /**
-     * Configure Sanctum to extract bearer token from Apache server variables
-     * as a fallback when the Authorization header gets stripped by the server.
-     */
-    protected function configureSanctum(): void
-    {
-        Sanctum::getAccessTokenFromRequestUsing(function (Request $request): ?string {
-            $token = $request->bearerToken();
-
-            if ($token !== null) {
-                return $token;
-            }
-
-            // Apache may strip the Authorization header — fall back to server variables
-            $header = $request->server('HTTP_AUTHORIZATION')
-                ?? $request->server('REDIRECT_HTTP_AUTHORIZATION');
-
-            if ($header && str_starts_with(strtolower($header), 'bearer ')) {
-                return trim(substr($header, 7));
-            }
-
-            return null;
         });
     }
 

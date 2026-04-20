@@ -19,6 +19,17 @@ final class EnsureJsonApiRequest
         // Force API exception rendering down the JSON path, even when clients omit Accept.
         $request->headers->set('Accept', 'application/json');
 
+        // Apache may strip the Authorization header — restore it from server variables
+        // so Sanctum's bearerToken() can find it.
+        if (! $request->headers->has('Authorization')) {
+            $header = $request->server('HTTP_AUTHORIZATION')
+                ?? $request->server('REDIRECT_HTTP_AUTHORIZATION');
+
+            if ($header) {
+                $request->headers->set('Authorization', $header);
+            }
+        }
+
         if ($this->hasRequestPayload($request) && ! $request->isJson()) {
             return new JsonResponse([
                 'message' => __('api.errors.unsupported_media_type'),
