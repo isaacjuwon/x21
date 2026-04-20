@@ -22,6 +22,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Validation\ValidationException;
@@ -44,7 +45,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'ability' => CheckForAnyAbility::class,
             'idempotency' => IdempotencyKey::class,
             'sunset' => Sunset::class,
-            'auth.api' => \App\Http\Middleware\ApiTokenAuth::class,
         ]);
 
         $trustedProxies = (string) env('TRUSTED_PROXIES', '*');
@@ -62,7 +62,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToGroup('api', EnforceTransportSecurity::class);
         $middleware->prependToGroup('api', SetRequestLocale::class);
         $middleware->prependToGroup('api', AttachRequestId::class);
-        $middleware->prependToGroup('api', \Illuminate\Http\Middleware\HandleCors::class);
+        $middleware->prependToGroup('api', HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $exception, Request $request): ?JsonResponse {
@@ -82,7 +82,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SecurityAudit::log('auth.forbidden', ['exception' => $exception::class]);
 
             return new JsonResponse(['message' => __('This action is unauthorized.')], 403);
-        }); 
+        });
 
         $exceptions->render(function (AccessDeniedHttpException $exception, Request $request): ?JsonResponse {
             if (! $request->expectsJson()) {

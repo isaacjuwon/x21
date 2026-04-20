@@ -13,9 +13,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\Response;
+use Knuckles\Scribe\Attributes\Unauthenticated;
 
+#[Group('Authentication', 'Register, login, and manage tokens')]
 final class ResetPasswordController
 {
+    #[Unauthenticated]
+    #[Response(['message' => 'Your password has been reset.'], status: 200, description: 'Password reset successful')]
+    #[Response(['message' => 'This password reset token is invalid.'], status: 422, description: 'Invalid token')]
     public function __invoke(ResetPasswordRequest $request): JsonResponse
     {
         $payload = ResetPasswordPayload::fromRequest($request);

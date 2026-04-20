@@ -11,24 +11,31 @@ use App\Models\User;
 use App\Support\SecurityAudit;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
+use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\Response;
+use Knuckles\Scribe\Attributes\Unauthenticated;
 
+#[Group('Authentication', 'Register, login, and manage tokens')]
 final class RegisterController
 {
+    #[Unauthenticated]
+    #[Response([
+        'data' => ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
+        'meta' => ['token' => '1|abc123...', 'token_type' => 'Bearer'],
+    ], status: 201, description: 'Registration successful')]
     public function __invoke(RegisterRequest $request): JsonResponse
     {
         $payload = RegisterPayload::fromRequest($request);
-
-        $plainToken = Str::random(60);
 
         $user = User::create([
             'name' => $payload->name,
             'email' => $payload->email,
             'password' => $payload->password,
-            'api_token' => hash('sha256', $plainToken),
         ]);
 
         event(new Registered($user));
+
+        $token = $user->createToken('api')->plainTextToken;
 
         SecurityAudit::log('auth.register.succeeded', [
             'user_id' => (string) $user->getKey(),
@@ -37,7 +44,7 @@ final class RegisterController
         return response()->json([
             'data' => new UserResource($user),
             'meta' => [
-                'token' => $plainToken,
+                'token' => $token,
                 'token_type' => 'Bearer',
             ],
         ], 201);

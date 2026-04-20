@@ -65,7 +65,7 @@ Route::prefix('/auth')->name('auth.')->group(function (): void {
         ->middleware('throttle:5,1')
         ->name('password.reset');
 
-    Route::middleware('auth.api')->group(function (): void {
+    Route::middleware('auth:sanctum')->group(function (): void {
         Route::get('/me', MeController::class)->name('me');
         Route::post('/logout', LogoutController::class)->name('logout');
         Route::get('/tokens', ListTokensController::class)->name('tokens.index');
@@ -75,7 +75,7 @@ Route::prefix('/auth')->name('auth.')->group(function (): void {
 });
 
 // --- Authenticated V1 routes ---
-Route::middleware('auth.api')->group(function (): void {
+Route::middleware('auth:sanctum')->group(function (): void {
 
     // --- User ---
     Route::prefix('/user')->name('user.')->group(function (): void {
