@@ -10,8 +10,8 @@ use App\Http\Resources\Api\V1\User\UserResource;
 use App\Models\User;
 use App\Support\SecurityAudit;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 final class LoginController
@@ -25,7 +25,6 @@ final class LoginController
         if (! $user || ! Hash::check($payload->password, $user->password)) {
             SecurityAudit::log('auth.login.failed', [
                 'email_hash' => SecurityAudit::hashEmail($payload->email),
-                'device_name' => $payload->deviceName,
             ]);
 
             throw ValidationException::withMessages([
@@ -33,41 +32,20 @@ final class LoginController
             ]);
         }
 
-        [$token, $expiresAt] = $this->issueToken($user, $payload->deviceName);
+        // Generate a plain token, store its hash
+        $plainToken = Str::random(60);
+        $user->forceFill(['api_token' => hash('sha256', $plainToken)])->save();
 
         SecurityAudit::log('auth.login.succeeded', [
             'user_id' => (string) $user->getKey(),
-            'device_name' => $payload->deviceName,
         ]);
 
         return response()->json([
             'data' => new UserResource($user),
             'meta' => [
-                'token' => $token,
+                'token' => $plainToken,
                 'token_type' => 'Bearer',
-                'expires_at' => $expiresAt?->toAtomString(),
             ],
         ]);
-    }
-
-    /**
-     * @return array{0:string,1:Carbon|null}
-     */
-    private function issueToken(User $user, string $deviceName): array
-    {
-        $configuredExpiration = config('sanctum.expiration');
-        $expirationMinutes = filter_var(
-            $configuredExpiration,
-            FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]],
-        );
-
-        $expiresAt = $expirationMinutes !== false
-            ? now()->addMinutes($expirationMinutes)
-            : null;
-
-        $token = $user->createToken($deviceName, ['*'], $expiresAt);
-
-        return [$token->plainTextToken, $expiresAt];
     }
 }

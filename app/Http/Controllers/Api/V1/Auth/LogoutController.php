@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Support\SecurityAudit;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Laravel\Sanctum\PersonalAccessToken;
 
 final class LogoutController
 {
@@ -15,16 +14,9 @@ final class LogoutController
     {
         $user = $request->user();
 
-        /** @var PersonalAccessToken|null $token */
-        $token = $user?->currentAccessToken();
-
-        if ($token) {
-            SecurityAudit::log('auth.logout.succeeded', [
-                'user_id' => (string) $user->getKey(),
-                'token_id' => (string) $token->getKey(),
-            ]);
-
-            $token->delete();
+        if ($user) {
+            SecurityAudit::log('auth.logout.succeeded', ['user_id' => (string) $user->getKey()]);
+            $user->forceFill(['api_token' => null])->save();
         }
 
         return response()->noContent();
