@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Tickets;
 
 use App\Actions\Tickets\ReplyToTicketAction;
@@ -12,9 +14,13 @@ use Knuckles\Scribe\Attributes\Group;
 
 #[Group('Tickets', 'Support ticket management')]
 #[Authenticated]
-class TicketReplyController
+final class StoreReplyController
 {
-    public function store(StoreTicketReplyRequest $request, Ticket $ticket, ReplyToTicketAction $action): JsonResponse
+    public function __construct(
+        private readonly ReplyToTicketAction $action,
+    ) {}
+
+    public function __invoke(StoreTicketReplyRequest $request, Ticket $ticket): JsonResponse
     {
         if ($ticket->user_id !== $request->user()->id) {
             abort(404);
@@ -24,7 +30,11 @@ class TicketReplyController
             abort(422, 'This ticket is closed and no longer accepting replies.');
         }
 
-        $reply = $action->handle($ticket, $request->user(), $request->validated('message'));
+        $reply = $this->action->handle(
+            ticket: $ticket,
+            user: $request->user(),
+            message: $request->validated('message'),
+        );
 
         return (new TicketReplyResource($reply->load('user')))
             ->response()
