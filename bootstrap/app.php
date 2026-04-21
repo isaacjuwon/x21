@@ -25,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
+        web: __DIR__ . '/../routes/web.php',
         api: __DIR__ . '/../routes/api/routes.php',
         apiPrefix: '',
         commands: __DIR__ . '/../routes/console.php',
