@@ -1,70 +1,22 @@
-name: Endpoints
+name: Authentication
 description: ''
 endpoints:
   -
     custom: []
     httpMethods:
       - POST
-    uri: 'api/v1/webhooks/{provider}'
+    uri: v1/auth/register
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Token Authentication'
       subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
+      title: Register
+      description: 'Create a new account and issue a Sanctum bearer token.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      provider:
-        custom: []
-        name: provider
-        description: ''
-        required: true
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      provider: architecto
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/auth/register
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -75,9 +27,9 @@ endpoints:
       name:
         custom: []
         name: name
-        description: 'Must not be greater than 255 characters.'
+        description: 'Display name for the account.'
         required: true
-        example: b
+        example: 'Jane Doe'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -86,9 +38,9 @@ endpoints:
       email:
         custom: []
         name: email
-        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        description: 'Unique email address for login.'
         required: true
-        example: zbailey@example.net
+        example: jane@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -97,9 +49,9 @@ endpoints:
       password:
         custom: []
         name: password
-        description: ''
+        description: 'Account password.'
         required: true
-        example: '|]|{+-'
+        example: password123
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -108,26 +60,35 @@ endpoints:
       device_name:
         custom: []
         name: device_name
-        description: 'Must not be greater than 255 characters.'
+        description: 'Client device label for token tracking.'
         required: false
-        example: v
+        example: ios-app
         type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: true
+        nullable: false
         deprecated: false
     cleanBodyParameters:
-      name: b
-      email: zbailey@example.net
-      password: '|]|{+-'
-      device_name: v
+      name: 'Jane Doe'
+      email: jane@example.com
+      password: password123
+      device_name: ios-app
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"data":{"id":"","type":"users","attributes":{"name":"Justina Gaylord","email":"lafayette.considine@example.com","email_verified_at":"2026-02-23T19:05:13+00:00","created_at":null,"updated_at":null}},"meta":{"token":"1|example-token","token_type":"Bearer","expires_at":null}}'
+        headers: []
+        description: 'Registration succeeded.'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"The given data was invalid.","errors":{"email":["The email has already been taken."]}}'
+        headers: []
+        description: 'Validation failed.'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -135,19 +96,18 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/auth/login
+    uri: v1/auth/login
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Token Authentication'
       subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
+      title: Login
+      description: 'Authenticate a user and issue a Sanctum bearer token.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -158,9 +118,9 @@ endpoints:
       email:
         custom: []
         name: email
-        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        description: 'User email address.'
         required: true
-        example: gbailey@example.net
+        example: jane@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -169,9 +129,9 @@ endpoints:
       password:
         custom: []
         name: password
-        description: ''
+        description: 'User password.'
         required: true
-        example: '|]|{+-'
+        example: password123
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -180,25 +140,34 @@ endpoints:
       device_name:
         custom: []
         name: device_name
-        description: 'Must not be greater than 255 characters.'
+        description: 'Client device label for token tracking.'
         required: true
-        example: v
+        example: ios-app
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: gbailey@example.net
-      password: '|]|{+-'
-      device_name: v
+      email: jane@example.com
+      password: password123
+      device_name: ios-app
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":"","type":"users","attributes":{"name":"Justina Gaylord","email":"cormier.nick@example.com","email_verified_at":"2026-02-23T19:05:13+00:00","created_at":null,"updated_at":null}},"meta":{"token":"1|example-token","token_type":"Bearer","expires_at":null}}'
+        headers: []
+        description: 'Login succeeded.'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"The given data was invalid.","errors":{"email":["The provided credentials are incorrect."]}}'
+        headers: []
+        description: 'Credentials were invalid.'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -206,19 +175,18 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/auth/forgot-password
+    uri: v1/auth/password/forgot
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Password Reset'
       subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
+      title: 'Request Password Reset'
+      description: 'Send a password reset link to the provided email if an account exists.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -229,23 +197,26 @@ endpoints:
       email:
         custom: []
         name: email
-        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        description: 'Account email address.'
         required: true
-        example: gbailey@example.net
+        example: jane@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: gbailey@example.net
+      email: jane@example.com
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"If the account exists, a password reset link has been sent."}'
+        headers: []
+        description: 'Password reset request accepted.'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -253,25 +224,139 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/auth/reset-password
+    uri: v1/auth/password/reset
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Password Reset'
       subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
+      title: 'Reset Password'
+      description: 'Reset the user password using a valid reset token.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
+    bodyParameters:
+      token:
+        custom: []
+        name: token
+        description: 'Password reset token.'
+        required: true
+        example: reset-token-value
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Account email associated with token.'
+        required: true
+        example: jane@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'New account password.'
+        required: true
+        example: new-password123
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Must match password.'
+        required: true
+        example: new-password123
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      token: reset-token-value
+      email: jane@example.com
+      password: new-password123
+      password_confirmation: new-password123
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Your password has been reset."}'
+        headers: []
+        description: 'Password reset succeeded.'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"The given data was invalid.","errors":{"email":["This password reset token is invalid."]}}'
+        headers: []
+        description: 'Reset token or payload was invalid.'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'v1/auth/password/reset/{token}'
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: 'Password Reset'
+      subgroupDescription: ''
+      title: 'Read Reset Token Payload'
+      description: 'Return reset token and email payload for API clients handling email reset links.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      token:
+        custom: []
+        name: token
+        description: 'Password reset token from reset link.'
+        required: true
+        example: reset-token-value
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      token: reset-token-value
+    queryParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Account email from the reset link.'
+        required: false
+        example: jane@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      email: jane@example.com
     bodyParameters:
       token:
         custom: []
@@ -288,47 +373,26 @@ endpoints:
         custom: []
         name: email
         description: 'Must be a valid email address. Must not be greater than 255 characters.'
-        required: true
+        required: false
         example: zbailey@example.net
         type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: ''
-        required: true
-        example: '|]|{+-'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      password_confirmation:
-        custom: []
-        name: password_confirmation
-        description: ''
-        required: true
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
+        nullable: true
         deprecated: false
     cleanBodyParameters:
       token: architecto
       email: zbailey@example.net
-      password: '|]|{+-'
-      password_confirmation: architecto
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"token":"reset-token-value","email":"jane@example.com"}'
+        headers: []
+        description: 'Reset payload data.'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -336,15 +400,106 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: api/v1/auth/me
+    uri: 'v1/auth/email/verify/{id}/{hash}'
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Email Verification'
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Verify Email'
+      description: 'Verify a user email using the signed verification link parameters.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'User ULID from the signed verification link.'
+        required: true
+        example: 01HZX3W3T4J8Q57XNZD5BPHJ92
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      hash:
+        custom: []
+        name: hash
+        description: 'SHA-1 hash of the email from the signed verification link.'
+        required: true
+        example: 8c4f4370e5db9b5be6d0f4c95495f49f998fa32a
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 01HZX3W3T4J8Q57XNZD5BPHJ92
+      hash: 8c4f4370e5db9b5be6d0f4c95495f49f998fa32a
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      hash:
+        custom: []
+        name: hash
+        description: 'Must be 40 characters.'
+        required: true
+        example: ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqld
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id: architecto
+      hash: ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqld
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Email verified successfully."}'
+        headers: []
+        description: 'Email was verified.'
+      -
+        custom: []
+        status: 403
+        content: '{"message":"Invalid verification link."}'
+        headers: []
+        description: 'Signed URL was invalid, expired, or mismatched.'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: v1/auth/me
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: 'Token Authentication'
+      subgroupDescription: ''
+      title: 'Get Current User'
+      description: 'Return the authenticated user for the current bearer token.'
       authenticated: true
       deprecated: false
     headers:
@@ -361,18 +516,16 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: '{"data":{"id":"","type":"users","attributes":{"name":"Morgan Hirthe","email":"dare.emelie@example.com","email_verified_at":"2026-02-23T19:05:13+00:00","created_at":null,"updated_at":null}}}'
+        headers: []
+        description: 'Authenticated user profile.'
+      -
+        custom: []
         status: 401
         content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          referrer-policy: no-referrer
-          content-language: en
-          x-request-id: c0dde5d1-1adb-4600-9aeb-619b8bb86574
-          access-control-allow-origin: '*'
-        description: null
+        headers: []
+        description: 'Authentication failed.'
     responseFields: []
     auth:
       - headers
@@ -385,50 +538,15 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/auth/logout
+    uri: v1/auth/logout
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Token Authentication'
       subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/v1/auth/tokens
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
+      title: Logout
+      description: 'Revoke the current Sanctum token.'
       authenticated: true
       deprecated: false
     headers:
@@ -445,18 +563,16 @@ endpoints:
     responses:
       -
         custom: []
+        status: 204
+        content: null
+        headers: []
+        description: 'Token revoked.'
+      -
+        custom: []
         status: 401
         content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          referrer-policy: no-referrer
-          content-language: en
-          x-request-id: 379bdde3-0c50-4824-8f8c-00eca8bed1f9
-          access-control-allow-origin: '*'
-        description: null
+        headers: []
+        description: 'Authentication failed.'
     responseFields: []
     auth:
       - headers
@@ -468,16 +584,16 @@ endpoints:
   -
     custom: []
     httpMethods:
-      - DELETE
-    uri: api/v1/auth/tokens
+      - GET
+    uri: v1/auth/tokens
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Token Authentication'
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'List Tokens'
+      description: 'List personal access tokens for the authenticated user.'
       authenticated: true
       deprecated: false
     headers:
@@ -491,7 +607,25 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":"1","type":"personal-access-tokens","attributes":{"name":"ios-app","abilities":["auth:me","auth:logout"],"last_used_at":null,"expires_at":"2026-02-24T12:00:00+00:00","created_at":"2026-02-23T12:00:00+00:00","updated_at":"2026-02-23T12:00:00+00:00","is_current":true}}]}'
+        headers: []
+        description: 'Token list payload.'
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers: []
+        description: 'Authentication failed.'
+      -
+        custom: []
+        status: 403
+        content: '{"message":"Forbidden."}'
+        headers: []
+        description: 'Token is missing required ability.'
     responseFields: []
     auth:
       - headers
@@ -504,15 +638,68 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/v1/auth/tokens/{token_id}'
+    uri: v1/auth/tokens
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Token Authentication'
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Revoke All Tokens'
+      description: 'Revoke all personal access tokens for the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: null
+        headers: []
+        description: 'All tokens revoked.'
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers: []
+        description: 'Authentication failed.'
+      -
+        custom: []
+        status: 403
+        content: '{"message":"Forbidden."}'
+        headers: []
+        description: 'Token is missing required ability.'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'v1/auth/tokens/{token_id}'
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: 'Token Authentication'
+      subgroupDescription: ''
+      title: 'Revoke Token'
+      description: 'Revoke one personal access token owned by the authenticated user.'
       authenticated: true
       deprecated: false
     headers:
@@ -523,16 +710,16 @@ endpoints:
       token_id:
         custom: []
         name: token_id
-        description: 'The ID of the token.'
+        description: 'Personal access token id.'
         required: true
-        example: architecto
-        type: string
+        example: 42
+        type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      token_id: architecto
+      token_id: 42
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -550,7 +737,31 @@ endpoints:
     cleanBodyParameters:
       token_id: 16
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: null
+        headers: []
+        description: 'Token revoked.'
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers: []
+        description: 'Authentication failed.'
+      -
+        custom: []
+        status: 403
+        content: '{"message":"Forbidden."}'
+        headers: []
+        description: 'Token is missing required ability.'
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Token not found."}'
+        headers: []
+        description: 'Token does not belong to current user or no longer exists.'
     responseFields: []
     auth:
       - headers
@@ -563,15 +774,15 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/support/chat
+    uri: v1/auth/email/verification-notification
     metadata:
       custom: []
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: ''
+      subgroup: 'Email Verification'
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Send Verification Email'
+      description: 'Send (or resend) an email verification link to the authenticated user.'
       authenticated: true
       deprecated: false
     headers:
@@ -582,22 +793,28 @@ endpoints:
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      message:
-        custom: []
-        name: message
-        description: 'Must be at least 3 characters. Must not be greater than 500 characters.'
-        required: true
-        example: b
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      message: b
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Verification link sent."}'
+        headers: []
+        description: 'Verification email queued/sent.'
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Email is already verified."}'
+        headers: []
+        description: 'User already verified.'
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers: []
+        description: 'Authentication failed.'
     responseFields: []
     auth:
       - headers

@@ -1,9 +1,9 @@
 # Introduction
 
-A comprehensive API for managing loans, shares, wallet transactions, and VTU services. All endpoints require Sanctum Bearer token authentication unless stated otherwise.
+
 
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost</code>
+    <strong>Base URL</strong>: <code>http://kit.test</code>
 </aside>
 
     This documentation aims to provide all the information you need to work with our API.

@@ -4,4 +4,4 @@ To authenticate requests, include an **`Authorization`** header with the value *
 
 All authenticated endpoints are marked with a `requires authentication` badge in the documentation below.
 
-Authenticate using a Sanctum personal access token. Pass the token in the <code>Authorization</code> header as <code>Bearer {token}</code>. You can obtain a token by logging in via the web application.
+Get a bearer token from the `POST /v1/auth/login` endpoint.
