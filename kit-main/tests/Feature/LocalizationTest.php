@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\SetRequestLocale;
 use App\Models\User;
+use App\Http\Middleware\SetRequestLocale;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;

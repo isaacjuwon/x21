@@ -42,6 +42,7 @@ final class Sunset
 
     private function attachHeaders(Response $response, CarbonImmutable $sunsetDate, ?string $successorUrl): Response
     {
+        // RFC 9745 syntax for Deprecation supports epoch prefixed with @.
         $response->headers->set('Deprecation', '@'.$sunsetDate->timestamp);
         $response->headers->set('Sunset', $sunsetDate->format('D, d M Y H:i:s').' GMT');
 

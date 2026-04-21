@@ -20,7 +20,7 @@ function generateOpenApiSpec(bool $forceGenerate = false): array
 {
     $specPath = base_path('public/docs/openapi.yaml');
 
-    if ($forceGenerate || ! File::exists($specPath)) {
+    if ($forceGenerate || !File::exists($specPath)) {
         $exitCode = Artisan::call('scribe:generate', [
             '--no-interaction' => true,
         ]);
@@ -96,6 +96,7 @@ function resolveOpenApiSchema(array $spec, array $schema): array
 /**
  * @param  array<string, mixed>  $spec
  * @param  array<string, mixed>  $schema
+ * @param  mixed  $value
  */
 function assertMatchesOpenApiSchema(array $spec, array $schema, mixed $value, string $path = '$'): void
 {
@@ -115,7 +116,7 @@ function assertMatchesOpenApiSchema(array $spec, array $schema, mixed $value, st
                 assertMatchesOpenApiSchema($spec, $candidate, $value, $path);
 
                 return;
-            } catch (Throwable) {
+            } catch (\Throwable) {
                 continue;
             }
         }
@@ -133,7 +134,7 @@ function assertMatchesOpenApiSchema(array $spec, array $schema, mixed $value, st
                 assertMatchesOpenApiSchema($spec, $candidate, $value, $path);
 
                 return;
-            } catch (Throwable) {
+            } catch (\Throwable) {
                 continue;
             }
         }
@@ -160,6 +161,7 @@ function assertMatchesOpenApiSchema(array $spec, array $schema, mixed $value, st
 /**
  * @param  array<string, mixed>  $spec
  * @param  array<string, mixed>  $schema
+ * @param  mixed  $value
  */
 function assertOpenApiObject(array $spec, array $schema, mixed $value, string $path): void
 {
@@ -197,6 +199,7 @@ function assertOpenApiObject(array $spec, array $schema, mixed $value, string $p
 /**
  * @param  array<string, mixed>  $spec
  * @param  array<string, mixed>  $schema
+ * @param  mixed  $value
  */
 function assertOpenApiArray(array $spec, array $schema, mixed $value, string $path): void
 {
@@ -232,8 +235,8 @@ it('generates openapi and documents all v1 auth routes', function (): void {
         ->values();
 
     $routeOperations = collect(Route::getRoutes()->getRoutes())
-        ->filter(fn (Illuminate\Routing\Route $route) => str_starts_with($route->uri(), 'v1/auth'))
-        ->flatMap(function (Illuminate\Routing\Route $route) {
+        ->filter(fn (\Illuminate\Routing\Route $route) => str_starts_with($route->uri(), 'v1/auth'))
+        ->flatMap(function (\Illuminate\Routing\Route $route) {
             $uri = '/'.$route->uri();
 
             return collect($route->methods())

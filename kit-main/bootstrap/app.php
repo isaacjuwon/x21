@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\AttachRequestId;
-use App\Http\Middleware\EnforceTransportSecurity;
 use App\Http\Middleware\EnsureJsonApiRequest;
+use App\Http\Middleware\EnforceTransportSecurity;
 use App\Http\Middleware\IdempotencyKey;
 use App\Http\Middleware\SetRequestLocale;
 use App\Http\Middleware\Sunset;
@@ -25,9 +25,9 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api: __DIR__.'/../routes/api/routes.php',
+        api: __DIR__ . '/../routes/api/routes.php',
         apiPrefix: '',
-        commands: __DIR__.'/../routes/console.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {

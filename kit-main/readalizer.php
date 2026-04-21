@@ -68,19 +68,19 @@ return [
     // Choose one or more rulesets (packs).
     'ruleset' => [
         // File tests
-        new StrictTypesDeclarationRule,
-        new RequireNamespaceRule,
-        new RequireNamespaceDeclarationFirstRule,
-        new SingleNamespacePerFileRule,
-        new SingleClassPerFileRule,
-        new NoExecutableCodeInFilesRule,
-        new NoBOMRule,
+        new StrictTypesDeclarationRule(),
+        new RequireNamespaceRule(),
+        new RequireNamespaceDeclarationFirstRule(),
+        new SingleNamespacePerFileRule(),
+        new SingleClassPerFileRule(),
+        new NoExecutableCodeInFilesRule(),
+        new NoBOMRule(),
 
         // Type rules
-        new NoPhpCloseTagRule,
-        new ReturnTypeRequiredRule,
-        new NoArrayReturnRule,
-        new ParameterTypeRequiredRule,
+        new NoPhpCloseTagRule(),
+        new ReturnTypeRequiredRule(),
+        new NoArrayReturnRule(),
+        new ParameterTypeRequiredRule(),
     ],
 
     // Add or override rules on top of rulesets.
