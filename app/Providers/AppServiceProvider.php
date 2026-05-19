@@ -24,6 +24,7 @@ use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Spatie\LaravelSettings\Exceptions\MissingSettings;
+use stdClass;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -82,8 +83,8 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             $view->with([
-                'generalSettings' => app(GeneralSettings::class),
-                'layoutSettings' => app(LayoutSettings::class),
+                'generalSettings' => $this->resolveGeneralSettings(),
+                'layoutSettings' => $this->resolveLayoutSettings(),
             ]);
         });
 
@@ -122,5 +123,52 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    private function resolveGeneralSettings(): GeneralSettings|stdClass
+    {
+        try {
+            return app(GeneralSettings::class);
+        } catch (MissingSettings|QueryException) {
+            return (object) [
+                'site_name' => config('app.name'),
+                'site_logo' => null,
+                'site_dark_logo' => null,
+                'site_favicon' => null,
+                'site_dark_favicon' => null,
+                'site_description' => null,
+                'contact_email' => null,
+                'support_email' => null,
+                'maintenance_mode' => false,
+                'registration_enabled' => true,
+                'currency' => 'NGN',
+                'timezone' => config('app.timezone', 'Africa/Lagos'),
+            ];
+        }
+    }
+
+    private function resolveLayoutSettings(): LayoutSettings|stdClass
+    {
+        try {
+            return app(LayoutSettings::class);
+        } catch (MissingSettings|QueryException) {
+            return (object) [
+                'primary_color' => '#2563eb',
+                'sidebar_collapsible' => true,
+                'font_family' => 'Instrument Sans',
+                'homepage_features_title' => 'Why choose us',
+                'homepage_features_description' => null,
+                'homepage_features_items' => [],
+                'banner' => null,
+                'about' => null,
+                'address' => null,
+                'facebook' => null,
+                'twitter' => null,
+                'instagram' => null,
+                'email' => null,
+                'homepage_title' => config('app.name'),
+                'homepage_description' => null,
+            ];
+        }
     }
 }

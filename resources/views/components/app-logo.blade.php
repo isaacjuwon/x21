@@ -1,5 +1,18 @@
 @php
-    $generalSettings = app(App\Settings\GeneralSettings::class);
+    use App\Settings\GeneralSettings;
+    use Illuminate\Database\QueryException;
+    use Spatie\LaravelSettings\Exceptions\MissingSettings;
+
+    try {
+        $generalSettings = app(GeneralSettings::class);
+    } catch (MissingSettings|QueryException) {
+        $generalSettings = (object) [
+            'site_name' => config('app.name', 'Laravel Starter Kit'),
+            'site_logo' => null,
+            'site_dark_logo' => null,
+        ];
+    }
+
     $siteName = $generalSettings->site_name ?? 'Laravel Starter Kit';
     $siteLogo = $generalSettings->site_logo;
     $siteDarkLogo = $generalSettings->site_dark_logo ?? $siteLogo;

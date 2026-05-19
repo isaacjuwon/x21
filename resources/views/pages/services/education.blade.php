@@ -117,7 +117,7 @@ new #[Title('Education Pins')] class extends Component {
                             <input type="radio" wire:model.live="brand_id" value="{{ $brand->id }}" class="sr-only peer">
                             <div class="p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
                                 @if($brand->hasMedia('logo'))
-                                    <img src="{{ $brand->getFirstMediaUrl('logo') }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
+                                    <img src="{{ asset($brand->getFirstMediaUrl('logo')) }}" alt="{{ $brand->name }}" class="h-10 w-10 rounded-full object-cover">
                                 @else
                                     <div class="h-10 w-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-primary-color">
                                         {{ substr($brand->name, 0, 1) }}
