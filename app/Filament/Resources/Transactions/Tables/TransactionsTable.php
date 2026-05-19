@@ -28,6 +28,11 @@ class TransactionsTable
                     ->fontFamily('mono')
                     ->size('sm'),
 
+                TextColumn::make('performedByUser.name')
+                    ->label('Performed By')
+                    ->placeholder('System')
+                    ->toggleable(),
+
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
@@ -73,6 +78,6 @@ class TransactionsTable
                 ViewAction::make(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->modifyQueryUsing(fn ($query) => $query->with('wallet.user'));
+            ->modifyQueryUsing(fn ($query) => $query->with(['wallet.user', 'performedByUser']));
     }
 }

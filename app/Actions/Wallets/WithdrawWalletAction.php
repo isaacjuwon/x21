@@ -88,7 +88,7 @@ class WithdrawWalletAction
         // Verify account name against user's name
         $accountName = $this->verifyAccountName($accountNumber, $bankCode, $user);
 
-        return DB::transaction(function () use ($user, $amount, $charges, $accountNumber, $bankCode, $bankName, $accountName) {
+        return DB::transaction(function () use ($user, $charges, $accountNumber, $bankCode, $bankName, $accountName) {
             // Debit the full amount (including fee + stamp duty) from wallet
             $wallet = $user->getWallet(WalletType::General);
             $wallet->decrement('balance', $charges['total']);
@@ -96,6 +96,7 @@ class WithdrawWalletAction
             $reference = 'WDR-'.strtoupper(Str::random(10));
 
             $transaction = $wallet->transactions()->create([
+                'performed_by_user_id' => $user->id,
                 'amount' => $charges['total'],
                 'type' => TransactionType::Withdrawal,
                 'status' => TransactionStatus::Pending,

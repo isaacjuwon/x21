@@ -1,0 +1,2365 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/ship.test"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "ce6d3112-d1e0-4848-bf19-e30fbc833d8e",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "",
+            "item": [
+                {
+                    "name": "Token Authentication",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Register",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/register",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/register"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"Jane Doe\",\"email\":\"jane@example.com\",\"password\":\"password123\",\"device_name\":\"ios-app\"}"
+                                },
+                                "description": "Create a new account and issue a Sanctum bearer token.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"lafayette.considine@example.com\",\"email_verified_at\":\"2026-04-22T13:19:15+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "name": "Registration succeeded."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 422,
+                                    "body": "{\"message\":\"The given data was invalid.\",\"errors\":{\"email\":[\"The email has already been taken.\"]}}",
+                                    "name": "Validation failed."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Login",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/login",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/login"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"email\":\"jane@example.com\",\"password\":\"password123\",\"device_name\":\"ios-app\"}"
+                                },
+                                "description": "Authenticate a user and issue a Sanctum bearer token.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"cormier.nick@example.com\",\"email_verified_at\":\"2026-04-22T13:19:16+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "name": "Login succeeded."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 422,
+                                    "body": "{\"message\":\"The given data was invalid.\",\"errors\":{\"email\":[\"The provided credentials are incorrect.\"]}}",
+                                    "name": "Credentials were invalid."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Get Current User",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/me",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/me"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Return the authenticated user for the current bearer token."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Morgan Hirthe\",\"email\":\"dare.emelie@example.com\",\"email_verified_at\":\"2026-04-22T13:19:16+00:00\",\"created_at\":null,\"updated_at\":null}}}",
+                                    "name": "Authenticated user profile."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": "Authentication failed."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Logout",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/logout",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/logout"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Revoke the current Sanctum token."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": null,
+                                    "name": "Token revoked."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": "Authentication failed."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "List Tokens",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/tokens",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/tokens"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "List personal access tokens for the authenticated user."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"data\":[{\"id\":\"1\",\"type\":\"personal-access-tokens\",\"attributes\":{\"name\":\"ios-app\",\"abilities\":[\"auth:me\",\"auth:logout\"],\"last_used_at\":null,\"expires_at\":\"2026-02-24T12:00:00+00:00\",\"created_at\":\"2026-02-23T12:00:00+00:00\",\"updated_at\":\"2026-02-23T12:00:00+00:00\",\"is_current\":true}}]}",
+                                    "name": "Token list payload."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": "Authentication failed."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\":\"Forbidden.\"}",
+                                    "name": "Token is missing required ability."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Revoke All Tokens",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/tokens",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/tokens"
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Revoke all personal access tokens for the authenticated user."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": null,
+                                    "name": "All tokens revoked."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": "Authentication failed."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\":\"Forbidden.\"}",
+                                    "name": "Token is missing required ability."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Revoke Token",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/tokens\/:token_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/tokens\/:token_id",
+                                    "variable": [
+                                        {
+                                            "id": "token_id",
+                                            "key": "token_id",
+                                            "value": "42",
+                                            "description": "Personal access token id."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"token_id\":16}"
+                                },
+                                "description": "Revoke one personal access token owned by the authenticated user."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": null,
+                                    "name": "Token revoked."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": "Authentication failed."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\":\"Forbidden.\"}",
+                                    "name": "Token is missing required ability."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 404,
+                                    "body": "{\"message\":\"Token not found.\"}",
+                                    "name": "Token does not belong to current user or no longer exists."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Password Reset",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Request Password Reset",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/forgot-password",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/forgot-password"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"email\":\"jane@example.com\"}"
+                                },
+                                "description": "Send a password reset link to the provided email if an account exists.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"message\":\"If the account exists, a password reset link has been sent.\"}",
+                                    "name": "Password reset request accepted."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Reset Password",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "v1\/auth\/reset-password",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/v1\/auth\/reset-password"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"token\":\"reset-token-value\",\"email\":\"jane@example.com\",\"password\":\"new-password123\",\"password_confirmation\":\"new-password123\"}"
+                                },
+                                "description": "Reset the user password using a valid reset token.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"message\":\"Your password has been reset.\"}",
+                                    "name": "Password reset succeeded."
+                                },
+                                {
+                                    "header": [],
+                                    "code": 422,
+                                    "body": "{\"message\":\"The given data was invalid.\",\"errors\":{\"email\":[\"This password reset token is invalid.\"]}}",
+                                    "name": "Reset token or payload was invalid."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "POST v1\/webhooks\/{provider}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/webhooks\/:provider",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/webhooks\/:provider",
+                            "variable": [
+                                {
+                                    "id": "provider",
+                                    "key": "provider",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST v1\/support\/chat",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/support\/chat",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/support\/chat"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"message\":\"b\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "KYC",
+            "description": "Identity verification",
+            "item": [
+                {
+                    "name": "Get the authenticated user's KYC status for all types.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/kyc",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/kyc"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Submit automatic KYC verification via Dojah.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/kyc\/automatic",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/kyc\/automatic"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"type\":\"bvn\",\"number\":\"82256977571\"}"
+                        },
+                        "description": "Returns immediately with the verification result."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Submit manual KYC verification with document upload.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/kyc\/manual",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/kyc\/manual"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "type",
+                                    "value": "nin",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "number",
+                                    "value": "82256977571",
+                                    "type": "text",
+                                    "description": "Must be 11 digits."
+                                },
+                                {
+                                    "key": "document",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Stays pending until admin reviews the document."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Loans",
+            "description": "Loan application and management",
+            "item": [
+                {
+                    "name": "POST v1\/loans\/eligibility",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/eligibility",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/eligibility"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"principal_amount\":50000}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"passed\":true,\"reason\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"passed\":false,\"reason\":\"Account must be at least 30 days old.\"}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/loans",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"user_id\":5,\"principal_amount\":1097.52,\"outstanding_balance\":1097.52,\"interest_rate\":0.2934,\"repayment_term_months\":18,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null},{\"id\":null,\"user_id\":6,\"principal_amount\":2349.31,\"outstanding_balance\":2349.31,\"interest_rate\":0.0611,\"repayment_term_months\":55,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/loans",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"principal_amount\":50000,\"repayment_term_months\":12,\"interest_method\":\"FlatRate\",\"notes\":\"Business expansion\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"principal_amount\":12966.66,\"outstanding_balance\":12966.66,\"interest_rate\":0.2089,\"repayment_term_months\":51,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"You are not eligible for this loan.\"}",
+                            "name": "Eligibility failed"
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/loans\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"principal_amount\":1097.52,\"outstanding_balance\":1097.52,\"interest_rate\":0.2934,\"repayment_term_months\":18,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"message\":\"Not Found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/loans\/{loan_id}\/schedule",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:loan_id\/schedule",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:loan_id\/schedule",
+                            "variable": [
+                                {
+                                    "id": "loan_id",
+                                    "key": "loan_id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"loan_id\":2,\"instalment_number\":30,\"due_date\":\"2026-05-13T00:00:00.000000Z\",\"instalment_amount\":103.78,\"principal_component\":101.39,\"interest_component\":2.39,\"outstanding_balance\":21270.2,\"status\":\"Pending\",\"remaining_amount\":103.78,\"paid_at\":null},{\"id\":null,\"loan_id\":3,\"instalment_number\":45,\"due_date\":\"2026-07-05T00:00:00.000000Z\",\"instalment_amount\":1579.06,\"principal_component\":280.37,\"interest_component\":1298.69,\"outstanding_balance\":11744.34,\"status\":\"Pending\",\"remaining_amount\":1579.06,\"paid_at\":null}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/loans\/{loan_id}\/repayments",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:loan_id\/repayments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:loan_id\/repayments",
+                            "variable": [
+                                {
+                                    "id": "loan_id",
+                                    "key": "loan_id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":5000}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":null,\"loan_id\":2,\"amount\":4977.1,\"transaction_id\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient funds.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/loans\/{loan_id}\/approve",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:loan_id\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:loan_id\/approve",
+                            "variable": [
+                                {
+                                    "id": "loan_id",
+                                    "key": "loan_id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"Approved after review\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"principal_amount\":49771.04,\"outstanding_balance\":49771.04,\"interest_rate\":0.1111,\"repayment_term_months\":38,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Loan must be in active status to be approved.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/loans\/{loan_id}\/disburse",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:loan_id\/disburse",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:loan_id\/disburse",
+                            "variable": [
+                                {
+                                    "id": "loan_id",
+                                    "key": "loan_id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"notes\":\"Disbursed to account\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"principal_amount\":49771.04,\"outstanding_balance\":49771.04,\"interest_rate\":0.1111,\"repayment_term_months\":38,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Loan must be in approved status to be disbursed.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/loans\/{loan_id}\/reject",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/loans\/:loan_id\/reject",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/loans\/:loan_id\/reject",
+                            "variable": [
+                                {
+                                    "id": "loan_id",
+                                    "key": "loan_id",
+                                    "value": "1",
+                                    "description": "The ID of the loan."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"rejection_reason\":\"Insufficient income documentation\",\"notes\":\"Reviewed by compliance team\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"principal_amount\":49771.04,\"outstanding_balance\":49771.04,\"interest_rate\":0.1111,\"repayment_term_months\":38,\"interest_method\":\"FlatRate\",\"status\":\"active\",\"disbursed_at\":null,\"eligibility_passed\":null,\"notes\":null,\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Loan cannot be rejected in its current status.\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Services",
+            "description": "VTU and bill payment services",
+            "item": [
+                {
+                    "name": "POST v1\/services\/airtime",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/services\/airtime",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/services\/airtime"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":1,\"phone_number\":\"08012345678\",\"amount\":200}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"reference\":\"AIR-XXXXXXXXXX\",\"amount\":\"200.00\",\"status\":\"completed\",\"type\":null,\"response_message\":\"Transaction successful\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Airtime purchase initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient wallet balance.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"No active airtime plan found for this brand.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/services\/data",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/services\/data",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/services\/data"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":1,\"plan_id\":3,\"phone_number\":\"08012345678\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"reference\":\"DAT-XXXXXXXXXX\",\"amount\":\"500.00\",\"status\":\"completed\",\"type\":null,\"response_message\":\"Transaction successful\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Data purchase initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient wallet balance.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/services\/electricity",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/services\/electricity",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/services\/electricity"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":2,\"meter_number\":\"12345678901\",\"meter_type\":\"Prepaid\",\"amount\":2000}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"reference\":\"ELE-XXXXXXXXXX\",\"amount\":\"2000.00\",\"status\":\"completed\",\"type\":null,\"response_message\":\"Transaction successful\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Electricity payment initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient wallet balance.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"No active electricity plan found for this provider.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/services\/cable-tv",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/services\/cable-tv",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/services\/cable-tv"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":3,\"plan_id\":7,\"smart_card_number\":\"1234567890\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"reference\":\"CAB-XXXXXXXXXX\",\"amount\":\"3500.00\",\"status\":\"completed\",\"type\":null,\"response_message\":\"Transaction successful\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Cable TV subscription initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient wallet balance.\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shares",
+            "description": "Share orders and holdings",
+            "item": [
+                {
+                    "name": "GET v1\/shares\/listing",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/listing",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/listing"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"price\":\"10.98\",\"total_shares\":1000,\"available_shares\":1000,\"updated_at\":null}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "PUT v1\/shares\/listing\/price",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/listing\/price",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/listing\/price"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"price\":150}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"price\":\"497.71\",\"total_shares\":1000,\"available_shares\":1000,\"updated_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/shares\/orders",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"user_id\":5,\"type\":\"buy\",\"quantity\":81,\"price_per_share\":487.1,\"total_amount\":39455.1,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null},{\"id\":null,\"user_id\":6,\"type\":\"buy\",\"quantity\":28,\"price_per_share\":23.49,\"total_amount\":657.72,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/shares\/orders\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the order."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"type\":\"buy\",\"quantity\":81,\"price_per_share\":487.1,\"total_amount\":39455.1,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"message\":\"Not Found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/shares\/orders\/buy",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders\/buy",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders\/buy"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"quantity\":10}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"type\":\"buy\",\"quantity\":72,\"price_per_share\":129.67,\"total_amount\":9336.24,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient available shares.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient funds.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/shares\/orders\/sell",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders\/sell",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders\/sell"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"quantity\":5}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"type\":\"buy\",\"quantity\":72,\"price_per_share\":129.67,\"total_amount\":9336.24,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient shares.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Holding period not met.\",\"earliest_sell_date\":\"2025-01-01\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/shares\/orders\/{order_id}\/approve",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders\/:order_id\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders\/:order_id\/approve",
+                            "variable": [
+                                {
+                                    "id": "order_id",
+                                    "key": "order_id",
+                                    "value": "1",
+                                    "description": "The ID of the order."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"user_id\":5,\"type\":\"buy\",\"quantity\":81,\"price_per_share\":487.1,\"total_amount\":39455.1,\"status\":\"pending\",\"rejection_reason\":null,\"created_at\":null}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Order is not in a pending state.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/shares\/orders\/{order_id}\/reject",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/orders\/:order_id\/reject",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/orders\/:order_id\/reject",
+                            "variable": [
+                                {
+                                    "id": "order_id",
+                                    "key": "order_id",
+                                    "value": "1",
+                                    "description": "The ID of the order."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"rejection_reason\":\"Insufficient documentation\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Order is not in a pending state.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/shares\/holdings",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/holdings",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/holdings"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"quantity\":681,\"acquired_at\":\"2026-02-21T13:19:17.000000Z\",\"market_value\":6810,\"eligible_for_sale\":true}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/shares\/price-history",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/price-history",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/price-history"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"old_price\":10.98,\"new_price\":487.1,\"created_at\":\"2026-02-21T13:19:17.595842Z\"},{\"id\":null,\"old_price\":334.4,\"new_price\":218.45,\"created_at\":\"2026-03-13T13:19:17.597616Z\"}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/shares\/dividends",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/dividends",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/dividends"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"total_amount\":50000}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"message\":\"Dividend declared successfully.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\"message\":\"This action is unauthorized.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/shares\/dividends\/payouts",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/shares\/dividends\/payouts",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/shares\/dividends\/payouts"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"amount\":2.99,\"created_at\":null,\"dividend\":{\"total_amount\":6654.11,\"declared_at\":\"2026-04-22T13:19:17.000000Z\"}},{\"id\":null,\"amount\":866.41,\"created_at\":null,\"dividend\":{\"total_amount\":9064.05,\"declared_at\":\"2026-04-22T13:19:17.000000Z\"}}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Support",
+            "description": "FAQ and support resources",
+            "item": [
+                {
+                    "name": "GET v1\/faqs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/faqs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/faqs"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"question\":\"Adipisci quidem nostrum qui commodi incidunt iure.?\",\"answer\":\"Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.\",\"category\":\"Shares\",\"sort_order\":10},{\"id\":null,\"question\":\"Distinctio eum doloremque id aut libero aliquam veniam corporis.?\",\"answer\":\"Deleniti nemo odit quia officia. Dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam.\",\"category\":\"Shares\",\"sort_order\":79}]}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tickets",
+            "description": "Support ticket management",
+            "item": [
+                {
+                    "name": "GET v1\/tickets",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/tickets",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/tickets"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":null,\"subject\":\"Adipisci quidem nostrum qui commodi incidunt iure.\",\"message\":\"Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null},{\"id\":null,\"subject\":\"Deleniti nemo odit quia officia.\",\"message\":\"Neque blanditiis odio veritatis excepturi doloribus delectus. Qui repudiandae laboriosam est alias.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/tickets",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/tickets",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/tickets"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"subject\":\"b\",\"message\":\"ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsn\",\"priority\":\"low\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"subject\":\"Tempora ex voluptatem laboriosam praesentium quis.\",\"message\":\"Fugit deleniti distinctio eum doloremque id aut libero. Veniam corporis dolorem mollitia. Nemo odit quia officia est dignissimos. Blanditiis odio veritatis excepturi doloribus delectus fugit.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/tickets\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/tickets\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/tickets\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the ticket."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"subject\":\"Adipisci quidem nostrum qui commodi incidunt iure.\",\"message\":\"Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/tickets\/{ticket_id}\/replies",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/tickets\/:ticket_id\/replies",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/tickets\/:ticket_id\/replies",
+                            "variable": [
+                                {
+                                    "id": "ticket_id",
+                                    "key": "ticket_id",
+                                    "value": "1",
+                                    "description": "The ID of the ticket."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"message\":\"bngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntl\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "description": "Authenticated user profile",
+            "item": [
+                {
+                    "name": "GET v1\/user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"name\":\"Morgan Hirthe\",\"email\":\"imclaughlin@example.org\",\"phone_number\":null,\"avatar_url\":null,\"created_at\":null}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "PATCH v1\/user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/user"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "b",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "phone_number",
+                                    "value": "n",
+                                    "type": "text",
+                                    "description": "Must be at least 10 characters. Must not be greater than 15 characters."
+                                },
+                                {
+                                    "key": "avatar",
+                                    "src": [],
+                                    "type": "file"
+                                },
+                                {
+                                    "key": "_method",
+                                    "value": "PATCH",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":null,\"name\":\"Ramiro Okuneva\",\"email\":\"gulgowski.asia@example.com\",\"phone_number\":null,\"avatar_url\":null,\"created_at\":null}}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Wallet",
+            "description": "Wallet balance and overview",
+            "item": [
+                {
+                    "name": "GET v1\/wallet",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":1,\"type\":\"general\",\"balance\":\"5000.00\",\"held_balance\":\"200.00\",\"available_balance\":4800,\"updated_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Wallet balance"
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/wallet\/fund",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/fund",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/fund"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":5000}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"authorization_url\":\"https:\\\/\\\/checkout.paystack.com\\\/abc123\",\"reference\":\"WFT-XXXXXXXXXX\"}}",
+                            "name": "Paystack authorization URL"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"The amount field must be at least 100.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/wallet\/fund\/verify",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/fund\/verify",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/fund\/verify"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"reference\":\"WFT-XXXXXXXXXX\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":1,\"amount\":\"5000.00\",\"type\":\"deposit\",\"status\":\"completed\",\"reference\":\"WFT-XXXXXXXXXX\",\"notes\":\"Wallet funding via Paystack\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Verified transaction"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"message\":\"Not Found\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/wallet\/transfer",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/transfer",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/transfer"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"recipient_email\":\"recipient@example.com\",\"amount\":1000,\"notes\":\"Payment for services\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"amount\":\"1000.00\",\"type\":\"withdrawal\",\"status\":\"completed\",\"reference\":\"WTH-XXXXXXXXXX\",\"notes\":\"Transfer to recipient@example.com\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Transfer initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"message\":\"Recipient not found.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient funds.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST v1\/wallet\/withdraw",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/withdraw",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/withdraw"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":5000,\"account_number\":\"0123456789\",\"bank_code\":\"058\",\"bank_name\":\"GTBank\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\"data\":{\"id\":1,\"amount\":\"5050.00\",\"type\":\"withdrawal\",\"status\":\"completed\",\"reference\":\"WDR-XXXXXXXXXX\",\"notes\":\"Withdrawal to John Doe (GTBank)\",\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": "Withdrawal initiated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Insufficient funds.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/wallet\/banks",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/banks",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/banks"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"name\":\"GTBank\",\"code\":\"058\",\"slug\":\"guaranty-trust-bank\"},{\"name\":\"Access Bank\",\"code\":\"044\",\"slug\":\"access-bank\"}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/wallet\/verify-account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/verify-account",
+                            "query": [
+                                {
+                                    "key": "account_number",
+                                    "value": "0123456789",
+                                    "description": "Bank account number",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "bank_code",
+                                    "value": "058",
+                                    "description": "Paystack bank code",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/verify-account?account_number=0123456789&bank_code=058"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"account_number\":\"8225697751\",\"bank_code\":\"architecto\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"account_name\":\"John Doe\",\"account_number\":\"0123456789\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"message\":\"Failed to resolve account.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/wallet\/transactions",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/transactions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/transactions"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"amount\":\"5000.00\",\"type\":\"deposit\",\"status\":\"completed\",\"reference\":\"DEP-XXXXXXXXXX\",\"notes\":null,\"created_at\":\"2026-01-01T00:00:00.000000Z\"}],\"links\":{\"first\":\"...\",\"last\":\"...\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"per_page\":15,\"total\":1}}",
+                            "name": "Paginated transactions"
+                        }
+                    ]
+                },
+                {
+                    "name": "GET v1\/wallet\/transactions\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "v1\/wallet\/transactions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/v1\/wallet\/transactions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the transaction."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":1,\"amount\":\"5000.00\",\"type\":\"deposit\",\"status\":\"completed\",\"reference\":\"DEP-XXXXXXXXXX\",\"notes\":null,\"created_at\":\"2026-01-01T00:00:00.000000Z\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"message\":\"Not Found\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

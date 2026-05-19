@@ -35,6 +35,10 @@ class TransactionInfolist
                             ->label('Amount')
                             ->money(fn () => Number::defaultCurrency()),
 
+                        TextEntry::make('performedByUser.name')
+                            ->label('Performed By')
+                            ->placeholder('System'),
+
                         TextEntry::make('wallet.user.name')
                             ->label('User'),
 

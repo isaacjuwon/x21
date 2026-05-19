@@ -16,6 +16,15 @@ final class EnsureJsonApiRequest
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Restore Authorization header if Apache stripped it
+        if (! $request->headers->has('Authorization')) {
+            if ($request->server->has('HTTP_AUTHORIZATION')) {
+                $request->headers->set('Authorization', $request->server->get('HTTP_AUTHORIZATION'));
+            } elseif ($request->server->has('REDIRECT_HTTP_AUTHORIZATION')) {
+                $request->headers->set('Authorization', $request->server->get('REDIRECT_HTTP_AUTHORIZATION'));
+            }
+        }
+
         // Force API exception rendering down the JSON path, even when clients omit Accept.
         $request->headers->set('Accept', 'application/json');
 

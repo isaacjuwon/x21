@@ -116,13 +116,19 @@ trait HasWallets
     /**
      * Deposit funds into a wallet.
      */
-    public function deposit(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
-    {
-        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
+    public function deposit(
+        float $amount,
+        WalletType $type,
+        ?string $notes = null,
+        ?Model $transactionable = null,
+        ?int $performedByUserId = null,
+    ): Transaction {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable, $performedByUserId) {
             $wallet = $this->getWallet($type);
             $wallet->increment('balance', $amount);
 
             return $wallet->transactions()->create([
+                'performed_by_user_id' => $performedByUserId ?? $this->getKey(),
                 'amount' => $amount,
                 'type' => TransactionType::Deposit,
                 'status' => TransactionStatus::Completed,
@@ -137,9 +143,14 @@ trait HasWallets
     /**
      * Immediate withdrawal (debit) from a wallet.
      */
-    public function withdraw(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
-    {
-        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
+    public function withdraw(
+        float $amount,
+        WalletType $type,
+        ?string $notes = null,
+        ?Model $transactionable = null,
+        ?int $performedByUserId = null,
+    ): Transaction {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable, $performedByUserId) {
             $wallet = $this->getWallet($type);
 
             if ($wallet->available_balance < $amount) {
@@ -149,6 +160,7 @@ trait HasWallets
             $wallet->decrement('balance', $amount);
 
             return $wallet->transactions()->create([
+                'performed_by_user_id' => $performedByUserId ?? $this->getKey(),
                 'amount' => $amount,
                 'type' => TransactionType::Withdrawal,
                 'status' => TransactionStatus::Completed,
@@ -163,9 +175,14 @@ trait HasWallets
     /**
      * Hold funds in a wallet (Pending debit).
      */
-    public function hold(float $amount, WalletType $type, ?string $notes = null, ?Model $transactionable = null): Transaction
-    {
-        return DB::transaction(function () use ($amount, $notes, $type, $transactionable) {
+    public function hold(
+        float $amount,
+        WalletType $type,
+        ?string $notes = null,
+        ?Model $transactionable = null,
+        ?int $performedByUserId = null,
+    ): Transaction {
+        return DB::transaction(function () use ($amount, $notes, $type, $transactionable, $performedByUserId) {
             $wallet = $this->getWallet($type);
 
             if ($wallet->available_balance < $amount) {
@@ -175,6 +192,7 @@ trait HasWallets
             $wallet->increment('held_balance', $amount);
 
             return $wallet->transactions()->create([
+                'performed_by_user_id' => $performedByUserId ?? $this->getKey(),
                 'amount' => $amount,
                 'type' => TransactionType::Hold,
                 'status' => TransactionStatus::Pending,
@@ -193,7 +211,7 @@ trait HasWallets
     {
         return DB::transaction(function () use ($amount, $recipient, $type, $notes) {
             $senderTransaction = $this->withdraw($amount, $type, $notes ?? "Transfer to {$recipient->name}");
-            $recipientTransaction = $recipient->deposit($amount, $type, $notes ?? "Transfer from {$this->name}");
+            $recipientTransaction = $recipient->deposit($amount, $type, $notes ?? "Transfer from {$this->name}", performedByUserId: $this->getKey());
 
             return [
                 'sender' => $senderTransaction,

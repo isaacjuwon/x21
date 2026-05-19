@@ -27,6 +27,11 @@ class WalletTransactionsRelationManager extends RelationManager
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('performedByUser.name')
+                    ->label('Performed By')
+                    ->placeholder('System')
+                    ->toggleable(),
+
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
@@ -60,6 +65,7 @@ class WalletTransactionsRelationManager extends RelationManager
                     ->options(TransactionStatus::class),
             ])
             ->defaultSort('created_at', 'desc')
+            ->modifyQueryUsing(fn ($query) => $query->with('performedByUser'))
             ->headerActions([])
             ->actions([])
             ->bulkActions([]);

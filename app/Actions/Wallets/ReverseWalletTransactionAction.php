@@ -39,6 +39,7 @@ class ReverseWalletTransactionAction
 
             // Create the refund transaction record
             $refund = $transaction->wallet->transactions()->create([
+                'performed_by_user_id' => $transaction->performed_by_user_id ?? $transaction->wallet->user_id,
                 'amount' => $transaction->amount,
                 'type' => TransactionType::Deposit,
                 'status' => TransactionStatus::Completed,

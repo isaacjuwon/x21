@@ -1,0 +1,4665 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://ship.test'
+tags:
+  -
+    name: Authentication
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: KYC
+    description: 'Identity verification'
+  -
+    name: Loans
+    description: 'Loan application and management'
+  -
+    name: Services
+    description: 'VTU and bill payment services'
+  -
+    name: Shares
+    description: 'Share orders and holdings'
+  -
+    name: Support
+    description: 'FAQ and support resources'
+  -
+    name: Tickets
+    description: 'Support ticket management'
+  -
+    name: User
+    description: 'Authenticated user profile'
+  -
+    name: Wallet
+    description: 'Wallet balance and overview'
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Get a bearer token from the `POST /v1/auth/login` endpoint.'
+security:
+  -
+    default: []
+paths:
+  /v1/auth/register:
+    post:
+      summary: Register
+      operationId: register
+      description: 'Create a new account and issue a Sanctum bearer token.'
+      parameters: []
+      responses:
+        201:
+          description: 'Registration succeeded.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: ''
+                    type: users
+                    attributes:
+                      name: 'Justina Gaylord'
+                      email: lafayette.considine@example.com
+                      email_verified_at: '2026-04-22T13:19:15+00:00'
+                      created_at: null
+                      updated_at: null
+                  meta:
+                    token: 1|example-token
+                    token_type: Bearer
+                    expires_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: ''
+                      type:
+                        type: string
+                        example: users
+                      attributes:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: 'Justina Gaylord'
+                          email:
+                            type: string
+                            example: lafayette.considine@example.com
+                          email_verified_at:
+                            type: string
+                            example: '2026-04-22T13:19:15+00:00'
+                          created_at:
+                            type: string
+                            example: null
+                            nullable: true
+                          updated_at:
+                            type: string
+                            example: null
+                            nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: 1|example-token
+                      token_type:
+                        type: string
+                        example: Bearer
+                      expires_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: 'Validation failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'The email has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Display name for the account.'
+                  example: 'Jane Doe'
+                email:
+                  type: string
+                  description: 'Unique email address for login.'
+                  example: jane@example.com
+                password:
+                  type: string
+                  description: 'Account password.'
+                  example: password123
+                device_name:
+                  type: string
+                  description: 'Client device label for token tracking.'
+                  example: ios-app
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /v1/auth/login:
+    post:
+      summary: Login
+      operationId: login
+      description: 'Authenticate a user and issue a Sanctum bearer token.'
+      parameters: []
+      responses:
+        200:
+          description: 'Login succeeded.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: ''
+                    type: users
+                    attributes:
+                      name: 'Justina Gaylord'
+                      email: cormier.nick@example.com
+                      email_verified_at: '2026-04-22T13:19:16+00:00'
+                      created_at: null
+                      updated_at: null
+                  meta:
+                    token: 1|example-token
+                    token_type: Bearer
+                    expires_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: ''
+                      type:
+                        type: string
+                        example: users
+                      attributes:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: 'Justina Gaylord'
+                          email:
+                            type: string
+                            example: cormier.nick@example.com
+                          email_verified_at:
+                            type: string
+                            example: '2026-04-22T13:19:16+00:00'
+                          created_at:
+                            type: string
+                            example: null
+                            nullable: true
+                          updated_at:
+                            type: string
+                            example: null
+                            nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: 1|example-token
+                      token_type:
+                        type: string
+                        example: Bearer
+                      expires_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: 'Credentials were invalid.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'The provided credentials are incorrect.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The provided credentials are incorrect.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'User email address.'
+                  example: jane@example.com
+                password:
+                  type: string
+                  description: 'User password.'
+                  example: password123
+                device_name:
+                  type: string
+                  description: 'Client device label for token tracking.'
+                  example: ios-app
+              required:
+                - email
+                - password
+                - device_name
+      security: []
+  /v1/auth/forgot-password:
+    post:
+      summary: 'Request Password Reset'
+      operationId: requestPasswordReset
+      description: 'Send a password reset link to the provided email if an account exists.'
+      parameters: []
+      responses:
+        200:
+          description: 'Password reset request accepted.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'If the account exists, a password reset link has been sent.'
+                properties:
+                  message:
+                    type: string
+                    example: 'If the account exists, a password reset link has been sent.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Account email address.'
+                  example: jane@example.com
+              required:
+                - email
+      security: []
+  /v1/auth/reset-password:
+    post:
+      summary: 'Reset Password'
+      operationId: resetPassword
+      description: 'Reset the user password using a valid reset token.'
+      parameters: []
+      responses:
+        200:
+          description: 'Password reset succeeded.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Your password has been reset.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Your password has been reset.'
+        422:
+          description: 'Reset token or payload was invalid.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'This password reset token is invalid.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'This password reset token is invalid.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'Password reset token.'
+                  example: reset-token-value
+                email:
+                  type: string
+                  description: 'Account email associated with token.'
+                  example: jane@example.com
+                password:
+                  type: string
+                  description: 'New account password.'
+                  example: new-password123
+                password_confirmation:
+                  type: string
+                  description: 'Must match password.'
+                  example: new-password123
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+      security: []
+  /v1/auth/me:
+    get:
+      summary: 'Get Current User'
+      operationId: getCurrentUser
+      description: 'Return the authenticated user for the current bearer token.'
+      parameters: []
+      responses:
+        200:
+          description: 'Authenticated user profile.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: ''
+                    type: users
+                    attributes:
+                      name: 'Morgan Hirthe'
+                      email: dare.emelie@example.com
+                      email_verified_at: '2026-04-22T13:19:16+00:00'
+                      created_at: null
+                      updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: ''
+                      type:
+                        type: string
+                        example: users
+                      attributes:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: 'Morgan Hirthe'
+                          email:
+                            type: string
+                            example: dare.emelie@example.com
+                          email_verified_at:
+                            type: string
+                            example: '2026-04-22T13:19:16+00:00'
+                          created_at:
+                            type: string
+                            example: null
+                            nullable: true
+                          updated_at:
+                            type: string
+                            example: null
+                            nullable: true
+        401:
+          description: 'Authentication failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Authentication
+  /v1/auth/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: 'Revoke the current Sanctum token.'
+      parameters: []
+      responses:
+        204:
+          description: 'Token revoked.'
+          content:
+            application/json:
+              schema:
+                type: object
+                nullable: true
+        401:
+          description: 'Authentication failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Authentication
+  /v1/auth/tokens:
+    get:
+      summary: 'List Tokens'
+      operationId: listTokens
+      description: 'List personal access tokens for the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: 'Token list payload.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: '1'
+                      type: personal-access-tokens
+                      attributes:
+                        name: ios-app
+                        abilities:
+                          - 'auth:me'
+                          - 'auth:logout'
+                        last_used_at: null
+                        expires_at: '2026-02-24T12:00:00+00:00'
+                        created_at: '2026-02-23T12:00:00+00:00'
+                        updated_at: '2026-02-23T12:00:00+00:00'
+                        is_current: true
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: '1'
+                        type: personal-access-tokens
+                        attributes:
+                          name: ios-app
+                          abilities:
+                            - 'auth:me'
+                            - 'auth:logout'
+                          last_used_at: null
+                          expires_at: '2026-02-24T12:00:00+00:00'
+                          created_at: '2026-02-23T12:00:00+00:00'
+                          updated_at: '2026-02-23T12:00:00+00:00'
+                          is_current: true
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '1'
+                        type:
+                          type: string
+                          example: personal-access-tokens
+                        attributes:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: ios-app
+                            abilities:
+                              type: array
+                              example:
+                                - 'auth:me'
+                                - 'auth:logout'
+                              items:
+                                type: string
+                            last_used_at:
+                              type: string
+                              example: null
+                              nullable: true
+                            expires_at:
+                              type: string
+                              example: '2026-02-24T12:00:00+00:00'
+                            created_at:
+                              type: string
+                              example: '2026-02-23T12:00:00+00:00'
+                            updated_at:
+                              type: string
+                              example: '2026-02-23T12:00:00+00:00'
+                            is_current:
+                              type: boolean
+                              example: true
+        401:
+          description: 'Authentication failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: 'Token is missing required ability.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden.
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden.
+      tags:
+        - Authentication
+    delete:
+      summary: 'Revoke All Tokens'
+      operationId: revokeAllTokens
+      description: 'Revoke all personal access tokens for the authenticated user.'
+      parameters: []
+      responses:
+        204:
+          description: 'All tokens revoked.'
+          content:
+            application/json:
+              schema:
+                type: object
+                nullable: true
+        401:
+          description: 'Authentication failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: 'Token is missing required ability.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden.
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden.
+      tags:
+        - Authentication
+  '/v1/auth/tokens/{token_id}':
+    delete:
+      summary: 'Revoke Token'
+      operationId: revokeToken
+      description: 'Revoke one personal access token owned by the authenticated user.'
+      parameters: []
+      responses:
+        204:
+          description: 'Token revoked.'
+          content:
+            application/json:
+              schema:
+                type: object
+                nullable: true
+        401:
+          description: 'Authentication failed.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: 'Token is missing required ability.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Forbidden.
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden.
+        404:
+          description: 'Token does not belong to current user or no longer exists.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not found.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token_id:
+                  type: integer
+                  description: ''
+                  example: 16
+              required:
+                - token_id
+    parameters:
+      -
+        in: path
+        name: token_id
+        description: 'Personal access token id.'
+        example: 42
+        required: true
+        schema:
+          type: integer
+  '/v1/webhooks/{provider}':
+    post:
+      summary: ''
+      operationId: postV1WebhooksProvider
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: provider
+        description: ''
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /v1/support/chat:
+    post:
+      summary: ''
+      operationId: postV1SupportChat
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: 'Must be at least 3 characters. Must not be greater than 500 characters.'
+                  example: b
+              required:
+                - message
+      security: []
+  /v1/kyc:
+    get:
+      summary: "Get the authenticated user's KYC status for all types."
+      operationId: getTheAuthenticatedUsersKYCStatusForAllTypes
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - KYC
+  /v1/kyc/automatic:
+    post:
+      summary: 'Submit automatic KYC verification via Dojah.'
+      operationId: submitAutomaticKYCVerificationViaDojah
+      description: 'Returns immediately with the verification result.'
+      parameters: []
+      responses: {  }
+      tags:
+        - KYC
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: bvn
+                  enum:
+                    - nin
+                    - bvn
+                number:
+                  type: string
+                  description: 'Must be 11 digits.'
+                  example: '82256977571'
+              required:
+                - type
+                - number
+  /v1/kyc/manual:
+    post:
+      summary: 'Submit manual KYC verification with document upload.'
+      operationId: submitManualKYCVerificationWithDocumentUpload
+      description: 'Stays pending until admin reviews the document.'
+      parameters: []
+      responses: {  }
+      tags:
+        - KYC
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: nin
+                  enum:
+                    - nin
+                    - bvn
+                number:
+                  type: string
+                  description: 'Must be 11 digits.'
+                  example: '82256977571'
+                document:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 5120 kilobytes.'
+              required:
+                - type
+                - number
+                - document
+  /v1/loans/eligibility:
+    post:
+      summary: ''
+      operationId: postV1LoansEligibility
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        passed: true
+                        reason: null
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          passed:
+                            type: boolean
+                            example: true
+                          reason:
+                            type: string
+                            example: null
+                            nullable: true
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        passed: false
+                        reason: 'Account must be at least 30 days old.'
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          passed:
+                            type: boolean
+                            example: false
+                          reason:
+                            type: string
+                            example: 'Account must be at least 30 days old.'
+      tags:
+        - Loans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                principal_amount:
+                  type: number
+                  description: ''
+                  example: 50000
+              required:
+                - principal_amount
+  /v1/loans:
+    get:
+      summary: ''
+      operationId: getV1Loans
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      user_id: 5
+                      principal_amount: 1097.52
+                      outstanding_balance: 1097.52
+                      interest_rate: 0.2934
+                      repayment_term_months: 18
+                      interest_method: FlatRate
+                      status: active
+                      disbursed_at: null
+                      eligibility_passed: null
+                      notes: null
+                      rejection_reason: null
+                      created_at: null
+                    -
+                      id: null
+                      user_id: 6
+                      principal_amount: 2349.31
+                      outstanding_balance: 2349.31
+                      interest_rate: 0.0611
+                      repayment_term_months: 55
+                      interest_method: FlatRate
+                      status: active
+                      disbursed_at: null
+                      eligibility_passed: null
+                      notes: null
+                      rejection_reason: null
+                      created_at: null
+                  links:
+                    first: '/?page=1'
+                    last: '/?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: '/?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    path: /
+                    per_page: 15
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        user_id: 5
+                        principal_amount: 1097.52
+                        outstanding_balance: 1097.52
+                        interest_rate: 0.2934
+                        repayment_term_months: 18
+                        interest_method: FlatRate
+                        status: active
+                        disbursed_at: null
+                        eligibility_passed: null
+                        notes: null
+                        rejection_reason: null
+                        created_at: null
+                      -
+                        id: null
+                        user_id: 6
+                        principal_amount: 2349.31
+                        outstanding_balance: 2349.31
+                        interest_rate: 0.0611
+                        repayment_term_months: 55
+                        interest_method: FlatRate
+                        status: active
+                        disbursed_at: null
+                        eligibility_passed: null
+                        notes: null
+                        rejection_reason: null
+                        created_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        user_id:
+                          type: integer
+                          example: 5
+                        principal_amount:
+                          type: number
+                          example: 1097.52
+                        outstanding_balance:
+                          type: number
+                          example: 1097.52
+                        interest_rate:
+                          type: number
+                          example: 0.2934
+                        repayment_term_months:
+                          type: integer
+                          example: 18
+                        interest_method:
+                          type: string
+                          example: FlatRate
+                        status:
+                          type: string
+                          example: active
+                        disbursed_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        eligibility_passed:
+                          type: string
+                          example: null
+                          nullable: true
+                        notes:
+                          type: string
+                          example: null
+                          nullable: true
+                        rejection_reason:
+                          type: string
+                          example: null
+                          nullable: true
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: '/?page=1'
+                      last:
+                        type: string
+                        example: '/?page=1'
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: '/?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: /
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Loans
+    post:
+      summary: ''
+      operationId: postV1Loans
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    principal_amount: 12966.66
+                    outstanding_balance: 12966.66
+                    interest_rate: 0.2089
+                    repayment_term_months: 51
+                    interest_method: FlatRate
+                    status: active
+                    disbursed_at: null
+                    eligibility_passed: null
+                    notes: null
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      principal_amount:
+                        type: number
+                        example: 12966.66
+                      outstanding_balance:
+                        type: number
+                        example: 12966.66
+                      interest_rate:
+                        type: number
+                        example: 0.2089
+                      repayment_term_months:
+                        type: integer
+                        example: 51
+                      interest_method:
+                        type: string
+                        example: FlatRate
+                      status:
+                        type: string
+                        example: active
+                      disbursed_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      eligibility_passed:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: 'Eligibility failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You are not eligible for this loan.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not eligible for this loan.'
+      tags:
+        - Loans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                principal_amount:
+                  type: number
+                  description: 'Loan amount requested (min: 1)'
+                  example: 50000
+                repayment_term_months:
+                  type: integer
+                  description: 'Repayment term in months (min: 1)'
+                  example: 12
+                interest_method:
+                  type: string
+                  description: 'Interest method: FlatRate or ReducingBalance'
+                  example: FlatRate
+                notes:
+                  type: string
+                  description: 'Purpose of the loan'
+                  example: 'Business expansion'
+              required:
+                - principal_amount
+                - repayment_term_months
+  '/v1/loans/{id}':
+    get:
+      summary: ''
+      operationId: getV1LoansId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    principal_amount: 1097.52
+                    outstanding_balance: 1097.52
+                    interest_rate: 0.2934
+                    repayment_term_months: 18
+                    interest_method: FlatRate
+                    status: active
+                    disbursed_at: null
+                    eligibility_passed: null
+                    notes: null
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      principal_amount:
+                        type: number
+                        example: 1097.52
+                      outstanding_balance:
+                        type: number
+                        example: 1097.52
+                      interest_rate:
+                        type: number
+                        example: 0.2934
+                      repayment_term_months:
+                        type: integer
+                        example: 18
+                      interest_method:
+                        type: string
+                        example: FlatRate
+                      status:
+                        type: string
+                        example: active
+                      disbursed_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      eligibility_passed:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not Found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not Found'
+      tags:
+        - Loans
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/loans/{loan_id}/schedule':
+    get:
+      summary: ''
+      operationId: getV1LoansLoan_idSchedule
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      loan_id: 2
+                      instalment_number: 30
+                      due_date: '2026-05-13T00:00:00.000000Z'
+                      instalment_amount: 103.78
+                      principal_component: 101.39
+                      interest_component: 2.39
+                      outstanding_balance: 21270.2
+                      status: Pending
+                      remaining_amount: 103.78
+                      paid_at: null
+                    -
+                      id: null
+                      loan_id: 3
+                      instalment_number: 45
+                      due_date: '2026-07-05T00:00:00.000000Z'
+                      instalment_amount: 1579.06
+                      principal_component: 280.37
+                      interest_component: 1298.69
+                      outstanding_balance: 11744.34
+                      status: Pending
+                      remaining_amount: 1579.06
+                      paid_at: null
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        loan_id: 2
+                        instalment_number: 30
+                        due_date: '2026-05-13T00:00:00.000000Z'
+                        instalment_amount: 103.78
+                        principal_component: 101.39
+                        interest_component: 2.39
+                        outstanding_balance: 21270.2
+                        status: Pending
+                        remaining_amount: 103.78
+                        paid_at: null
+                      -
+                        id: null
+                        loan_id: 3
+                        instalment_number: 45
+                        due_date: '2026-07-05T00:00:00.000000Z'
+                        instalment_amount: 1579.06
+                        principal_component: 280.37
+                        interest_component: 1298.69
+                        outstanding_balance: 11744.34
+                        status: Pending
+                        remaining_amount: 1579.06
+                        paid_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        loan_id:
+                          type: integer
+                          example: 2
+                        instalment_number:
+                          type: integer
+                          example: 30
+                        due_date:
+                          type: string
+                          example: '2026-05-13T00:00:00.000000Z'
+                        instalment_amount:
+                          type: number
+                          example: 103.78
+                        principal_component:
+                          type: number
+                          example: 101.39
+                        interest_component:
+                          type: number
+                          example: 2.39
+                        outstanding_balance:
+                          type: number
+                          example: 21270.2
+                        status:
+                          type: string
+                          example: Pending
+                        remaining_amount:
+                          type: number
+                          example: 103.78
+                        paid_at:
+                          type: string
+                          example: null
+                          nullable: true
+      tags:
+        - Loans
+    parameters:
+      -
+        in: path
+        name: loan_id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/loans/{loan_id}/repayments':
+    post:
+      summary: ''
+      operationId: postV1LoansLoan_idRepayments
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    loan_id: 2
+                    amount: 4977.1
+                    transaction_id: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      loan_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: number
+                        example: 4977.1
+                      transaction_id:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient funds.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient funds.'
+      tags:
+        - Loans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Repayment amount (min: 0.01, max: outstanding balance)'
+                  example: 5000
+              required:
+                - amount
+    parameters:
+      -
+        in: path
+        name: loan_id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/loans/{loan_id}/approve':
+    post:
+      summary: ''
+      operationId: postV1LoansLoan_idApprove
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    principal_amount: 49771.04
+                    outstanding_balance: 49771.04
+                    interest_rate: 0.1111
+                    repayment_term_months: 38
+                    interest_method: FlatRate
+                    status: active
+                    disbursed_at: null
+                    eligibility_passed: null
+                    notes: null
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      principal_amount:
+                        type: number
+                        example: 49771.04
+                      outstanding_balance:
+                        type: number
+                        example: 49771.04
+                      interest_rate:
+                        type: number
+                        example: 0.1111
+                      repayment_term_months:
+                        type: integer
+                        example: 38
+                      interest_method:
+                        type: string
+                        example: FlatRate
+                      status:
+                        type: string
+                        example: active
+                      disbursed_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      eligibility_passed:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Loan must be in active status to be approved.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Loan must be in active status to be approved.'
+      tags:
+        - Loans
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Optional approval notes'
+                  example: 'Approved after review'
+    parameters:
+      -
+        in: path
+        name: loan_id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/loans/{loan_id}/disburse':
+    post:
+      summary: ''
+      operationId: postV1LoansLoan_idDisburse
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    principal_amount: 49771.04
+                    outstanding_balance: 49771.04
+                    interest_rate: 0.1111
+                    repayment_term_months: 38
+                    interest_method: FlatRate
+                    status: active
+                    disbursed_at: null
+                    eligibility_passed: null
+                    notes: null
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      principal_amount:
+                        type: number
+                        example: 49771.04
+                      outstanding_balance:
+                        type: number
+                        example: 49771.04
+                      interest_rate:
+                        type: number
+                        example: 0.1111
+                      repayment_term_months:
+                        type: integer
+                        example: 38
+                      interest_method:
+                        type: string
+                        example: FlatRate
+                      status:
+                        type: string
+                        example: active
+                      disbursed_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      eligibility_passed:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Loan must be in approved status to be disbursed.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Loan must be in approved status to be disbursed.'
+      tags:
+        - Loans
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Optional disbursement notes'
+                  example: 'Disbursed to account'
+    parameters:
+      -
+        in: path
+        name: loan_id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/loans/{loan_id}/reject':
+    post:
+      summary: ''
+      operationId: postV1LoansLoan_idReject
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    principal_amount: 49771.04
+                    outstanding_balance: 49771.04
+                    interest_rate: 0.1111
+                    repayment_term_months: 38
+                    interest_method: FlatRate
+                    status: active
+                    disbursed_at: null
+                    eligibility_passed: null
+                    notes: null
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      principal_amount:
+                        type: number
+                        example: 49771.04
+                      outstanding_balance:
+                        type: number
+                        example: 49771.04
+                      interest_rate:
+                        type: number
+                        example: 0.1111
+                      repayment_term_months:
+                        type: integer
+                        example: 38
+                      interest_method:
+                        type: string
+                        example: FlatRate
+                      status:
+                        type: string
+                        example: active
+                      disbursed_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      eligibility_passed:
+                        type: string
+                        example: null
+                        nullable: true
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Loan cannot be rejected in its current status.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Loan cannot be rejected in its current status.'
+      tags:
+        - Loans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rejection_reason:
+                  type: string
+                  description: 'Reason for rejecting the loan'
+                  example: 'Insufficient income documentation'
+                notes:
+                  type: string
+                  description: 'Optional internal notes'
+                  example: 'Reviewed by compliance team'
+              required:
+                - rejection_reason
+    parameters:
+      -
+        in: path
+        name: loan_id
+        description: 'The ID of the loan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /v1/services/airtime:
+    post:
+      summary: ''
+      operationId: postV1ServicesAirtime
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Airtime purchase initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    reference: AIR-XXXXXXXXXX
+                    amount: '200.00'
+                    status: completed
+                    type: null
+                    response_message: 'Transaction successful'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      reference:
+                        type: string
+                        example: AIR-XXXXXXXXXX
+                      amount:
+                        type: string
+                        example: '200.00'
+                      status:
+                        type: string
+                        example: completed
+                      type:
+                        type: string
+                        example: null
+                        nullable: true
+                      response_message:
+                        type: string
+                        example: 'Transaction successful'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Insufficient wallet balance.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Insufficient wallet balance.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'No active airtime plan found for this brand.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'No active airtime plan found for this brand.'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Network provider brand ID'
+                  example: 1
+                phone_number:
+                  type: string
+                  description: 'Recipient phone number'
+                  example: '08012345678'
+                amount:
+                  type: number
+                  description: 'Airtime amount (min: 50)'
+                  example: 200
+              required:
+                - brand_id
+                - phone_number
+                - amount
+  /v1/services/data:
+    post:
+      summary: ''
+      operationId: postV1ServicesData
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Data purchase initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    reference: DAT-XXXXXXXXXX
+                    amount: '500.00'
+                    status: completed
+                    type: null
+                    response_message: 'Transaction successful'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      reference:
+                        type: string
+                        example: DAT-XXXXXXXXXX
+                      amount:
+                        type: string
+                        example: '500.00'
+                      status:
+                        type: string
+                        example: completed
+                      type:
+                        type: string
+                        example: null
+                        nullable: true
+                      response_message:
+                        type: string
+                        example: 'Transaction successful'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient wallet balance.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient wallet balance.'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Network provider brand ID'
+                  example: 1
+                plan_id:
+                  type: integer
+                  description: 'Data plan ID'
+                  example: 3
+                phone_number:
+                  type: string
+                  description: 'Recipient phone number'
+                  example: '08012345678'
+              required:
+                - brand_id
+                - plan_id
+                - phone_number
+  /v1/services/electricity:
+    post:
+      summary: ''
+      operationId: postV1ServicesElectricity
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Electricity payment initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    reference: ELE-XXXXXXXXXX
+                    amount: '2000.00'
+                    status: completed
+                    type: null
+                    response_message: 'Transaction successful'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      reference:
+                        type: string
+                        example: ELE-XXXXXXXXXX
+                      amount:
+                        type: string
+                        example: '2000.00'
+                      status:
+                        type: string
+                        example: completed
+                      type:
+                        type: string
+                        example: null
+                        nullable: true
+                      response_message:
+                        type: string
+                        example: 'Transaction successful'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Insufficient wallet balance.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Insufficient wallet balance.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'No active electricity plan found for this provider.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'No active electricity plan found for this provider.'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Electricity provider brand ID'
+                  example: 2
+                meter_number:
+                  type: string
+                  description: 'Meter number (min: 8 chars)'
+                  example: '12345678901'
+                meter_type:
+                  type: string
+                  description: 'Meter type: Prepaid or Postpaid'
+                  example: Prepaid
+                amount:
+                  type: number
+                  description: 'Amount to pay (min: 500)'
+                  example: 2000
+              required:
+                - brand_id
+                - meter_number
+                - meter_type
+                - amount
+  /v1/services/cable-tv:
+    post:
+      summary: ''
+      operationId: postV1ServicesCableTv
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Cable TV subscription initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    reference: CAB-XXXXXXXXXX
+                    amount: '3500.00'
+                    status: completed
+                    type: null
+                    response_message: 'Transaction successful'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      reference:
+                        type: string
+                        example: CAB-XXXXXXXXXX
+                      amount:
+                        type: string
+                        example: '3500.00'
+                      status:
+                        type: string
+                        example: completed
+                      type:
+                        type: string
+                        example: null
+                        nullable: true
+                      response_message:
+                        type: string
+                        example: 'Transaction successful'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient wallet balance.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient wallet balance.'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Cable TV provider brand ID'
+                  example: 3
+                plan_id:
+                  type: integer
+                  description: 'Cable TV plan ID'
+                  example: 7
+                smart_card_number:
+                  type: string
+                  description: 'Smart card / IUC number (min: 10 chars)'
+                  example: '1234567890'
+              required:
+                - brand_id
+                - plan_id
+                - smart_card_number
+  /v1/shares/listing:
+    get:
+      summary: ''
+      operationId: getV1SharesListing
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    price: '10.98'
+                    total_shares: 1000
+                    available_shares: 1000
+                    updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      price:
+                        type: string
+                        example: '10.98'
+                      total_shares:
+                        type: integer
+                        example: 1000
+                      available_shares:
+                        type: integer
+                        example: 1000
+                      updated_at:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Shares
+  /v1/shares/listing/price:
+    put:
+      summary: ''
+      operationId: putV1SharesListingPrice
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    price: '497.71'
+                    total_shares: 1000
+                    available_shares: 1000
+                    updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      price:
+                        type: string
+                        example: '497.71'
+                      total_shares:
+                        type: integer
+                        example: 1000
+                      available_shares:
+                        type: integer
+                        example: 1000
+                      updated_at:
+                        type: string
+                        example: null
+                        nullable: true
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+      tags:
+        - Shares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                  description: 'New share price (min: 0.01)'
+                  example: 150.0
+              required:
+                - price
+  /v1/shares/orders:
+    get:
+      summary: ''
+      operationId: getV1SharesOrders
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      user_id: 5
+                      type: buy
+                      quantity: 81
+                      price_per_share: 487.1
+                      total_amount: 39455.1
+                      status: pending
+                      rejection_reason: null
+                      created_at: null
+                    -
+                      id: null
+                      user_id: 6
+                      type: buy
+                      quantity: 28
+                      price_per_share: 23.49
+                      total_amount: 657.72
+                      status: pending
+                      rejection_reason: null
+                      created_at: null
+                  links:
+                    first: '/?page=1'
+                    last: '/?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: '/?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    path: /
+                    per_page: 15
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        user_id: 5
+                        type: buy
+                        quantity: 81
+                        price_per_share: 487.1
+                        total_amount: 39455.1
+                        status: pending
+                        rejection_reason: null
+                        created_at: null
+                      -
+                        id: null
+                        user_id: 6
+                        type: buy
+                        quantity: 28
+                        price_per_share: 23.49
+                        total_amount: 657.72
+                        status: pending
+                        rejection_reason: null
+                        created_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        user_id:
+                          type: integer
+                          example: 5
+                        type:
+                          type: string
+                          example: buy
+                        quantity:
+                          type: integer
+                          example: 81
+                        price_per_share:
+                          type: number
+                          example: 487.1
+                        total_amount:
+                          type: number
+                          example: 39455.1
+                        status:
+                          type: string
+                          example: pending
+                        rejection_reason:
+                          type: string
+                          example: null
+                          nullable: true
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: '/?page=1'
+                      last:
+                        type: string
+                        example: '/?page=1'
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: '/?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: /
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Shares
+  '/v1/shares/orders/{id}':
+    get:
+      summary: ''
+      operationId: getV1SharesOrdersId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    type: buy
+                    quantity: 81
+                    price_per_share: 487.1
+                    total_amount: 39455.1
+                    status: pending
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      type:
+                        type: string
+                        example: buy
+                      quantity:
+                        type: integer
+                        example: 81
+                      price_per_share:
+                        type: number
+                        example: 487.1
+                      total_amount:
+                        type: number
+                        example: 39455.1
+                      status:
+                        type: string
+                        example: pending
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not Found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not Found'
+      tags:
+        - Shares
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /v1/shares/orders/buy:
+    post:
+      summary: ''
+      operationId: postV1SharesOrdersBuy
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    type: buy
+                    quantity: 72
+                    price_per_share: 129.67
+                    total_amount: 9336.24
+                    status: pending
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      type:
+                        type: string
+                        example: buy
+                      quantity:
+                        type: integer
+                        example: 72
+                      price_per_share:
+                        type: number
+                        example: 129.67
+                      total_amount:
+                        type: number
+                        example: 9336.24
+                      status:
+                        type: string
+                        example: pending
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Insufficient available shares.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Insufficient available shares.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Insufficient funds.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Insufficient funds.'
+      tags:
+        - Shares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: 'Number of shares to buy (min: 1)'
+                  example: 10
+              required:
+                - quantity
+  /v1/shares/orders/sell:
+    post:
+      summary: ''
+      operationId: postV1SharesOrdersSell
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    type: buy
+                    quantity: 72
+                    price_per_share: 129.67
+                    total_amount: 9336.24
+                    status: pending
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      type:
+                        type: string
+                        example: buy
+                      quantity:
+                        type: integer
+                        example: 72
+                      price_per_share:
+                        type: number
+                        example: 129.67
+                      total_amount:
+                        type: number
+                        example: 9336.24
+                      status:
+                        type: string
+                        example: pending
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Insufficient shares.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Insufficient shares.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Holding period not met.'
+                      earliest_sell_date: '2025-01-01'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Holding period not met.'
+                      earliest_sell_date:
+                        type: string
+                        example: '2025-01-01'
+      tags:
+        - Shares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: 'Number of shares to sell (min: 1)'
+                  example: 5
+              required:
+                - quantity
+  '/v1/shares/orders/{order_id}/approve':
+    post:
+      summary: ''
+      operationId: postV1SharesOrdersOrder_idApprove
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    user_id: 5
+                    type: buy
+                    quantity: 81
+                    price_per_share: 487.1
+                    total_amount: 39455.1
+                    status: pending
+                    rejection_reason: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      user_id:
+                        type: integer
+                        example: 5
+                      type:
+                        type: string
+                        example: buy
+                      quantity:
+                        type: integer
+                        example: 81
+                      price_per_share:
+                        type: number
+                        example: 487.1
+                      total_amount:
+                        type: number
+                        example: 39455.1
+                      status:
+                        type: string
+                        example: pending
+                      rejection_reason:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order is not in a pending state.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Order is not in a pending state.'
+      tags:
+        - Shares
+    parameters:
+      -
+        in: path
+        name: order_id
+        description: 'The ID of the order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/shares/orders/{order_id}/reject':
+    post:
+      summary: ''
+      operationId: postV1SharesOrdersOrder_idReject
+      description: ''
+      parameters: []
+      responses:
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order is not in a pending state.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Order is not in a pending state.'
+      tags:
+        - Shares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rejection_reason:
+                  type: string
+                  description: 'Reason for rejecting the share order'
+                  example: 'Insufficient documentation'
+              required:
+                - rejection_reason
+    parameters:
+      -
+        in: path
+        name: order_id
+        description: 'The ID of the order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /v1/shares/holdings:
+    get:
+      summary: ''
+      operationId: getV1SharesHoldings
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    quantity: 681
+                    acquired_at: '2026-02-21T13:19:17.000000Z'
+                    market_value: 6810
+                    eligible_for_sale: true
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      quantity:
+                        type: integer
+                        example: 681
+                      acquired_at:
+                        type: string
+                        example: '2026-02-21T13:19:17.000000Z'
+                      market_value:
+                        type: integer
+                        example: 6810
+                      eligible_for_sale:
+                        type: boolean
+                        example: true
+      tags:
+        - Shares
+  /v1/shares/price-history:
+    get:
+      summary: ''
+      operationId: getV1SharesPriceHistory
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      old_price: 10.98
+                      new_price: 487.1
+                      created_at: '2026-02-21T13:19:17.595842Z'
+                    -
+                      id: null
+                      old_price: 334.4
+                      new_price: 218.45
+                      created_at: '2026-03-13T13:19:17.597616Z'
+                  links:
+                    first: '/?page=1'
+                    last: '/?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: '/?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    path: /
+                    per_page: 15
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        old_price: 10.98
+                        new_price: 487.1
+                        created_at: '2026-02-21T13:19:17.595842Z'
+                      -
+                        id: null
+                        old_price: 334.4
+                        new_price: 218.45
+                        created_at: '2026-03-13T13:19:17.597616Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        old_price:
+                          type: number
+                          example: 10.98
+                        new_price:
+                          type: number
+                          example: 487.1
+                        created_at:
+                          type: string
+                          example: '2026-02-21T13:19:17.595842Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: '/?page=1'
+                      last:
+                        type: string
+                        example: '/?page=1'
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: '/?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: /
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Shares
+  /v1/shares/dividends:
+    post:
+      summary: ''
+      operationId: postV1SharesDividends
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Dividend declared successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Dividend declared successfully.'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This action is unauthorized.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This action is unauthorized.'
+      tags:
+        - Shares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                total_amount:
+                  type: number
+                  description: 'Total dividend amount to distribute (min: 0.01)'
+                  example: 50000
+              required:
+                - total_amount
+  /v1/shares/dividends/payouts:
+    get:
+      summary: ''
+      operationId: getV1SharesDividendsPayouts
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      amount: 2.99
+                      created_at: null
+                      dividend:
+                        total_amount: 6654.11
+                        declared_at: '2026-04-22T13:19:17.000000Z'
+                    -
+                      id: null
+                      amount: 866.41
+                      created_at: null
+                      dividend:
+                        total_amount: 9064.05
+                        declared_at: '2026-04-22T13:19:17.000000Z'
+                  links:
+                    first: '/?page=1'
+                    last: '/?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: '/?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    path: /
+                    per_page: 15
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        amount: 2.99
+                        created_at: null
+                        dividend:
+                          total_amount: 6654.11
+                          declared_at: '2026-04-22T13:19:17.000000Z'
+                      -
+                        id: null
+                        amount: 866.41
+                        created_at: null
+                        dividend:
+                          total_amount: 9064.05
+                          declared_at: '2026-04-22T13:19:17.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        amount:
+                          type: number
+                          example: 2.99
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        dividend:
+                          type: object
+                          properties:
+                            total_amount:
+                              type: number
+                              example: 6654.11
+                            declared_at:
+                              type: string
+                              example: '2026-04-22T13:19:17.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: '/?page=1'
+                      last:
+                        type: string
+                        example: '/?page=1'
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: '/?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: /
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Shares
+  /v1/faqs:
+    get:
+      summary: ''
+      operationId: getV1Faqs
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      question: 'Adipisci quidem nostrum qui commodi incidunt iure.?'
+                      answer: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                      category: Shares
+                      sort_order: 10
+                    -
+                      id: null
+                      question: 'Distinctio eum doloremque id aut libero aliquam veniam corporis.?'
+                      answer: 'Deleniti nemo odit quia officia. Dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam.'
+                      category: Shares
+                      sort_order: 79
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        question: 'Adipisci quidem nostrum qui commodi incidunt iure.?'
+                        answer: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                        category: Shares
+                        sort_order: 10
+                      -
+                        id: null
+                        question: 'Distinctio eum doloremque id aut libero aliquam veniam corporis.?'
+                        answer: 'Deleniti nemo odit quia officia. Dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam.'
+                        category: Shares
+                        sort_order: 79
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        question:
+                          type: string
+                          example: 'Adipisci quidem nostrum qui commodi incidunt iure.?'
+                        answer:
+                          type: string
+                          example: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                        category:
+                          type: string
+                          example: Shares
+                        sort_order:
+                          type: integer
+                          example: 10
+      tags:
+        - Support
+  /v1/tickets:
+    get:
+      summary: ''
+      operationId: getV1Tickets
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: null
+                      subject: 'Adipisci quidem nostrum qui commodi incidunt iure.'
+                      message: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                      status: open
+                      status_label: Open
+                      priority: medium
+                      priority_label: Medium
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: null
+                      subject: 'Deleniti nemo odit quia officia.'
+                      message: 'Neque blanditiis odio veritatis excepturi doloribus delectus. Qui repudiandae laboriosam est alias.'
+                      status: open
+                      status_label: Open
+                      priority: medium
+                      priority_label: Medium
+                      created_at: null
+                      updated_at: null
+                  links:
+                    first: '/?page=1'
+                    last: '/?page=1'
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    from: 1
+                    last_page: 1
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      -
+                        url: '/?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    path: /
+                    per_page: 15
+                    to: 2
+                    total: 2
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: null
+                        subject: 'Adipisci quidem nostrum qui commodi incidunt iure.'
+                        message: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                        status: open
+                        status_label: Open
+                        priority: medium
+                        priority_label: Medium
+                        created_at: null
+                        updated_at: null
+                      -
+                        id: null
+                        subject: 'Deleniti nemo odit quia officia.'
+                        message: 'Neque blanditiis odio veritatis excepturi doloribus delectus. Qui repudiandae laboriosam est alias.'
+                        status: open
+                        status_label: Open
+                        priority: medium
+                        priority_label: Medium
+                        created_at: null
+                        updated_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: null
+                          nullable: true
+                        subject:
+                          type: string
+                          example: 'Adipisci quidem nostrum qui commodi incidunt iure.'
+                        message:
+                          type: string
+                          example: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                        status:
+                          type: string
+                          example: open
+                        status_label:
+                          type: string
+                          example: Open
+                        priority:
+                          type: string
+                          example: medium
+                        priority_label:
+                          type: string
+                          example: Medium
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        updated_at:
+                          type: string
+                          example: null
+                          nullable: true
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: '/?page=1'
+                      last:
+                        type: string
+                        example: '/?page=1'
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            page: null
+                            active: false
+                          -
+                            url: '/?page=1'
+                            label: '1'
+                            page: 1
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            page: null
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                              nullable: true
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            page:
+                              type: string
+                              example: null
+                              nullable: true
+                            active:
+                              type: boolean
+                              example: false
+                      path:
+                        type: string
+                        example: /
+                      per_page:
+                        type: integer
+                        example: 15
+                      to:
+                        type: integer
+                        example: 2
+                      total:
+                        type: integer
+                        example: 2
+      tags:
+        - Tickets
+    post:
+      summary: ''
+      operationId: postV1Tickets
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    subject: 'Tempora ex voluptatem laboriosam praesentium quis.'
+                    message: 'Fugit deleniti distinctio eum doloremque id aut libero. Veniam corporis dolorem mollitia. Nemo odit quia officia est dignissimos. Blanditiis odio veritatis excepturi doloribus delectus fugit.'
+                    status: open
+                    status_label: Open
+                    priority: medium
+                    priority_label: Medium
+                    created_at: null
+                    updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      subject:
+                        type: string
+                        example: 'Tempora ex voluptatem laboriosam praesentium quis.'
+                      message:
+                        type: string
+                        example: 'Fugit deleniti distinctio eum doloremque id aut libero. Veniam corporis dolorem mollitia. Nemo odit quia officia est dignissimos. Blanditiis odio veritatis excepturi doloribus delectus fugit.'
+                      status:
+                        type: string
+                        example: open
+                      status_label:
+                        type: string
+                        example: Open
+                      priority:
+                        type: string
+                        example: medium
+                      priority_label:
+                        type: string
+                        example: Medium
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      updated_at:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                message:
+                  type: string
+                  description: 'Must be at least 10 characters.'
+                  example: ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsn
+                priority:
+                  type: string
+                  description: ''
+                  example: low
+                  enum:
+                    - low
+                    - medium
+                    - high
+                    - urgent
+                  nullable: true
+              required:
+                - subject
+                - message
+  '/v1/tickets/{id}':
+    get:
+      summary: ''
+      operationId: getV1TicketsId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    subject: 'Adipisci quidem nostrum qui commodi incidunt iure.'
+                    message: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                    status: open
+                    status_label: Open
+                    priority: medium
+                    priority_label: Medium
+                    created_at: null
+                    updated_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      subject:
+                        type: string
+                        example: 'Adipisci quidem nostrum qui commodi incidunt iure.'
+                      message:
+                        type: string
+                        example: 'Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.'
+                      status:
+                        type: string
+                        example: open
+                      status_label:
+                        type: string
+                        example: Open
+                      priority:
+                        type: string
+                        example: medium
+                      priority_label:
+                        type: string
+                        example: Medium
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      updated_at:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - Tickets
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ticket.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/v1/tickets/{ticket_id}/replies':
+    post:
+      summary: ''
+      operationId: postV1TicketsTicket_idReplies
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: 'Must be at least 5 characters.'
+                  example: bngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntl
+              required:
+                - message
+    parameters:
+      -
+        in: path
+        name: ticket_id
+        description: 'The ID of the ticket.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /v1/user:
+    get:
+      summary: ''
+      operationId: getV1User
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    name: 'Morgan Hirthe'
+                    email: imclaughlin@example.org
+                    phone_number: null
+                    avatar_url: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      name:
+                        type: string
+                        example: 'Morgan Hirthe'
+                      email:
+                        type: string
+                        example: imclaughlin@example.org
+                      phone_number:
+                        type: string
+                        example: null
+                        nullable: true
+                      avatar_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - User
+    patch:
+      summary: ''
+      operationId: patchV1User
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: null
+                    name: 'Ramiro Okuneva'
+                    email: gulgowski.asia@example.com
+                    phone_number: null
+                    avatar_url: null
+                    created_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: null
+                        nullable: true
+                      name:
+                        type: string
+                        example: 'Ramiro Okuneva'
+                      email:
+                        type: string
+                        example: gulgowski.asia@example.com
+                      phone_number:
+                        type: string
+                        example: null
+                        nullable: true
+                      avatar_url:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: null
+                        nullable: true
+      tags:
+        - User
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                phone_number:
+                  type: string
+                  description: 'Must be at least 10 characters. Must not be greater than 15 characters.'
+                  example: 'n'
+                  nullable: true
+                avatar:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
+  /v1/wallet:
+    get:
+      summary: ''
+      operationId: getV1Wallet
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Wallet balance'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    type: general
+                    balance: '5000.00'
+                    held_balance: '200.00'
+                    available_balance: 4800
+                    updated_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      type:
+                        type: string
+                        example: general
+                      balance:
+                        type: string
+                        example: '5000.00'
+                      held_balance:
+                        type: string
+                        example: '200.00'
+                      available_balance:
+                        type: integer
+                        example: 4800
+                      updated_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+      tags:
+        - Wallet
+  /v1/wallet/fund:
+    post:
+      summary: ''
+      operationId: postV1WalletFund
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Paystack authorization URL'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    authorization_url: 'https://checkout.paystack.com/abc123'
+                    reference: WFT-XXXXXXXXXX
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      authorization_url:
+                        type: string
+                        example: 'https://checkout.paystack.com/abc123'
+                      reference:
+                        type: string
+                        example: WFT-XXXXXXXXXX
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The amount field must be at least 100.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The amount field must be at least 100.'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Amount to fund in the smallest currency unit (min: 100)'
+                  example: 5000
+              required:
+                - amount
+  /v1/wallet/fund/verify:
+    post:
+      summary: ''
+      operationId: postV1WalletFundVerify
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Verified transaction'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    amount: '5000.00'
+                    type: deposit
+                    status: completed
+                    reference: WFT-XXXXXXXXXX
+                    notes: 'Wallet funding via Paystack'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      amount:
+                        type: string
+                        example: '5000.00'
+                      type:
+                        type: string
+                        example: deposit
+                      status:
+                        type: string
+                        example: completed
+                      reference:
+                        type: string
+                        example: WFT-XXXXXXXXXX
+                      notes:
+                        type: string
+                        example: 'Wallet funding via Paystack'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not Found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not Found'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reference:
+                  type: string
+                  description: 'The Paystack payment reference from the callback URL'
+                  example: WFT-XXXXXXXXXX
+              required:
+                - reference
+  /v1/wallet/transfer:
+    post:
+      summary: ''
+      operationId: postV1WalletTransfer
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Transfer initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    amount: '1000.00'
+                    type: withdrawal
+                    status: completed
+                    reference: WTH-XXXXXXXXXX
+                    notes: 'Transfer to recipient@example.com'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      amount:
+                        type: string
+                        example: '1000.00'
+                      type:
+                        type: string
+                        example: withdrawal
+                      status:
+                        type: string
+                        example: completed
+                      reference:
+                        type: string
+                        example: WTH-XXXXXXXXXX
+                      notes:
+                        type: string
+                        example: 'Transfer to recipient@example.com'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Recipient not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Recipient not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient funds.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient funds.'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_email:
+                  type: string
+                  description: 'Email address of the recipient'
+                  example: recipient@example.com
+                amount:
+                  type: number
+                  description: 'Amount to transfer (min: 1)'
+                  example: 1000
+                notes:
+                  type: string
+                  description: 'Optional transfer note'
+                  example: 'Payment for services'
+              required:
+                - recipient_email
+                - amount
+  /v1/wallet/withdraw:
+    post:
+      summary: ''
+      operationId: postV1WalletWithdraw
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Withdrawal initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    amount: '5050.00'
+                    type: withdrawal
+                    status: completed
+                    reference: WDR-XXXXXXXXXX
+                    notes: 'Withdrawal to John Doe (GTBank)'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      amount:
+                        type: string
+                        example: '5050.00'
+                      type:
+                        type: string
+                        example: withdrawal
+                      status:
+                        type: string
+                        example: completed
+                      reference:
+                        type: string
+                        example: WDR-XXXXXXXXXX
+                      notes:
+                        type: string
+                        example: 'Withdrawal to John Doe (GTBank)'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient funds.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient funds.'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Amount to withdraw'
+                  example: 5000
+                account_number:
+                  type: string
+                  description: 'Bank account number'
+                  example: '0123456789'
+                bank_code:
+                  type: string
+                  description: 'Paystack bank code'
+                  example: '058'
+                bank_name:
+                  type: string
+                  description: 'Bank name for display'
+                  example: GTBank
+              required:
+                - amount
+                - account_number
+                - bank_code
+                - bank_name
+  /v1/wallet/banks:
+    get:
+      summary: ''
+      operationId: getV1WalletBanks
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      name: GTBank
+                      code: '058'
+                      slug: guaranty-trust-bank
+                    -
+                      name: 'Access Bank'
+                      code: '044'
+                      slug: access-bank
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        name: GTBank
+                        code: '058'
+                        slug: guaranty-trust-bank
+                      -
+                        name: 'Access Bank'
+                        code: '044'
+                        slug: access-bank
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: GTBank
+                        code:
+                          type: string
+                          example: '058'
+                        slug:
+                          type: string
+                          example: guaranty-trust-bank
+      tags:
+        - Wallet
+  /v1/wallet/verify-account:
+    get:
+      summary: ''
+      operationId: getV1WalletVerifyAccount
+      description: ''
+      parameters:
+        -
+          in: query
+          name: account_number
+          description: 'Bank account number'
+          example: '0123456789'
+          required: true
+          schema:
+            type: string
+            description: 'Bank account number'
+            example: '0123456789'
+        -
+          in: query
+          name: bank_code
+          description: 'Paystack bank code'
+          example: '058'
+          required: true
+          schema:
+            type: string
+            description: 'Paystack bank code'
+            example: '058'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    account_name: 'John Doe'
+                    account_number: '0123456789'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      account_name:
+                        type: string
+                        example: 'John Doe'
+                      account_number:
+                        type: string
+                        example: '0123456789'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Failed to resolve account.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed to resolve account.'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_number:
+                  type: string
+                  description: 'Must be 10 digits.'
+                  example: '8225697751'
+                bank_code:
+                  type: string
+                  description: ''
+                  example: architecto
+              required:
+                - account_number
+                - bank_code
+  /v1/wallet/transactions:
+    get:
+      summary: ''
+      operationId: getV1WalletTransactions
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Paginated transactions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 1
+                      amount: '5000.00'
+                      type: deposit
+                      status: completed
+                      reference: DEP-XXXXXXXXXX
+                      notes: null
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                  links:
+                    first: ...
+                    last: ...
+                    prev: null
+                    next: null
+                  meta:
+                    current_page: 1
+                    per_page: 15
+                    total: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        amount: '5000.00'
+                        type: deposit
+                        status: completed
+                        reference: DEP-XXXXXXXXXX
+                        notes: null
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        amount:
+                          type: string
+                          example: '5000.00'
+                        type:
+                          type: string
+                          example: deposit
+                        status:
+                          type: string
+                          example: completed
+                        reference:
+                          type: string
+                          example: DEP-XXXXXXXXXX
+                        notes:
+                          type: string
+                          example: null
+                          nullable: true
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: ...
+                      last:
+                        type: string
+                        example: ...
+                      prev:
+                        type: string
+                        example: null
+                        nullable: true
+                      next:
+                        type: string
+                        example: null
+                        nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 15
+                      total:
+                        type: integer
+                        example: 1
+      tags:
+        - Wallet
+  '/v1/wallet/transactions/{id}':
+    get:
+      summary: ''
+      operationId: getV1WalletTransactionsId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    amount: '5000.00'
+                    type: deposit
+                    status: completed
+                    reference: DEP-XXXXXXXXXX
+                    notes: null
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      amount:
+                        type: string
+                        example: '5000.00'
+                      type:
+                        type: string
+                        example: deposit
+                      status:
+                        type: string
+                        example: completed
+                      reference:
+                        type: string
+                        example: DEP-XXXXXXXXXX
+                      notes:
+                        type: string
+                        example: null
+                        nullable: true
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Not Found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Not Found'
+      tags:
+        - Wallet
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the transaction.'
+        example: 1
+        required: true
+        schema:
+          type: integer

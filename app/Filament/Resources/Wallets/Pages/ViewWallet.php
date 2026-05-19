@@ -39,7 +39,7 @@ class ViewWallet extends ViewRecord
                         ->required(),
                 ])
                 ->action(function (array $data, Wallet $record): void {
-                    $record->user->deposit((float) $data['amount'], $record->type, $data['notes']);
+                    $record->user->deposit((float) $data['amount'], $record->type, $data['notes'], performedByUserId: auth()->id());
 
                     Notification::make()
                         ->success()
@@ -66,7 +66,7 @@ class ViewWallet extends ViewRecord
                 ])
                 ->action(function (array $data, Wallet $record): void {
                     try {
-                        $record->user->withdraw((float) $data['amount'], $record->type, $data['notes']);
+                        $record->user->withdraw((float) $data['amount'], $record->type, $data['notes'], performedByUserId: auth()->id());
 
                         Notification::make()
                             ->success()

@@ -30,6 +30,7 @@ class InitializeWalletFundingAction
 
         // Create a pending transaction record
         $transaction = $wallet->transactions()->create([
+            'performed_by_user_id' => $user->id,
             'amount' => $amount,
             'type' => TransactionType::Deposit,
             'status' => TransactionStatus::Pending,

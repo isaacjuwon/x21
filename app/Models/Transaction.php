@@ -20,6 +20,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'wallet_id',
+        'performed_by_user_id',
         'amount',
         'type',
         'status',
@@ -45,6 +46,11 @@ class Transaction extends Model
     public function wallet(): BelongsTo
     {
         return $this->belongsTo(Wallet::class);
+    }
+
+    public function performedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'performed_by_user_id');
     }
 
     public function transactionable(): MorphTo

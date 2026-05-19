@@ -20,6 +20,7 @@ class TransactionFactory extends Factory
 
         return [
             'wallet_id' => Wallet::factory(),
+            'performed_by_user_id' => null,
             'amount' => fake()->randomFloat(2, 10, 10000),
             'type' => $type,
             'status' => TransactionStatus::Completed,

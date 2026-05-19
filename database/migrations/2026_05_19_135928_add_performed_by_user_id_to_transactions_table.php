@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('transactions', function (Blueprint $table) {
+            if (Schema::getConnection()->getDriverName() === 'sqlite') {
+                $table->unsignedBigInteger('performed_by_user_id')
+                    ->nullable()
+                    ->after('wallet_id');
+
+                return;
+            }
+
+            $table->foreignId('performed_by_user_id')
+                ->nullable()
+                ->after('wallet_id')
+                ->constrained('users')
+                ->nullOnDelete();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('transactions', function (Blueprint $table) {
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->dropForeign(['performed_by_user_id']);
+            }
+
+            $table->dropColumn('performed_by_user_id');
+        });
+    }
+};

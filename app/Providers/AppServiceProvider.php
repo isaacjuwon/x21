@@ -13,6 +13,7 @@ use App\Settings\GeneralSettings;
 use App\Settings\LayoutSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Spatie\LaravelSettings\Exceptions\MissingSettings;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -66,7 +68,11 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureCurrency(): void
     {
-        Number::useCurrency(app(GeneralSettings::class)->currency ?? 'NGN');
+        try {
+            Number::useCurrency(app(GeneralSettings::class)->currency ?? 'NGN');
+        } catch (MissingSettings|QueryException) {
+            Number::useCurrency('NGN');
+        }
     }
 
     /**
