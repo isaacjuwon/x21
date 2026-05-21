@@ -25,6 +25,7 @@ class Brand extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('logo')
+            ->useDisk('public')
             ->singleFile();
     }
 
