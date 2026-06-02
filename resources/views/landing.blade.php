@@ -68,10 +68,10 @@
                         {{ $layoutSettings->homepage_description }}
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <flux:button href="{{ route('register') }}" variant="primary" size="lg" class="px-8 shadow-lg shadow-primary-color/20">
+                        <flux:button href="{{ route('register') }}" variant="primary" class="px-8 shadow-lg shadow-primary-color/20">
                             Start for Free
                         </flux:button>
-                        <flux:button href="#features" variant="outline" size="lg" class="px-8">
+                        <flux:button href="#features" variant="outline" class="px-8">
                             Learn More
                         </flux:button>
                     </div>
