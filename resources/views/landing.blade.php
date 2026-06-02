@@ -46,19 +46,32 @@
 
         <!-- Hero Section -->
         <section class="relative py-20 lg:py-32 overflow-hidden">
+            <!-- Decorative background elements -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-hidden pointer-events-none">
+                <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-color/5 blur-[120px] rounded-full"></div>
+                <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary-color/10 blur-[120px] rounded-full"></div>
+            </div>
+
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div class="text-center">
-                    <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6">
-                        <span class="block">{{ $layoutSettings->homepage_title }}</span>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-color/10 text-primary-color text-xs font-bold tracking-wider uppercase mb-8 animate-fade-in">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-color opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-color"></span>
+                        </span>
+                        The Future of Fintech
+                    </div>
+                    <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+                        <span class="block text-zinc-900 dark:text-white">{{ $layoutSettings->homepage_title }}</span>
                     </h1>
-                    <p class="max-w-2xl mx-auto text-xl text-zinc-600 dark:text-zinc-400 mb-10">
+                    <p class="max-w-2xl mx-auto text-xl text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed">
                         {{ $layoutSettings->homepage_description }}
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <flux:button href="{{ route('register') }}" variant="primary" size="sm" class="px-8">
+                        <flux:button href="{{ route('register') }}" variant="primary" size="lg" class="px-8 shadow-lg shadow-primary-color/20">
                             Start for Free
                         </flux:button>
-                        <flux:button href="#features" variant="outline" size="sm" class="px-8">
+                        <flux:button href="#features" variant="outline" size="lg" class="px-8">
                             Learn More
                         </flux:button>
                     </div>
@@ -66,22 +79,73 @@
 
                 <!-- Hero Image/Banner -->
                 @if($layoutSettings->banner)
-                    <div class="mt-16 rounded-2xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800">
+                    <div class="mt-20 rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800 transform hover:scale-[1.01] transition-transform duration-700">
                         <img src="{{ $layoutSettings->banner }}" alt="Banner" class="w-full object-cover aspect-video">
                     </div>
                 @else
-                    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
-                         <div class="aspect-video bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center border border-dashed border-zinc-300 dark:border-zinc-700">
-                            <flux:icon.wallet class="size-12 text-zinc-400" />
+                    <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                         <div class="group aspect-video bg-white dark:bg-zinc-900 rounded-2xl flex flex-col items-center justify-center border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:border-primary-color/30 transition-all duration-500">
+                            <div class="p-4 bg-zinc-50 dark:bg-zinc-800 rounded-xl group-hover:bg-primary-color/10 transition-colors">
+                                <flux:icon.wallet class="size-8 text-zinc-400 group-hover:text-primary-color" />
+                            </div>
+                            <span class="mt-4 font-semibold text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100">Smart Wallet</span>
                          </div>
-                         <div class="aspect-video bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center border border-dashed border-zinc-300 dark:border-zinc-700">
-                            <flux:icon.banknotes class="size-12 text-zinc-400" />
+                         <div class="group aspect-video bg-white dark:bg-zinc-900 rounded-2xl flex flex-col items-center justify-center border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:border-primary-color/30 transition-all duration-500">
+                            <div class="p-4 bg-zinc-50 dark:bg-zinc-800 rounded-xl group-hover:bg-primary-color/10 transition-colors">
+                                <flux:icon.banknotes class="size-8 text-zinc-400 group-hover:text-primary-color" />
+                            </div>
+                            <span class="mt-4 font-semibold text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100">Quick Loans</span>
                          </div>
-                         <div class="aspect-video bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center border border-dashed border-zinc-300 dark:border-zinc-700">
-                            <flux:icon.chart-bar class="size-12 text-zinc-400" />
+                         <div class="group aspect-video bg-white dark:bg-zinc-900 rounded-2xl flex flex-col items-center justify-center border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:border-primary-color/30 transition-all duration-500">
+                            <div class="p-4 bg-zinc-50 dark:bg-zinc-800 rounded-xl group-hover:bg-primary-color/10 transition-colors">
+                                <flux:icon.chart-bar class="size-8 text-zinc-400 group-hover:text-primary-color" />
+                            </div>
+                            <span class="mt-4 font-semibold text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-zinc-100">Share Trading</span>
                          </div>
                     </div>
                 @endif
+            </div>
+        </section>
+
+        <!-- How it Works Section -->
+        <section class="py-24 border-y border-zinc-100 dark:border-zinc-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-4">How it Works</h2>
+                    <p class="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">Get started in three simple steps and take control of your financial future.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                    <!-- Connector line for desktop -->
+                    <div class="hidden md:block absolute top-12 left-0 w-full h-px bg-zinc-100 dark:bg-zinc-800 -z-10"></div>
+                    
+                    <div class="text-center space-y-6">
+                        <div class="size-16 bg-white dark:bg-zinc-950 rounded-2xl shadow-md border border-zinc-100 dark:border-zinc-800 flex items-center justify-center mx-auto relative">
+                            <span class="absolute -top-2 -right-2 size-6 bg-primary-color text-white text-xs font-bold rounded-full flex items-center justify-center">1</span>
+                            <flux:icon.identification class="size-8 text-primary-color" />
+                        </div>
+                        <h3 class="text-xl font-bold">Create Account</h3>
+                        <p class="text-zinc-600 dark:text-zinc-400">Sign up in minutes with your basic details and complete a quick KYC verification.</p>
+                    </div>
+
+                    <div class="text-center space-y-6">
+                        <div class="size-16 bg-white dark:bg-zinc-950 rounded-2xl shadow-md border border-zinc-100 dark:border-zinc-800 flex items-center justify-center mx-auto relative">
+                            <span class="absolute -top-2 -right-2 size-6 bg-primary-color text-white text-xs font-bold rounded-full flex items-center justify-center">2</span>
+                            <flux:icon.wallet class="size-8 text-primary-color" />
+                        </div>
+                        <h3 class="text-xl font-bold">Fund Wallet</h3>
+                        <p class="text-zinc-600 dark:text-zinc-400">Deposit funds securely into your smart wallet using multiple payment methods.</p>
+                    </div>
+
+                    <div class="text-center space-y-6">
+                        <div class="size-16 bg-white dark:bg-zinc-950 rounded-2xl shadow-md border border-zinc-100 dark:border-zinc-800 flex items-center justify-center mx-auto relative">
+                            <span class="absolute -top-2 -right-2 size-6 bg-primary-color text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+                            <flux:icon.bolt class="size-8 text-primary-color" />
+                        </div>
+                        <h3 class="text-xl font-bold">Start Using Services</h3>
+                        <p class="text-zinc-600 dark:text-zinc-400">Apply for loans, buy shares, or pay bills instantly from your dashboard.</p>
+                    </div>
+                </div>
             </div>
         </section>
 

@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\V1\Loans\IndexController as LoansIndexController;
 use App\Http\Controllers\Api\V1\Loans\LoanApprovalController;
 use App\Http\Controllers\Api\V1\Loans\LoanDisbursementController;
 use App\Http\Controllers\Api\V1\Loans\LoanEligibilityController;
+use App\Http\Controllers\Api\V1\Loans\LoanPayoffController;
+use App\Http\Controllers\Api\V1\Loans\LoanPayoffQuoteController;
 use App\Http\Controllers\Api\V1\Loans\LoanRejectionController;
 use App\Http\Controllers\Api\V1\Loans\LoanRepaymentController;
 use App\Http\Controllers\Api\V1\Loans\LoanScheduleController;
@@ -130,6 +132,10 @@ Route::middleware('auth:sanctum')->group(function (): void {
         Route::post('/{loan}/approve', LoanApprovalController::class)->name('approve');
         Route::post('/{loan}/disburse', LoanDisbursementController::class)->name('disburse');
         Route::post('/{loan}/reject', LoanRejectionController::class)->name('reject');
+        Route::get('/{loan}/payoff-quote', LoanPayoffQuoteController::class)->name('payoff-quote');
+        Route::post('/{loan}/payoff', LoanPayoffController::class)
+            ->middleware('idempotency')
+            ->name('payoff');
     });
 
     // --- Shares ---

@@ -2,15 +2,19 @@
 
 use App\Models\Loan;
 use App\Models\LoanRepayment;
+use App\Models\LoanScheduleEntry;
 use App\Enums\Loans\LoanStatus;
+use App\Enums\Loans\LoanScheduleEntryStatus;
 use App\Enums\Wallets\WalletType;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Number;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Title('Loan Details')] class extends Component {
     public Loan $loan;
+    public ?array $payoffQuote = null;
 
     public function mount(Loan $loan)
     {
@@ -24,10 +28,10 @@ new #[Title('Loan Details')] class extends Component {
      * Get the next repayment due.
      */
     #[Computed]
-    public function nextRepayment(): ?LoanRepayment
+    public function nextRepayment(): ?LoanScheduleEntry
     {
-        return $this->loan->repayments()
-            ->where('status', 'pending')
+        return $this->loan->scheduleEntries()
+            ->where('status', LoanScheduleEntryStatus::Pending)
             ->orderBy('due_date')
             ->first();
     }
@@ -53,7 +57,7 @@ new #[Title('Loan Details')] class extends Component {
     /**
      * Pay the next instalment.
      */
-    public function payInstalment(): void
+    public function payInstalment(App\Actions\Loans\RepayLoanAction $action): void
     {
         $user = Auth::user();
         $amount = $this->nextRepaymentAmount;
@@ -67,26 +71,11 @@ new #[Title('Loan Details')] class extends Component {
         }
 
         try {
-            DB::transaction(function () use ($user, $amount) {
-                $user->withdraw($amount, WalletType::General, "Loan Repayment: Loan #{$this->loan->id}");
-
-                $repayment = $this->nextRepayment;
-                $repayment->update([
-                    'paid_amount' => $amount,
-                    'status' => 'paid',
-                    'paid_at' => now(),
-                ]);
-
-                $this->loan->decrement('outstanding_balance', $repayment->principal_component);
-
-                if ($this->loan->outstanding_balance <= 0) {
-                    $this->loan->update(['status' => LoanStatus::Completed]);
-                }
-            });
+            $action->handle($this->loan, $user, $amount);
 
             Flux::toast(
                 text: __('Successfully paid instalment of :amount', [
-                    'amount' => Number::currency($this->repaymentAmount),
+                    'amount' => Number::currency($amount),
                 ]),
                 variant: 'success',
             );
@@ -94,7 +83,45 @@ new #[Title('Loan Details')] class extends Component {
             $this->loan->refresh();
         } catch (\Exception $e) {
             Flux::toast(
-                text: __('An error occurred during payment.'),
+                text: __('An error occurred during payment: ' . $e->getMessage()),
+                variant: 'danger',
+            );
+        }
+    }
+
+    /**
+     * Load the early payoff quote.
+     */
+    public function loadPayoffQuote(App\Actions\Loans\CalculateLoanPayoffAction $action): void
+    {
+        $this->payoffQuote = $action->handle($this->loan);
+    }
+
+    /**
+     * Confirm and execute early payoff.
+     */
+    public function confirmPayoff(App\Actions\Loans\PayoffLoanAction $action): void
+    {
+        $user = Auth::user();
+        if (! $this->payoffQuote) {
+            return;
+        }
+
+        try {
+            $action->handle($this->loan, $user);
+
+            Flux::toast(
+                text: __('Successfully settled loan early.'),
+                variant: 'success',
+            );
+
+            $this->loan->refresh();
+            $this->payoffQuote = null;
+
+            $this->dispatch('close-modal', name: 'payoff-modal');
+        } catch (\Exception $e) {
+            Flux::toast(
+                text: __('An error occurred: ' . $e->getMessage()),
                 variant: 'danger',
             );
         }
@@ -175,6 +202,7 @@ new #[Title('Loan Details')] class extends Component {
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.column>{{ __('#') }}</flux:column>
+                        <flux:table.column>{{ __('#') }}</flux:table.column>
                         <flux:table.column>{{ __('Due Date') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Amount') }}</flux:table.column>
                         <flux:table.column>{{ __('Status') }}</flux:table.column>
@@ -182,14 +210,14 @@ new #[Title('Loan Details')] class extends Component {
                     </flux:table.columns>
 
                     <flux:table.rows>
-                        @foreach ($loan->repayments as $entry)
+                        @foreach ($loan->scheduleEntries as $entry)
                             <flux:table.row :key="$entry->id">
                                 <flux:table.cell class="text-zinc-500">{{ $entry->instalment_number }}</flux:table.cell>
                                 <flux:table.cell>{{ $entry->due_date->format('M j, Y') }}</flux:table.cell>
                                 <flux:table.cell align="end">{{ Number::currency($entry->instalment_amount) }}</flux:table.cell>
                                 <flux:table.cell>
-                                    <flux:badge :color="$entry->status === 'paid' ? 'green' : 'zinc'" size="sm">
-                                        {{ ucfirst($entry->status) }}
+                                    <flux:badge :color="$entry->status->getFluxColor()" size="sm">
+                                        {{ $entry->status->getLabel() }}
                                     </flux:badge>
                                 </flux:table.cell>
                                 <flux:table.cell align="end" class="text-zinc-500">
@@ -227,6 +255,21 @@ new #[Title('Loan Details')] class extends Component {
                 </flux:card>
             @endif
 
+            @if ($loan->status === LoanStatus::Disbursed)
+                <flux:card class="space-y-4">
+                    <flux:heading size="lg">{{ __('Early Payoff') }}</flux:heading>
+                    <flux:text size="sm" class="text-zinc-500">
+                        {{ __('Settle this loan in full today. A prepayment penalty may apply on future remaining interest.') }}
+                    </flux:text>
+
+                    <flux:modal.trigger name="payoff-modal">
+                        <flux:button variant="primary" class="w-full" wire:click="loadPayoffQuote">
+                            {{ __('Settle Loan Early') }}
+                        </flux:button>
+                    </flux:modal.trigger>
+                </flux:card>
+            @endif
+
             <flux:card class="space-y-4 bg-zinc-50 dark:bg-zinc-900 border-dashed">
                 <flux:heading size="sm">{{ __('Help & Support') }}</flux:heading>
                 <flux:text size="sm" class="text-zinc-500">
@@ -236,4 +279,43 @@ new #[Title('Loan Details')] class extends Component {
             </flux:card>
         </div>
     </div>
+
+    <flux:modal name="payoff-modal" class="md:w-[28rem] space-y-6">
+        <div>
+            <flux:heading size="lg">{{ __('Settle Loan Early') }}</flux:heading>
+            <flux:subheading>{{ __('Review the early payoff quote details.') }}</flux:subheading>
+        </div>
+
+        @if ($payoffQuote)
+            <div class="space-y-3">
+                <div class="flex justify-between border-b pb-2">
+                    <flux:text>{{ __('Remaining Principal') }}</flux:text>
+                    <flux:text weight="semibold">{{ Number::currency($payoffQuote['remaining_principal']) }}</flux:text>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <flux:text>{{ __('Accrued Interest') }}</flux:text>
+                    <flux:text weight="semibold">{{ Number::currency($payoffQuote['accrued_interest']) }}</flux:text>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <flux:text>{{ __('Prepayment Penalty') }}</flux:text>
+                    <flux:text weight="semibold">{{ Number::currency($payoffQuote['prepayment_penalty']) }}</flux:text>
+                </div>
+                <div class="flex justify-between pt-2">
+                    <flux:text weight="semibold">{{ __('Total Payoff Amount') }}</flux:text>
+                    <flux:text weight="bold" size="lg" class="text-violet-600">{{ Number::currency($payoffQuote['total_payoff_amount']) }}</flux:text>
+                </div>
+            </div>
+
+            <div class="flex space-x-2 justify-end">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:button variant="primary" wire:click="confirmPayoff">{{ __('Confirm Payoff') }}</flux:button>
+            </div>
+        @else
+            <div class="flex justify-center py-6">
+                <flux:spinner />
+            </div>
+        @endif
+    </flux:modal>
 </div>

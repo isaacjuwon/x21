@@ -12,6 +12,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
     case Approved = 'approved';
     case Disbursed = 'disbursed';
     case Rejected = 'rejected';
+    case Completed = 'completed';
 
     public function getLabel(): string
     {
@@ -20,6 +21,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Approved => 'Approved',
             self::Disbursed => 'Disbursed',
             self::Rejected => 'Rejected',
+            self::Completed => 'Completed',
         };
     }
 
@@ -30,6 +32,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Approved => 'info',
             self::Disbursed => 'primary',
             self::Rejected => 'danger',
+            self::Completed => 'success',
         };
     }
 
@@ -40,6 +43,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Approved => 'heroicon-o-hand-thumb-up',
             self::Disbursed => 'heroicon-o-banknotes',
             self::Rejected => 'heroicon-o-x-circle',
+            self::Completed => 'heroicon-o-check-badge',
         };
     }
 
@@ -50,6 +54,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Approved => 'blue',
             self::Disbursed => 'violet',
             self::Rejected => 'red',
+            self::Completed => 'green',
         };
     }
 
@@ -60,6 +65,7 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
             self::Approved => 'hand-thumb-up',
             self::Disbursed => 'banknotes',
             self::Rejected => 'x-circle',
+            self::Completed => 'check-badge',
         };
     }
 }

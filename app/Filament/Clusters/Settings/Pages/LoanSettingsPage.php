@@ -12,6 +12,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Number;
 
@@ -49,6 +50,17 @@ class LoanSettingsPage extends SettingsPage
                             Select::make('interest_method')
                                 ->options(InterestMethod::class)
                                 ->required(),
+                        ]),
+                        Grid::make(2)->schema([
+                            Toggle::make('enable_prepayment_penalty')
+                                ->label('Enable Prepayment Penalty')
+                                ->live(),
+                            TextInput::make('prepayment_penalty_percentage')
+                                ->label('Prepayment Penalty Percentage')
+                                ->numeric()
+                                ->suffix('%')
+                                ->required(fn (Get $get): bool => (bool) $get('enable_prepayment_penalty'))
+                                ->visible(fn (Get $get): bool => (bool) $get('enable_prepayment_penalty')),
                         ]),
                         Toggle::make('auto_approve')
                             ->label('Auto-approve Applications'),

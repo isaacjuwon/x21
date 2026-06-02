@@ -16,6 +16,9 @@ class LoanRepayment extends Model
         'loan_id',
         'amount',
         'transaction_id',
+        'principal_component',
+        'interest_component',
+        'penalty_component',
     ];
 
     public function loan(): BelongsTo

@@ -143,7 +143,7 @@ new #[Title('My Loans'), Defer] class extends Component {
                         <flux:table.cell align="end">
                             <flux:button :href="route('loan.view', $loan)" size="sm" variant="ghost" icon="eye" inset="top bottom" />
                         </flux:table.cell>
-                    </flux:row>
+                    </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>

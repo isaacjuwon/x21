@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Loans\Tables;
 
 use App\Actions\Loans\ApproveLoanAction;
+use App\Actions\Loans\CalculateLoanPayoffAction;
 use App\Actions\Loans\DisburseLoanAction;
+use App\Actions\Loans\PayoffLoanAction;
 use App\Actions\Loans\RejectLoanAction;
 use App\Enums\Loans\LoanStatus;
 use Filament\Actions\Action;
@@ -119,6 +121,32 @@ class LoansTable
                     ->action(function ($record, array $data): void {
                         app(RejectLoanAction::class)->handle($record, auth()->user(), $data['rejection_reason'], $data['notes'] ?? null);
                         Notification::make()->success()->title('Loan rejected')->send();
+                    }),
+
+                Action::make('payoff')
+                    ->label('Payoff Loan')
+                    ->icon(Heroicon::CheckBadge)
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Payoff Loan Early')
+                    ->modalDescription(function ($record) {
+                        $quote = app(CalculateLoanPayoffAction::class)->handle($record);
+                        $currency = Number::defaultCurrency();
+
+                        return "Review payoff quote:\n".
+                            'Remaining Principal: '.Number::currency($quote['remaining_principal'], $currency)."\n".
+                            'Accrued Interest: '.Number::currency($quote['accrued_interest'], $currency)."\n".
+                            'Prepayment Penalty: '.Number::currency($quote['prepayment_penalty'], $currency)."\n".
+                            'Total Payoff Amount: '.Number::currency($quote['total_payoff_amount'], $currency);
+                    })
+                    ->visible(fn ($record) => $record->status === LoanStatus::Disbursed)
+                    ->action(function ($record): void {
+                        try {
+                            app(PayoffLoanAction::class)->handle($record, auth()->user());
+                            Notification::make()->success()->title('Loan paid off successfully')->send();
+                        } catch (\Exception $e) {
+                            Notification::make()->danger()->title('Payoff failed')->body($e->getMessage())->send();
+                        }
                     }),
 
                 EditAction::make(),
