@@ -14,7 +14,7 @@ class StoreDividendRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'total_amount' => ['required', 'numeric', 'min:0.01'],
+            'percentage' => ['required', 'numeric', 'min:0.01'],
         ];
     }
 }

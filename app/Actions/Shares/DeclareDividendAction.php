@@ -23,7 +23,7 @@ class DeclareDividendAction
 
         DividendDeclared::dispatch($dividend);
 
-        ProcessDividendPayoutsJob::dispatch($dividend);
+        ProcessDividendPayoutsJob::dispatchSync($dividend);
 
         return $dividend;
     }

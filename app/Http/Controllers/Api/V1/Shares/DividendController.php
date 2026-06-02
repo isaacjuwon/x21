@@ -18,7 +18,7 @@ class DividendController
 {
     use AuthorizesRequests;
 
-    #[BodyParam('total_amount', 'number', description: 'Total dividend amount to distribute (min: 0.01)', required: true, example: 50000)]
+    #[BodyParam('percentage', 'number', description: 'Dividend percentage of the share price (min: 0.01)', required: true, example: 2.5)]
 
     #[Response(['message' => 'Dividend declared successfully.'], status: 201)]
     #[Response(['message' => 'This action is unauthorized.'], status: 403)]
@@ -26,7 +26,7 @@ class DividendController
     {
         $this->authorize('declareDividend', ShareOrder::class);
 
-        $action->handle((float) $request->total_amount);
+        $action->handle((float) $request->percentage);
 
         return response()->json(['message' => 'Dividend declared successfully.'], 201);
     }
