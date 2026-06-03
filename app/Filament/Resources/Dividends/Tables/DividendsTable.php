@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Dividends\Tables;
 use App\Actions\Shares\DeclareDividendAction;
 use App\Enums\Shares\DividendStatus;
 use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
@@ -80,6 +81,7 @@ class DividendsTable
                         Notification::make()->success()->title('Dividend declared and queued for distribution')->send();
                     }),
             ])
+            ->recordAction(ViewAction::class)
             ->defaultSort('declared_at', 'desc');
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\Dividends;
 
 use App\Filament\Resources\Dividends\Pages\ListDividends;
+use App\Filament\Resources\Dividends\Pages\ViewDividend;
+use App\Filament\Resources\Dividends\RelationManagers\PayoutsRelationManager;
 use App\Filament\Resources\Dividends\Schemas\DividendForm;
+use App\Filament\Resources\Dividends\Schemas\DividendInfolist;
 use App\Filament\Resources\Dividends\Tables\DividendsTable;
 use App\Models\Dividend;
 use Filament\Resources\Resource;
@@ -26,6 +29,11 @@ class DividendResource extends Resource
         return DividendForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return DividendInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return DividendsTable::configure($table);
@@ -33,13 +41,16 @@ class DividendResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            PayoutsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListDividends::route('/'),
+            'view' => ViewDividend::route('/{record}'),
         ];
     }
 }
