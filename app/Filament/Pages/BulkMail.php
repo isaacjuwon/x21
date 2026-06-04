@@ -30,30 +30,46 @@ class BulkMail extends Page
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form->fill([
+            'send_to_all' => false,
+            'users' => [],
+        ]);
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
-            ->schema([
+            ->components([
                 TextInput::make('subject')
                     ->required()
                     ->maxLength(255),
+
                 RichEditor::make('content')
                     ->required()
                     ->columnSpanFull(),
+
                 Toggle::make('send_to_all')
                     ->label('Send to all users')
                     ->live()
+                    ->default(false)
                     ->afterStateUpdated(fn (Set $set, bool $state) => $state ? $set('users', []) : null),
+
                 Select::make('users')
                     ->label('Select Users')
                     ->multiple()
                     ->searchable()
-                    ->options(User::query()->pluck('name', 'id'))
+                    ->getSearchResultsUsing(
+                        fn (string $search) => User::query()
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->limit(50)
+                            ->pluck('name', 'id')
+                    )
+                    ->getOptionLabelsUsing(
+                        fn (array $values) => User::whereIn('id', $values)->pluck('name', 'id')
+                    )
                     ->hidden(fn (Get $get): bool => (bool) $get('send_to_all'))
-                    ->required(fn (Get $get): bool => ! $get('send_to_all')),
+                    ->required(fn (Get $get): bool => ! (bool) $get('send_to_all')),
             ])
             ->statePath('data');
     }
@@ -64,12 +80,24 @@ class BulkMail extends Page
             Action::make('send')
                 ->label('Send Bulk Mail')
                 ->icon('heroicon-o-paper-airplane')
+                ->requiresConfirmation()
+                ->modalHeading('Send Bulk Mail')
+                ->modalDescription(fn () => 'This will dispatch emails to the selected recipients.')
                 ->action(function (): void {
                     $data = $this->form->getState();
 
-                    $users = $data['send_to_all']
+                    $users = (bool) ($data['send_to_all'] ?? false)
                         ? User::all()
-                        : User::whereIn('id', $data['users'])->get();
+                        : User::whereIn('id', $data['users'] ?? [])->get();
+
+                    if ($users->isEmpty()) {
+                        Notification::make()
+                            ->title('No recipients selected.')
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
 
                     foreach ($users as $user) {
                         SendBulkMailJob::dispatch($user, $data['subject'], $data['content']);
@@ -80,7 +108,10 @@ class BulkMail extends Page
                         ->success()
                         ->send();
 
-                    $this->form->fill();
+                    $this->form->fill([
+                        'send_to_all' => false,
+                        'users' => [],
+                    ]);
                 }),
         ];
     }
