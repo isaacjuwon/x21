@@ -18,7 +18,7 @@ use Filament\Schemas\Schema;
 
 class BulkMail extends Page
 {
-    use HasPageShield;
+    //use HasPageShield;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
 
