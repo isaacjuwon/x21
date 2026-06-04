@@ -20,7 +20,7 @@ class BulkMail extends Page
     //use HasPageShield;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
-    protected static string|\UnitEnum|null = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
     protected static ?int $navigationSort = 20;
     protected static string $view = 'filament.pages.bulk-mail';
 
