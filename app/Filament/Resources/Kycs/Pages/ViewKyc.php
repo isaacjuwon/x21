@@ -45,7 +45,7 @@ class ViewKyc extends ViewRecord
                         ->label('Document')
                         ->formatStateUsing(fn (string $state) => basename($state))
                         ->suffixAction(
-                            \Filament\Infolists\Components\Actions\Action::make('download')
+                            Action::make('download')
                                 ->icon('heroicon-o-arrow-down-tray')
                                 ->url(fn (Kyc $record) => Storage::url($record->file_path))
                                 ->openUrlInNewTab()
