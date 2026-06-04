@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use App\Jobs\SendBulkMailJob;
 use App\Models\User;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -20,13 +19,10 @@ class BulkMail extends Page
 {
     //use HasPageShield;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
-
-    protected static string|\UnitEnum|null $navigationGroup = 'System';
-
+    protected static ?string $navigationIcon = 'heroicon-o-envelope';
+    protected static ?string $navigationGroup = 'System';
     protected static ?int $navigationSort = 20;
-
-    protected string $view = 'filament.pages.bulk-mail';
+    protected static string $view = 'filament.pages.bulk-mail';
 
     public ?array $data = [];
 
@@ -45,17 +41,14 @@ class BulkMail extends Page
                 TextInput::make('subject')
                     ->required()
                     ->maxLength(255),
-
                 RichEditor::make('content')
                     ->required()
                     ->columnSpanFull(),
-
                 Toggle::make('send_to_all')
                     ->label('Send to all users')
                     ->live()
                     ->default(false)
                     ->afterStateUpdated(fn (Set $set, bool $state) => $state ? $set('users', []) : null),
-
                 Select::make('users')
                     ->label('Select Users')
                     ->multiple()
@@ -89,7 +82,6 @@ class BulkMail extends Page
                 ->title('No recipients selected.')
                 ->warning()
                 ->send();
-
             return;
         }
 
@@ -98,7 +90,7 @@ class BulkMail extends Page
         }
 
         Notification::make()
-            ->title('Bulk mail queued for '.$users->count().' recipient(s).')
+            ->title('Bulk mail queued for ' . $users->count() . ' recipient(s).')
             ->success()
             ->send();
 
