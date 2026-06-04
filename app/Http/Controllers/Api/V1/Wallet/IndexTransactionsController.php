@@ -28,6 +28,7 @@ final class IndexTransactionsController
         $transactions = $request->user()
             ->getWallet(WalletType::General)
             ->transactions()
+            ->with('performedByUser:id,name')
             ->latest()
             ->paginate(15);
 

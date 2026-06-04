@@ -51,6 +51,7 @@ new #[Title('Transactions'), Defer] class extends Component {
         return Auth::user()
             ->getWallet(WalletType::General)
             ->transactions()
+            ->with('performedByUser:id,name')
             ->when($this->filterType, fn ($q) => $q->where('type', $this->filterType))
             ->when($this->filterStatus, fn ($q) => $q->where('status', $this->filterStatus))
             ->when($this->search, fn ($q) => $q->where('reference', 'like', "%{$this->search}%"))
@@ -153,6 +154,7 @@ new #[Title('Transactions'), Defer] class extends Component {
 
                 <flux:table.column>{{ __('Status') }}</flux:table.column>
                 <flux:table.column>{{ __('Reference') }}</flux:table.column>
+                <flux:table.column>{{ __('Performed By') }}</flux:table.column>
                 <flux:table.column>{{ __('Notes') }}</flux:table.column>
             </flux:table.columns>
 
@@ -191,13 +193,24 @@ new #[Title('Transactions'), Defer] class extends Component {
                             {{ $transaction->reference }}
                         </flux:table.cell>
 
+                        <flux:table.cell class="text-zinc-500 text-sm whitespace-nowrap">
+                            @if ($transaction->performedByUser && $transaction->performed_by_user_id !== $transaction->wallet->user_id)
+                                <div class="flex items-center gap-1.5">
+                                    <flux:icon name="user-circle" class="size-4 shrink-0 text-amber-500" />
+                                    <span class="font-medium text-amber-700 dark:text-amber-400">{{ $transaction->performedByUser->name }}</span>
+                                </div>
+                            @else
+                                <span class="text-zinc-400">{{ __('Self') }}</span>
+                            @endif
+                        </flux:table.cell>
+
                         <flux:table.cell class="text-zinc-500 text-sm max-w-xs truncate">
                             {{ $transaction->notes ?? '—' }}
                         </flux:table.cell>
                     </flux:table.row>
                 @empty
                     <flux:table.row>
-                        <flux:table.cell colspan="6" class="py-12 text-center text-zinc-400">
+                        <flux:table.cell colspan="7" class="py-12 text-center text-zinc-400">
                             {{ __('No transactions found.') }}
                         </flux:table.cell>
                     </flux:table.row>

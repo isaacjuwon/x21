@@ -17,6 +17,10 @@ class TransactionResource extends JsonResource
             'reference' => $this->reference,
             'notes' => $this->notes,
             'failure_reason' => $this->failure_reason,
+            'performed_by' => $this->whenLoaded('performedByUser', fn () => [
+                'id' => $this->performedByUser->id,
+                'name' => $this->performedByUser->name,
+            ]),
             'created_at' => $this->created_at,
         ];
     }

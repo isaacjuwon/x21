@@ -31,6 +31,6 @@ final class ShowTransactionController
     {
         abort_unless($transaction->wallet->user_id === $request->user()->id, 404);
 
-        return new TransactionResource($transaction);
+        return new TransactionResource($transaction->load('performedByUser:id,name'));
     }
 }
