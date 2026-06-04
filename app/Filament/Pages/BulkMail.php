@@ -26,6 +26,8 @@ class BulkMail extends Page
 
     protected static ?int $navigationSort = 20;
 
+    protected string $view = 'filament.pages.bulk-mail';
+
     public ?array $data = [];
 
     public function mount(): void
@@ -74,6 +76,38 @@ class BulkMail extends Page
             ->statePath('data');
     }
 
+    public function send(): void
+    {
+        $data = $this->form->getState();
+
+        $users = (bool) ($data['send_to_all'] ?? false)
+            ? User::all()
+            : User::whereIn('id', $data['users'] ?? [])->get();
+
+        if ($users->isEmpty()) {
+            Notification::make()
+                ->title('No recipients selected.')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        foreach ($users as $user) {
+            SendBulkMailJob::dispatch($user, $data['subject'], $data['content']);
+        }
+
+        Notification::make()
+            ->title('Bulk mail queued for '.$users->count().' recipient(s).')
+            ->success()
+            ->send();
+
+        $this->form->fill([
+            'send_to_all' => false,
+            'users' => [],
+        ]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -81,38 +115,9 @@ class BulkMail extends Page
                 ->label('Send Bulk Mail')
                 ->icon('heroicon-o-paper-airplane')
                 ->requiresConfirmation()
-                ->modalHeading('Send Bulk Mail')
-                ->modalDescription(fn () => 'This will dispatch emails to the selected recipients.')
-                ->action(function (): void {
-                    $data = $this->form->getState();
-
-                    $users = (bool) ($data['send_to_all'] ?? false)
-                        ? User::all()
-                        : User::whereIn('id', $data['users'] ?? [])->get();
-
-                    if ($users->isEmpty()) {
-                        Notification::make()
-                            ->title('No recipients selected.')
-                            ->warning()
-                            ->send();
-
-                        return;
-                    }
-
-                    foreach ($users as $user) {
-                        SendBulkMailJob::dispatch($user, $data['subject'], $data['content']);
-                    }
-
-                    Notification::make()
-                        ->title('Bulk mail queued for '.$users->count().' recipient(s).')
-                        ->success()
-                        ->send();
-
-                    $this->form->fill([
-                        'send_to_all' => false,
-                        'users' => [],
-                    ]);
-                }),
+                ->modalHeading('Confirm Bulk Send')
+                ->modalDescription('This will queue emails for all selected recipients. Are you sure?')
+                ->action(fn () => $this->send()),
         ];
     }
 }

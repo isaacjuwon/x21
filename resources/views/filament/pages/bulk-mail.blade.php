@@ -1,3 +1,5 @@
 <x-filament-panels::page>
-    {{ $this->form }}
+    <form wire:submit.prevent="send">
+        {{ $this->form }}
+    </form>
 </x-filament-panels::page>
