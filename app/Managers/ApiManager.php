@@ -34,6 +34,8 @@ class ApiManager extends MultipleInstanceManager
      */
     public function paymentProvider(?string $name = null): PaymentProvider
     {
+        $name ??= $this->app['config']->get('api.defaults.payment', $this->getDefaultInstance());
+
         return tap($this->instance($name), function ($instance) {
             if (! $instance instanceof PaymentProvider) {
                 throw new LogicException('Provider ['.get_class($instance).'] does not support payments.');
@@ -60,6 +62,8 @@ class ApiManager extends MultipleInstanceManager
      */
     public function vtuProvider(?string $name = null): VtuProvider
     {
+        $name ??= $this->app['config']->get('api.defaults.vtu', $this->getDefaultInstance());
+
         return tap($this->instance($name), function ($instance) {
             if (! $instance instanceof VtuProvider) {
                 throw new LogicException('Provider ['.get_class($instance).'] does not support VTU.');
@@ -86,6 +90,8 @@ class ApiManager extends MultipleInstanceManager
      */
     public function accountProvider(?string $name = null): AccountProvider
     {
+        $name ??= $this->app['config']->get('api.defaults.account', $this->getDefaultInstance());
+
         return tap($this->instance($name), function ($instance) {
             if (! $instance instanceof AccountProvider) {
                 throw new LogicException('Provider ['.get_class($instance).'] does not support accounts.');
@@ -100,6 +106,8 @@ class ApiManager extends MultipleInstanceManager
      */
     public function verificationProvider(?string $name = null): VerificationProvider
     {
+        $name ??= $this->app['config']->get('api.defaults.verification', $this->getDefaultInstance());
+
         return tap($this->instance($name), function ($instance) {
             if (! $instance instanceof VerificationProvider) {
                 throw new LogicException('Provider ['.get_class($instance).'] does not support verification.');
