@@ -4,14 +4,35 @@ declare(strict_types=1);
 
 namespace App\Integrations\Dojah\Entities;
 
-final readonly class BvnMatchRequest
+final class BvnMatchRequest
 {
+    public string $bvn {
+        set(string $value) => trim($value);
+    }
+
+    public ?string $firstName {
+        set(?string $value) => $value ? trim($value) : null;
+    }
+
+    public ?string $lastName {
+        set(?string $value) => $value ? trim($value) : null;
+    }
+
+    public ?string $dob {
+        set(?string $value) => $value ? trim($value) : null;
+    }
+
     public function __construct(
-        public string $bvn,
-        public string $firstName,
-        public string $lastName,
-        public ?string $dob = null,
-    ) {}
+        string $bvn,
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $dob = null,
+    ) {
+        $this->bvn = $bvn;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->dob = $dob;
+    }
 
     public function toQuery(): array
     {
