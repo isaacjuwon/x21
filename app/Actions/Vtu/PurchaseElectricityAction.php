@@ -1,67 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
 use App\Integrations\Epins\Entities\PurchaseElectricity as PurchaseElectricityEntity;
+use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
-class PurchaseElectricityAction
+final class PurchaseElectricityAction
 {
     public function __construct(
-        protected ApiManager $apiManager,
+        private readonly ApiManager $apiManager,
     ) {}
 
-    /**
-     * Purchase electricity using the configured VTU provider.
-     *
-     * @param TopupTransaction $transaction
-     * @return \App\Integrations\Epins\Entities\ServiceResponse
-     */
-    public function handle(TopupTransaction $transaction)
+    public function handle(TopupTransaction $transaction): ServiceResponse
     {
-        $purchaseData = new PurchaseElectricityEntity(
-            service: $transaction->brand->slug, // e.g., ikeja-electric
-            meterNumber: $transaction->meter_number,
+        $entity = new PurchaseElectricityEntity(
+            service: (string) $transaction->brand->api_code,
+            meterNumber: (string) $transaction->recipient,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
-            phone: $transaction->user->phone // Assuming user has phone
+            phone: $transaction->user->phone ?? null,
         );
 
         try {
-            $vtuProvider = $this->apiManager->vtuProvider();
-            $response = $vtuProvider->purchaseElectricity($purchaseData);
+            $response = $this->apiManager->vtuProvider()->purchaseElectricity($entity);
 
-            // Record the request using Job
             RecordApiRequestJob::dispatch(
                 type: 'vtu',
                 method: 'POST',
                 url: '/electricity/',
-                payload: $purchaseData->toRequestBody(),
+                payload: $entity->toRequestBody(),
                 response: (array) $response,
                 userId: $transaction->user_id,
-                reference: $transaction->reference
+                reference: $transaction->reference,
             );
 
+            $transaction->update([
+                'status' => $response->isSuccessful() ? 'completed' : 'failed',
+            ]);
+
             if ($response->isSuccessful()) {
-                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
-            } else {
-                $transaction->update(['status' => 'failed']);
             }
 
             return $response;
 
         } catch (\Exception $e) {
-            Log::error("Electricity payment failed: " . $e->getMessage(), [
+            Log::error('Electricity payment failed: '.$e->getMessage(), [
                 'transaction_id' => $transaction->id,
-                'reference' => $transaction->reference
+                'reference' => $transaction->reference,
             ]);
 
             $transaction->update(['status' => 'failed']);
+
             throw $e;
         }
     }

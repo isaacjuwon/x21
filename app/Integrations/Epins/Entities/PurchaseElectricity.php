@@ -4,15 +4,40 @@ declare(strict_types=1);
 
 namespace App\Integrations\Epins\Entities;
 
-final readonly class PurchaseElectricity
+final class PurchaseElectricity
 {
+    public string $service {
+        set (string $value) {
+            $this->service = strtolower(trim($value));
+        }
+    }
+
+    public string $meterNumber {
+        set (string $value) {
+            $this->meterNumber = trim($value);
+        }
+    }
+
+    public int $amount {
+        set (int $value) {
+            if ($value <= 0) {
+                throw new \InvalidArgumentException('Electricity amount must be greater than zero.');
+            }
+            $this->amount = $value;
+        }
+    }
+
     public function __construct(
-        public string $service,
-        public string $meterNumber,
-        public int $amount,
-        public ?string $reference = null,
-        public ?string $phone = null,
-    ) {}
+        string $service,
+        string $meterNumber,
+        int $amount,
+        public readonly ?string $reference = null,
+        public readonly ?string $phone = null,
+    ) {
+        $this->service = $service;
+        $this->meterNumber = $meterNumber;
+        $this->amount = $amount;
+    }
 
     public function toRequestBody(): array
     {

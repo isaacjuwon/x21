@@ -4,13 +4,31 @@ declare(strict_types=1);
 
 namespace App\Integrations\Epins\Entities;
 
-final readonly class PurchaseExam
+final class PurchaseExam
 {
+    public string $service {
+        set (string $value) {
+            $this->service = strtolower(trim($value));
+        }
+    }
+
+    public int $numberOfPins {
+        set (int $value) {
+            if ($value < 1) {
+                throw new \InvalidArgumentException('Number of pins must be at least 1.');
+            }
+            $this->numberOfPins = $value;
+        }
+    }
+
     public function __construct(
-        public string $service, // waec, neco, nabteb
-        public int $numberOfPins = 1,
-        public ?string $reference = null,
-    ) {}
+        string $service,
+        int $numberOfPins = 1,
+        public readonly ?string $reference = null,
+    ) {
+        $this->service = $service;
+        $this->numberOfPins = $numberOfPins;
+    }
 
     public function toRequestBody(): array
     {

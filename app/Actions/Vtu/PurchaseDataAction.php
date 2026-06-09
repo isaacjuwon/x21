@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
@@ -10,46 +12,40 @@ use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
-class PurchaseDataAction
+final class PurchaseDataAction
 {
     public function __construct(
-        protected ApiManager $apiManager,
+        private readonly ApiManager $apiManager,
     ) {}
 
-    /**
-     * Purchase data bundle using the configured VTU provider.
-     *
-     * @return ServiceResponse
-     */
-    public function handle(TopupTransaction $transaction)
+    public function handle(TopupTransaction $transaction): ServiceResponse
     {
-        $purchaseData = new PurchaseDataEntity(
-            network: $transaction->brand->network_code, // Assuming mapping exists
-            mobileNumber: $transaction->phone_number,
-            dataCode: $transaction->plan->api_code,
-            reference: $transaction->reference
+        $entity = new PurchaseDataEntity(
+            network: (string) $transaction->brand->api_code,
+            mobileNumber: (string) $transaction->recipient,
+            dataCode: (string) $transaction->plan->api_code,
+            reference: $transaction->reference,
         );
 
         try {
-            $vtuProvider = $this->apiManager->vtuProvider();
-            $response = $vtuProvider->purchaseData($purchaseData);
+            $response = $this->apiManager->vtuProvider()->purchaseData($entity);
 
-            // Record the request using Job
             RecordApiRequestJob::dispatch(
                 type: 'vtu',
                 method: 'POST',
                 url: '/data/',
-                payload: $purchaseData->toRequestBody(),
+                payload: $entity->toRequestBody(),
                 response: (array) $response,
                 userId: $transaction->user_id,
-                reference: $transaction->reference
+                reference: $transaction->reference,
             );
 
+            $transaction->update([
+                'status' => $response->isSuccessful() ? 'completed' : 'failed',
+            ]);
+
             if ($response->isSuccessful()) {
-                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
-            } else {
-                $transaction->update(['status' => 'failed']);
             }
 
             return $response;
@@ -61,6 +57,7 @@ class PurchaseDataAction
             ]);
 
             $transaction->update(['status' => 'failed']);
+
             throw $e;
         }
     }

@@ -4,14 +4,39 @@ declare(strict_types=1);
 
 namespace App\Integrations\Epins\Entities;
 
-final readonly class PurchaseData
+final class PurchaseData
 {
+    public string $network {
+        set (string $value) {
+            if (blank($value)) {
+                throw new \InvalidArgumentException('Network code cannot be blank.');
+            }
+            $this->network = strtolower(trim($value));
+        }
+    }
+
+    public string $mobileNumber {
+        set (string $value) {
+            $this->mobileNumber = preg_replace('/\D/', '', $value);
+        }
+    }
+
+    public string $dataCode {
+        set (string $value) {
+            $this->dataCode = trim($value);
+        }
+    }
+
     public function __construct(
-        public string $network,
-        public string $mobileNumber,
-        public string $dataCode, // Variation code
-        public ?string $reference = null,
-    ) {}
+        string $network,
+        string $mobileNumber,
+        string $dataCode,
+        public readonly ?string $reference = null,
+    ) {
+        $this->network = $network;
+        $this->mobileNumber = $mobileNumber;
+        $this->dataCode = $dataCode;
+    }
 
     public function toRequestBody(): array
     {

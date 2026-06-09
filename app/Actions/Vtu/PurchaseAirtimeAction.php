@@ -1,66 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
 use App\Integrations\Epins\Entities\PurchaseAirtime as PurchaseAirtimeEntity;
+use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
-class PurchaseAirtimeAction
+final class PurchaseAirtimeAction
 {
     public function __construct(
-        protected ApiManager $apiManager,
+        private readonly ApiManager $apiManager,
     ) {}
 
-    /**
-     * Purchase airtime using the configured VTU provider.
-     *
-     * @param TopupTransaction $transaction
-     * @return \App\Integrations\Epins\Entities\ServiceResponse
-     */
-    public function handle(TopupTransaction $transaction)
+    public function handle(TopupTransaction $transaction): ServiceResponse
     {
-        $purchaseData = new PurchaseAirtimeEntity(
-            network: $transaction->brand->network_code,
+        $entity = new PurchaseAirtimeEntity(
+            network: (string) $transaction->brand->api_code,
             amount: (int) $transaction->amount,
-            mobileNumber: $transaction->phone_number,
-            reference: $transaction->reference
+            mobileNumber: (string) $transaction->recipient,
+            reference: $transaction->reference,
         );
 
         try {
-            $vtuProvider = $this->apiManager->vtuProvider();
-            $response = $vtuProvider->purchaseAirtime($purchaseData);
+            $response = $this->apiManager->vtuProvider()->purchaseAirtime($entity);
 
-            // Record the request using Job
             RecordApiRequestJob::dispatch(
                 type: 'vtu',
                 method: 'POST',
                 url: '/airtime/',
-                payload: $purchaseData->toRequestBody(),
+                payload: $entity->toRequestBody(),
                 response: (array) $response,
                 userId: $transaction->user_id,
-                reference: $transaction->reference
+                reference: $transaction->reference,
             );
 
+            $transaction->update([
+                'status' => $response->isSuccessful() ? 'completed' : 'failed',
+            ]);
+
             if ($response->isSuccessful()) {
-                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
-            } else {
-                $transaction->update(['status' => 'failed']);
             }
 
             return $response;
 
         } catch (\Exception $e) {
-            Log::error("Airtime purchase failed: " . $e->getMessage(), [
+            Log::error('Airtime purchase failed: '.$e->getMessage(), [
                 'transaction_id' => $transaction->id,
-                'reference' => $transaction->reference
+                'reference' => $transaction->reference,
             ]);
 
             $transaction->update(['status' => 'failed']);
+
             throw $e;
         }
     }

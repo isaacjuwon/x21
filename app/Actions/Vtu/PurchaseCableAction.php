@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Vtu;
 
 use App\Events\Services\ServicePurchased;
@@ -10,47 +12,41 @@ use App\Managers\ApiManager;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
-class PurchaseCableAction
+final class PurchaseCableAction
 {
     public function __construct(
-        protected ApiManager $apiManager,
+        private readonly ApiManager $apiManager,
     ) {}
 
-    /**
-     * Purchase cable subscription using the configured VTU provider.
-     *
-     * @return ServiceResponse
-     */
-    public function handle(TopupTransaction $transaction)
+    public function handle(TopupTransaction $transaction): ServiceResponse
     {
-        $purchaseData = new PurchaseCableEntity(
-            service: $transaction->brand->slug, // e.g., dstv
-            smartcardNumber: $transaction->smart_card_number,
-            variationCode: $transaction->plan->api_code,
+        $entity = new PurchaseCableEntity(
+            service: (string) $transaction->brand->api_code,
+            smartcardNumber: (string) $transaction->recipient,
+            variationCode: (string) $transaction->plan->api_code,
             reference: $transaction->reference,
-            phone: $transaction->user->phone
+            phone: $transaction->user->phone ?? null,
         );
 
         try {
-            $vtuProvider = $this->apiManager->vtuProvider();
-            $response = $vtuProvider->purchaseCable($purchaseData);
+            $response = $this->apiManager->vtuProvider()->purchaseCable($entity);
 
-            // Record the request using Job
             RecordApiRequestJob::dispatch(
                 type: 'vtu',
                 method: 'POST',
                 url: '/cable/',
-                payload: $purchaseData->toRequestBody(),
+                payload: $entity->toRequestBody(),
                 response: (array) $response,
                 userId: $transaction->user_id,
-                reference: $transaction->reference
+                reference: $transaction->reference,
             );
 
+            $transaction->update([
+                'status' => $response->isSuccessful() ? 'completed' : 'failed',
+            ]);
+
             if ($response->isSuccessful()) {
-                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
-            } else {
-                $transaction->update(['status' => 'failed']);
             }
 
             return $response;
@@ -62,6 +58,7 @@ class PurchaseCableAction
             ]);
 
             $transaction->update(['status' => 'failed']);
+
             throw $e;
         }
     }

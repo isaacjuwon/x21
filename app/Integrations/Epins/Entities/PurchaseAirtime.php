@@ -4,15 +4,43 @@ declare(strict_types=1);
 
 namespace App\Integrations\Epins\Entities;
 
-final readonly class PurchaseAirtime
+final class PurchaseAirtime
 {
+    public string $network {
+        set (string $value) {
+            if (blank($value)) {
+                throw new \InvalidArgumentException('Network code cannot be blank.');
+            }
+            $this->network = strtolower(trim($value));
+        }
+    }
+
+    public string $mobileNumber {
+        set (string $value) {
+            $this->mobileNumber = preg_replace('/\D/', '', $value);
+        }
+    }
+
+    public int $amount {
+        set (int $value) {
+            if ($value <= 0) {
+                throw new \InvalidArgumentException('Airtime amount must be greater than zero.');
+            }
+            $this->amount = $value;
+        }
+    }
+
     public function __construct(
-        public string $network, // 01=MTN, 02=Glo, 03=9Mobile, 04=Airtel
-        public int $amount,
-        public string $mobileNumber,
-        public string $portedNumber = 'false',
-        public ?string $reference = null,
-    ) {}
+        string $network,
+        int $amount,
+        string $mobileNumber,
+        public readonly string $portedNumber = 'false',
+        public readonly ?string $reference = null,
+    ) {
+        $this->network = $network;
+        $this->amount = $amount;
+        $this->mobileNumber = $mobileNumber;
+    }
 
     public function toRequestBody(): array
     {

@@ -4,15 +4,37 @@ declare(strict_types=1);
 
 namespace App\Integrations\Epins\Entities;
 
-final readonly class PurchaseCable
+final class PurchaseCable
 {
+    public string $service {
+        set (string $value) {
+            $this->service = strtolower(trim($value));
+        }
+    }
+
+    public string $smartcardNumber {
+        set (string $value) {
+            $this->smartcardNumber = trim($value);
+        }
+    }
+
+    public string $variationCode {
+        set (string $value) {
+            $this->variationCode = trim($value);
+        }
+    }
+
     public function __construct(
-        public string $service, // dstv, gotv, startimes
-        public string $smartcardNumber,
-        public string $variationCode, // Plan code
-        public ?string $reference = null,
-        public ?string $phone = null,
-    ) {}
+        string $service,
+        string $smartcardNumber,
+        string $variationCode,
+        public readonly ?string $reference = null,
+        public readonly ?string $phone = null,
+    ) {
+        $this->service = $service;
+        $this->smartcardNumber = $smartcardNumber;
+        $this->variationCode = $variationCode;
+    }
 
     public function toRequestBody(): array
     {
