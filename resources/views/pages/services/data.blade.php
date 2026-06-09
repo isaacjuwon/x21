@@ -147,47 +147,71 @@ new #[Title('Data Purchase')] class extends Component {
 
             @if($brand_id)
                 <!-- Type Selection -->
-                @if($this->types->isNotEmpty())
-                    <flux:field>
-                        <flux:label>Select Data Type</flux:label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            @foreach($this->types as $type)
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" wire:model.live="type_filter" value="{{ $type }}" class="sr-only peer">
-                                    <div class="p-3 border-2 rounded-xl flex items-center justify-center text-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
-                                        <span class="text-sm font-semibold uppercase tracking-wide">{{ $type }}</span>
-                                    </div>
-                                </label>
-                            @endforeach
-                        </div>
-                        <flux:error name="type_filter" />
-                    </flux:field>
-                @endif
+                <flux:field>
+                    <flux:label>Select Data Type</flux:label>
+
+                    {{-- Loading skeleton shown while brand_id update is in-flight --}}
+                    <div wire:loading wire:target="brand_id" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        @foreach(range(1, 3) as $i)
+                            <div class="h-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
+                        @endforeach
+                    </div>
+
+                    {{-- Actual type buttons, hidden while loading --}}
+                    <div wire:loading.remove wire:target="brand_id">
+                        @if($this->types->isNotEmpty())
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                @foreach($this->types as $type)
+                                    <label class="relative cursor-pointer group" wire:key="type-{{ $type }}">
+                                        <input type="radio" wire:model.live="type_filter" value="{{ $type }}" class="sr-only peer">
+                                        <div class="p-3 border-2 rounded-xl flex items-center justify-center text-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                            <span class="text-sm font-semibold uppercase tracking-wide">{{ $type }}</span>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                        @else
+                            <flux:text class="text-zinc-400 text-sm py-2">No data types available for this provider.</flux:text>
+                        @endif
+                    </div>
+                    <flux:error name="type_filter" />
+                </flux:field>
 
                 <!-- Plan Selection -->
                 @if($type_filter)
                     <flux:field>
                         <flux:label>Select Data Plan</flux:label>
-                        @if($this->plans->isEmpty())
-                            <flux:text class="text-zinc-400 text-sm py-2">No plans available for this type.</flux:text>
-                        @else
-                            <div class="grid grid-cols-1 gap-3">
-                                @foreach($this->plans as $plan)
-                                    <label class="relative cursor-pointer">
-                                        <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
-                                        <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
-                                            <div class="flex flex-col">
-                                                <span class="font-bold text-lg">{{ $plan->name ?? $plan->type }}</span>
-                                                <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
+
+                        {{-- Loading skeleton shown while type_filter update is in-flight --}}
+                        <div wire:loading wire:target="type_filter" class="grid grid-cols-1 gap-3">
+                            @foreach(range(1, 3) as $i)
+                                <div class="h-16 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse"></div>
+                            @endforeach
+                        </div>
+
+                        {{-- Actual plans, hidden while loading --}}
+                        <div wire:loading.remove wire:target="type_filter">
+                            @if($this->plans->isEmpty())
+                                <flux:text class="text-zinc-400 text-sm py-2">No plans available for this type.</flux:text>
+                            @else
+                                <div class="grid grid-cols-1 gap-3">
+                                    @foreach($this->plans as $plan)
+                                        <label class="relative cursor-pointer" wire:key="plan-{{ $plan->id }}">
+                                            <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
+                                            <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                                <div class="flex flex-col">
+                                                    <span class="font-bold text-lg">{{ $plan->name ?? $plan->type }}</span>
+                                                    <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="text-xl font-black text-primary-color">{{ Number::currency($plan->price) }}</div>
+                                                </div>
                                             </div>
-                                            <div class="text-right">
-                                                <div class="text-xl font-black text-primary-color">{{ Number::currency($plan->price) }}</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-                        @endif
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                         <flux:error name="plan_id" />
                     </flux:field>
                 @endif
