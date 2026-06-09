@@ -15,6 +15,7 @@ use Flux\Flux;
 
 new #[Title('Data Purchase')] class extends Component {
     public $brand_id;
+    public $type_filter;
     public $plan_id;
     public $phone_number;
 
@@ -33,11 +34,25 @@ new #[Title('Data Purchase')] class extends Component {
     }
 
     #[Computed]
-    public function plans()
+    public function types()
     {
         if (!$this->brand_id) return collect();
 
         return DataPlan::where('brand_id', $this->brand_id)
+            ->where('status', true)
+            ->whereNotNull('type')
+            ->distinct()
+            ->orderBy('type')
+            ->pluck('type');
+    }
+
+    #[Computed]
+    public function plans()
+    {
+        if (!$this->brand_id || !$this->type_filter) return collect();
+
+        return DataPlan::where('brand_id', $this->brand_id)
+            ->where('type', $this->type_filter)
             ->where('status', true)
             ->orderBy('price')
             ->get();
@@ -51,6 +66,11 @@ new #[Title('Data Purchase')] class extends Component {
     }
 
     public function updatedBrandId()
+    {
+        $this->reset('type_filter', 'plan_id');
+    }
+
+    public function updatedTypeFilter()
     {
         $this->reset('plan_id');
     }
@@ -88,7 +108,7 @@ new #[Title('Data Purchase')] class extends Component {
             $purchaseAction->handle($transaction);
 
             Flux::toast('Data purchase initiated successfully.');
-            $this->reset(['plan_id', 'phone_number', 'brand_id']);
+            $this->reset(['plan_id', 'phone_number', 'brand_id', 'type_filter']);
         } catch (\Exception $e) {
             $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
         }
@@ -125,27 +145,51 @@ new #[Title('Data Purchase')] class extends Component {
             </flux:field>
 
             @if($brand_id)
+                <!-- Type Selection -->
+                @if($this->types->isNotEmpty())
+                    <flux:field>
+                        <flux:label>Select Data Type</flux:label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            @foreach($this->types as $type)
+                                <label class="relative cursor-pointer group">
+                                    <input type="radio" wire:model.live="type_filter" value="{{ $type }}" class="sr-only peer">
+                                    <div class="p-3 border-2 rounded-xl flex items-center justify-center text-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                        <span class="text-sm font-semibold uppercase tracking-wide">{{ $type }}</span>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                        <flux:error name="type_filter" />
+                    </flux:field>
+                @endif
+
                 <!-- Plan Selection -->
-                <flux:field>
-                    <flux:label>Select Data Plan</flux:label>
-                    <div class="grid grid-cols-1 gap-3">
-                        @foreach($this->plans as $plan)
-                            <label class="relative cursor-pointer">
-                                <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
-                                <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-lg">{{ $plan->name ?? $plan->type }}</span>
-                                        <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="text-xl font-black text-primary-color">{{ Number::currency($plan->price) }}</div>
-                                    </div>
-                                </div>
-                            </label>
-                        @endforeach
-                    </div>
-                    <flux:error name="plan_id" />
-                </flux:field>
+                @if($type_filter)
+                    <flux:field>
+                        <flux:label>Select Data Plan</flux:label>
+                        @if($this->plans->isEmpty())
+                            <flux:text class="text-zinc-400 text-sm py-2">No plans available for this type.</flux:text>
+                        @else
+                            <div class="grid grid-cols-1 gap-3">
+                                @foreach($this->plans as $plan)
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" wire:model.live="plan_id" value="{{ $plan->id }}" class="sr-only peer">
+                                        <div class="p-4 border rounded-xl flex justify-between items-center transition-all peer-checked:border-primary-color peer-checked:bg-primary-color/5 peer-checked:shadow-md peer-checked:ring-2 peer-checked:ring-primary-color/20 hover:border-zinc-300 dark:hover:border-zinc-700 border-zinc-200 dark:border-zinc-800">
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-lg">{{ $plan->name ?? $plan->type }}</span>
+                                                <span class="text-xs text-zinc-500 uppercase tracking-widest font-bold">{{ $plan->duration }}</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="text-xl font-black text-primary-color">{{ Number::currency($plan->price) }}</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endif
+                        <flux:error name="plan_id" />
+                    </flux:field>
+                @endif
             @endif
 
             <!-- Phone Number -->

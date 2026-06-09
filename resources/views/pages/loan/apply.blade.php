@@ -214,19 +214,25 @@ new #[Title('Apply for a Loan')] class extends Component {
             $loan = Loan::create([
                 'user_id' => Auth::id(),
                 'principal_amount' => $this->amount,
-                'outstanding_balance' => $this->amount, // Disbursal will add interest
+                'outstanding_balance' => $this->amount,
                 'interest_rate' => $this->interestRate,
                 'repayment_term_months' => $this->term_months,
                 'interest_method' => $this->interest_method,
-                'status' => $this->autoApprove ? LoanStatus::Disbursed : LoanStatus::Active,
+                'status' => LoanStatus::Active,
                 'notes' => $this->notes,
             ]);
 
-            // Generate the initial schedule immediately on application
-            \App\Jobs\GenerateLoanScheduleJob::dispatch($loan);
+            if ($this->autoApprove) {
+                app(\App\Actions\Loans\ApproveLoanAction::class)->handle($loan, Auth::user());
+                app(\App\Actions\Loans\DisburseLoanAction::class)->handle($loan, Auth::user());
+            } else {
+                \App\Jobs\GenerateLoanScheduleJob::dispatch($loan);
+            }
 
             Flux::toast(
-                text: __('Loan application submitted successfully.'),
+                text: $this->autoApprove
+                    ? __('Loan approved and disbursed successfully.')
+                    : __('Loan application submitted successfully.'),
                 variant: 'success',
             );
 
@@ -260,7 +266,7 @@ new #[Title('Apply for a Loan')] class extends Component {
 
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center space-x-4">
-        <flux:button :href="route('loan.index')" variant="ghost" icon="heroicon-o-arrow-left" inset="left" />
+        <flux:button :href="route('loan.index')" variant="ghost" icon="arrow-left" inset="left" />
         <flux:heading size="xl">{{ __('Apply for a Loan') }}</flux:heading>
     </div>
 
@@ -340,7 +346,7 @@ new #[Title('Apply for a Loan')] class extends Component {
                         step="0.01"
                         :label="__('Requested Amount')"
                         placeholder="0.00"
-                        icon="heroicon-o-currency-naira"
+                        icon="currency-naira"
                         required
                         :min="$this->minAmount"
                         :max="$this->maxAmount"
@@ -351,7 +357,7 @@ new #[Title('Apply for a Loan')] class extends Component {
                         type="number"
                         :label="__('Repayment Term (Months)')"
                         placeholder="12"
-                        icon="heroicon-o-calendar"
+                        icon="calendar"
                         required
                         min="1"
                         :max="$this->maxTermMonths"
@@ -412,7 +418,7 @@ new #[Title('Apply for a Loan')] class extends Component {
                 </flux:card>
             @else
                 <flux:card class="flex flex-col items-center justify-center py-12 text-center border-dashed">
-                    <flux:icon icon="heroicon-o-calculator" class="size-12 text-zinc-300 mb-4" />
+                    <flux:icon icon="calculator" class="size-12 text-zinc-300 mb-4" />
                     <flux:heading size="lg" class="text-zinc-400">{{ __('No Preview Available') }}</flux:heading>
                     <flux:text class="text-zinc-400">
                         {{ __('Fill in the loan amount and term to see a repayment schedule estimate.') }}

@@ -70,10 +70,13 @@ class AppServiceProvider extends ServiceProvider
     protected function configureCurrency(): void
     {
         try {
-            Number::useCurrency(app(GeneralSettings::class)->currency ?? 'NGN');
+            $currency = app(GeneralSettings::class)->currency ?? 'NGN';
         } catch (MissingSettings|QueryException) {
-            Number::useCurrency('NGN');
+            $currency = 'NGN';
         }
+
+        Number::useCurrency($currency);
+        Number::useLocale('en_NG');
     }
 
     /**

@@ -147,7 +147,7 @@ new #[Title('Loan Details')] class extends Component {
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-            <flux:button :href="route('loan.index')" variant="ghost" icon="heroicon-o-arrow-left" inset="left" />
+            <flux:button :href="route('loan.index')" variant="ghost" icon="arrow-left" inset="left" />
             <flux:heading size="xl">{{ __('Loan Details') }} #{{ $loan->id }}</flux:heading>
         </div>
 
@@ -201,7 +201,6 @@ new #[Title('Loan Details')] class extends Component {
             <flux:card class="p-2 overflow-hidden">
                 <flux:table>
                     <flux:table.columns>
-                        <flux:table.column>{{ __('#') }}</flux:column>
                         <flux:table.column>{{ __('#') }}</flux:table.column>
                         <flux:table.column>{{ __('Due Date') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Amount') }}</flux:table.column>
