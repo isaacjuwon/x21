@@ -81,8 +81,9 @@ new #[Title('Education Pins')] class extends Component {
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
                     'plan_type' => EducationPlan::class,
+                    'type' => \App\Enums\Topups\TopupType::Education,
                     'amount' => $total,
-                    'quantity' => $this->quantity,
+                    'meta' => ['quantity' => $this->quantity],
                     'status' => 'pending',
                     'reference' => 'EDU-'.strtoupper(Str::random(10)),
                 ]);

@@ -74,8 +74,9 @@ new #[Title('Cable TV Subscription')] class extends Component {
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
                     'plan_type' => CablePlan::class,
+                    'type' => \App\Enums\Topups\TopupType::Cable,
                     'amount' => $plan->price,
-                    'smart_card_number' => $this->smart_card_number,
+                    'recipient' => $this->smart_card_number,
                     'status' => 'pending',
                     'reference' => 'CAB-'.strtoupper(Str::random(10)),
                 ]);

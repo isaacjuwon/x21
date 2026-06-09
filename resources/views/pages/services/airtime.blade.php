@@ -57,8 +57,9 @@ new #[Title('Airtime Purchase')] class extends Component {
                     'brand_id' => $brand->id,
                     'plan_id' => $plan->id,
                     'plan_type' => AirtimePlan::class,
+                    'type' => \App\Enums\Topups\TopupType::Airtime,
                     'amount' => $this->amount,
-                    'phone_number' => $this->phone_number,
+                    'recipient' => $this->phone_number,
                     'status' => 'pending',
                     'reference' => 'AIR-'.strtoupper(Str::random(10)),
                 ]);

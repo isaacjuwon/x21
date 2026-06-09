@@ -59,9 +59,10 @@ new #[Title('Electricity Bill Payment')] class extends Component {
                     'brand_id' => $brand->id,
                     'plan_id' => $plan->id,
                     'plan_type' => ElectricityPlan::class,
+                    'type' => \App\Enums\Topups\TopupType::Electricity,
                     'amount' => $this->amount,
-                    'meter_number' => $this->meter_number,
-                    'meter_type' => $this->meter_type,
+                    'recipient' => $this->meter_number,
+                    'meta' => ['meter_type' => $this->meter_type],
                     'status' => 'pending',
                     'reference' => 'ELE-'.strtoupper(Str::random(10)),
                 ]);

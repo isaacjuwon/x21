@@ -94,8 +94,9 @@ new #[Title('Data Purchase')] class extends Component {
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
                     'plan_type' => DataPlan::class,
+                    'type' => \App\Enums\Topups\TopupType::Data,
                     'amount' => $plan->price,
-                    'phone_number' => $this->phone_number,
+                    'recipient' => $this->phone_number,
                     'status' => 'pending',
                     'reference' => 'DAT-'.strtoupper(Str::random(10)),
                 ]);
