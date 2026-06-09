@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace App\Integrations\Dojah\Entities;
 
-final class BvnMatchRequest
+final readonly class BvnMatchRequest
 {
-    public string $bvn {
-        set(string $value) => trim($value);
-    }
+    public string $bvn;
 
-    public ?string $firstName {
-        set(?string $value) => $value ? trim($value) : null;
-    }
+    public ?string $firstName;
 
-    public ?string $lastName {
-        set(?string $value) => $value ? trim($value) : null;
-    }
+    public ?string $lastName;
 
-    public ?string $dob {
-        set(?string $value) => $value ? trim($value) : null;
-    }
+    public ?string $dob;
 
     public function __construct(
         string $bvn,
@@ -28,10 +20,10 @@ final class BvnMatchRequest
         ?string $lastName = null,
         ?string $dob = null,
     ) {
-        $this->bvn = $bvn;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->dob = $dob;
+        $this->bvn = trim($bvn);
+        $this->firstName = $firstName ? trim($firstName) : null;
+        $this->lastName = $lastName ? trim($lastName) : null;
+        $this->dob = $dob ? trim($dob) : null;
     }
 
     public function toQuery(): array
