@@ -6,27 +6,20 @@ namespace App\Integrations\Epins\Entities;
 
 final class PurchaseExam
 {
-    public string $service {
-        set (string $value) {
-            $this->service = strtolower(trim($value));
-        }
-    }
+    public string $service;
 
-    public int $numberOfPins {
-        set (int $value) {
-            if ($value < 1) {
-                throw new \InvalidArgumentException('Number of pins must be at least 1.');
-            }
-            $this->numberOfPins = $value;
-        }
-    }
+    public int $numberOfPins;
 
     public function __construct(
         string $service,
         int $numberOfPins = 1,
         public readonly ?string $reference = null,
     ) {
-        $this->service = $service;
+        if ($numberOfPins < 1) {
+            throw new \InvalidArgumentException('Number of pins must be at least 1.');
+        }
+
+        $this->service = strtolower(trim($service));
         $this->numberOfPins = $numberOfPins;
     }
 

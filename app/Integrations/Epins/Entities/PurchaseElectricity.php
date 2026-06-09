@@ -6,26 +6,11 @@ namespace App\Integrations\Epins\Entities;
 
 final class PurchaseElectricity
 {
-    public string $service {
-        set (string $value) {
-            $this->service = strtolower(trim($value));
-        }
-    }
+    public string $service;
 
-    public string $meterNumber {
-        set (string $value) {
-            $this->meterNumber = trim($value);
-        }
-    }
+    public string $meterNumber;
 
-    public int $amount {
-        set (int $value) {
-            if ($value <= 0) {
-                throw new \InvalidArgumentException('Electricity amount must be greater than zero.');
-            }
-            $this->amount = $value;
-        }
-    }
+    public int $amount;
 
     public function __construct(
         string $service,
@@ -34,8 +19,12 @@ final class PurchaseElectricity
         public readonly ?string $reference = null,
         public readonly ?string $phone = null,
     ) {
-        $this->service = $service;
-        $this->meterNumber = $meterNumber;
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Electricity amount must be greater than zero.');
+        }
+
+        $this->service = strtolower(trim($service));
+        $this->meterNumber = trim($meterNumber);
         $this->amount = $amount;
     }
 

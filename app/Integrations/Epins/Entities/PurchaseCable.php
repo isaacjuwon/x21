@@ -6,23 +6,11 @@ namespace App\Integrations\Epins\Entities;
 
 final class PurchaseCable
 {
-    public string $service {
-        set (string $value) {
-            $this->service = strtolower(trim($value));
-        }
-    }
+    public string $service;
 
-    public string $smartcardNumber {
-        set (string $value) {
-            $this->smartcardNumber = trim($value);
-        }
-    }
+    public string $smartcardNumber;
 
-    public string $variationCode {
-        set (string $value) {
-            $this->variationCode = trim($value);
-        }
-    }
+    public string $variationCode;
 
     public function __construct(
         string $service,
@@ -31,9 +19,9 @@ final class PurchaseCable
         public readonly ?string $reference = null,
         public readonly ?string $phone = null,
     ) {
-        $this->service = $service;
-        $this->smartcardNumber = $smartcardNumber;
-        $this->variationCode = $variationCode;
+        $this->service = strtolower(trim($service));
+        $this->smartcardNumber = trim($smartcardNumber);
+        $this->variationCode = trim($variationCode);
     }
 
     public function toRequestBody(): array
