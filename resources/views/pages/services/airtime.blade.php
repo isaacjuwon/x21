@@ -74,7 +74,11 @@ new #[Title('Airtime Purchase')] class extends Component {
             Flux::toast('Airtime purchase initiated successfully.');
             $this->reset(['amount', 'phone_number', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('amount', 'An error occurred during the transaction: ' . $e->getMessage());
+            if (app()->isProduction()) {
+                Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
+            } else {
+                $this->addError('amount', 'An error occurred during the transaction: ' . $e->getMessage());
+            }
         }
     }
 }; ?>

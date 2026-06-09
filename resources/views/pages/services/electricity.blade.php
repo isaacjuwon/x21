@@ -77,7 +77,11 @@ new #[Title('Electricity Bill Payment')] class extends Component {
             Flux::toast('Electricity bill payment initiated successfully.');
             $this->reset(['amount', 'meter_number', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('amount', 'An error occurred during the transaction: ' . $e->getMessage());
+            if (app()->isProduction()) {
+                Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
+            } else {
+                $this->addError('amount', 'An error occurred during the transaction: ' . $e->getMessage());
+            }
         }
     }
 }; ?>

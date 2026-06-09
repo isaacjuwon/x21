@@ -98,7 +98,11 @@ new #[Title('Education Pins')] class extends Component {
             Flux::toast('Education PIN purchase initiated successfully.');
             $this->reset(['plan_id', 'quantity', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            if (app()->isProduction()) {
+                Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
+            } else {
+                $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            }
         }
     }
 }; ?>

@@ -111,7 +111,11 @@ new #[Title('Data Purchase')] class extends Component {
             Flux::toast('Data purchase initiated successfully.');
             $this->reset(['plan_id', 'phone_number', 'brand_id', 'type_filter']);
         } catch (\Exception $e) {
-            $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            if (app()->isProduction()) {
+                Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
+            } else {
+                $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            }
         }
     }
 }; ?>

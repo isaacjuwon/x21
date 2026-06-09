@@ -91,7 +91,11 @@ new #[Title('Cable TV Subscription')] class extends Component {
             Flux::toast('Subscription initiated successfully.');
             $this->reset(['plan_id', 'smart_card_number', 'brand_id']);
         } catch (\Exception $e) {
-            $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            if (app()->isProduction()) {
+                Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
+            } else {
+                $this->addError('plan_id', 'An error occurred during the transaction: ' . $e->getMessage());
+            }
         }
     }
 }; ?>
