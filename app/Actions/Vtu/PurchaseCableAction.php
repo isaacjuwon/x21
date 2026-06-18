@@ -43,6 +43,8 @@ final class PurchaseCableAction
 
             $transaction->update([
                 'status' => $response->isSuccessful() ? 'completed' : 'failed',
+                'api_reference' => $response->description['ref'] ?? null,
+                'response_message' => $response->description['response_description'] ?? 'Transaction processed',
             ]);
 
             if ($response->isSuccessful()) {
