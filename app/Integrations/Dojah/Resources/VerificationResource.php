@@ -98,12 +98,13 @@ final readonly class VerificationResource
 
             $data = $response->json();
 
-            // NIN Lookup success depends on getting an entity back
-            $success = isset($data['entity']);
+            // NIN Lookup success depends on getting an entity back with first_name
+            $entity = $data['entity'] ?? null;
+            $success = ! empty($entity['first_name']);
 
             return new VerificationResponse(
                 success: $success,
-                data: $data,
+                data: $entity,
                 message: $data['error'] ?? $data['message'] ?? ($success ? 'NIN Lookup successful' : 'NIN Lookup failed')
             );
         } catch (Throwable $exception) {

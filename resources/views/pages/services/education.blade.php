@@ -119,15 +119,14 @@ new #[Title('Education Pins')] class extends Component {
     <flux:subheading>Buy exam result checker PINs (WAEC, JAMB, etc.).</flux:subheading>
 
     @if($purchasedPin)
-        <flux:card class="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 p-4">
-            <div class="flex items-start gap-3">
-                <flux:icon.check-circle class="size-6 text-green-600 dark:text-green-400" />
-                <div>
-                    <flux:heading size="lg" class="text-green-800 dark:text-green-300">Purchase Successful!</flux:heading>
-                    <p class="text-green-700 dark:text-green-400 mt-2 font-mono text-sm leading-relaxed whitespace-pre-wrap">{{ $purchasedPin }}</p>
-                </div>
-            </div>
-        </flux:card>
+        <flux:callout icon="check-circle" color="green">
+            <flux:callout.heading>PIN Purchase Successful!</flux:callout.heading>
+            <flux:callout.text>
+                Your exam PIN has been generated. Keep it safe and do not share with anyone.
+                <br><br>
+                <span class="font-mono text-sm font-semibold tracking-wide whitespace-pre-wrap">{{ $purchasedPin }}</span>
+            </flux:callout.text>
+        </flux:callout>
     @endif
 
     <flux:card>

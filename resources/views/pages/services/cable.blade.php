@@ -17,6 +17,7 @@ new #[Title('Cable TV Subscription')] class extends Component {
     public $brand_id;
     public $plan_id;
     public $smart_card_number;
+    public $successDetails = null;
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
@@ -58,6 +59,7 @@ new #[Title('Cable TV Subscription')] class extends Component {
     public function buy(PurchaseCableAction $purchaseAction)
     {
         $this->validate();
+        $this->successDetails = null;
 
         $user = Auth::user();
         $plan = $this->selectedPlan;
@@ -86,10 +88,20 @@ new #[Title('Cable TV Subscription')] class extends Component {
                 return $topup;
             });
 
-            $purchaseAction->handle($transaction);
+            $response = $purchaseAction->handle($transaction);
 
-            Flux::toast('Subscription initiated successfully.');
-            $this->reset(['plan_id', 'smart_card_number', 'brand_id']);
+            if ($response->isSuccessful()) {
+                $this->successDetails = [
+                    'message' => $response->description['response_description'] ?? 'Subscription successful!',
+                    'ref' => $response->description['ref'] ?? null,
+                    'amount' => $response->description['amount'] ?? null,
+                    'transaction_date' => $response->description['transaction_date'] ?? null,
+                ];
+                Flux::toast('Cable TV subscription successful.');
+                $this->reset(['plan_id', 'smart_card_number', 'brand_id']);
+            } else {
+                $this->addError('plan_id', $response->description['response_description'] ?? 'Transaction failed at the provider.');
+            }
         } catch (\Exception $e) {
             if (app()->isProduction()) {
                 Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
@@ -103,6 +115,24 @@ new #[Title('Cable TV Subscription')] class extends Component {
 <div class="max-w-2xl mx-auto space-y-6">
     <flux:heading size="xl">Cable TV Subscription</flux:heading>
     <flux:subheading>Renew your cable TV subscription easily.</flux:subheading>
+
+    @if($successDetails)
+        <flux:callout icon="check-circle" color="green">
+            <flux:callout.heading>Subscription Successful!</flux:callout.heading>
+            <flux:callout.text>
+                {{ $successDetails['message'] }}
+                @if($successDetails['ref'])
+                    <br><span class="font-semibold">Reference:</span> {{ $successDetails['ref'] }}
+                @endif
+                @if($successDetails['amount'])
+                    <br><span class="font-semibold">Amount:</span> {{ Number::currency($successDetails['amount']) }}
+                @endif
+                @if($successDetails['transaction_date'])
+                    <br><span class="font-semibold">Date:</span> {{ $successDetails['transaction_date'] }}
+                @endif
+            </flux:callout.text>
+        </flux:callout>
+    @endif
 
     <flux:card>
         <form wire:submit="buy" class="space-y-6">

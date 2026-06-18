@@ -18,6 +18,7 @@ new #[Title('Data Purchase')] class extends Component {
     public $type_filter;
     public $plan_id;
     public $phone_number;
+    public $successMessage = null;
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
@@ -78,6 +79,7 @@ new #[Title('Data Purchase')] class extends Component {
     public function buy(PurchaseDataAction $purchaseAction)
     {
         $this->validate();
+        $this->successMessage = null;
 
         $user = Auth::user();
         $plan = $this->selectedPlan;
@@ -107,10 +109,15 @@ new #[Title('Data Purchase')] class extends Component {
                 return $topup;
             });
 
-            $purchaseAction->handle($transaction);
+            $response = $purchaseAction->handle($transaction);
 
-            Flux::toast('Data purchase initiated successfully.');
-            $this->reset(['plan_id', 'phone_number', 'brand_id', 'type_filter']);
+            if ($response->isSuccessful()) {
+                $this->successMessage = $response->description['response_description'] ?? 'Data purchase successful!';
+                Flux::toast('Data purchase successful.');
+                $this->reset(['plan_id', 'phone_number', 'brand_id', 'type_filter']);
+            } else {
+                $this->addError('plan_id', $response->description['response_description'] ?? 'Transaction failed at the provider.');
+            }
         } catch (\Exception $e) {
             if (app()->isProduction()) {
                 Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
@@ -124,6 +131,13 @@ new #[Title('Data Purchase')] class extends Component {
 <div class="max-w-2xl mx-auto space-y-6">
     <flux:heading size="xl">Data Bundle Purchase</flux:heading>
     <flux:subheading>Stay connected with cheap data bundles.</flux:subheading>
+
+    @if($successMessage)
+        <flux:callout icon="check-circle" color="green">
+            <flux:callout.heading>Data Purchase Successful!</flux:callout.heading>
+            <flux:callout.text>{{ $successMessage }}</flux:callout.text>
+        </flux:callout>
+    @endif
 
     <flux:card>
         <form wire:submit="buy" class="space-y-6">

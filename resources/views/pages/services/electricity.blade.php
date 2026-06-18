@@ -18,6 +18,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
     public $meter_type = 'Prepaid';
     public $meter_number;
     public $amount;
+    public $successMessage = null;
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
@@ -37,6 +38,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
     public function pay(PurchaseElectricityAction $purchaseAction)
     {
         $this->validate();
+        $this->successMessage = null;
 
         $user = Auth::user();
         $brand = Brand::find($this->brand_id);
@@ -72,10 +74,15 @@ new #[Title('Electricity Bill Payment')] class extends Component {
                 return $topup;
             });
 
-            $purchaseAction->handle($transaction);
+            $response = $purchaseAction->handle($transaction);
 
-            Flux::toast('Electricity bill payment initiated successfully.');
-            $this->reset(['amount', 'meter_number', 'brand_id']);
+            if ($response->isSuccessful()) {
+                $this->successMessage = $response->description['response_description'] ?? 'Electricity payment successful!';
+                Flux::toast('Electricity bill paid successfully.');
+                $this->reset(['amount', 'meter_number', 'brand_id']);
+            } else {
+                $this->addError('amount', $response->description['response_description'] ?? 'Transaction failed at the provider.');
+            }
         } catch (\Exception $e) {
             if (app()->isProduction()) {
                 Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
@@ -89,6 +96,13 @@ new #[Title('Electricity Bill Payment')] class extends Component {
 <div class="max-w-2xl mx-auto space-y-6">
     <flux:heading size="xl">Electricity Bill Payment</flux:heading>
     <flux:subheading>Pay your electricity bills quickly and securely.</flux:subheading>
+
+    @if($successMessage)
+        <flux:callout icon="check-circle" color="green">
+            <flux:callout.heading>Electricity Payment Successful!</flux:callout.heading>
+            <flux:callout.text>{{ $successMessage }}</flux:callout.text>
+        </flux:callout>
+    @endif
 
     <flux:card>
         <form wire:submit="pay" class="space-y-6">
