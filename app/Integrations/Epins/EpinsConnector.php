@@ -11,6 +11,7 @@ use App\Integrations\Epins\Resources\DataResource;
 use App\Integrations\Epins\Resources\EducationResource;
 use App\Integrations\Epins\Resources\ElectricityResource;
 use App\Integrations\Epins\Resources\WalletResource;
+use App\Settings\IntegrationSettings;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -54,10 +55,11 @@ final readonly class EpinsConnector
 
     public function send(Method $method, string $uri, array $options = []): Response
     {
-        return $this->request->send(
-            method: $method->value,
-            url: $uri,
-            options: $options,
+        $httpMethod = strtolower($method->value);
+
+        return $this->request->{$httpMethod}(
+            $uri,
+            $options
         )->throw();
     }
 
@@ -66,7 +68,7 @@ final readonly class EpinsConnector
         $app->bind(
             abstract: EpinsConnector::class,
             concrete: function () {
-                $settings = app(\App\Settings\IntegrationSettings::class);
+                $settings = app(IntegrationSettings::class);
 
                 return new EpinsConnector(
                     request: Http::baseUrl(

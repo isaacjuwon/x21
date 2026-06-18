@@ -46,14 +46,14 @@ final readonly class VerificationResource
                 uri: '/api/v1/kyc/bvn',
                 options: ['query' => $request->toQuery()],
             );
-            
+
             $data = $response->json();
-            
+
             // BVN Match success depends on bvn, first_name and last_name statuses being true
             $entity = $data['entity'] ?? null;
-            $success = $entity && 
-                       ($entity['bvn']['status'] ?? false) === true && 
-                       ($entity['first_name']['status'] ?? false) === true && 
+            $success = $entity &&
+                       ($entity['bvn']['status'] ?? false) === true &&
+                       ($entity['first_name']['status'] ?? false) === true &&
                        ($entity['last_name']['status'] ?? false) === true;
 
             return new VerificationResponse(
@@ -63,7 +63,7 @@ final readonly class VerificationResource
             );
         } catch (Throwable $exception) {
             throw new DojahException(
-                message: 'Failed BVN match verification: ' . $exception->getMessage(),
+                message: 'Failed BVN match verification: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -95,9 +95,9 @@ final readonly class VerificationResource
                 uri: '/api/v1/kyc/nin',
                 options: ['query' => $request->toQuery()],
             );
-            
+
             $data = $response->json();
-            
+
             // NIN Lookup success depends on getting an entity back
             $success = isset($data['entity']);
 
@@ -108,7 +108,7 @@ final readonly class VerificationResource
             );
         } catch (Throwable $exception) {
             throw new DojahException(
-                message: 'Failed NIN lookup verification: ' . $exception->getMessage(),
+                message: 'Failed NIN lookup verification: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
