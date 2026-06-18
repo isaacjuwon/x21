@@ -12,26 +12,29 @@ final class PurchaseCable
 
     public string $variationCode;
 
+    public int $amount;
+
     public function __construct(
         string $service,
         string $smartcardNumber,
         string $variationCode,
+        int $amount,
         public readonly ?string $reference = null,
-        public readonly ?string $phone = null,
     ) {
         $this->service = strtolower(trim($service));
         $this->smartcardNumber = trim($smartcardNumber);
         $this->variationCode = trim($variationCode);
+        $this->amount = $amount;
     }
 
     public function toRequestBody(): array
     {
         return [
             'service' => $this->service,
-            'smartcard_number' => $this->smartcardNumber,
-            'variation_code' => $this->variationCode,
+            'accountno' => $this->smartcardNumber,
+            'vcode' => $this->variationCode,
+            'amount' => $this->amount,
             'ref' => $this->reference,
-            'phone' => $this->phone,
         ];
     }
 }

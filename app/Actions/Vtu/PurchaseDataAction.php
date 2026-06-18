@@ -21,7 +21,7 @@ final class PurchaseDataAction
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
         $entity = new PurchaseDataEntity(
-            network: (string) $transaction->brand->api_code,
+            network: (string) ($transaction->meta['network'] ?? $transaction->brand->api_code),
             mobileNumber: (string) $transaction->recipient,
             dataCode: (string) $transaction->plan->api_code,
             reference: $transaction->reference,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseCableAction;
+use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseCableTvRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
@@ -42,8 +43,9 @@ class CableTvController
                 'brand_id' => $plan->brand_id,
                 'plan_id' => $plan->id,
                 'plan_type' => CablePlan::class,
+                'type' => TopupType::Cable,
                 'amount' => $plan->price,
-                'smart_card_number' => $request->smart_card_number,
+                'recipient' => $request->smart_card_number,
                 'status' => 'pending',
                 'reference' => 'CAB-'.strtoupper(Str::random(10)),
             ]);

@@ -36,9 +36,7 @@ final class PurchaseAirtime
         return [
             'network' => $this->network,
             'amount' => $this->amount,
-            'mobile_number' => $this->mobileNumber,
-            'Ported_number' => $this->portedNumber,
-            'airtime_type' => 'VTU',
+            'phone' => $this->mobileNumber,
             'ref' => $this->reference,
         ];
     }

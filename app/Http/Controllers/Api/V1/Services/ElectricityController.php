@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseElectricityAction;
+use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseElectricityRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
@@ -50,9 +51,10 @@ class ElectricityController
                 'brand_id' => $brand->id,
                 'plan_id' => $plan->id,
                 'plan_type' => ElectricityPlan::class,
+                'type' => TopupType::Electricity,
                 'amount' => $request->amount,
-                'meter_number' => $request->meter_number,
-                'meter_type' => $request->meter_type,
+                'recipient' => $request->meter_number,
+                'meta' => ['meter_type' => $request->meter_type],
                 'status' => 'pending',
                 'reference' => 'ELE-'.strtoupper(Str::random(10)),
             ]);

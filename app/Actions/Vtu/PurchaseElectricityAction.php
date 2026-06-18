@@ -23,9 +23,9 @@ final class PurchaseElectricityAction
         $entity = new PurchaseElectricityEntity(
             service: (string) $transaction->brand->api_code,
             meterNumber: (string) $transaction->recipient,
+            meterType: (string) ($transaction->meta['meter_type'] ?? 'prepaid'),
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
-            phone: $transaction->user->phone ?? null,
         );
 
         try {

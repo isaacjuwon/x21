@@ -59,7 +59,7 @@ final readonly class VerificationResource
             return new VerificationResponse(
                 success: $success,
                 data: $data,
-                message: $data['message'] ?? ($success ? 'BVN Match successful' : 'BVN Match failed or details mismatch')
+                message: $data['error'] ?? $data['message'] ?? ($success ? 'BVN Match successful' : 'BVN Match failed or details mismatch')
             );
         } catch (Throwable $exception) {
             throw new DojahException(
@@ -104,7 +104,7 @@ final readonly class VerificationResource
             return new VerificationResponse(
                 success: $success,
                 data: $data,
-                message: $data['message'] ?? ($success ? 'NIN Lookup successful' : 'NIN Lookup failed')
+                message: $data['error'] ?? $data['message'] ?? ($success ? 'NIN Lookup successful' : 'NIN Lookup failed')
             );
         } catch (Throwable $exception) {
             throw new DojahException(

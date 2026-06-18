@@ -46,7 +46,7 @@ final readonly class DojahConnector
                         seconds: 30,
                     )->withHeaders([
                         'AppId' => ! blank($settings->dojah_app_id) ? $settings->dojah_app_id : config('services.dojah.app_id'),
-                        'Authorization' => 'Bearer '.(! blank($settings->dojah_api_key) ? $settings->dojah_api_key : config('services.dojah.api_key')),
+                        'Authorization' => (! blank($settings->dojah_api_key) ? $settings->dojah_api_key : config('services.dojah.api_key')),
                     ])->asJson()->acceptJson(),
                 );
             },

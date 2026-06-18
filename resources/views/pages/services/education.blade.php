@@ -17,6 +17,7 @@ new #[Title('Education Pins')] class extends Component {
     public $brand_id;
     public $plan_id;
     public $quantity = 1;
+    public $purchasedPin = null;
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
@@ -64,6 +65,7 @@ new #[Title('Education Pins')] class extends Component {
     public function buy(PurchaseEducationAction $purchaseAction)
     {
         $this->validate();
+        $this->purchasedPin = null;
 
         $user = Auth::user();
         $plan = $this->selectedPlan;
@@ -93,10 +95,15 @@ new #[Title('Education Pins')] class extends Component {
                 return $topup;
             });
 
-            $purchaseAction->handle($transaction);
+            $response = $purchaseAction->handle($transaction);
 
-            Flux::toast('Education PIN purchase initiated successfully.');
-            $this->reset(['plan_id', 'quantity', 'brand_id']);
+            if ($response->isSuccessful()) {
+                $this->purchasedPin = $response->description['Content'] ?? null;
+                Flux::toast('Education PIN purchased successfully.');
+                $this->reset(['plan_id', 'quantity', 'brand_id']);
+            } else {
+                $this->addError('plan_id', 'Transaction failed at the provider.');
+            }
         } catch (\Exception $e) {
             if (app()->isProduction()) {
                 Flux::toast('An error occurred during the transaction. Please try again later.', variant: 'danger');
@@ -110,6 +117,18 @@ new #[Title('Education Pins')] class extends Component {
 <div class="max-w-2xl mx-auto space-y-6">
     <flux:heading size="xl">Education PINs</flux:heading>
     <flux:subheading>Buy exam result checker PINs (WAEC, JAMB, etc.).</flux:subheading>
+
+    @if($purchasedPin)
+        <flux:card class="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 p-4">
+            <div class="flex items-start gap-3">
+                <flux:icon.check-circle class="size-6 text-green-600 dark:text-green-400" />
+                <div>
+                    <flux:heading size="lg" class="text-green-800 dark:text-green-300">Purchase Successful!</flux:heading>
+                    <p class="text-green-700 dark:text-green-400 mt-2 font-mono text-sm leading-relaxed whitespace-pre-wrap">{{ $purchasedPin }}</p>
+                </div>
+            </div>
+        </flux:card>
+    @endif
 
     <flux:card>
         <form wire:submit="buy" class="space-y-6">

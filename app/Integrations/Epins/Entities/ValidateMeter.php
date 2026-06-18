@@ -15,9 +15,9 @@ final readonly class ValidateMeter
     public function toRequestBody(): array
     {
         return [
-            'service' => $this->service,
-            'meter_number' => $this->meterNumber,
-            'type' => $this->meterType,
+            'serviceId' => $this->service,
+            'billerNumber' => $this->meterNumber,
+            'vcode' => $this->meterType,
         ];
     }
 }

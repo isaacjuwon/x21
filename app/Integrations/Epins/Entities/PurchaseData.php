@@ -30,9 +30,9 @@ final class PurchaseData
     public function toRequestBody(): array
     {
         return [
-            'network' => $this->network,
-            'mobile_number' => $this->mobileNumber,
-            'data_code' => $this->dataCode,
+            'networkId' => $this->network,
+            'MobileNumber' => $this->mobileNumber,
+            'DataPlan' => $this->dataCode,
             'ref' => $this->reference,
         ];
     }

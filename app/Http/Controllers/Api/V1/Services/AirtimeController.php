@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseAirtimeAction;
+use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseAirtimeRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
@@ -49,8 +50,10 @@ class AirtimeController
                 'brand_id' => $brand->id,
                 'plan_id' => $plan->id,
                 'plan_type' => AirtimePlan::class,
+                'type' => TopupType::Airtime,
                 'amount' => $request->amount,
-                'phone_number' => $request->phone_number,
+                'recipient' => $request->phone_number,
+                'meta' => ['network' => $brand->api_code],
                 'status' => 'pending',
                 'reference' => 'AIR-'.strtoupper(Str::random(10)),
             ]);

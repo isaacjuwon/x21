@@ -24,6 +24,8 @@ final class PurchaseEducationAction
 
         $entity = new PurchaseExamEntity(
             service: (string) $transaction->brand->api_code,
+            variationCode: (string) $transaction->plan->api_code,
+            amount: (int) $transaction->amount,
             numberOfPins: $quantity,
             reference: $transaction->reference,
         );
@@ -43,6 +45,7 @@ final class PurchaseEducationAction
 
             $transaction->update([
                 'status' => $response->isSuccessful() ? 'completed' : 'failed',
+                'response_message' => $response->isSuccessful() ? ($response->description['Content'] ?? 'Success') : 'Failed',
             ]);
 
             if ($response->isSuccessful()) {

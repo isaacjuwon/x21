@@ -14,8 +14,9 @@ final readonly class ValidateSmartcard
     public function toRequestBody(): array
     {
         return [
-            'service' => $this->service,
-            'smartcard_number' => $this->smartcardNumber,
+            'serviceId' => $this->service,
+            'billerNumber' => $this->smartcardNumber,
+            'vcode' => $this->service,
         ];
     }
 }

@@ -8,10 +8,16 @@ final class PurchaseExam
 {
     public string $service;
 
+    public string $variationCode;
+
+    public int $amount;
+
     public int $numberOfPins;
 
     public function __construct(
         string $service,
+        string $variationCode,
+        int $amount,
         int $numberOfPins = 1,
         public readonly ?string $reference = null,
     ) {
@@ -20,6 +26,8 @@ final class PurchaseExam
         }
 
         $this->service = strtolower(trim($service));
+        $this->variationCode = trim($variationCode);
+        $this->amount = $amount;
         $this->numberOfPins = $numberOfPins;
     }
 
@@ -27,7 +35,9 @@ final class PurchaseExam
     {
         return [
             'service' => $this->service,
-            'numberOfPins' => $this->numberOfPins,
+            'vcode' => $this->variationCode,
+            'amount' => $this->amount,
+            'quantity' => $this->numberOfPins,
             'ref' => $this->reference,
         ];
     }

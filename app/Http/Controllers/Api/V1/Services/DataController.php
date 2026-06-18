@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseDataAction;
+use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseDataRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
@@ -42,8 +43,10 @@ class DataController
                 'brand_id' => $plan->brand_id,
                 'plan_id' => $plan->id,
                 'plan_type' => DataPlan::class,
+                'type' => TopupType::Data,
                 'amount' => $plan->price,
-                'phone_number' => $request->phone_number,
+                'recipient' => $request->phone_number,
+                'meta' => ['network' => $plan->brand->api_code],
                 'status' => 'pending',
                 'reference' => 'DAT-'.strtoupper(Str::random(10)),
             ]);

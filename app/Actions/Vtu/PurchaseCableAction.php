@@ -24,8 +24,8 @@ final class PurchaseCableAction
             service: (string) $transaction->brand->api_code,
             smartcardNumber: (string) $transaction->recipient,
             variationCode: (string) $transaction->plan->api_code,
+            amount: (int) $transaction->amount,
             reference: $transaction->reference,
-            phone: $transaction->user->phone ?? null,
         );
 
         try {
