@@ -21,7 +21,7 @@ final class PurchaseAirtimeAction
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
         $entity = new PurchaseAirtimeEntity(
-            network: (string) ($transaction->meta['network'] ?? $transaction->brand->api_code),
+            network: (string) ($transaction->meta['network'] ?? $transaction->brand->slug),
             amount: (int) $transaction->amount,
             mobileNumber: (string) $transaction->recipient,
             reference: $transaction->reference,

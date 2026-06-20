@@ -62,7 +62,7 @@ new #[Title('Airtime Purchase')] class extends Component {
                     'type' => \App\Enums\Topups\TopupType::Airtime,
                     'amount' => $this->amount,
                     'recipient' => $this->phone_number,
-                    'meta' => ['network' => $brand->api_code],
+                    'meta' => ['network' => $brand->slug],
                     'status' => 'pending',
                     'reference' => 'AIR-'.strtoupper(Str::random(10)),
                 ]);
