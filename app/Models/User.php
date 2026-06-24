@@ -11,6 +11,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -138,5 +139,53 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function firstName(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                $words = explode(' ', trim($this->name));
+
+                return $words[0] ?? '';
+            },
+        );
+    }
+
+    /**
+     * Get the user's middle name.
+     */
+    protected function middleName(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                $words = explode(' ', trim($this->name));
+                if (count($words) > 2) {
+                    return implode(' ', array_slice($words, 1, -1));
+                }
+
+                return '';
+            },
+        );
+    }
+
+    /**
+     * Get the user's last name.
+     */
+    protected function lastName(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                $words = explode(' ', trim($this->name));
+                if (count($words) > 1) {
+                    return end($words);
+                }
+
+                return '';
+            },
+        );
     }
 }
