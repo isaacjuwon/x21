@@ -4,10 +4,10 @@ namespace App\Actions\Loans;
 
 use App\Loans\EligibilityResult;
 use App\Loans\LoanEligibilityChecker;
+use App\Loans\Specifications\KycRequirementSpecification;
 use App\Loans\Specifications\LoanLevelSpecification;
 use App\Loans\Specifications\SharesRequirementSpecification;
 use App\Loans\Specifications\UserDurationSpecification;
-use App\Loans\Specifications\KycRequirementSpecification;
 use App\Models\User;
 use App\Settings\LoanSettings;
 

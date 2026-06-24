@@ -11,6 +11,13 @@ class StoreBuyOrderRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array { return ['quantity' => ['required', 'integer', 'min:1']]; }
-    public function bodyParameters(): array { return []; }
+    public function rules(): array
+    {
+        return ['quantity' => ['required', 'integer', 'min:1']];
+    }
+
+    public function bodyParameters(): array
+    {
+        return [];
+    }
 }

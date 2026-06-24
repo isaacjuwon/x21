@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class UserResource extends JsonResource
 {
@@ -14,7 +15,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
-            'avatar_url' => $this->avatar ? \Illuminate\Support\Facades\Storage::url($this->avatar) : null,
+            'avatar_url' => $this->avatar ? Storage::url($this->avatar) : null,
             'roles' => $this->whenLoaded('roles', fn () => $this->roles->pluck('name')),
             'loan_level' => $this->whenLoaded('loanLevel', fn () => [
                 'id' => $this->loanLevel->id,

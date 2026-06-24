@@ -11,6 +11,13 @@ class StoreDisbursementRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array { return ['notes' => ['nullable', 'string']]; }
-    public function bodyParameters(): array { return []; }
+    public function rules(): array
+    {
+        return ['notes' => ['nullable', 'string']];
+    }
+
+    public function bodyParameters(): array
+    {
+        return [];
+    }
 }

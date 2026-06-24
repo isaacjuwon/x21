@@ -9,6 +9,7 @@ use App\Integrations\Paystack\Resources\BankResource;
 use App\Integrations\Paystack\Resources\TransactionResource;
 use App\Integrations\Paystack\Resources\TransferResource;
 use App\Integrations\Paystack\Resources\WebhookResource;
+use App\Settings\IntegrationSettings;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -63,7 +64,7 @@ final readonly class PaystackConnector
         $app->bind(
             abstract: PaystackConnector::class,
             concrete: function () {
-                $settings = app(\App\Settings\IntegrationSettings::class);
+                $settings = app(IntegrationSettings::class);
 
                 return new PaystackConnector(
                     request: Http::baseUrl(

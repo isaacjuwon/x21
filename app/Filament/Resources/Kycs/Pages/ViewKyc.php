@@ -10,8 +10,8 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -75,7 +75,7 @@ class ViewKyc extends ViewRecord
                         'rejection_reason' => null,
                     ]);
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->success()
                         ->title('KYC Verified')
                         ->send();
@@ -99,7 +99,7 @@ class ViewKyc extends ViewRecord
                         'verified_at' => null,
                     ]);
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->danger()
                         ->title('KYC Rejected')
                         ->send();

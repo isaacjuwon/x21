@@ -34,7 +34,7 @@ final readonly class BankResource
                 ->map(fn (array $bank) => Bank::fromArray($bank));
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to fetch banks: ' . $exception->getMessage(),
+                message: 'Failed to fetch banks: '.$exception->getMessage(),
                 previous: $exception,
             );
         }
@@ -55,7 +55,7 @@ final readonly class BankResource
             return BankAccount::fromArray($response->json('data'));
         } catch (Throwable $exception) {
             throw new PaystackException(
-                message: 'Failed to resolve account: ' . $exception->getMessage(),
+                message: 'Failed to resolve account: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

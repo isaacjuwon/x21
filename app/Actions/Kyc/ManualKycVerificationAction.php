@@ -7,7 +7,6 @@ use App\Enums\Kyc\KycStatus;
 use App\Enums\Kyc\KycType;
 use App\Models\Kyc;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 
 class ManualKycVerificationAction
 {

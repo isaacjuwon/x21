@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Faqs;
 
 use App\Filament\Resources\Faqs\Pages\ManageFaqs;
 use App\Models\Faq;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -76,8 +78,8 @@ class FaqResource extends Resource
                     ->boolean(),
             ])
             ->recordActions([
-                \Filament\Actions\EditAction::make(),
-                \Filament\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('sort_order');
     }

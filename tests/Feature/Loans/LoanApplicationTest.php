@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\Loans\LoanStatus;
-use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 

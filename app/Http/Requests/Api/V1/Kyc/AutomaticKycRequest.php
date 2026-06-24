@@ -21,5 +21,8 @@ class AutomaticKycRequest extends FormRequest
         ];
     }
 
-    public function bodyParameters(): array { return []; }
+    public function bodyParameters(): array
+    {
+        return [];
+    }
 }

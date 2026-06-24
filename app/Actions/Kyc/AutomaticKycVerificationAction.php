@@ -7,6 +7,7 @@ use App\Enums\Kyc\KycStatus;
 use App\Enums\Kyc\KycType;
 use App\Integrations\Dojah\Entities\BvnMatchRequest;
 use App\Integrations\Dojah\Entities\NinLookupRequest;
+use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\Kyc;
 use App\Models\User;
@@ -33,6 +34,12 @@ class AutomaticKycVerificationAction
             ]
         );
 
+        $method = 'GET';
+        $url = $type === KycType::Nin ? '/api/v1/kyc/nin' : '/api/v1/kyc/bvn';
+        $payload = $type === KycType::Nin
+            ? (new NinLookupRequest($number))->toQuery()
+            : (new BvnMatchRequest($number, $user->first_name, $user->last_name))->toQuery();
+
         try {
             $verificationProvider = $this->apiManager->verificationProvider('dojah');
 
@@ -56,12 +63,39 @@ class AutomaticKycVerificationAction
                 ]);
             }
 
+            RecordApiRequestJob::dispatch(
+                type: 'dojah',
+                method: $method,
+                url: $url,
+                payload: $payload,
+                response: $response ? [
+                    'success' => $response->success,
+                    'data' => $response->data,
+                    'message' => $response->message,
+                ] : ['error' => 'No response returned from provider'],
+                userId: $user->id,
+                reference: (string) $kyc->id,
+            );
+
         } catch (\Exception $e) {
             Log::error("Automatic KYC failed for User {$user->id}: ".$e->getMessage());
             $kyc->update([
                 'status' => KycStatus::Pending, // Keep as pending if API error? Or fail?
                 'rejection_reason' => 'API connection error. Please try again later.',
             ]);
+
+            RecordApiRequestJob::dispatch(
+                type: 'dojah',
+                method: $method,
+                url: $url,
+                payload: $payload,
+                response: [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ],
+                userId: $user->id,
+                reference: (string) $kyc->id,
+            );
         }
 
         return $kyc;

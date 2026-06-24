@@ -21,5 +21,8 @@ class PurchaseElectricityRequest extends FormRequest
         ];
     }
 
-    public function bodyParameters(): array { return []; }
+    public function bodyParameters(): array
+    {
+        return [];
+    }
 }

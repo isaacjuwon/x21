@@ -19,7 +19,7 @@ class GenerateUniqueReferenceAction
         string $column = 'reference'
     ): string {
         do {
-            $reference = strtoupper($prefix . '-' . Str::random($length));
+            $reference = strtoupper($prefix.'-'.Str::random($length));
         } while ($modelClass::where($column, $reference)->exists());
 
         return $reference;

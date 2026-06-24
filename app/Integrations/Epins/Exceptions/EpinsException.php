@@ -6,6 +6,4 @@ namespace App\Integrations\Epins\Exceptions;
 
 use Exception;
 
-final class EpinsException extends Exception
-{
-}
+final class EpinsException extends Exception {}

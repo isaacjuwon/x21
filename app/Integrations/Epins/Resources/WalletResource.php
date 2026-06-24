@@ -24,7 +24,7 @@ final readonly class WalletResource
             );
         } catch (Throwable $exception) {
             throw new EpinsException(
-                message: 'Failed to get wallet balance: ' . $exception->getMessage(),
+                message: 'Failed to get wallet balance: '.$exception->getMessage(),
                 previous: $exception,
             );
         }

@@ -6,6 +6,4 @@ namespace App\Integrations\Paystack\Exceptions;
 
 use Exception;
 
-final class WebhookVerificationException extends Exception
-{
-}
+final class WebhookVerificationException extends Exception {}

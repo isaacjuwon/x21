@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Support\SecurityAudit;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Endpoint;
 use Knuckles\Scribe\Attributes\Group;
@@ -75,7 +76,7 @@ final class RegisterController
     }
 
     /**
-     * @return array{0:string,1:\Illuminate\Support\Carbon|null}
+     * @return array{0:string,1:Carbon|null}
      */
     private function issueToken(User $user, string $deviceName): array
     {

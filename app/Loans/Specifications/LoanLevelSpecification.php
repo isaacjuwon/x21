@@ -30,9 +30,9 @@ class LoanLevelSpecification implements LoanSpecification
         $max = $level?->max_amount ?? $settings->max_amount;
 
         if ($this->requestedAmount < $min) {
-            return "The minimum loan amount for your level is $" . number_format($min, 2) . ".";
+            return 'The minimum loan amount for your level is $'.number_format($min, 2).'.';
         }
 
-        return "The maximum loan amount for your level is $" . number_format($max, 2) . ".";
+        return 'The maximum loan amount for your level is $'.number_format($max, 2).'.';
     }
 }

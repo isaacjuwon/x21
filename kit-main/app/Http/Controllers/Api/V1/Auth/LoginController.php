@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Support\SecurityAudit;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Knuckles\Scribe\Attributes\BodyParam;
@@ -80,7 +81,7 @@ final class LoginController
     }
 
     /**
-     * @return array{0:string,1:\Illuminate\Support\Carbon|null}
+     * @return array{0:string,1:Carbon|null}
      */
     private function issueToken(User $user, string $deviceName): array
     {

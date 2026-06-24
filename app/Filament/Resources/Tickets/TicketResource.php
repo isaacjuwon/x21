@@ -7,14 +7,9 @@ use App\Enums\Tickets\TicketStatus;
 use App\Filament\Resources\Tickets\Pages\ListTickets;
 use App\Filament\Resources\Tickets\Pages\ViewTicket;
 use App\Models\Ticket;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -79,7 +74,7 @@ class TicketResource extends Resource
                     ->options(TicketPriority::class),
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make(),
+                ViewAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
     }

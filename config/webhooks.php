@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\TopupTransaction;
+
 return [
 
     /*
@@ -19,7 +21,7 @@ return [
     */
 
     'epins' => [
-        'transaction_model' => \App\Models\TopupTransaction::class,
+        'transaction_model' => TopupTransaction::class,
     ],
 
 ];
