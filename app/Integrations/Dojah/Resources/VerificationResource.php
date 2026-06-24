@@ -48,18 +48,13 @@ final readonly class VerificationResource
             );
 
             $data = $response->json();
-
-            // BVN Match success depends on bvn, first_name and last_name statuses being true
             $entity = $data['entity'] ?? null;
-            $success = $entity &&
-                       ($entity['bvn']['status'] ?? false) === true &&
-                       ($entity['first_name']['status'] ?? false) === true &&
-                       ($entity['last_name']['status'] ?? false) === true;
+            $success = ! empty($entity);
 
             return new VerificationResponse(
                 success: $success,
                 data: $data,
-                message: $data['error'] ?? $data['message'] ?? ($success ? 'BVN Match successful' : 'BVN Match failed or details mismatch')
+                message: $data['error'] ?? $data['message'] ?? ($success ? 'BVN Lookup completed' : 'BVN Lookup failed')
             );
         } catch (Throwable $exception) {
             throw new DojahException(
@@ -97,15 +92,13 @@ final readonly class VerificationResource
             );
 
             $data = $response->json();
-
-            // NIN Lookup success depends on getting an entity back with first_name
             $entity = $data['entity'] ?? null;
-            $success = ! empty($entity['first_name']);
+            $success = ! empty($entity);
 
             return new VerificationResponse(
                 success: $success,
                 data: $entity,
-                message: $data['error'] ?? $data['message'] ?? ($success ? 'NIN Lookup successful' : 'NIN Lookup failed')
+                message: $data['error'] ?? $data['message'] ?? ($success ? 'NIN Lookup completed' : 'NIN Lookup failed')
             );
         } catch (Throwable $exception) {
             throw new DojahException(

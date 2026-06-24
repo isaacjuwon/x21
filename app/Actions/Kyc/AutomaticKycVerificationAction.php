@@ -50,7 +50,30 @@ class AutomaticKycVerificationAction
                 $response = $verificationProvider->verifyBvn(new BvnMatchRequest($number, $user->first_name, $user->last_name));
             }
 
+            $success = false;
+            $rejectionReason = 'Verification failed';
+
             if ($response && $response->success) {
+                if ($type === KycType::Nin) {
+                    $success = ! empty($response->data['first_name']);
+                    if (! $success) {
+                        $rejectionReason = 'NIN Lookup failed';
+                    }
+                } elseif ($type === KycType::Bvn) {
+                    $entity = $response->data['entity'] ?? null;
+                    $success = $entity &&
+                               ($entity['bvn']['status'] ?? false) === true &&
+                               ($entity['first_name']['status'] ?? false) === true &&
+                               ($entity['last_name']['status'] ?? false) === true;
+                    if (! $success) {
+                        $rejectionReason = 'BVN Match failed or details mismatch';
+                    }
+                }
+            } else {
+                $rejectionReason = $response?->message ?? 'Verification failed';
+            }
+
+            if ($success) {
                 $kyc->update([
                     'status' => KycStatus::Verified,
                     'data' => $response->data,
@@ -59,7 +82,7 @@ class AutomaticKycVerificationAction
             } else {
                 $kyc->update([
                     'status' => KycStatus::Rejected,
-                    'rejection_reason' => $response?->message ?? 'Verification failed',
+                    'rejection_reason' => $rejectionReason,
                 ]);
             }
 
@@ -69,9 +92,9 @@ class AutomaticKycVerificationAction
                 url: $url,
                 payload: $payload,
                 response: $response ? [
-                    'success' => $response->success,
+                    'success' => $success,
                     'data' => $response->data,
-                    'message' => $response->message,
+                    'message' => $success ? 'Verification successful' : $rejectionReason,
                 ] : ['error' => 'No response returned from provider'],
                 userId: $user->id,
                 reference: (string) $kyc->id,
