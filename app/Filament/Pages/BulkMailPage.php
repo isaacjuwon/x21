@@ -32,14 +32,14 @@ class BulkMailPage extends Page
 
     protected static ?string $title = 'Send Bulk Mail';
 
-    public ?string $subject = '';
+    public $subject = '';
 
-    public ?string $message = '';
+    public $message = '';
 
-    public ?string $recipients = 'all';
+    public $recipients = 'all';
 
     /** @var array<string>|null */
-    public ?array $selectedRoles = [];
+    public $selectedRoles = [];
 
     public function mount(): void
     {
