@@ -39,7 +39,7 @@ class BulkMailPage extends Page
     public string $recipients = 'all';
 
     /** @var array<string> */
-    public array $selectedRoles = [];
+    public ?array $selectedRoles = [];
 
     public function mount(): void
     {
@@ -116,7 +116,7 @@ class BulkMailPage extends Page
 
                     if ($data['recipients'] === 'verified') {
                         $query->whereNotNull('email_verified_at');
-                    } elseif ($data['recipients'] === 'roles' && ! empty($data['selectedRoles'])) {
+                    } elseif ($data['recipients'] === 'roles' && ! empty($data['selectedRoles'] ?? [])) {
                         $query->whereHas('roles', fn ($q) => $q->whereIn('name', $data['selectedRoles']));
                     }
 
