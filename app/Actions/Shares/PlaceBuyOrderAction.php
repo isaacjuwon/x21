@@ -25,7 +25,7 @@ class PlaceBuyOrderAction
             throw new MinSharesPurchaseNotMetException($settings->min_shares_purchase);
         }
 
-        $currentHolding = $user->shareHolding?->quantity ?? 0;
+        $currentHolding = $user->total_shares;
         $pendingBuyQty = $user->shareOrders()
             ->where('type', ShareOrderType::Buy)
             ->where('status', ShareOrderStatus::Pending)

@@ -32,6 +32,6 @@ final class UpdateController
         $user->fill($validated);
         $user->save();
 
-        return new UserResource($user->fresh()->load('loanLevel', 'shareHolding', 'roles'));
+        return new UserResource($user->fresh()->load('loanLevel', 'shareHoldings', 'roles'));
     }
 }

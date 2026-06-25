@@ -28,7 +28,9 @@ class ProcessDividendPayoutsJob implements ShouldQueue
             ->with('user')
             ->get();
 
-        if ($eligibleHoldings->isEmpty()) {
+        $groupedHoldings = $eligibleHoldings->groupBy('user_id');
+
+        if ($groupedHoldings->isEmpty()) {
             $this->dividend->update([
                 'status' => DividendStatus::Distributed,
                 'total_amount' => 0,
@@ -40,23 +42,26 @@ class ProcessDividendPayoutsJob implements ShouldQueue
         $dividendPerShare = $this->dividend->share_price * ($this->dividend->percentage / 100);
         $totalDistributedAmount = 0;
 
-        foreach ($eligibleHoldings as $holding) {
-            $payoutAmount = round($dividendPerShare * $holding->quantity, 2);
+        foreach ($groupedHoldings as $userId => $lots) {
+            $totalQuantity = $lots->sum('quantity');
+            $user = $lots->first()->user;
+
+            $payoutAmount = round($dividendPerShare * $totalQuantity, 2);
 
             if ($payoutAmount <= 0) {
                 continue;
             }
 
-            $transaction = $holding->user->deposit($payoutAmount, WalletType::General, "Dividend payout #{$this->dividend->id}", $this->dividend);
+            $transaction = $user->deposit($payoutAmount, WalletType::General, "Dividend payout #{$this->dividend->id}", $this->dividend);
 
             $payout = DividendPayout::create([
                 'dividend_id' => $this->dividend->id,
-                'user_id' => $holding->user->id,
+                'user_id' => $user->id,
                 'amount' => $payoutAmount,
                 'transaction_id' => $transaction->id,
             ]);
 
-            $holding->user->notify(new DividendPaidNotification($payout));
+            $user->notify(new DividendPaidNotification($payout));
 
             $totalDistributedAmount += $payoutAmount;
         }

@@ -22,16 +22,11 @@ class ApproveBuyOrderAction
         // Wallet was already debited on placement — no confirm() needed here.
         // Just update holdings and listing.
 
-        $holding = ShareHolding::firstOrCreate(
-            ['user_id' => $order->user_id],
-            ['quantity' => 0]
-        );
-
-        $holding->increment('quantity', $order->quantity);
-
-        if ($holding->wasRecentlyCreated || $holding->acquired_at === null) {
-            $holding->update(['acquired_at' => now()]);
-        }
+        $holding = ShareHolding::create([
+            'user_id' => $order->user_id,
+            'quantity' => $order->quantity,
+            'acquired_at' => now(),
+        ]);
 
         ShareListing::firstOrFail()->decrement('available_shares', $order->quantity);
 

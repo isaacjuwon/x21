@@ -17,7 +17,7 @@ class SharesRequirementSpecification implements LoanSpecification
         $shareSettings = app(ShareSettings::class);
 
         $requiredValue = $this->requestedAmount * ($loanSettings->min_shares_percentage / 100);
-        $userSharesQuantity = $user->shareHolding?->quantity ?? 0;
+        $userSharesQuantity = $user->total_shares;
         $userSharesValue = $userSharesQuantity * $shareSettings->price_per_share;
 
         return $userSharesValue >= $requiredValue;

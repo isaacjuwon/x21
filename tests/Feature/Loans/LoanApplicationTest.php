@@ -1,11 +1,18 @@
 <?php
 
 use App\Enums\Loans\LoanStatus;
+use App\Models\ShareHolding;
 use App\Models\User;
+use App\Settings\ShareSettings;
 use Illuminate\Auth\Middleware\Authenticate;
 
 test('successful loan application returns 201 with active status', function () {
     $user = User::factory()->create(['created_at' => now()->subDays(60)]);
+    ShareHolding::factory()->create([
+        'user_id' => $user->id,
+        'quantity' => 200,
+        'acquired_at' => now()->subDays(60),
+    ]);
 
     $response = $this->actingAs($user)
         ->withoutMiddleware(Authenticate::class)
@@ -21,6 +28,11 @@ test('successful loan application returns 201 with active status', function () {
 
 test('loan is persisted with active status and correct user_id', function () {
     $user = User::factory()->create(['created_at' => now()->subDays(60)]);
+    ShareHolding::factory()->create([
+        'user_id' => $user->id,
+        'quantity' => 200,
+        'acquired_at' => now()->subDays(60),
+    ]);
 
     $this->actingAs($user)
         ->withoutMiddleware(Authenticate::class)

@@ -18,6 +18,6 @@ final class ShowController
     #[ResponseFromApiResource(UserResource::class, User::class)]
     public function __invoke(Request $request): UserResource
     {
-        return new UserResource($request->user()->load('loanLevel', 'shareHolding', 'roles'));
+        return new UserResource($request->user()->load('loanLevel', 'shareHoldings', 'roles'));
     }
 }

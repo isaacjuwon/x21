@@ -19,15 +19,24 @@ class PlaceSellOrderAction
         $settings = app(ShareSettings::class);
         $listing = ShareListing::firstOrFail();
 
-        $holding = $user->shareHolding;
+        $totalShares = $user->total_shares;
 
-        if (! $holding || $holding->quantity < $quantity) {
+        if ($totalShares < $quantity) {
             throw new InsufficientSharesException('Insufficient shares.');
         }
 
-        if ($holding->acquired_at > now()->subDays($settings->holding_period_days)) {
+        $eligibleShares = $user->shareHoldings()
+            ->where('acquired_at', '<=', now()->subDays($settings->holding_period_days))
+            ->sum('quantity');
+
+        if ($eligibleShares < $quantity) {
+            $closestLot = $user->shareHoldings()
+                ->where('acquired_at', '>', now()->subDays($settings->holding_period_days))
+                ->orderBy('acquired_at', 'asc')
+                ->first();
+
             throw new HoldingPeriodNotMetException(
-                $holding->acquired_at->addDays($settings->holding_period_days)
+                $closestLot ? $closestLot->acquired_at->addDays($settings->holding_period_days) : now()->addDays($settings->holding_period_days)
             );
         }
 

@@ -89,9 +89,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->belongsTo(LoanLevel::class);
     }
 
-    public function shareHolding(): HasOne
+    public function shareHoldings(): HasMany
     {
-        return $this->hasOne(ShareHolding::class);
+        return $this->hasMany(ShareHolding::class);
+    }
+
+    public function getTotalSharesAttribute(): int
+    {
+        return $this->shareHoldings()->sum('quantity');
     }
 
     public function shareOrders(): HasMany

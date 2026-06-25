@@ -21,7 +21,22 @@ class ApproveSellOrderAction
 
         $order->user->deposit($order->total_amount, WalletType::General, "Share sell order approved #{$order->id}", $order);
 
-        $order->user->shareHolding->decrement('quantity', $order->quantity);
+        $quantityToSell = $order->quantity;
+        $lots = $order->user->shareHoldings()->orderBy('acquired_at', 'asc')->get();
+
+        foreach ($lots as $lot) {
+            if ($quantityToSell <= 0) {
+                break;
+            }
+
+            if ($lot->quantity <= $quantityToSell) {
+                $quantityToSell -= $lot->quantity;
+                $lot->delete();
+            } else {
+                $lot->decrement('quantity', $quantityToSell);
+                $quantityToSell = 0;
+            }
+        }
 
         ShareListing::firstOrFail()->increment('available_shares', $order->quantity);
 

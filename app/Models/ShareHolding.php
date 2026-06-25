@@ -29,4 +29,13 @@ class ShareHolding extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function isEligible(int $holdingPeriodDays): bool
+    {
+        if ($this->acquired_at === null) {
+            return false;
+        }
+
+        return $this->acquired_at <= now()->subDays($holdingPeriodDays);
+    }
 }

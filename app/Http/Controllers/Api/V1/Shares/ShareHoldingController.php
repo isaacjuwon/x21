@@ -16,9 +16,6 @@ class ShareHoldingController
     #[ResponseFromApiResource(ShareHoldingResource::class, ShareHolding::class)]
     public function __invoke(Request $request): ShareHoldingResource
     {
-        $holding = $request->user()->shareHolding
-            ?? new ShareHolding(['quantity' => 0, 'acquired_at' => null]);
-
-        return new ShareHoldingResource($holding);
+        return new ShareHoldingResource($request->user());
     }
 }

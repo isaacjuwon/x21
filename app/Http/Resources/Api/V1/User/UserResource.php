@@ -23,9 +23,9 @@ class UserResource extends JsonResource
                 'max_amount' => $this->loanLevel->max_amount,
                 'interest_rate' => $this->loanLevel->interest_rate,
             ]),
-            'share_holding' => $this->whenLoaded('shareHolding', fn () => $this->shareHolding ? [
-                'quantity' => $this->shareHolding->quantity,
-                'acquired_at' => $this->shareHolding->acquired_at,
+            'share_holding' => $this->whenLoaded('shareHoldings', fn () => $this->shareHoldings->isNotEmpty() ? [
+                'quantity' => $this->total_shares,
+                'acquired_at' => $this->shareHoldings->sortBy('acquired_at')->first()->acquired_at,
             ] : null),
             'created_at' => $this->created_at,
         ];
