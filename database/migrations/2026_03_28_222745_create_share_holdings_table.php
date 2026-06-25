@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('share_holdings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->unique();
             $table->unsignedBigInteger('quantity')->default(0);
             $table->timestamp('acquired_at')->nullable();
             $table->timestamps();
