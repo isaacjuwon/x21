@@ -98,7 +98,6 @@ new #[Title('Transfer Funds')] class extends Component {
                 step="0.01"
                 :label="__('Amount')"
                 placeholder="0.00"
-                icon="heroicon-o-currency-naira"
             />
 
             <flux:textarea

@@ -346,7 +346,6 @@ new #[Title('Apply for a Loan')] class extends Component {
                         step="0.01"
                         :label="__('Requested Amount')"
                         placeholder="0.00"
-                        icon="currency-naira"
                         required
                         :min="$this->minAmount"
                         :max="$this->maxAmount"

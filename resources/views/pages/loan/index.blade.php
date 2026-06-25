@@ -9,6 +9,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Number;
 
 new #[Title('My Loans'), Defer] class extends Component {
     use WithPagination;

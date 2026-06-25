@@ -3,7 +3,7 @@
 namespace App\Filament\Clusters\Settings\Pages;
 
 use App\Filament\Clusters\Settings\SettingsCluster;
-use App\Settings\ShareSettings;
+use App\Settings\WalletSettings;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\SettingsPage;
@@ -11,13 +11,13 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Number;
 
-class ShareSettingsPage extends SettingsPage
+class WalletSettingsPage extends SettingsPage
 {
     use HasPageShield;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wallet';
 
-    protected static string $settings = ShareSettings::class;
+    protected static string $settings = WalletSettings::class;
 
     protected static ?string $cluster = SettingsCluster::class;
 
@@ -25,20 +25,23 @@ class ShareSettingsPage extends SettingsPage
     {
         return $schema
             ->components([
-                Section::make('Share Configuration')
+                Section::make('Wallet Configuration')
                     ->schema([
-                        TextInput::make('price_per_share')
+                        TextInput::make('min_withdrawal')
                             ->numeric()
                             ->prefix(Number::defaultCurrency())
                             ->required(),
-                        TextInput::make('min_shares_purchase')
+                        TextInput::make('withdrawal_fee')
                             ->numeric()
+                            ->prefix(Number::defaultCurrency())
                             ->required(),
-                        TextInput::make('max_shares_per_user')
+                        TextInput::make('stamp_duty_rate')
                             ->numeric()
+                            ->suffix('%')
                             ->required(),
-                        TextInput::make('holding_period_days')
+                        TextInput::make('stamp_duty_threshold')
                             ->numeric()
+                            ->prefix(Number::defaultCurrency())
                             ->required(),
                     ])->columns(2),
             ]);
