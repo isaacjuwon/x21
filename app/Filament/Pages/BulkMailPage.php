@@ -32,13 +32,13 @@ class BulkMailPage extends Page
 
     protected static ?string $title = 'Send Bulk Mail';
 
-    public string $subject = '';
+    public ?string $subject = '';
 
-    public string $message = '';
+    public ?string $message = '';
 
-    public string $recipients = 'all';
+    public ?string $recipients = 'all';
 
-    /** @var array<string> */
+    /** @var array<string>|null */
     public ?array $selectedRoles = [];
 
     public function mount(): void
@@ -112,18 +112,23 @@ class BulkMailPage extends Page
                 ->action(function (): void {
                     $data = $this->form->getState();
 
+                    $recipientTarget = $data['recipients'] ?? 'all';
+                    $roles = $data['selectedRoles'] ?? [];
+                    $subject = $data['subject'] ?? '';
+                    $body = strip_tags($data['message'] ?? '');
+
                     $query = User::query();
 
-                    if ($data['recipients'] === 'verified') {
+                    if ($recipientTarget === 'verified') {
                         $query->whereNotNull('email_verified_at');
-                    } elseif ($data['recipients'] === 'roles' && ! empty($data['selectedRoles'] ?? [])) {
-                        $query->whereHas('roles', fn ($q) => $q->whereIn('name', $data['selectedRoles']));
+                    } elseif ($recipientTarget === 'roles' && ! empty($roles)) {
+                        $query->whereHas('roles', fn ($q) => $q->whereIn('name', $roles));
                     }
 
                     $recipients = $query->get();
 
                     foreach ($recipients as $user) {
-                        SendBulkMailJob::dispatch($user, $data['subject'], strip_tags($data['message']));
+                        SendBulkMailJob::dispatch($user, $subject, $body);
                     }
 
                     $this->form->fill();
