@@ -41,6 +41,11 @@ class BulkMailPage extends Page
     /** @var array<string>|null */
     public $selectedRoles = [];
 
+    /** @var array<int>|null */
+    public $selectedUsers = [];
+
+    public $singleUser = null;
+
     public function mount(): void
     {
         $this->form->fill();
@@ -56,9 +61,11 @@ class BulkMailPage extends Page
                         Select::make('recipients')
                             ->label('Send To')
                             ->options([
-                                'all' => 'All Users',
+                                'all'      => 'All Users',
                                 'verified' => 'Verified Users Only',
-                                'roles' => 'Specific Roles',
+                                'roles'    => 'Specific Roles',
+                                'select'   => 'Select Users',
+                                'one'      => 'One User',
                             ])
                             ->default('all')
                             ->live()
@@ -70,6 +77,41 @@ class BulkMailPage extends Page
                             ->visible(fn ($get) => $get('recipients') === 'roles')
                             ->required(fn ($get) => $get('recipients') === 'roles')
                             ->columns(3),
+
+                        Select::make('selectedUsers')
+                            ->label('Select Users')
+                            ->multiple()
+                            ->searchable()
+                            ->getSearchResultsUsing(
+                                fn (string $search) => User::where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%")
+                                    ->limit(20)
+                                    ->pluck('name', 'id')
+                                    ->toArray()
+                            )
+                            ->getOptionLabelsUsing(
+                                fn (array $values) => User::whereIn('id', $values)
+                                    ->pluck('name', 'id')
+                                    ->toArray()
+                            )
+                            ->visible(fn ($get) => $get('recipients') === 'select')
+                            ->required(fn ($get) => $get('recipients') === 'select'),
+
+                        Select::make('singleUser')
+                            ->label('User')
+                            ->searchable()
+                            ->getSearchResultsUsing(
+                                fn (string $search) => User::where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%")
+                                    ->limit(20)
+                                    ->pluck('name', 'id')
+                                    ->toArray()
+                            )
+                            ->getOptionLabelUsing(
+                                fn ($value) => User::find($value)?->name
+                            )
+                            ->visible(fn ($get) => $get('recipients') === 'one')
+                            ->required(fn ($get) => $get('recipients') === 'one'),
                     ]),
 
                 Section::make('Compose Email')
@@ -114,6 +156,8 @@ class BulkMailPage extends Page
 
                     $recipientTarget = $data['recipients'] ?? 'all';
                     $roles = $data['selectedRoles'] ?? [];
+                    $userIds = $data['selectedUsers'] ?? [];
+                    $singleUserId = $data['singleUser'] ?? null;
                     $subject = $data['subject'] ?? '';
                     $body = strip_tags($data['message'] ?? '');
 
@@ -123,6 +167,10 @@ class BulkMailPage extends Page
                         $query->whereNotNull('email_verified_at');
                     } elseif ($recipientTarget === 'roles' && ! empty($roles)) {
                         $query->whereHas('roles', fn ($q) => $q->whereIn('name', $roles));
+                    } elseif ($recipientTarget === 'select' && ! empty($userIds)) {
+                        $query->whereIn('id', $userIds);
+                    } elseif ($recipientTarget === 'one' && $singleUserId) {
+                        $query->where('id', $singleUserId);
                     }
 
                     $recipients = $query->get();
