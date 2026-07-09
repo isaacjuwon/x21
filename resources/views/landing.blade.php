@@ -10,7 +10,7 @@
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center gap-2">
                         @if($generalSettings->site_logo)
-                            <img src="{{ \Illuminate\Support\Facades\Storage::url($generalSettings->site_logo) }}" alt="{{ $generalSettings->site_name }}" class="h-8 w-auto">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($generalSettings->site_logo) }}" alt="{{ $generalSettings->site_name }}" class="h-8 w-auto">
                         @else
                             <x-app-logo class="h-8 w-auto text-primary-color" />
                         @endif
@@ -262,7 +262,7 @@
                     <div class="col-span-1 md:col-span-1">
                         <div class="flex items-center gap-2 mb-6">
                             @if($generalSettings->site_logo)
-                                <img src="{{ \Illuminate\Support\Facades\Storage::url($generalSettings->site_logo) }}" alt="{{ $generalSettings->site_name }}" class="h-6 w-auto">
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($generalSettings->site_logo) }}" alt="{{ $generalSettings->site_name }}" class="h-6 w-auto">
                             @else
                                 <x-app-logo class="h-6 w-auto text-primary-color" />
                             @endif

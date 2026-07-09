@@ -14,8 +14,10 @@
     }
 
     $siteName = $generalSettings->site_name ?? 'Laravel Starter Kit';
-    $siteLogo = $generalSettings->site_logo;
-    $siteDarkLogo = $generalSettings->site_dark_logo ?? $siteLogo;
+    $siteLogo = $generalSettings->site_logo ? \Illuminate\Support\Facades\Storage::disk('public')->url($generalSettings->site_logo) : null;
+    $siteDarkLogo = $generalSettings->site_dark_logo
+        ? \Illuminate\Support\Facades\Storage::disk('public')->url($generalSettings->site_dark_logo)
+        : $siteLogo;
 @endphp
 
 @props([

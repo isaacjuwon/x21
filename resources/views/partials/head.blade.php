@@ -7,7 +7,7 @@
 </title>
 
 @if($generalSettings->site_favicon)
-    <link rel="icon" href="{{ Storage::url($generalSettings->site_favicon) }}" sizes="any">
+    <link rel="icon" href="{{ Storage::disk('public')->url($generalSettings->site_favicon) }}" sizes="any">
 @else
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">

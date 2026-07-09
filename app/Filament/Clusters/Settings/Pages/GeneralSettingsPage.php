@@ -44,11 +44,13 @@ class GeneralSettingsPage extends SettingsPage
                         Grid::make(2)->schema([
                             FileUpload::make('site_logo')
                                 ->image()
+                                ->disk('public')
                                 ->directory('settings')
                                 ->visibility('public')
                                 ->imageEditor(),
                             FileUpload::make('site_dark_logo')
                                 ->image()
+                                ->disk('public')
                                 ->directory('settings')
                                 ->visibility('public')
                                 ->imageEditor(),
@@ -56,11 +58,13 @@ class GeneralSettingsPage extends SettingsPage
                         Grid::make(2)->schema([
                             FileUpload::make('site_favicon')
                                 ->image()
+                                ->disk('public')
                                 ->directory('settings')
                                 ->visibility('public')
                                 ->imageEditor(),
                             FileUpload::make('site_dark_favicon')
                                 ->image()
+                                ->disk('public')
                                 ->directory('settings')
                                 ->visibility('public')
                                 ->imageEditor(),

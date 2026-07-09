@@ -57,7 +57,7 @@
 
                 <div class="lg:w-1/3 bg-zinc-50 dark:bg-zinc-900 p-12 flex flex-col justify-center items-center text-center border-s border-zinc-200 dark:border-zinc-800">
                     @if($generalSettings->site_logo)
-                        <img src="{{ $generalSettings->site_logo }}" alt="{{ $generalSettings->site_name }}" class="h-24 w-auto mb-8">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($generalSettings->site_logo) }}" alt="{{ $generalSettings->site_name }}" class="h-24 w-auto mb-8">
                     @else
                         <x-app-logo class="h-24 w-auto mb-8" />
                     @endif
