@@ -26,6 +26,12 @@ class IntegrationSettings extends Settings
 
     public ?string $openai_model;
 
+    public ?string $kudisms_url;
+
+    public ?string $kudisms_api_key;
+
+    public ?string $kudisms_sender_id;
+
     public static function group(): string
     {
         return 'integrations';

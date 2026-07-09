@@ -3,10 +3,12 @@
 namespace App\Notifications\Wallets;
 
 use App\Models\Transaction;
+use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Number;
 
 class TransactionReversedNotification extends Notification implements ShouldQueue
 {
@@ -19,7 +21,13 @@ class TransactionReversedNotification extends Notification implements ShouldQueu
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database', 'mail'];
+
+        if (app(SmsSettings::class)->sms_transaction_reversed) {
+            $channels[] = 'kudisms';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -31,6 +39,11 @@ class TransactionReversedNotification extends Notification implements ShouldQueu
                 'original' => $this->original,
                 'refund' => $this->refund,
             ]);
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        return "Hi {$notifiable->name}, a refund of ".Number::currency($this->original->amount)." has been processed to your wallet (Ref: {$this->refund->reference}).";
     }
 
     public function toArray(object $notifiable): array

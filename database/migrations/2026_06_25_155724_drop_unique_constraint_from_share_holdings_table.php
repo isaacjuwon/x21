@@ -13,7 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('share_holdings', function (Blueprint $table) {
-            $table->dropUnique(['user_id']);
+            $indexes = collect(Schema::getIndexes('share_holdings'))
+                ->pluck('name')
+                ->all();
+
+            if (in_array('share_holdings_user_id_unique', $indexes)) {
+                $table->dropUnique(['user_id']);
+            }
         });
     }
 

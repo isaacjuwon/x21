@@ -2,19 +2,24 @@
 
 namespace App\Providers;
 
+use App\Events\Services\ServicePurchased;
 use App\Events\Wallets\TransactionFailed;
 use App\Integrations\Dojah\DojahConnector;
 use App\Integrations\Epins\EpinsConnector;
+use App\Integrations\KudiSms\KudiSmsConnector;
 use App\Integrations\Paystack\PaystackConnector;
+use App\Listeners\Services\SendServicePurchasedNotificationListener;
 use App\Listeners\Wallets\DispatchWalletReversalListener;
 use App\Managers\ApiManager;
 use App\Models\Faq;
+use App\Notifications\Channels\KudiSmsChannel;
 use App\Settings\GeneralSettings;
 use App\Settings\LayoutSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -42,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerConnectors();
+        $this->registerNotificationChannels();
         $this->registerEventListeners();
         $this->configureDefaults();
         $this->configureCurrency();
@@ -57,11 +63,23 @@ class AppServiceProvider extends ServiceProvider
         PaystackConnector::register($this->app);
         EpinsConnector::register($this->app);
         DojahConnector::register($this->app);
+        KudiSmsConnector::register($this->app);
+    }
+
+    /**
+     * Register custom notification channels.
+     */
+    protected function registerNotificationChannels(): void
+    {
+        $this->app->make(ChannelManager::class)->extend('kudisms', function ($app) {
+            return $app->make(KudiSmsChannel::class);
+        });
     }
 
     protected function registerEventListeners(): void
     {
         Event::listen(TransactionFailed::class, DispatchWalletReversalListener::class);
+        Event::listen(ServicePurchased::class, SendServicePurchasedNotificationListener::class);
     }
 
     /**

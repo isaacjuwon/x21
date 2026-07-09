@@ -61,11 +61,12 @@ class BulkMailPage extends Page
                         Select::make('recipients')
                             ->label('Send To')
                             ->options([
-                                'all'      => 'All Users',
+                                'all' => 'All Users',
                                 'verified' => 'Verified Users Only',
-                                'roles'    => 'Specific Roles',
-                                'select'   => 'Select Users',
-                                'one'      => 'One User',
+                                'shares' => 'Users With Shares',
+                                'roles' => 'Specific Roles',
+                                'select' => 'Select Users',
+                                'one' => 'One User',
                             ])
                             ->default('all')
                             ->live()
@@ -165,6 +166,8 @@ class BulkMailPage extends Page
 
                     if ($recipientTarget === 'verified') {
                         $query->whereNotNull('email_verified_at');
+                    } elseif ($recipientTarget === 'shares') {
+                        $query->whereHas('shareHoldings', fn ($q) => $q->where('quantity', '>', 0));
                     } elseif ($recipientTarget === 'roles' && ! empty($roles)) {
                         $query->whereHas('roles', fn ($q) => $q->whereIn('name', $roles));
                     } elseif ($recipientTarget === 'select' && ! empty($userIds)) {

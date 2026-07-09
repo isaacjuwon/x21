@@ -3,10 +3,12 @@
 namespace App\Notifications\Shares;
 
 use App\Models\ShareOrder;
+use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Number;
 
 class ShareOrderRejectedNotification extends Notification implements ShouldQueue
 {
@@ -16,7 +18,13 @@ class ShareOrderRejectedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database', 'mail'];
+
+        if (app(SmsSettings::class)->sms_share_order_rejected) {
+            $channels[] = 'kudisms';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -27,6 +35,11 @@ class ShareOrderRejectedNotification extends Notification implements ShouldQueue
                 'notifiable' => $notifiable,
                 'order' => $this->order,
             ]);
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        return "Hi {$notifiable->name}, your {$this->order->type->getLabel()} order for {$this->order->quantity} shares (".Number::currency($this->order->total_amount).") was rejected. Reason: {$this->order->rejection_reason}.";
     }
 
     public function toArray(object $notifiable): array

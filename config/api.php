@@ -19,6 +19,7 @@ return [
         'vtu' => env('API_VTU_PROVIDER', 'epins'),
         'account' => env('API_ACCOUNT_PROVIDER', 'paystack'),
         'verification' => env('API_VERIFICATION_PROVIDER', 'dojah'),
+        'sms' => env('API_SMS_PROVIDER', 'kudisms'),
     ],
 
     /*
@@ -43,6 +44,9 @@ return [
         ],
         'monnify' => [
             'driver' => 'monnify',
+        ],
+        'kudisms' => [
+            'driver' => 'kudisms',
         ],
     ],
 

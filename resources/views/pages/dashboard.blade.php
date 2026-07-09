@@ -177,7 +177,7 @@ new #[Title('Dashboard'), Defer] class extends Component {
                 @if($this->recentTransactions->count() > 0)
                     <flux:table>
                         <flux:table.columns sticky class="bg-white dark:bg-zinc-900">
-                            <flux:table.column>Type</flux:table.column>
+                            <flux:table.column>Description</flux:table.column>
                             <flux:table.column align="end">Amount</flux:table.column>
                             <flux:table.column>Status</flux:table.column>
                             <flux:table.column>Date</flux:table.column>
@@ -188,7 +188,12 @@ new #[Title('Dashboard'), Defer] class extends Component {
                                 <flux:table.row :key="$transaction->id">
                                     <flux:table.cell class="flex items-center gap-2">
                                         <flux:icon :name="$transaction->type->getFluxIcon()" class="size-4 text-zinc-400" />
-                                        <span>{{ $transaction->type->getLabel() }}</span>
+                                        <div>
+                                            <div class="font-medium">{{ $transaction->type->getLabel() }}</div>
+                                            @if($transaction->notes)
+                                                <div class="text-xs text-zinc-400">{{ $transaction->notes }}</div>
+                                            @endif
+                                        </div>
                                     </flux:table.cell>
                                     <flux:table.cell align="end" variant="strong" class="{{ $transaction->amount > 0 ? 'text-green-600' : 'text-red-600' }}">
                                         {{ $transaction->amount > 0 ? '+' : '' }}{{ Number::currency($transaction->amount) }}

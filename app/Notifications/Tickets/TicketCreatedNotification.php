@@ -3,6 +3,7 @@
 namespace App\Notifications\Tickets;
 
 use App\Models\Ticket;
+use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,7 +17,13 @@ class TicketCreatedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database', 'mail'];
+
+        if (app(SmsSettings::class)->sms_ticket_created) {
+            $channels[] = 'kudisms';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -27,6 +34,11 @@ class TicketCreatedNotification extends Notification implements ShouldQueue
                 'notifiable' => $notifiable,
                 'ticket' => $this->ticket,
             ]);
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        return "Hi {$notifiable->name}, your support ticket #{$this->ticket->id} has been received. We'll get back to you shortly.";
     }
 
     public function toArray(object $notifiable): array

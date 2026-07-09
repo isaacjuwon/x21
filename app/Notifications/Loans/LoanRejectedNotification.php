@@ -3,6 +3,7 @@
 namespace App\Notifications\Loans;
 
 use App\Models\Loan;
+use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,7 +17,13 @@ class LoanRejectedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database', 'mail'];
+
+        if (app(SmsSettings::class)->sms_loan_rejected) {
+            $channels[] = 'kudisms';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -27,6 +34,11 @@ class LoanRejectedNotification extends Notification implements ShouldQueue
                 'notifiable' => $notifiable,
                 'loan' => $this->loan,
             ]);
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        return "Hi {$notifiable->name}, unfortunately your loan application has been rejected. Please contact support for further assistance.";
     }
 
     public function toArray(object $notifiable): array

@@ -76,6 +76,24 @@ class IntegrationSettingsPage extends SettingsPage
                             ->label('Model')
                             ->placeholder('gpt-4o-mini'),
                     ]),
+
+                Section::make('KudiSMS Configuration')
+                    ->description('Used for sending SMS notifications.')
+                    ->schema([
+                        TextInput::make('kudisms_url')
+                            ->label('Base URL')
+                            ->url()
+                            ->default('https://api.kudisms.net'),
+                        Grid::make(2)->schema([
+                            TextInput::make('kudisms_api_key')
+                                ->label('API Key')
+                                ->password()
+                                ->revealable(),
+                            TextInput::make('kudisms_sender_id')
+                                ->label('Sender ID')
+                                ->placeholder('YOURAPP'),
+                        ]),
+                    ]),
             ]);
     }
 }

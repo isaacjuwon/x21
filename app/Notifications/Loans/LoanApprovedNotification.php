@@ -3,10 +3,12 @@
 namespace App\Notifications\Loans;
 
 use App\Models\Loan;
+use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Number;
 
 class LoanApprovedNotification extends Notification implements ShouldQueue
 {
@@ -16,7 +18,13 @@ class LoanApprovedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database', 'mail'];
+
+        if (app(SmsSettings::class)->sms_loan_approved) {
+            $channels[] = 'kudisms';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -27,6 +35,11 @@ class LoanApprovedNotification extends Notification implements ShouldQueue
                 'notifiable' => $notifiable,
                 'loan' => $this->loan,
             ]);
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        return "Hi {$notifiable->name}, your loan application of ".Number::currency($this->loan->principal_amount).' has been approved. Log in to your account for details.';
     }
 
     public function toArray(object $notifiable): array

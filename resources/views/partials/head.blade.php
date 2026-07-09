@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -6,7 +7,7 @@
 </title>
 
 @if($generalSettings->site_favicon)
-    <link rel="icon" href="{{ $generalSettings->site_favicon }}" sizes="any">
+    <link rel="icon" href="{{ Storage::url($generalSettings->site_favicon) }}" sizes="any">
 @else
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">

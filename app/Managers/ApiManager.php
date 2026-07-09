@@ -4,12 +4,15 @@ namespace App\Managers;
 
 use App\Integrations\Contracts\Providers\AccountProvider;
 use App\Integrations\Contracts\Providers\PaymentProvider;
+use App\Integrations\Contracts\Providers\SmsProvider;
 use App\Integrations\Contracts\Providers\VerificationProvider;
 use App\Integrations\Contracts\Providers\VtuProvider;
 use App\Integrations\Dojah\DojahConnector;
 use App\Integrations\Dojah\DojahProvider;
 use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\Epins\EpinsProvider;
+use App\Integrations\KudiSms\KudiSmsConnector;
+use App\Integrations\KudiSms\KudiSmsProvider;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Integrations\Paystack\PaystackProvider;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -116,6 +119,22 @@ class ApiManager extends MultipleInstanceManager
     }
 
     /**
+     * Get an SMS provider instance by name.
+     *
+     * @throws LogicException
+     */
+    public function smsProvider(?string $name = null): SmsProvider
+    {
+        $name ??= $this->app['config']->get('api.defaults.sms', $this->getDefaultInstance());
+
+        return tap($this->instance($name), function ($instance) {
+            if (! $instance instanceof SmsProvider) {
+                throw new LogicException('Provider ['.get_class($instance).'] does not support SMS.');
+            }
+        });
+    }
+
+    /**
      * Get a fakeable account provider instance.
      */
     public function fakeableAccountProvider(?string $name = null): AccountProvider
@@ -158,6 +177,16 @@ class ApiManager extends MultipleInstanceManager
     {
         return new EpinsProvider(
             $this->app->make(EpinsConnector::class)
+        );
+    }
+
+    /**
+     * Create a KudiSMS powered instance.
+     */
+    public function createKudismsDriver(array $config): KudiSmsProvider
+    {
+        return new KudiSmsProvider(
+            $this->app->make(KudiSmsConnector::class)
         );
     }
 
