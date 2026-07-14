@@ -158,7 +158,6 @@ new #[Title('Profile settings')] class extends Component {
             <livewire:pages::settings.delete-user-form />
         @endif
 
-        <x-pages::settings.layout :heading="__('Referrals')" :subheading="__('Your referral link and stats')">
             <div class="my-6 w-full space-y-6">
                 <flux:input 
                     :label="__('Your Referral Link')" 
@@ -172,6 +171,5 @@ new #[Title('Profile settings')] class extends Component {
                     <strong>{{ __('Total Referrals:') }}</strong> {{ Auth::user()->referrals()->count() }}
                 </flux:text>
             </div>
-        </x-pages::settings.layout>
     </x-pages::settings.layout>
 </section>
