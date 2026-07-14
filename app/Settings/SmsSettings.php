@@ -25,6 +25,8 @@ class SmsSettings extends Settings
     // Wallets
     public bool $sms_transaction_reversed;
 
+    public bool $sms_wallet_withdrawn;
+
     // Services (VTU)
     public bool $sms_service_purchased;
 

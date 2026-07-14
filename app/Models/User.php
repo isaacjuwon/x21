@@ -200,4 +200,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             },
         );
     }
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
+    }
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(User::class, 'referrer_id');
+    }
 }

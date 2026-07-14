@@ -31,15 +31,11 @@ class WalletSettingsPage extends SettingsPage
                             ->numeric()
                             ->prefix(Number::defaultCurrency())
                             ->required(),
-                        TextInput::make('withdrawal_fee')
+                        TextInput::make('max_withdrawal')
                             ->numeric()
                             ->prefix(Number::defaultCurrency())
                             ->required(),
-                        TextInput::make('stamp_duty_rate')
-                            ->numeric()
-                            ->suffix('%')
-                            ->required(),
-                        TextInput::make('stamp_duty_threshold')
+                        TextInput::make('withdrawal_fee')
                             ->numeric()
                             ->prefix(Number::defaultCurrency())
                             ->required(),

@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Events\Services\ServicePurchased;
 use App\Events\Wallets\TransactionFailed;
+use App\Events\Wallets\WalletWithdrawn;
 use App\Integrations\Dojah\DojahConnector;
 use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\KudiSms\KudiSmsConnector;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Listeners\Services\SendServicePurchasedNotificationListener;
 use App\Listeners\Wallets\DispatchWalletReversalListener;
+use App\Listeners\Wallets\SendWalletWithdrawnNotificationListener;
 use App\Managers\ApiManager;
 use App\Models\Faq;
 use App\Notifications\Channels\KudiSmsChannel;
@@ -80,6 +82,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(TransactionFailed::class, DispatchWalletReversalListener::class);
         Event::listen(ServicePurchased::class, SendServicePurchasedNotificationListener::class);
+        Event::listen(WalletWithdrawn::class, SendWalletWithdrawnNotificationListener::class);
     }
 
     /**

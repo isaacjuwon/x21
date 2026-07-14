@@ -256,6 +256,9 @@
         @endif
 
         <!-- Contact/Footer Section -->
+        @php
+            $visiblePages = \App\Models\Page::where('is_visible', true)->get();
+        @endphp
         <footer id="contact" class="bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 pt-16 pb-8">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
@@ -306,6 +309,9 @@
                             <li><a href="#" class="hover:text-primary-color transition-colors">About Us</a></li>
                             <li><a href="#" class="hover:text-primary-color transition-colors">Privacy Policy</a></li>
                             <li><a href="#" class="hover:text-primary-color transition-colors">Terms of Service</a></li>
+                            @foreach($visiblePages as $page)
+                                <li><a href="{{ route('page.show', $page->slug) }}" class="hover:text-primary-color transition-colors">{{ $page->title }}</a></li>
+                            @endforeach
                         </ul>
                     </div>
 

@@ -61,6 +61,8 @@ class SmsNotificationSettingsPage extends SettingsPage
                     ->schema([
                         Toggle::make('sms_transaction_reversed')
                             ->label('Transaction Reversed / Refunded'),
+                        Toggle::make('sms_wallet_withdrawn')
+                            ->label('Withdrawal Initiated'),
                     ]),
 
                 Section::make('Service Notifications')

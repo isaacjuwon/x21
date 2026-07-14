@@ -44,6 +44,13 @@ class UserForm
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $operation) => $operation === 'create')
                             ->visible(fn () => auth()->user()?->hasRole('super_admin')),
+
+                        Select::make('referrer_id')
+                            ->label('Referrer')
+                            ->relationship('referrer', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->nullable(),
                     ]),
                 ]),
 

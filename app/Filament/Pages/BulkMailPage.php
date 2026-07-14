@@ -127,7 +127,11 @@ class BulkMailPage extends Page
                             ->label('Message')
                             ->placeholder('Write your message here…')
                             ->required()
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('bulk-mail-attachments')
+                            ->fileAttachmentsVisibility('public')
                             ->toolbarButtons([
+                                'attachFiles',
                                 'bold',
                                 'italic',
                                 'underline',

@@ -6,7 +6,7 @@ return new class extends SettingsMigration
 {
     public function up(): void
     {
-        $this->migrator->add('wallet.min_withdrawal', 500.0);
-        $this->migrator->add('wallet.withdrawal_fee', 50.0);
+        $this->migrator->add('wallet.max_withdrawal', 100000.0);
+
     }
 };

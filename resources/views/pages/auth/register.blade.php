@@ -7,6 +7,9 @@
 
         <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
             @csrf
+            <!-- Referrer ID -->
+            <input type="hidden" name="referrer_id" value="{{ request('ref') }}">
+
             <!-- Name -->
             <flux:input
                 name="name"
@@ -28,6 +31,17 @@
                 required
                 autocomplete="email"
                 placeholder="email@example.com"
+            />
+
+            <!-- Phone Number -->
+            <flux:input
+                name="phone_number"
+                :label="__('Phone number')"
+                :value="old('phone_number')"
+                type="tel"
+                required
+                autocomplete="tel"
+                placeholder="09012345678"
             />
 
             <!-- Password -->

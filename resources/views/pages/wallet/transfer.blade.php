@@ -10,8 +10,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 new #[Title('Transfer Funds')] class extends Component {
-    #[Url]
-    public ?int $recipient_id = null;
+    public ?string $recipient_phone = '';
 
     public ?float $amount = null;
     public string $notes = '';
@@ -34,13 +33,23 @@ new #[Title('Transfer Funds')] class extends Component {
     public function transfer(): void
     {
         $this->validate([
-            'recipient_id' => ['required', 'exists:users,id'],
+            'recipient_phone' => ['required', 'string'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'notes' => ['nullable', 'string', 'max:255'],
         ]);
 
         $sender = Auth::user();
-        $recipient = User::find($this->recipient_id);
+        
+        $phone = ltrim($this->recipient_phone, '0');
+        $recipient = User::where('phone_number', $this->recipient_phone)
+            ->orWhere('phone_number', '0' . $phone)
+            ->orWhere('phone_number', $phone)
+            ->first();
+
+        if (!$recipient || $recipient->id === $sender->id) {
+            $this->addError('recipient_phone', __('Invalid recipient phone number.'));
+            return;
+        }
 
         try {
             $sender->transfer($this->amount, $recipient, WalletType::General, $this->notes);
@@ -85,12 +94,20 @@ new #[Title('Transfer Funds')] class extends Component {
     </div>
 
     <flux:card>
+        <div class="mb-6">
+            <flux:callout variant="info" icon="information-circle">
+                {{ __('Enter the recipient\'s registered phone number to transfer funds.') }}
+            </flux:callout>
+        </div>
+
         <form wire:submit="transfer" class="space-y-6">
-            <flux:select wire:model="recipient_id" :label="__('Recipient')" placeholder="{{ __('Select a recipient...') }}" searchable>
-                @foreach ($this->users as $user)
-                    <flux:select.option :value="$user->id">{{ $user->name }} ({{ $user->email }})</flux:select.option>
-                @endforeach
-            </flux:select>
+            <flux:input 
+                wire:model="recipient_phone" 
+                :label="__('Recipient Phone Number')" 
+                type="tel" 
+                placeholder="{{ __('e.g., 09078989786') }}" 
+                required 
+            />
 
             <flux:input
                 wire:model="amount"

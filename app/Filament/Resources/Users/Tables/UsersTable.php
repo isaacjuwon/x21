@@ -38,6 +38,18 @@ class UsersTable
                     ->counts('loans')
                     ->sortable(),
 
+                TextColumn::make('referrer.name')
+                    ->label('Referred By')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('referrals_count')
+                    ->label('Referrals')
+                    ->counts('referrals')
+                    ->sortable()
+                    ->toggleable(),
+
                 IconColumn::make('is_kyc_verified')
                     ->label('KYC Verified')
                     ->state(fn ($record) => $record->isKycVerified())

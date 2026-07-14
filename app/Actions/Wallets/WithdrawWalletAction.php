@@ -5,6 +5,7 @@ namespace App\Actions\Wallets;
 use App\Enums\Wallets\TransactionStatus;
 use App\Enums\Wallets\TransactionType;
 use App\Enums\Wallets\WalletType;
+use App\Events\Wallets\WalletWithdrawn;
 use App\Exceptions\Wallets\InsufficientFundsException;
 use App\Integrations\Paystack\Entities\CreateRecipient;
 use App\Integrations\Paystack\Entities\InitiateTransfer;
@@ -31,15 +32,11 @@ class WithdrawWalletAction
     public function calculateCharges(float $amount): array
     {
         $fee = $this->settings->withdrawal_fee;
-        $stampDuty = $amount >= $this->settings->stamp_duty_threshold
-            ? round($amount * $this->settings->stamp_duty_rate, 2)
-            : 0.0;
 
         return [
             'amount' => $amount,
             'fee' => $fee,
-            'stamp_duty' => $stampDuty,
-            'total' => round($amount + $fee + $stampDuty, 2),
+            'total' => round($amount + $fee, 2),
         ];
     }
 
@@ -74,6 +71,12 @@ class WithdrawWalletAction
         if ($amount < $this->settings->min_withdrawal) {
             throw ValidationException::withMessages([
                 'amount' => "Minimum withdrawal amount is {$this->settings->min_withdrawal}.",
+            ]);
+        }
+
+        if ($amount > $this->settings->max_withdrawal) {
+            throw ValidationException::withMessages([
+                'amount' => "Maximum withdrawal amount is {$this->settings->max_withdrawal}.",
             ]);
         }
 
@@ -138,7 +141,10 @@ class WithdrawWalletAction
                 ]),
             ]);
 
-            return $transaction->fresh();
+            $transaction->refresh();
+            WalletWithdrawn::dispatch($transaction);
+
+            return $transaction;
         });
     }
 }
