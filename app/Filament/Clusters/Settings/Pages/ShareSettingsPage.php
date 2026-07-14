@@ -67,15 +67,14 @@ class ShareSettingsPage extends SettingsPage
                         ->rule('current_password'),
                 ])
                 ->action(function () {
-                    DB::transaction(function () {
-                        ShareHolding::truncate();
-                        ShareOrder::truncate();
-                        SharePriceHistory::truncate();
-                        ShareListing::query()->update([
-                            'total_shares' => 0,
-                            'available_shares' => 0,
-                        ]);
-                    });
+                    // truncate() causes implicit DB commits which breaks DB::transaction()
+                    ShareHolding::truncate();
+                    ShareOrder::truncate();
+                    SharePriceHistory::truncate();
+                    ShareListing::query()->update([
+                        'total_shares' => 0,
+                        'available_shares' => 0,
+                    ]);
 
                     Notification::make()
                         ->title('Shares Cleared')

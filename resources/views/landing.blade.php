@@ -306,9 +306,6 @@
                     <div>
                         <h4 class="font-bold mb-6 uppercase text-xs tracking-widest text-zinc-400">Company</h4>
                         <ul class="space-y-4 text-sm font-medium">
-                            <li><a href="#" class="hover:text-primary-color transition-colors">About Us</a></li>
-                            <li><a href="#" class="hover:text-primary-color transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" class="hover:text-primary-color transition-colors">Terms of Service</a></li>
                             @foreach($visiblePages as $page)
                                 <li><a href="{{ route('page.show', $page->slug) }}" class="hover:text-primary-color transition-colors">{{ $page->title }}</a></li>
                             @endforeach
