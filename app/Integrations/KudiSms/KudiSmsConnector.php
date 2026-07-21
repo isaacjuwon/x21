@@ -42,7 +42,7 @@ final readonly class KudiSmsConnector
 
                 return new KudiSmsConnector(
                     request: Http::baseUrl(
-                        url: ! blank($settings->kudisms_url) ? $settings->kudisms_url : config('services.kudisms.url', 'https://api.kudisms.net'),
+                        url: ! blank($settings->kudisms_url) ? $settings->kudisms_url : config('services.kudisms.url', 'https://my.kudisms.net'),
                     )->timeout(
                         seconds: 30,
                     )->withToken(
