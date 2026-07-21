@@ -45,8 +45,6 @@ final readonly class KudiSmsConnector
                         url: ! blank($settings->kudisms_url) ? $settings->kudisms_url : config('services.kudisms.url', 'https://my.kudisms.net'),
                     )->timeout(
                         seconds: 30,
-                    )->withToken(
-                        token: ! blank($settings->kudisms_api_key) ? $settings->kudisms_api_key : config('services.kudisms.api_key', ''),
                     )->asJson()->acceptJson(),
                 );
             },

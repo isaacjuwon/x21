@@ -6,21 +6,32 @@ namespace App\Integrations\KudiSms\Entities;
 
 final readonly class SendSms
 {
+    /**
+     * @param  string|array<int, string>  $recipients
+     */
     public function __construct(
+        public string $token,
         public string $senderId,
-        public array $recipients,
+        public string|array $recipients,
         public string $message,
+        public string $gateway = '2',
     ) {}
 
     /**
-     * @return array{sender_id: string, recipients: array, message: string}
+     * @return array{token: string, senderID: string, recipients: string, message: string, gateway: string}
      */
     public function toRequestBody(): array
     {
+        $recipientsFormatted = is_array($this->recipients)
+            ? implode(',', $this->recipients)
+            : $this->recipients;
+
         return [
-            'sender_id' => $this->senderId,
-            'recipients' => $this->recipients,
+            'token' => $this->token,
+            'senderID' => $this->senderId,
+            'recipients' => $recipientsFormatted,
             'message' => $this->message,
+            'gateway' => $this->gateway,
         ];
     }
 }

@@ -36,12 +36,14 @@ class KudiSmsChannel
             return;
         }
 
+        $apiKey = $this->integrationSettings->kudisms_api_key ?? config('services.kudisms.api_key', '');
         $senderId = $this->integrationSettings->kudisms_sender_id ?? config('services.kudisms.sender_id', 'INFO');
 
         try {
             $this->connector->sms()->send(new SendSms(
+                token: $apiKey,
                 senderId: $senderId,
-                recipients: is_array($phone) ? $phone : [$phone],
+                recipients: $phone,
                 message: $message,
             ));
         } catch (\Throwable $e) {
