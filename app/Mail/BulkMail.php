@@ -18,7 +18,8 @@ class BulkMail extends Mailable
      */
     public function __construct(
         public string $mailSubject,
-        public string $mailMessage
+        public string $mailMessage,
+        public array $attachmentPaths = []
     ) {}
 
     /**
@@ -51,6 +52,9 @@ class BulkMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return array_map(
+            fn (string $path) => Attachment::fromStorageDisk('local', $path),
+            $this->attachmentPaths
+        );
     }
 }

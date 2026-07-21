@@ -7,6 +7,7 @@ use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -141,6 +142,15 @@ class BulkMailPage extends Page
                                 'h2',
                                 'h3',
                             ]),
+
+                        FileUpload::make('attachments')
+                            ->label('Attachments')
+                            ->multiple()
+                            ->disk('local')
+                            ->directory('bulk-mail-attachments')
+                            ->visibility('private')
+                            ->maxSize(10240)
+                            ->helperText('Attach files to be sent with the email (max 10MB each).'),
                     ]),
             ]);
     }
@@ -165,6 +175,7 @@ class BulkMailPage extends Page
                     $singleUserId = $data['singleUser'] ?? null;
                     $subject = $data['subject'] ?? '';
                     $body = strip_tags($data['message'] ?? '');
+                    $attachments = $data['attachments'] ?? [];
 
                     $query = User::query();
 
@@ -183,7 +194,7 @@ class BulkMailPage extends Page
                     $recipients = $query->get();
 
                     foreach ($recipients as $user) {
-                        SendBulkMailJob::dispatch($user, $subject, $body);
+                        SendBulkMailJob::dispatch($user, $subject, $body, $attachments);
                     }
 
                     $this->form->fill();

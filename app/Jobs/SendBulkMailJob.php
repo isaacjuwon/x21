@@ -18,7 +18,8 @@ class SendBulkMailJob implements ShouldQueue
     public function __construct(
         public User $user,
         public string $mailSubject,
-        public string $mailMessage
+        public string $mailMessage,
+        public array $attachmentPaths = []
     ) {}
 
     /**
@@ -26,6 +27,6 @@ class SendBulkMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->user)->send(new BulkMail($this->mailSubject, $this->mailMessage));
+        Mail::to($this->user)->send(new BulkMail($this->mailSubject, $this->mailMessage, $this->attachmentPaths));
     }
 }
