@@ -25,7 +25,7 @@ final readonly class SmsResource
         try {
             $response = $this->connector->send(
                 method: Method::Post,
-                uri: '/api/v1/sms',
+                uri: '/api/sms',
                 options: $entity->toRequestBody(),
             );
         } catch (Throwable $exception) {
@@ -35,6 +35,16 @@ final readonly class SmsResource
             );
         }
 
-        return SmsResponse::fromResponse($response->json());
+        $jsonResponse = $response->json();
+        
+        \App\Jobs\RecordApiRequestJob::dispatch(
+            type: 'kudisms',
+            method: Method::Post->value,
+            url: '/api/v1/sms',
+            payload: $entity->toRequestBody(),
+            response: is_array($jsonResponse) ? $jsonResponse : $response->body(),
+        );
+
+        return SmsResponse::fromResponse($jsonResponse ?? []);
     }
 }

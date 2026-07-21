@@ -8,12 +8,12 @@ final readonly class SendSms
 {
     public function __construct(
         public string $senderId,
-        public string $recipients,
+        public array $recipients,
         public string $message,
     ) {}
 
     /**
-     * @return array{sender_id: string, recipients: string, message: string}
+     * @return array{sender_id: string, recipients: array, message: string}
      */
     public function toRequestBody(): array
     {

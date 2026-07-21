@@ -21,7 +21,7 @@ class RecordApiRequestJob implements ShouldQueue
         protected string $method,
         protected string $url,
         protected array $payload,
-        protected array $response,
+        protected mixed $response,
         protected ?int $userId = null,
         protected ?string $reference = null,
     ) {}

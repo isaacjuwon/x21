@@ -41,7 +41,7 @@ class KudiSmsChannel
         try {
             $this->connector->sms()->send(new SendSms(
                 senderId: $senderId,
-                recipients: $phone,
+                recipients: is_array($phone) ? $phone : [$phone],
                 message: $message,
             ));
         } catch (\Throwable $e) {
