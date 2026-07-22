@@ -7,11 +7,11 @@ use App\Models\Transaction;
 use App\Settings\ShareSettings;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Dashboard'), Defer] class extends Component {
+new #[Title('Dashboard'), Lazy] class extends Component {
     /**
      * Get the user's wallet balance.
      */

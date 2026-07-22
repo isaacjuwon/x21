@@ -38,7 +38,7 @@ test('flat rate schedule sum of instalments equals principal plus total interest
 
     (new GenerateLoanScheduleAction)->handle($loan);
 
-    $totalInterest = $principal * $rate * ($term / 12);
+    $totalInterest = $principal * $rate * $term;
     $expectedTotal = $principal + $totalInterest;
     $actualTotal = $loan->scheduleEntries()->sum('instalment_amount');
 

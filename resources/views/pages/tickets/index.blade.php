@@ -4,13 +4,13 @@ use App\Enums\Tickets\TicketStatus;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new #[Title('My Tickets'), Defer] class extends Component {
+new #[Title('My Tickets'), Lazy] class extends Component {
     use WithPagination;
 
     #[Url]

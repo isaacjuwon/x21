@@ -4,7 +4,6 @@ namespace App\Filament\Clusters\Settings\Pages;
 
 use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Models\ShareHolding;
-use App\Models\ShareListing;
 use App\Models\ShareOrder;
 use App\Models\SharePriceHistory;
 use App\Settings\ShareSettings;
@@ -67,14 +66,9 @@ class ShareSettingsPage extends SettingsPage
                         ->rule('current_password'),
                 ])
                 ->action(function () {
-                    // truncate() causes implicit DB commits which breaks DB::transaction()
                     ShareHolding::truncate();
                     ShareOrder::truncate();
                     SharePriceHistory::truncate();
-                    ShareListing::query()->update([
-                        'total_shares' => 0,
-                        'available_shares' => 0,
-                    ]);
 
                     Notification::make()
                         ->title('Shares Cleared')

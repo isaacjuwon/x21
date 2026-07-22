@@ -4,14 +4,14 @@ use App\Models\ShareHolding;
 use App\Settings\ShareSettings;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new #[Title('My Shares'), Defer] class extends Component
+new #[Title('My Shares'), Lazy] class extends Component
 {
     use WithPagination;
 
@@ -41,9 +41,9 @@ new #[Title('My Shares'), Defer] class extends Component
     }
 
     #[Computed]
-    public function shareHolding(): ?ShareHolding
+    public function totalShares(): int
     {
-        return Auth::user()->shareHolding;
+        return Auth::user()->total_shares;
     }
 
     #[Computed]
@@ -107,14 +107,14 @@ new #[Title('My Shares'), Defer] class extends Component
         <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
             <flux:heading size="sm" class="text-zinc-500">{{ __('Total Shares') }}</flux:heading>
             <flux:text size="xl" weight="semibold">
-                {{ number_format($this->shareHolding?->quantity ?? 0) }}
+                {{ number_format($this->totalShares) }}
             </flux:text>
         </flux:card>
 
         <flux:card class="space-y-2 border-zinc-200 dark:border-zinc-800">
             <flux:heading size="sm" class="text-zinc-500">{{ __('Current Value') }}</flux:heading>
             <flux:text size="xl" weight="semibold">
-                {{ Number::currency(($this->shareHolding?->quantity ?? 0) * $this->shareSettings->price_per_share) }}
+                {{ Number::currency($this->totalShares * $this->shareSettings->price_per_share) }}
             </flux:text>
         </flux:card>
 

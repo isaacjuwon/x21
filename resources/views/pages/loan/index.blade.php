@@ -4,14 +4,14 @@ use App\Models\Loan;
 use App\Enums\Loans\LoanStatus;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Number;
 
-new #[Title('My Loans'), Defer] class extends Component {
+new #[Title('My Loans'), Lazy] class extends Component {
     use WithPagination;
 
     #[Url(as: 'page')]

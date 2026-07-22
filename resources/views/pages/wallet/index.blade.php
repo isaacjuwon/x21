@@ -6,13 +6,13 @@ use App\Enums\Wallets\TransactionType;
 use App\Enums\Wallets\WalletType;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Defer;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new #[Title('My Wallet'), Defer] class extends Component {
+new #[Title('My Wallet'), Lazy] class extends Component {
     use WithPagination;
 
     #[Url(as: 'page')]

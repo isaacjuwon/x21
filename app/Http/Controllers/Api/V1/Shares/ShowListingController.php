@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
-use App\Http\Resources\Api\V1\Shares\ShareListingResource;
-use App\Models\ShareListing;
+use App\Settings\ShareSettings;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Knuckles\Scribe\Attributes\Authenticated;
 use Knuckles\Scribe\Attributes\Group;
-use Knuckles\Scribe\Attributes\ResponseFromApiResource;
+use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
 final class ShowListingController
 {
-    #[ResponseFromApiResource(ShareListingResource::class, ShareListing::class)]
-    public function __invoke(Request $request): ShareListingResource
+    #[Response(['data' => ['price' => 150.00]])]
+    public function __invoke(Request $request): JsonResponse
     {
-        return new ShareListingResource(ShareListing::firstOrFail());
+        return response()->json([
+            'data' => [
+                'price' => app(ShareSettings::class)->price_per_share,
+            ],
+        ]);
     }
 }

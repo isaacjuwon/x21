@@ -6,7 +6,6 @@ use App\Enums\Shares\ShareOrderStatus;
 use App\Events\Shares\ShareOrderApproved;
 use App\Exceptions\Shares\InvalidShareOrderStateException;
 use App\Models\ShareHolding;
-use App\Models\ShareListing;
 use App\Models\ShareOrder;
 use App\Models\User;
 use App\Notifications\Shares\ShareOrderApprovedNotification;
@@ -27,8 +26,6 @@ class ApproveBuyOrderAction
             'quantity' => $order->quantity,
             'acquired_at' => now(),
         ]);
-
-        ShareListing::firstOrFail()->decrement('available_shares', $order->quantity);
 
         $order->update(['status' => ShareOrderStatus::Approved]);
 

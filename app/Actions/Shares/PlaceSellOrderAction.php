@@ -7,7 +7,6 @@ use App\Enums\Shares\ShareOrderType;
 use App\Events\Shares\ShareOrderPlaced;
 use App\Exceptions\Shares\HoldingPeriodNotMetException;
 use App\Exceptions\Shares\InsufficientSharesException;
-use App\Models\ShareListing;
 use App\Models\ShareOrder;
 use App\Models\User;
 use App\Settings\ShareSettings;
@@ -17,7 +16,6 @@ class PlaceSellOrderAction
     public function handle(User $user, int $quantity): ShareOrder
     {
         $settings = app(ShareSettings::class);
-        $listing = ShareListing::firstOrFail();
 
         $totalShares = $user->total_shares;
 

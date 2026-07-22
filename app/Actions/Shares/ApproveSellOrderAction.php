@@ -6,7 +6,6 @@ use App\Enums\Shares\ShareOrderStatus;
 use App\Enums\Wallets\WalletType;
 use App\Events\Shares\ShareOrderApproved;
 use App\Exceptions\Shares\InvalidShareOrderStateException;
-use App\Models\ShareListing;
 use App\Models\ShareOrder;
 use App\Models\User;
 use App\Notifications\Shares\ShareOrderApprovedNotification;
@@ -37,8 +36,6 @@ class ApproveSellOrderAction
                 $quantityToSell = 0;
             }
         }
-
-        ShareListing::firstOrFail()->increment('available_shares', $order->quantity);
 
         $order->update(['status' => ShareOrderStatus::Approved]);
 

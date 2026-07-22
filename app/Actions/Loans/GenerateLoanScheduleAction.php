@@ -37,14 +37,13 @@ class GenerateLoanScheduleAction
     private function buildFlatRateSchedule(Loan $loan): array
     {
         $principal = (float) $loan->principal_amount;
-        $rate = (float) $loan->interest_rate / 100;
+        $rate = (float) $loan->interest_rate; // Stored as decimal(5,4) e.g. 0.2500
         $term = (int) $loan->repayment_term_months;
         $start = $this->startDate($loan);
 
-        $totalInterest = $principal * $rate * ($term / 12);
-        $instalmentAmount = round(($principal + $totalInterest) / $term, 2);
-        $interestComponent = round($totalInterest / $term, 2);
+        $interestComponent = round($principal * $rate, 2);
         $principalComponent = round($principal / $term, 2);
+        $instalmentAmount = $principalComponent + $interestComponent;
 
         $now = Carbon::now();
         $entries = [];
@@ -71,29 +70,24 @@ class GenerateLoanScheduleAction
         return $entries;
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
     private function buildReducingBalanceSchedule(Loan $loan): array
     {
         $principal = (float) $loan->principal_amount;
-        $annualRate = (float) $loan->interest_rate / 100;
+        $rate = (float) $loan->interest_rate;
         $term = (int) $loan->repayment_term_months;
         $start = $this->startDate($loan);
 
-        $monthlyRate = $annualRate / 12;
-        $instalmentAmount = $monthlyRate > 0
-            ? round($principal * $monthlyRate / (1 - (1 + $monthlyRate) ** (-$term)), 2)
-            : round($principal / $term, 2);
+        $principalComponent = round($principal / $term, 2);
 
         $now = Carbon::now();
         $entries = [];
         $outstandingBalance = $principal;
 
         for ($n = 1; $n <= $term; $n++) {
-            $interestComponent = round($outstandingBalance * $monthlyRate, 2);
-            $principalComponent = round($instalmentAmount - $interestComponent, 2);
-            $outstandingBalance = round($outstandingBalance - $principalComponent, 2);
+            $interestComponent = round($outstandingBalance * $rate, 2);
+            $instalmentAmount = $principalComponent + $interestComponent;
+            
+            $nextOutstandingBalance = round($principal - ($principalComponent * $n), 2);
 
             $entries[] = [
                 'loan_id' => $loan->id,
@@ -102,13 +96,15 @@ class GenerateLoanScheduleAction
                 'instalment_amount' => $instalmentAmount,
                 'principal_component' => $principalComponent,
                 'interest_component' => $interestComponent,
-                'outstanding_balance' => max(0, $outstandingBalance),
+                'outstanding_balance' => max(0, $nextOutstandingBalance),
                 'status' => LoanScheduleEntryStatus::Pending->value,
                 'remaining_amount' => $instalmentAmount,
                 'paid_at' => null,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
+
+            $outstandingBalance = max(0, $nextOutstandingBalance);
         }
 
         return $entries;

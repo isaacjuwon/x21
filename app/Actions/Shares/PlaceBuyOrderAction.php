@@ -9,7 +9,6 @@ use App\Events\Shares\ShareOrderPlaced;
 use App\Exceptions\Shares\InsufficientAvailableSharesException;
 use App\Exceptions\Shares\MaxSharesPerUserExceededException;
 use App\Exceptions\Shares\MinSharesPurchaseNotMetException;
-use App\Models\ShareListing;
 use App\Models\ShareOrder;
 use App\Models\User;
 use App\Settings\ShareSettings;
@@ -19,7 +18,6 @@ class PlaceBuyOrderAction
     public function handle(User $user, int $quantity): ShareOrder
     {
         $settings = app(ShareSettings::class);
-        $listing = ShareListing::firstOrFail();
 
         if ($quantity < $settings->min_shares_purchase) {
             throw new MinSharesPurchaseNotMetException($settings->min_shares_purchase);
@@ -33,10 +31,6 @@ class PlaceBuyOrderAction
 
         if (($currentHolding + $pendingBuyQty + $quantity) > $settings->max_shares_per_user) {
             throw new MaxSharesPerUserExceededException($settings->max_shares_per_user);
-        }
-
-        if ($quantity > $listing->available_shares) {
-            throw new InsufficientAvailableSharesException('Insufficient available shares.');
         }
 
         $totalCost = $quantity * $settings->price_per_share;

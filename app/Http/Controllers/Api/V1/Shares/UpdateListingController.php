@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
-use App\Actions\Shares\UpdateSharePriceAction;
 use App\Http\Requests\Api\V1\Shares\UpdateSharePriceRequest;
-use App\Http\Resources\Api\V1\Shares\ShareListingResource;
-use App\Models\ShareListing;
+use App\Models\ShareOrder;
+use App\Models\SharePriceHistory;
+use App\Settings\ShareSettings;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Knuckles\Scribe\Attributes\Authenticated;
 use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
-use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
@@ -21,17 +21,29 @@ final class UpdateListingController
 {
     use AuthorizesRequests;
 
-    public function __construct(
-        private readonly UpdateSharePriceAction $action,
-    ) {}
-
     #[BodyParam('price', 'number', description: 'New share price (min: 0.01)', required: true, example: 150.00)]
-    #[ResponseFromApiResource(ShareListingResource::class, ShareListing::class)]
+    #[Response(['data' => ['price' => 150.00]])]
     #[Response(['message' => 'This action is unauthorized.'], status: 403)]
-    public function __invoke(UpdateSharePriceRequest $request): ShareListingResource
+    public function __invoke(UpdateSharePriceRequest $request, ShareSettings $settings): JsonResponse
     {
-        $this->authorize('updatePrice', ShareListing::class);
+        $this->authorize('updatePrice', ShareOrder::class);
 
-        return new ShareListingResource($this->action->handle((float) $request->price));
+        $oldPrice = $settings->price_per_share;
+        $newPrice = (float) $request->price;
+
+        SharePriceHistory::create([
+            'old_price' => $oldPrice,
+            'new_price' => $newPrice,
+            'created_at' => now(),
+        ]);
+
+        $settings->price_per_share = $newPrice;
+        $settings->save();
+
+        return response()->json([
+            'data' => [
+                'price' => $settings->price_per_share,
+            ],
+        ]);
     }
 }
