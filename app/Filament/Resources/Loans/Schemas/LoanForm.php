@@ -44,6 +44,8 @@ class LoanForm
                             ->label('Interest Rate (%)')
                             ->numeric()
                             ->suffix('%')
+                            ->dehydrateStateUsing(fn ($state) => $state !== null ? $state / 100 : null)
+                            ->formatStateUsing(fn ($state) => $state !== null ? $state * 100 : null)
                             ->required(),
 
                         TextInput::make('repayment_term_months')

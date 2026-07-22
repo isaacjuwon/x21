@@ -123,8 +123,8 @@ new #[Title('My Loans'), Lazy] class extends Component {
                             {{ Number::currency($loan->principal_amount) }}
                         </flux:table.cell>
 
-                        <flux:table.cell>
-                            {{ number_format($loan->interest_rate, 2) }}%
+                        <flux:table.cell align="end">
+                            {{ number_format($loan->interest_rate * 100, 2) }}%
                         </flux:table.cell>
 
                         <flux:table.cell>

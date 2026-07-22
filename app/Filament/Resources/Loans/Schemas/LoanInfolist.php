@@ -35,6 +35,7 @@ class LoanInfolist
 
                         TextEntry::make('interest_rate')
                             ->label('Interest Rate')
+                            ->state(fn ($record) => $record->interest_rate * 100)
                             ->suffix('%'),
                     ]),
 

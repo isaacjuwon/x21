@@ -36,7 +36,7 @@ final class StoreController
         $loan = $request->user()->loans()->create([
             'principal_amount' => $request->principal_amount,
             'outstanding_balance' => $request->principal_amount,
-            'interest_rate' => $request->user()->loanLevel?->interest_rate ?? $this->settings->default_interest_rate,
+            'interest_rate' => ($request->user()->loanLevel?->interest_rate ?? $this->settings->default_interest_rate) / 100,
             'repayment_term_months' => $request->repayment_term_months,
             'interest_method' => $request->input('interest_method', 'FlatRate'),
             'status' => LoanStatus::Active,

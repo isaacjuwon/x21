@@ -215,7 +215,7 @@ new #[Title('Apply for a Loan')] class extends Component {
                 'user_id' => Auth::id(),
                 'principal_amount' => $this->amount,
                 'outstanding_balance' => $this->amount,
-                'interest_rate' => $this->interestRate,
+                'interest_rate' => $this->interestRate / 100,
                 'repayment_term_months' => $this->term_months,
                 'interest_method' => $this->interest_method,
                 'status' => LoanStatus::Active,
@@ -341,7 +341,7 @@ new #[Title('Apply for a Loan')] class extends Component {
 
                 <form wire:submit="apply" class="space-y-6">
                     <flux:input
-                        wire:model.live="amount"
+                        wire:model.live.debounce.500ms="amount"
                         type="number"
                         step="0.01"
                         :label="__('Requested Amount')"
@@ -352,7 +352,7 @@ new #[Title('Apply for a Loan')] class extends Component {
                     />
 
                     <flux:input
-                        wire:model.live="term_months"
+                        wire:model.live.debounce.500ms="term_months"
                         type="number"
                         :label="__('Repayment Term (Months)')"
                         placeholder="12"

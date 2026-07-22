@@ -47,6 +47,7 @@ class LoansTable
 
                 TextColumn::make('interest_rate')
                     ->label('Rate')
+                    ->state(fn ($record) => $record->interest_rate * 100)
                     ->suffix('%')
                     ->sortable(),
 

@@ -164,9 +164,9 @@ new #[Title('Loan Details')] class extends Component {
                         <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Principal Amount') }}</flux:text>
                         <flux:text weight="semibold">{{ Number::currency($loan->principal_amount) }}</flux:text>
                     </div>
-                    <div class="space-y-1">
-                        <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Interest Rate') }}</flux:text>
-                        <flux:text weight="semibold">{{ $loan->interest_rate }}% ({{ $loan->interest_method->getLabel() }})</flux:text>
+                    <div>
+                        <flux:text size="sm" class="text-zinc-500 block mb-1">{{ __('Interest Rate') }}</flux:text>
+                        <flux:text weight="semibold">{{ $loan->interest_rate * 100 }}% ({{ $loan->interest_method->getLabel() }})</flux:text>
                     </div>
                     <div class="space-y-1">
                         <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Term') }}</flux:text>

@@ -22,12 +22,12 @@ new #[Title('Dashboard'), Lazy] class extends Component {
     }
 
     /**
-     * Get the user's share holdings.
+     * Get the user's total shares.
      */
     #[Computed(cache: false)]
-    public function shareHolding(): ?ShareHolding
+    public function totalShares(): int
     {
-        return Auth::user()->shareHolding;
+        return Auth::user()->total_shares;
     }
 
     /**
@@ -65,7 +65,7 @@ new #[Title('Dashboard'), Lazy] class extends Component {
     #[Computed]
     public function sharesValue(): float
     {
-        return ($this->shareHolding?->quantity ?? 0) * $this->sharePrice;
+        return $this->totalShares * $this->sharePrice;
     }
 
     /**
@@ -101,7 +101,7 @@ new #[Title('Dashboard'), Lazy] class extends Component {
             [
                 'label' => 'Shares Value',
                 'value' => Number::currency($this->sharesValue),
-                'description' => number_format($this->shareHolding?->quantity ?? 0).' share(s) held',
+                'description' => number_format($this->totalShares).' share(s) held',
                 'icon' => 'chart-bar',
                 'color' => 'green',
             ],
@@ -245,7 +245,7 @@ new #[Title('Dashboard'), Lazy] class extends Component {
                 </div>
                 <div class="flex justify-between items-end">
                     <div>
-                        <div class="text-2xl font-bold tracking-tight">{{ number_format($this->shareHolding?->quantity ?? 0) }}</div>
+                        <div class="text-2xl font-bold tracking-tight">{{ number_format($this->totalShares) }}</div>
                         <flux:text class="text-xs text-zinc-400">Total Units</flux:text>
                     </div>
                     <div class="text-right">
