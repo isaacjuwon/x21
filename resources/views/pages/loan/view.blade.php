@@ -18,7 +18,7 @@ new #[Title('Loan Details')] class extends Component {
 
     public function mount(Loan $loan)
     {
-        if ($loan->user_id !== Auth::id()) {
+        if ($loan->user_id != Auth::id()) {
             abort(403);
         }
         $this->loan = $loan;
