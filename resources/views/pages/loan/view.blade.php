@@ -55,6 +55,33 @@ new #[Title('Loan Details')] class extends Component {
     }
 
     /**
+     * Get the total payable (sum of all instalments).
+     */
+    #[Computed]
+    public function totalPayable(): float
+    {
+        return (float) $this->loan->scheduleEntries()->sum('instalment_amount');
+    }
+
+    /**
+     * Get total amount already paid.
+     */
+    #[Computed]
+    public function totalPaid(): float
+    {
+        return $this->totalPayable - $this->loan->outstanding_balance;
+    }
+
+    /**
+     * Get the outstanding balance (what's left to pay).
+     */
+    #[Computed]
+    public function outstandingBalance(): float
+    {
+        return (float) $this->loan->outstanding_balance;
+    }
+
+    /**
      * Pay the next instalment.
      */
     public function payInstalment(App\Actions\Loans\RepayLoanAction $action): void
@@ -156,6 +183,31 @@ new #[Title('Loan Details')] class extends Component {
         </flux:badge>
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-zinc-25 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-1">
+            <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Total Payable') }}</flux:text>
+            <div class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+                {{ Number::currency($this->totalPayable) }}
+            </div>
+            <flux:text size="xs" class="text-zinc-400">{{ __('Principal + all interest') }}</flux:text>
+        </div>
+        <div class="bg-zinc-25 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-1">
+            <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Total Paid') }}</flux:text>
+            <div class="text-2xl font-bold tracking-tight text-green-600">
+                {{ Number::currency($this->totalPaid) }}
+            </div>
+            <flux:text size="xs" class="text-zinc-400">{{ __('Instalments cleared') }}</flux:text>
+        </div>
+        <div class="bg-zinc-25 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-1">
+            <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Outstanding') }}</flux:text>
+            <div class="text-2xl font-bold tracking-tight {{ $this->outstandingBalance > 0 ? 'text-orange-600' : 'text-green-600' }}">
+                {{ Number::currency($this->outstandingBalance) }}
+            </div>
+            <flux:text size="xs" class="text-zinc-400">{{ __('Remaining to clear') }}</flux:text>
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
             <flux:card class="space-y-6">
@@ -182,10 +234,8 @@ new #[Title('Loan Details')] class extends Component {
                         <flux:text weight="semibold">{{ $loan->created_at->format('M j, Y') }}</flux:text>
                     </div>
                     <div class="space-y-1">
-                        <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Outstanding Balance') }}</flux:text>
-                        <flux:text weight="semibold" :class="$loan->outstanding_balance > 0 ? 'text-orange-600' : 'text-green-600'">
-                            {{ Number::currency($loan->outstanding_balance ?? 0) }}
-                        </flux:text>
+                        <flux:text size="xs" class="text-zinc-500 uppercase tracking-wider font-semibold">{{ __('Date Disbursed') }}</flux:text>
+                        <flux:text weight="semibold">{{ $loan->disbursed_at?->format('M j, Y') ?? '—' }}</flux:text>
                     </div>
                 </div>
 
@@ -244,7 +294,11 @@ new #[Title('Loan Details')] class extends Component {
                         </div>
                         <div class="flex justify-between">
                             <flux:text size="sm">{{ __('Total Outstanding') }}</flux:text>
-                            <flux:text size="sm" weight="semibold">{{ Number::currency($loan->outstanding_balance) }}</flux:text>
+                            <flux:text size="sm" weight="semibold" class="text-orange-600">{{ Number::currency($this->outstandingBalance) }}</flux:text>
+                        </div>
+                        <div class="flex justify-between pt-1 border-t border-zinc-100 dark:border-zinc-800">
+                            <flux:text size="sm">{{ __('Total Paid') }}</flux:text>
+                            <flux:text size="sm" weight="semibold" class="text-green-600">{{ Number::currency($this->totalPaid) }}</flux:text>
                         </div>
                     </div>
 
@@ -269,7 +323,7 @@ new #[Title('Loan Details')] class extends Component {
                 </flux:card>
             @endif
 
-            <flux:card class="space-y-4 bg-zinc-50 dark:bg-zinc-900 border-dashed">
+            <flux:card class="space-y-4 bg-zinc-25 dark:bg-zinc-900 border-dashed">
                 <flux:heading size="sm">{{ __('Help & Support') }}</flux:heading>
                 <flux:text size="sm" class="text-zinc-500">
                     {{ __('If you have any questions about your loan or repayment schedule, please contact our support team.') }}
