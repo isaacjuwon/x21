@@ -313,7 +313,7 @@ new #[Title('Loan Details')] class extends Component {
             </div>
         @else
             <div class="flex justify-center py-6">
-                <flux:spinner />
+                <flux:icon name="arrow-path" class="animate-spin size-6 text-zinc-400" />
             </div>
         @endif
     </flux:modal>
