@@ -11,6 +11,8 @@ use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class StatsOverview extends BaseWidget
 {
@@ -21,6 +23,16 @@ class StatsOverview extends BaseWidget
                 ->description('All registered members')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
+
+            Stat::make('Online Users', DB::table('sessions')->whereNotNull('user_id')->where('last_activity', '>=', now()->subMinutes(15)->getTimestamp())->count())
+                ->description('Active in the last 15 mins')
+                ->descriptionIcon('heroicon-m-user-circle')
+                ->color('success'),
+
+            Stat::make('Online Guests', DB::table('sessions')->whereNull('user_id')->where('last_activity', '>=', now()->subMinutes(15)->getTimestamp())->count())
+                ->description('Active in the last 15 mins')
+                ->descriptionIcon('heroicon-m-user')
+                ->color('gray'),
 
             Stat::make('Active Applications', Loan::where('status', LoanStatus::Active)->count())
                 ->description('Loans awaiting approval')

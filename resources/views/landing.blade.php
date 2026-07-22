@@ -24,7 +24,10 @@
                         <a href="#contact" class="hover:text-primary-color transition-colors">Contact</a>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-6">
+                        <x-online-stats class="hidden lg:flex" />
+                        
+                        <div class="flex items-center gap-4">
                         @auth
                             <flux:button href="{{ route('dashboard') }}" variant="primary" size="sm" wire:navigate>
                                 Dashboard
@@ -39,6 +42,7 @@
                                 </flux:button>
                             @endif
                         @endauth
+                        </div>
                     </div>
                 </div>
             </div>
