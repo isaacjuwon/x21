@@ -21,6 +21,9 @@ class GenerateLoanScheduleAction
         };
 
         LoanScheduleEntry::insert($entries);
+
+        $totalOutstanding = collect($entries)->sum('instalment_amount');
+        $loan->update(['outstanding_balance' => $totalOutstanding]);
     }
 
     /**

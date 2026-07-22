@@ -15,9 +15,9 @@ new class extends Component
     public ?int $quantity = null;
 
     #[Computed]
-    public function shareHolding(): ?ShareHolding
+    public function totalShares(): int
     {
-        return Auth::user()->shareHolding;
+        return Auth::user()->shareHoldings()->sum('quantity');
     }
 
     #[Computed]
@@ -32,7 +32,7 @@ new class extends Component
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $userShares = $this->shareHolding?->quantity ?? 0;
+        $userShares = $this->totalShares;
 
         if ($userShares < $this->quantity) {
             $this->addError('quantity', __('You do not have enough shares to sell.'));
@@ -75,11 +75,11 @@ new class extends Component
             label="{{ __('Quantity') }}" 
             placeholder="0"
             min="1"
-            :max="$this->shareHolding?->quantity ?? 0"
+            :max="$this->totalShares"
         />
 
         <div class="text-xs text-zinc-500">
-            {{ __('Available Shares') }}: <span class="font-medium">{{ number_format($this->shareHolding?->quantity ?? 0) }}</span>
+            {{ __('Available Shares') }}: <span class="font-medium">{{ number_format($this->totalShares) }}</span>
         </div>
 
         @if($quantity > 0)

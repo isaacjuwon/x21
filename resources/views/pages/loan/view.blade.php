@@ -220,7 +220,7 @@ new #[Title('Loan Details')] class extends Component {
                                     </flux:badge>
                                 </flux:table.cell>
                                 <flux:table.cell align="end" class="text-zinc-500">
-                                    {{ Number::currency($entry->remaining_amount) }}
+                                    {{ Number::currency($entry->outstanding_balance) }}
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

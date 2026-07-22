@@ -43,7 +43,7 @@ new #[Title('My Shares'), Lazy] class extends Component
     #[Computed]
     public function totalShares(): int
     {
-        return Auth::user()->total_shares;
+        return Auth::user()->shareHoldings()->sum('quantity');
     }
 
     #[Computed]

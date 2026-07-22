@@ -138,10 +138,9 @@ new #[Title('Apply for a Loan')] class extends Component {
         $term = (int) $this->term_months;
 
         if ($this->interest_method === InterestMethod::FlatRate->value) {
-            $totalInterest = $principal * $rate * ($term / 12);
-            $instalmentAmount = round(($principal + $totalInterest) / $term, 2);
-            $interestComponent = round($totalInterest / $term, 2);
+            $interestComponent = round($principal * $rate, 2);
             $principalComponent = round($principal / $term, 2);
+            $instalmentAmount = $principalComponent + $interestComponent;
 
             $entries = [];
             for ($n = 1; $n <= $term; $n++) {
@@ -158,23 +157,15 @@ new #[Title('Apply for a Loan')] class extends Component {
 
             return $entries;
         } else {
-            // Reducing Balance
-            $monthlyRate = $rate / 12;
-            if ($monthlyRate == 0) {
-                $instalmentAmount = round($principal / $term, 2);
-            } else {
-                $instalmentAmount = round(
-                    $principal * $monthlyRate / (1 - (1 + $monthlyRate) ** (-$term)),
-                    2
-                );
-            }
+            // Reducing Balance (Equal Principal)
+            $principalComponent = round($principal / $term, 2);
 
             $entries = [];
-            $currentBalance = $principal;
+            $outstandingBalance = $principal;
             for ($n = 1; $n <= $term; $n++) {
-                $interestComponent = round($currentBalance * $monthlyRate, 2);
-                $principalComponent = round($instalmentAmount - $interestComponent, 2);
-                $currentBalance = round($currentBalance - $principalComponent, 2);
+                $interestComponent = round($outstandingBalance * $rate, 2);
+                $instalmentAmount = $principalComponent + $interestComponent;
+                $nextOutstandingBalance = round($principal - ($principalComponent * $n), 2);
 
                 $entries[] = [
                     'instalment_number' => $n,
@@ -182,8 +173,10 @@ new #[Title('Apply for a Loan')] class extends Component {
                     'instalment_amount' => $instalmentAmount,
                     'principal_component' => $principalComponent,
                     'interest_component' => $interestComponent,
-                    'outstanding_balance' => max(0, $currentBalance),
+                    'outstanding_balance' => max(0, $nextOutstandingBalance),
                 ];
+
+                $outstandingBalance = max(0, $nextOutstandingBalance);
             }
 
             return $entries;
