@@ -7,6 +7,32 @@
         <flux:sidebar sticky :collapsible="$layoutSettings->sidebar_collapsible ? 'mobile' : 'none'" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <flux:spacer />
+                <div x-data class="flex items-center gap-1">
+                    <flux:tooltip content="{{ __('Toggle theme') }}" position="bottom">
+                        <flux:button
+                            icon="sun"
+                            variant="ghost"
+                            size="sm"
+                            x-show="$flux.appearance === 'light'"
+                            x-on:click="$flux.appearance = 'dark'"
+                        />
+                        <flux:button
+                            icon="moon"
+                            variant="ghost"
+                            size="sm"
+                            x-show="$flux.appearance === 'dark'"
+                            x-on:click="$flux.appearance = 'system'"
+                        />
+                        <flux:button
+                            icon="computer-desktop"
+                            variant="ghost"
+                            size="sm"
+                            x-show="$flux.appearance === 'system'"
+                            x-on:click="$flux.appearance = 'light'"
+                        />
+                    </flux:tooltip>
+                </div>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 

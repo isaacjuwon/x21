@@ -64,12 +64,14 @@ new #[Title('Loan Details')] class extends Component {
     }
 
     /**
-     * Get total amount already paid.
+     * Get total amount already paid (sum of paid instalments).
      */
     #[Computed]
     public function totalPaid(): float
     {
-        return $this->totalPayable - $this->loan->outstanding_balance;
+        return (float) $this->loan->scheduleEntries()
+            ->where('status', LoanScheduleEntryStatus::Paid)
+            ->sum('instalment_amount');
     }
 
     /**
