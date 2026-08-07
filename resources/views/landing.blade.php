@@ -25,7 +25,6 @@
                     </div>
 
                     <div class="flex items-center gap-6">
-                        <x-online-stats class="hidden lg:flex" />
                         
                         <div class="flex items-center gap-4">
                         @auth
@@ -339,11 +338,14 @@
 
                 <div class="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
                     <p>&copy; {{ date('Y') }} {{ $generalSettings->site_name }}. All rights reserved.</p>
+                    <x-online-stats class="flex" />
+                    @if($visiblePages->isNotEmpty())
                     <div class="flex gap-6">
-                        <a href="#" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Privacy</a>
-                        <a href="#" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Terms</a>
-                        <a href="#" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Cookies</a>
+                        @foreach($visiblePages as $page)
+                            <a href="{{ route('page.show', $page->slug) }}" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">{{ $page->title }}</a>
+                        @endforeach
                     </div>
+                    @endif
                 </div>
             </div>
         </footer>

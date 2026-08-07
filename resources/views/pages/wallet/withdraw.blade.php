@@ -175,12 +175,7 @@ new #[Title('Withdraw Funds')] class extends Component {
                         <span class="text-zinc-500">{{ __('Processing Fee') }}</span>
                         <span>{{ Number::currency($charges['fee']) }}</span>
                     </div>
-                    @if($charges['stamp_duty'] > 0)
-                        <div class="flex justify-between">
-                            <span class="text-zinc-500">{{ __('Stamp Duty') }}</span>
-                            <span>{{ Number::currency($charges['stamp_duty']) }}</span>
-                        </div>
-                    @endif
+
                     <div class="flex justify-between font-semibold border-t border-zinc-200 dark:border-zinc-700 pt-2">
                         <span>{{ __('Total Debit') }}</span>
                         <span>{{ Number::currency($charges['total']) }}</span>
@@ -251,9 +246,8 @@ new #[Title('Withdraw Funds')] class extends Component {
 
     <flux:callout icon="information-circle" color="blue" variant="secondary">
         <flux:callout.text>
-            {{ __('A processing fee of :fee applies. Transactions above :threshold also attract a stamp duty charge.', [
+            {{ __('A processing fee of :fee applies to all withdrawals.', [
                 'fee' => Number::currency($this->settings->withdrawal_fee),
-                'threshold' => Number::currency($this->settings->stamp_duty_threshold),
             ]) }}
         </flux:callout.text>
     </flux:callout>

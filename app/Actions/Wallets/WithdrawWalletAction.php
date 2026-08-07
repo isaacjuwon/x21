@@ -27,7 +27,7 @@ class WithdrawWalletAction
     /**
      * Calculate the total debit amount including fee and stamp duty.
      *
-     * @return array{amount: float, fee: float, stamp_duty: float, total: float}
+     * @return array{amount: float, fee: float, total: float}
      */
     public function calculateCharges(float $amount): array
     {
@@ -108,7 +108,6 @@ class WithdrawWalletAction
                 'meta' => [
                     'amount' => $charges['amount'],
                     'fee' => $charges['fee'],
-                    'stamp_duty' => $charges['stamp_duty'],
                     'account_number' => $accountNumber,
                     'bank_code' => $bankCode,
                     'bank_name' => $bankName,

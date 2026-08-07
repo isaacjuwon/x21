@@ -65,6 +65,7 @@ class ShareOrdersTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(ShareOrderStatus::class)
+                    ->default(ShareOrderStatus::Pending->value)
                     ->multiple(),
 
                 SelectFilter::make('type')
