@@ -74,6 +74,7 @@ class LoansTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(LoanStatus::class)
+                    ->default(LoanStatus::Active->value)
                     ->multiple(),
             ])
             ->recordActions([

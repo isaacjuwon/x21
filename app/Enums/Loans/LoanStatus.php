@@ -13,6 +13,69 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
     case Disbursed = 'disbursed';
     case Rejected = 'rejected';
     case Completed = 'completed';
+    case Defaulted = 'defaulted';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Active => 'Active',
+            self::Approved => 'Approved',
+            self::Disbursed => 'Disbursed',
+            self::Rejected => 'Rejected',
+            self::Completed => 'Completed',
+            self::Defaulted => 'Defaulted',
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::Active => 'success',
+            self::Approved => 'info',
+            self::Disbursed => 'primary',
+            self::Rejected => 'danger',
+            self::Completed => 'success',
+            self::Defaulted => 'danger',
+        };
+    }
+
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::Active => 'heroicon-o-check-circle',
+            self::Approved => 'heroicon-o-hand-thumb-up',
+            self::Disbursed => 'heroicon-o-banknotes',
+            self::Rejected => 'heroicon-o-x-circle',
+            self::Completed => 'heroicon-o-check-badge',
+            self::Defaulted => 'heroicon-o-exclamation-triangle',
+        };
+    }
+
+    public function getFluxColor(): string
+    {
+        return match ($this) {
+            self::Active => 'green',
+            self::Approved => 'blue',
+            self::Disbursed => 'violet',
+            self::Rejected => 'red',
+            self::Completed => 'green',
+            self::Defaulted => 'red',
+        };
+    }
+
+    public function getFluxIcon(): string
+    {
+        return match ($this) {
+            self::Active => 'check-circle',
+            self::Approved => 'hand-thumb-up',
+            self::Disbursed => 'banknotes',
+            self::Rejected => 'x-circle',
+            self::Completed => 'check-badge',
+            self::Defaulted => 'exclamation-triangle',
+        };
+    }
+}
+
 
     public function getLabel(): string
     {
