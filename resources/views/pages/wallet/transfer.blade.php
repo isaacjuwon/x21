@@ -121,7 +121,7 @@ new #[Title('Transfer Funds')] class extends Component {
 
         <form wire:submit="transfer" class="space-y-6">
             {{-- Idempotency key — prevents duplicate transfers on retry --}}
-            @idempotency($formToken ?: null)
+            {!! \WendellAdriel\Idempotency\Idempotency::field($formToken ?: null) !!}
             <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
             <flux:input 

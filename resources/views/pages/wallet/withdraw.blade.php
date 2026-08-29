@@ -169,7 +169,7 @@ new #[Title('Withdraw Funds')] class extends Component {
         <form wire:submit="withdraw" class="space-y-5">
 
             {{-- Idempotency key — prevents duplicate withdrawals on retry --}}
-            @idempotency($formToken ?: null)
+            {!! \WendellAdriel\Idempotency\Idempotency::field($formToken ?: null) !!}
             <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
             {{-- Amount --}}

@@ -350,7 +350,7 @@ new #[Title('Apply for a Loan')] class extends Component {
 
                 <form wire:submit="apply" class="space-y-6">
                     {{-- Idempotency key — prevents duplicate loan applications --}}
-                    @idempotency($formToken ?: null)
+                    {!! \WendellAdriel\Idempotency\Idempotency::field($formToken ?: null) !!}
                     <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
                     <flux:input
