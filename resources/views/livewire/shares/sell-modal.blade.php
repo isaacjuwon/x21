@@ -1,5 +1,6 @@
 <?php
 
+use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Shares\ShareOrderStatus;
 use App\Enums\Shares\ShareOrderType;
 use App\Models\ShareHolding;
@@ -12,7 +13,15 @@ use Livewire\Component;
 
 new class extends Component
 {
+    use GuardsAgainstDuplicateSubmission;
+
+    public string $formToken = '';
     public ?int $quantity = null;
+
+    public function mount(): void
+    {
+        $this->formToken = $this->generateFormToken();
+    }
 
     #[Computed]
     public function totalShares(): int
@@ -26,7 +35,7 @@ new class extends Component
         return app(ShareSettings::class);
     }
 
-    public function sell()
+    public function sell(): void
     {
         $this->validate([
             'quantity' => ['required', 'integer', 'min:1'],
@@ -40,25 +49,42 @@ new class extends Component
             return;
         }
 
-        $totalAmount = $this->quantity * $this->shareSettings->price_per_share;
+        if (! $this->acquireSubmissionLock()) {
+            return; // duplicate submission in flight
+        }
 
-        ShareOrder::create([
-            'user_id' => Auth::id(),
-            'type' => ShareOrderType::Sell,
-            'quantity' => $this->quantity,
-            'price_per_share' => $this->shareSettings->price_per_share,
-            'total_amount' => $totalAmount,
-            'status' => ShareOrderStatus::Pending,
-        ]);
+        try {
+            if ($this->submissionAlreadyCompleted()) {
+                $this->dispatch('modal-close', name: 'sell-shares');
 
-        $this->quantity = null;
-        $this->dispatch('modal-close', name: 'sell-shares');
-        $this->dispatch('share-order-placed');
+                return;
+            }
 
-        Flux::toast(
-            text: __('Share sell order placed successfully and is awaiting approval.'),
-            variant: 'success',
-        );
+            $totalAmount = $this->quantity * $this->shareSettings->price_per_share;
+
+            ShareOrder::create([
+                'user_id' => Auth::id(),
+                'type' => ShareOrderType::Sell,
+                'quantity' => $this->quantity,
+                'price_per_share' => $this->shareSettings->price_per_share,
+                'total_amount' => $totalAmount,
+                'status' => ShareOrderStatus::Pending,
+            ]);
+
+            $this->markSubmissionComplete();
+            $this->quantity = null;
+            $this->dispatch('modal-close', name: 'sell-shares');
+            $this->dispatch('share-order-placed');
+
+            Flux::toast(
+                text: __('Share sell order placed successfully and is awaiting approval.'),
+                variant: 'success',
+            );
+        } finally {
+            $this->releaseSubmissionLock();
+        }
+
+        $this->rotateFormToken();
     }
 }; ?>
 
@@ -68,6 +94,10 @@ new class extends Component
             <flux:heading size="lg">{{ __('Sell Shares') }}</flux:heading>
             <flux:subheading>{{ __('Sell your shares at the current market price.') }}</flux:subheading>
         </div>
+
+        {{-- Idempotency key — prevents duplicate order placement --}}
+        @idempotency($formToken ?: null)
+        <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
         <flux:input 
             wire:model.live="quantity" 

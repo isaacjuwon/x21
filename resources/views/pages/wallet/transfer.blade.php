@@ -1,5 +1,6 @@
 <?php
 
+use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Models\User;
 use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
@@ -10,6 +11,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 new #[Title('Transfer Funds')] class extends Component {
+    use GuardsAgainstDuplicateSubmission;
+
+    public string $formToken = '';
     public ?string $recipient_phone = '';
 
     public ?float $amount = null;
@@ -39,7 +43,7 @@ new #[Title('Transfer Funds')] class extends Component {
         ]);
 
         $sender = Auth::user();
-        
+
         $phone = ltrim($this->recipient_phone, '0');
         $recipient = User::where('phone_number', $this->recipient_phone)
             ->orWhere('phone_number', '0' . $phone)
@@ -51,8 +55,19 @@ new #[Title('Transfer Funds')] class extends Component {
             return;
         }
 
+        if (! $this->acquireSubmissionLock()) {
+            return; // duplicate submission in flight
+        }
+
         try {
+            if ($this->submissionAlreadyCompleted()) {
+                $this->redirect(route('wallet.index'), navigate: true);
+                return;
+            }
+
             $sender->transfer($this->amount, $recipient, WalletType::General, $this->notes);
+
+            $this->markSubmissionComplete();
 
             Flux::toast(
                 text: __('Successfully transferred :amount to :name', [
@@ -70,7 +85,11 @@ new #[Title('Transfer Funds')] class extends Component {
                 text: __('An error occurred during the transfer.'),
                 variant: 'danger',
             );
+        } finally {
+            $this->releaseSubmissionLock();
         }
+
+        $this->rotateFormToken();
     }
 
     public function placeholder()
@@ -101,6 +120,10 @@ new #[Title('Transfer Funds')] class extends Component {
         </div>
 
         <form wire:submit="transfer" class="space-y-6">
+            {{-- Idempotency key — prevents duplicate transfers on retry --}}
+            @idempotency($formToken ?: null)
+            <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+
             <flux:input 
                 wire:model="recipient_phone" 
                 :label="__('Recipient Phone Number')" 

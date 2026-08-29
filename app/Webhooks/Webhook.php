@@ -8,9 +8,11 @@ use App\Jobs\ProcessWebhookJob;
 use App\Models\WebhookLog;
 use App\Webhooks\Contracts\WebhookProcessorContract;
 use App\Webhooks\Contracts\WebhookVerifierContract;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class Webhook
 {
@@ -81,7 +83,9 @@ class Webhook
 
     /**
      * Set a custom idempotency key to deduplicate webhooks.
-     * Defaults to provider + event + reference from payload.
+     * Defaults to provider + event + reference from payload, aligned
+     * with whatever MapWebhookIdempotencyKey already merged into the
+     * request input so cache keys and DB keys are traceable.
      */
     public function idempotencyKey(string $key): static
     {
@@ -107,64 +111,112 @@ class Webhook
     {
         // 1. Verify signature before touching the database
         if ($this->verifierClass) {
-            /** @var WebhookVerifierContract $verifier */
-            $verifier = app($this->verifierClass);
+            try {
+                /** @var WebhookVerifierContract $verifier */
+                $verifier = app($this->verifierClass);
 
-            if (! $verifier->verify($this->request)) {
-                Log::warning("Webhook signature verification failed [{$this->provider}]");
+                if (! $verifier->verify($this->request)) {
+                    Log::warning("Webhook signature verification failed [{$this->provider}]", [
+                        'ip' => $this->request->ip(),
+                    ]);
+
+                    return response()->json(['message' => 'Unauthorized'], 401);
+                }
+            } catch (Throwable $e) {
+                Log::error("Webhook signature verifier threw for [{$this->provider}]", [
+                    'error' => $e->getMessage(),
+                    'exception' => $e,
+                ]);
 
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
         }
 
-        // 2. Resolve idempotency key
+        // 2. Resolve idempotency key — prefer the one MapWebhookIdempotencyKey
+        //    already placed on the request so HTTP cache + DB dedup align.
         $idempotencyKey = $this->resolveIdempotencyKey();
 
-        // 3. Deduplicate — if we've already seen this exact webhook, ignore it
-        if ($idempotencyKey) {
-            $existing = WebhookLog::where('idempotency_key', $idempotencyKey)
-                ->whereIn('status', [WebhookStatus::Processed, WebhookStatus::Processing])
-                ->first();
+        // 3. Persist the incoming webhook, relying on the unique index on
+        //    idempotency_key for atomic deduplication rather than a
+        //    SELECT-then-INSERT race window.
+        try {
+            $log = WebhookLog::create([
+                'provider' => $this->provider,
+                'event_type' => $this->extractEventType(),
+                'reference' => $this->extractReference(),
+                'idempotency_key' => $idempotencyKey,
+                'payload' => $this->request->all(),
+                'headers' => $this->request->headers->all(),
+                'status' => WebhookStatus::Pending,
+                'max_attempts' => $this->maxAttempts,
+            ]);
+        } catch (QueryException $e) {
+            // Unique constraint violation on idempotency_key → duplicate.
+            if ($this->isUniqueConstraintViolation($e, 'webhook_logs_idempotency_key_index')) {
+                Log::info("Webhook [{$this->provider}] duplicate detected via unique constraint", [
+                    'idempotency_key' => $idempotencyKey,
+                    'event_type' => $this->extractEventType(),
+                    'reference' => $this->extractReference(),
+                ]);
 
-            if ($existing) {
                 return response()->json(['message' => 'Already processed'], 200);
             }
+
+            Log::critical("Webhook [{$this->provider}] failed to persist log record", [
+                'error' => $e->getMessage(),
+                'exception' => $e,
+                'idempotency_key' => $idempotencyKey,
+            ]);
+
+            // ACK with 200 to avoid provider replaying into the same broken
+            // state indefinitely; ops will alert from the critical log.
+            return response()->json(['message' => 'Received'], 200);
         }
 
-        // 4. Persist the incoming webhook
-        $log = WebhookLog::create([
-            'provider' => $this->provider,
-            'event_type' => $this->extractEventType(),
-            'reference' => $this->extractReference(),
-            'idempotency_key' => $idempotencyKey,
-            'payload' => $this->request->all(),
-            'headers' => $this->request->headers->all(),
-            'status' => WebhookStatus::Pending,
-            'max_attempts' => $this->maxAttempts,
-        ]);
+        try {
+            WebhookReceived::dispatch($log);
+        } catch (Throwable $e) {
+            Log::warning("Webhook [{$this->provider}] WebhookReceived event dispatch failed", [
+                'log_id' => $log->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-        WebhookReceived::dispatch($log);
-
-        // 5. Dispatch processor
+        // 4. Dispatch processor
         if (! $this->processorClass) {
             $log->markIgnored('No processor configured');
 
             return response()->json(['message' => 'Received'], 200);
         }
 
-        if ($this->queued) {
-            ProcessWebhookJob::dispatch($log, $this->processorClass)
-                ->onQueue($this->queue);
-        } else {
-            ProcessWebhookJob::dispatchSync($log, $this->processorClass);
+        try {
+            if ($this->queued) {
+                ProcessWebhookJob::dispatch($log, $this->processorClass)
+                    ->onQueue($this->queue);
+            } else {
+                ProcessWebhookJob::dispatchSync($log, $this->processorClass);
+            }
+        } catch (Throwable $e) {
+            Log::critical("Webhook [{$this->provider}] processor dispatch failed", [
+                'log_id' => $log->id,
+                'queued' => $this->queued,
+                'queue' => $this->queue,
+                'processor' => $this->processorClass,
+                'error' => $e->getMessage(),
+                'exception' => $e,
+            ]);
+
+            $log->markFailed('Processor dispatch failed: '.$e->getMessage());
         }
 
-        // Always return 200 immediately — processing happens async
         return response()->json(['message' => 'Received'], 200);
     }
 
     /**
      * Build an idempotency key from provider + event + reference.
+     * Prefer the value that MapWebhookIdempotencyKey already merged
+     * into the request input so the HTTP-layer cache and the DB
+     * dedup key are identical (or at least traceable).
      */
     private function resolveIdempotencyKey(): ?string
     {
@@ -172,11 +224,17 @@ class Webhook
             return $this->idempotencyKey;
         }
 
+        $mergedFromMiddleware = $this->request->input(config('idempotency.input'));
+
+        if (is_string($mergedFromMiddleware) && $mergedFromMiddleware !== '') {
+            return $mergedFromMiddleware;
+        }
+
         $event = $this->extractEventType();
         $reference = $this->extractReference();
 
         if ($event && $reference) {
-            return hash('sha256', "{$this->provider}:{$event}:{$reference}");
+            return sprintf('%s:%s:%s', $this->provider, $event, $reference);
         }
 
         return null;
@@ -189,7 +247,9 @@ class Webhook
     {
         $payload = $this->request->all();
 
-        return $payload['event'] ?? $payload['event_type'] ?? $payload['type'] ?? null;
+        $event = $payload['event'] ?? $payload['event_type'] ?? $payload['type'] ?? null;
+
+        return is_string($event) && $event !== '' ? $event : null;
     }
 
     /**
@@ -199,6 +259,29 @@ class Webhook
     {
         $payload = $this->request->all();
 
-        return $payload['data']['reference'] ?? $payload['ref'] ?? $payload['reference'] ?? null;
+        $reference = $payload['data']['reference'] ?? $payload['ref'] ?? $payload['reference'] ?? null;
+
+        return is_scalar($reference) && (string) $reference !== '' ? (string) $reference : null;
+    }
+
+    /**
+     * Detect a SQL unique-constraint violation (driver-aware).
+     */
+    private function isUniqueConstraintViolation(QueryException $e, string $indexName): bool
+    {
+        $code = $e->errorInfo[1] ?? $e->getCode();
+        $sqlState = $e->errorInfo[0] ?? null;
+
+        // MySQL: 1062 duplicate entry; PostgreSQL: 23505 unique violation
+        if (in_array((int) $code, [1062, 23505], true) || $sqlState === '23000' || $sqlState === '23505') {
+            if ($indexName === '') {
+                return true;
+            }
+
+            return stripos($e->getMessage(), $indexName) !== false
+                || stripos($e->getMessage(), 'idempotency_key') !== false;
+        }
+
+        return false;
     }
 }

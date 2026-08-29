@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Dividends\Pages;
 
-use App\Filament\Resources\Dividends\DividendResource;
-use Filament\Resources\Pages\CreateRecord;
 use App\Actions\Shares\DispatchDividendPayoutJobAction;
-use App\Settings\ShareSettings;
 use App\Enums\Shares\DividendStatus;
+use App\Filament\Resources\Dividends\DividendResource;
+use App\Settings\ShareSettings;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
 
 class CreateDividend extends CreateRecord
 {
@@ -24,6 +25,14 @@ class CreateDividend extends CreateRecord
 
     protected function afterCreate(): void
     {
-        app(DispatchDividendPayoutJobAction::class)->handle($this->record);
+        $dispatched = app(DispatchDividendPayoutJobAction::class)->handle($this->record);
+
+        if (! $dispatched) {
+            Notification::make()
+                ->title('Payout already processed')
+                ->body('This dividend has already been distributed. No payout job was dispatched.')
+                ->warning()
+                ->send();
+        }
     }
 }

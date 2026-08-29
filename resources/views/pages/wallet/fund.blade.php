@@ -2,6 +2,7 @@
 
 use App\Actions\Wallets\InitializeWalletFundingAction;
 use App\Actions\Wallets\VerifyWalletFundingAction;
+use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Wallets\TransactionStatus;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 new #[Title('Fund Wallet')] class extends Component {
+    use GuardsAgainstDuplicateSubmission;
 
+    public string $formToken = '';
     public ?float $amount = null;
 
     /** Paystack callback injects this via ?reference= query param */
@@ -35,6 +38,10 @@ new #[Title('Fund Wallet')] class extends Component {
             'amount' => ['required', 'numeric', 'min:100'],
         ]);
 
+        if (! $this->acquireSubmissionLock()) {
+            return null; // duplicate submission in flight
+        }
+
         try {
             $authorizationUrl = $action->handle(Auth::user(), (float) $this->amount);
 
@@ -42,7 +49,11 @@ new #[Title('Fund Wallet')] class extends Component {
             return redirect()->away($authorizationUrl);
         } catch (\Exception $e) {
             Flux::toast(variant: 'danger', heading: 'Initialization Failed', text: $e->getMessage());
+        } finally {
+            $this->releaseSubmissionLock();
         }
+
+        $this->rotateFormToken();
 
         return null;
     }
@@ -107,6 +118,10 @@ new #[Title('Fund Wallet')] class extends Component {
 
         <flux:card class="space-y-6">
             <form wire:submit="fund" class="space-y-6">
+                {{-- Idempotency key — prevents duplicate funding initializations --}}
+                @idempotency($formToken ?: null)
+                <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+
                 <flux:field>
                     <flux:label>{{ __('Amount') }}</flux:label>
                     <flux:input

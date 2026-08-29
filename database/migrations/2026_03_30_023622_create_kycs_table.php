@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('type'); // nin, bvn
             $table->string('number')->nullable();
-            $table->string('method'); // manual, automatic
+            $table->string('method')->nullable(); // manual, automatic
             $table->string('status'); // pending, verified, rejected
             $table->json('data')->nullable(); // external api response or manual metadata
             $table->string('file_path')->nullable(); // for manual uploads

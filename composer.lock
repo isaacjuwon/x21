@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "202f972c02c1161dae5939ceb953c889",
+    "content-hash": "5f2a58d101698e1dbbd5c5d1aa21e80e",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -10298,6 +10298,79 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
+        },
+        {
+            "name": "wendelladriel/laravel-idempotency",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WendellAdriel/laravel-idempotency.git",
+                "reference": "2758fb3ee4942c8f93a39f8511c86bd086f9e1f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WendellAdriel/laravel-idempotency/zipball/2758fb3ee4942c8f93a39f8511c86bd086f9e1f6",
+                "reference": "2758fb3ee4942c8f93a39f8511c86bd086f9e1f6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.29",
+                "nunomaduro/pao": "^1.0",
+                "orchestra/testbench": "^11.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-type-coverage": "^4.0",
+                "phpstan/phpstan": "^2.1",
+                "rector/rector": "^2.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "WendellAdriel\\Idempotency\\Providers\\IdempotencyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "WendellAdriel\\Idempotency\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Wendell Adriel",
+                    "email": "wendelladriel.ti@gmail.com"
+                }
+            ],
+            "description": "HTTP Idempotency Middleware for Laravel applications",
+            "keywords": [
+                "api",
+                "http",
+                "idempotency",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/WendellAdriel/laravel-idempotency/issues",
+                "source": "https://github.com/WendellAdriel/laravel-idempotency"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/wendelladriel",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/WendellAdriel",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-14T17:21:09+00:00"
         }
     ],
     "packages-dev": [

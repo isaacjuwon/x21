@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Loans\CheckLoanEligibilityAction;
+use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Loans\InterestMethod;
 use App\Enums\Loans\LoanStatus;
 use App\Models\Loan;
@@ -12,12 +13,12 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Title('Apply for a Loan')] class extends Component {
+    use GuardsAgainstDuplicateSubmission;
+
+    public string $formToken = '';
     public ?float $amount = null;
-
     public ?int $term_months = null;
-
     public ?string $interest_method = null;
-
     public string $notes = '';
 
     public function mount(LoanSettings $settings): void
@@ -194,7 +195,16 @@ new #[Title('Apply for a Loan')] class extends Component {
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
 
+        if (! $this->acquireSubmissionLock()) {
+            return; // duplicate submission in flight
+        }
+
         try {
+            if ($this->submissionAlreadyCompleted()) {
+                $this->redirect(route('loan.index'), navigate: true);
+                return;
+            }
+
             // Check eligibility first
             $result = $checkEligibility->handle(Auth::user(), $this->amount);
 
@@ -222,6 +232,8 @@ new #[Title('Apply for a Loan')] class extends Component {
                 \App\Jobs\GenerateLoanScheduleJob::dispatch($loan);
             }
 
+            $this->markSubmissionComplete();
+
             Flux::toast(
                 text: $this->autoApprove
                     ? __('Loan approved and disbursed successfully.')
@@ -237,7 +249,11 @@ new #[Title('Apply for a Loan')] class extends Component {
                 text: __('An error occurred during application: '.$e->getMessage()),
                 variant: 'danger',
             );
+        } finally {
+            $this->releaseSubmissionLock();
         }
+
+        $this->rotateFormToken();
     }
 
     public function placeholder()
@@ -333,6 +349,10 @@ new #[Title('Apply for a Loan')] class extends Component {
                 <flux:separator />
 
                 <form wire:submit="apply" class="space-y-6">
+                    {{-- Idempotency key — prevents duplicate loan applications --}}
+                    @idempotency($formToken ?: null)
+                    <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+
                     <flux:input
                         wire:model.live.debounce.500ms="amount"
                         type="number"

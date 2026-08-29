@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Wallets\WithdrawWalletAction;
+use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
 use App\Integrations\Paystack\PaystackConnector;
@@ -12,6 +13,9 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Title('Withdraw Funds')] class extends Component {
+    use GuardsAgainstDuplicateSubmission;
+
+    public string $formToken = '';
     public ?float $amount = null;
     public string $account_number = '';
     public string $bank_code = '';
@@ -94,7 +98,16 @@ new #[Title('Withdraw Funds')] class extends Component {
             return;
         }
 
+        if (! $this->acquireSubmissionLock()) {
+            return; // duplicate submission in flight
+        }
+
         try {
+            if ($this->submissionAlreadyCompleted()) {
+                $this->redirect(route('wallet.index'), navigate: true);
+                return;
+            }
+
             $action->handle(
                 user: Auth::user(),
                 amount: (float) $this->amount,
@@ -102,6 +115,8 @@ new #[Title('Withdraw Funds')] class extends Component {
                 bankCode: $this->bank_code,
                 bankName: $this->bank_name,
             );
+
+            $this->markSubmissionComplete();
 
             Flux::toast(
                 text: __('Withdrawal of :amount initiated successfully.', ['amount' => Number::currency((float) $this->amount)]),
@@ -117,7 +132,11 @@ new #[Title('Withdraw Funds')] class extends Component {
             }
         } catch (\Exception $e) {
             Flux::toast(text: __('Withdrawal failed: :msg', ['msg' => $e->getMessage()]), variant: 'danger');
+        } finally {
+            $this->releaseSubmissionLock();
         }
+
+        $this->rotateFormToken();
     }
 
     public function placeholder(): string
@@ -148,6 +167,10 @@ new #[Title('Withdraw Funds')] class extends Component {
 
     <flux:card class="space-y-6">
         <form wire:submit="withdraw" class="space-y-5">
+
+            {{-- Idempotency key — prevents duplicate withdrawals on retry --}}
+            @idempotency($formToken ?: null)
+            <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
             {{-- Amount --}}
             <flux:field>

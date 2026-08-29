@@ -58,22 +58,32 @@ use App\Http\Controllers\Api\V1\Wallet\WalletFundController;
 use App\Http\Controllers\Api\V1\Wallet\WalletTransferController;
 use App\Http\Controllers\Api\V1\Wallet\WalletWithdrawController;
 use App\Http\Controllers\WebhookController;
+use App\Http\Middleware\MapWebhookIdempotencyKey;
 use Illuminate\Support\Facades\Route;
+use WendellAdriel\Idempotency\Enums\IdempotencyScope;
+use WendellAdriel\Idempotency\Http\Middleware\Idempotent;
 
-// Webhooks — no auth, no rate limiting
+// Webhooks — no auth, no rate limiting.
+// MapWebhookIdempotencyKey promotes the provider's natural event ID into the
+// field that Idempotent reads, so duplicate deliveries are deduplicated before
+// they even reach the queue.
 Route::post('/webhooks/{provider}', [WebhookController::class, 'handle'])
+    ->middleware([
+        MapWebhookIdempotencyKey::class,
+        Idempotent::using(scope: IdempotencyScope::Global, required: false, ttl: 604800),
+    ])
     ->name('webhooks');
 
 // --- Auth ---
 Route::prefix('/auth')->name('auth.')->group(function (): void {
     Route::post('/register', RegisterController::class)
-        ->middleware(['idempotency', 'throttle:10,1'])
+        ->middleware(['idempotent', 'throttle:10,1'])
         ->name('register');
     Route::post('/login', LoginController::class)
         ->middleware('throttle:10,1')
         ->name('login');
     Route::post('/forgot-password', ForgotPasswordController::class)
-        ->middleware(['idempotency', 'throttle:5,1'])
+        ->middleware(['idempotent', 'throttle:5,1'])
         ->name('password.forgot');
     Route::post('/reset-password', ResetPasswordController::class)
         ->middleware('throttle:5,1')
@@ -101,14 +111,14 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::prefix('/wallet')->name('wallet.')->group(function (): void {
         Route::get('/', WalletController::class)->name('show');
         Route::post('/fund', [WalletFundController::class, 'initialize'])
-            ->middleware('idempotency')
+            ->middleware(Idempotent::using(lockTimeout: 30, ttl: 86400))
             ->name('fund.initialize');
         Route::post('/fund/verify', [WalletFundController::class, 'verify'])->name('fund.verify');
         Route::post('/transfer', WalletTransferController::class)
-            ->middleware('idempotency')
+            ->middleware(Idempotent::using(lockTimeout: 30, ttl: 86400))
             ->name('transfer');
         Route::post('/withdraw', WalletWithdrawController::class)
-            ->middleware('idempotency')
+            ->middleware(Idempotent::using(lockTimeout: 30, ttl: 86400))
             ->name('withdraw');
         Route::get('/banks', BankListController::class)->name('banks');
         Route::get('/verify-account', VerifyAccountController::class)->name('verify-account');
@@ -122,19 +132,26 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::prefix('/loans')->name('loans.')->group(function (): void {
         Route::get('/', LoansIndexController::class)->name('index');
         Route::post('/', LoansStoreController::class)
-            ->middleware(['idempotency', 'throttle:loan-applications'])
+            ->middleware(['idempotent', 'throttle:loan-applications'])
             ->name('store');
         Route::get('/{loan}', LoansShowController::class)->name('show');
         Route::get('/{loan}/schedule', LoanScheduleController::class)->name('schedule');
         Route::post('/{loan}/repayments', LoanRepaymentController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('repayments.store');
-        Route::post('/{loan}/approve', LoanApprovalController::class)->name('approve');
-        Route::post('/{loan}/disburse', LoanDisbursementController::class)->name('disburse');
-        Route::post('/{loan}/reject', LoanRejectionController::class)->name('reject');
+        // Staff/admin-triggered money-moving endpoints — idempotent with extended lock.
+        Route::post('/{loan}/approve', LoanApprovalController::class)
+            ->middleware('idempotent')
+            ->name('approve');
+        Route::post('/{loan}/disburse', LoanDisbursementController::class)
+            ->middleware(Idempotent::using(lockTimeout: 30, ttl: 86400))
+            ->name('disburse');
+        Route::post('/{loan}/reject', LoanRejectionController::class)
+            ->middleware('idempotent')
+            ->name('reject');
         Route::get('/{loan}/payoff-quote', LoanPayoffQuoteController::class)->name('payoff-quote');
         Route::post('/{loan}/payoff', LoanPayoffController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('payoff');
     });
 
@@ -146,45 +163,50 @@ Route::middleware('auth:sanctum')->group(function (): void {
         Route::get('/orders', IndexOrdersController::class)->name('orders.index');
         Route::get('/orders/{order}', ShowOrderController::class)->name('orders.show');
         Route::post('/orders/buy', BuyOrderController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('orders.buy');
         Route::post('/orders/sell', SellOrderController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('orders.sell');
-        Route::post('/orders/{order}/approve', ShareOrderApprovalController::class)->name('orders.approve');
-        Route::post('/orders/{order}/reject', ShareOrderRejectionController::class)->name('orders.reject');
+        // Staff/admin-triggered endpoints — now covered by idempotent middleware.
+        Route::post('/orders/{order}/approve', ShareOrderApprovalController::class)
+            ->middleware('idempotent')
+            ->name('orders.approve');
+        Route::post('/orders/{order}/reject', ShareOrderRejectionController::class)
+            ->middleware('idempotent')
+            ->name('orders.reject');
 
         Route::get('/holdings', ShareHoldingController::class)->name('holdings.show');
         Route::get('/price-history', SharePriceHistoryController::class)->name('price-history.index');
 
         Route::post('/dividends', DividendController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('dividends.store');
         Route::get('/dividends/payouts', DividendPayoutController::class)->name('dividends.payouts');
     });
 
     // --- Services (VTU) ---
     Route::prefix('/services')->name('services.')->group(function (): void {
-        Route::post('/airtime', AirtimeController::class)->middleware('idempotency')->name('airtime');
-        Route::post('/data', DataController::class)->middleware('idempotency')->name('data');
-        Route::post('/electricity', ElectricityController::class)->middleware('idempotency')->name('electricity');
-        Route::post('/cable-tv', CableTvController::class)->middleware('idempotency')->name('cable-tv');
+        Route::post('/airtime', AirtimeController::class)->middleware('idempotent')->name('airtime');
+        Route::post('/data', DataController::class)->middleware('idempotent')->name('data');
+        Route::post('/electricity', ElectricityController::class)->middleware('idempotent')->name('electricity');
+        Route::post('/cable-tv', CableTvController::class)->middleware('idempotent')->name('cable-tv');
     });
 
     // --- KYC ---
     Route::prefix('/kyc')->name('kyc.')->group(function (): void {
         Route::get('/', KycIndexController::class)->name('index');
-        Route::post('/automatic', KycAutomaticController::class)->middleware('idempotency')->name('automatic');
-        Route::post('/manual', KycManualController::class)->middleware('idempotency')->name('manual');
+        Route::post('/automatic', KycAutomaticController::class)->middleware('idempotent')->name('automatic');
+        Route::post('/manual', KycManualController::class)->middleware('idempotent')->name('manual');
     });
 
     // --- Tickets ---
     Route::prefix('/tickets')->name('tickets.')->group(function (): void {
         Route::get('/', TicketsIndexController::class)->name('index');
-        Route::post('/', TicketsStoreController::class)->middleware('idempotency')->name('store');
+        Route::post('/', TicketsStoreController::class)->middleware('idempotent')->name('store');
         Route::get('/{ticket}', TicketsShowController::class)->name('show');
         Route::post('/{ticket}/replies', StoreReplyController::class)
-            ->middleware('idempotency')
+            ->middleware('idempotent')
             ->name('replies.store');
     });
 
