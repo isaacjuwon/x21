@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Wallet;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Wallet\WalletTransferRequest;
 use App\Http\Resources\Api\V1\Wallet\TransactionResource;
@@ -14,6 +16,7 @@ use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Wallet', 'Wallet balance and overview')]
 #[Authenticated]
+#[Idempotent]
 class WalletTransferController
 {
     #[BodyParam('recipient_email', 'string', description: 'Email address of the recipient', required: true, example: 'recipient@example.com')]

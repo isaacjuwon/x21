@@ -92,6 +92,8 @@ new #[Title('Airtime Purchase')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="services" />
+
     <flux:heading size="xl">Airtime Purchase</flux:heading>
     <flux:subheading>Top up your phone instantly.</flux:subheading>
 

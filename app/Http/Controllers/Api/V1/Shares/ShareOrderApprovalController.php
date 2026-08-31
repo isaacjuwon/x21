@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Actions\Shares\ApproveBuyOrderAction;
 use App\Actions\Shares\ApproveSellOrderAction;
 use App\Enums\Shares\ShareOrderType;
@@ -16,6 +18,7 @@ use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
+#[Idempotent]
 class ShareOrderApprovalController
 {
     use AuthorizesRequests;

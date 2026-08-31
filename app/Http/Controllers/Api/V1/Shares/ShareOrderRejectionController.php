@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Actions\Shares\RejectShareOrderAction;
 use App\Http\Requests\Api\V1\Shares\StoreShareOrderRejectionRequest;
 use App\Http\Resources\Api\V1\Shares\ShareOrderResource;
@@ -14,6 +16,7 @@ use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
+#[Idempotent]
 class ShareOrderRejectionController
 {
     use AuthorizesRequests;

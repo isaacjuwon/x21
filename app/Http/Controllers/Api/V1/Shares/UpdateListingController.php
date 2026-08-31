@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Http\Requests\Api\V1\Shares\UpdateSharePriceRequest;
 use App\Models\ShareOrder;
 use App\Models\SharePriceHistory;

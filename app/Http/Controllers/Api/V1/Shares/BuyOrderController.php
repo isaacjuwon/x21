@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Actions\Shares\PlaceBuyOrderAction;
 use App\Http\Requests\Api\V1\Shares\StoreBuyOrderRequest;
 use App\Http\Resources\Api\V1\Shares\ShareOrderResource;

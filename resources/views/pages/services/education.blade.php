@@ -115,6 +115,8 @@ new #[Title('Education Pins')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="services" />
+
     <flux:heading size="xl">Education PINs</flux:heading>
     <flux:subheading>Buy exam result checker PINs (WAEC, JAMB, etc.).</flux:subheading>
 

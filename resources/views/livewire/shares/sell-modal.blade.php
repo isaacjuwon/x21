@@ -95,7 +95,7 @@ new class extends Component
             <flux:subheading>{{ __('Sell your shares at the current market price.') }}</flux:subheading>
         </div>
 
-        {{-- Idempotency key — prevents duplicate order placement --}}
+        {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
         @idempotency($formToken ?: null)
         <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 

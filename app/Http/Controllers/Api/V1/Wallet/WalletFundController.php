@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Wallet;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Actions\Wallets\InitializeWalletFundingAction;
 use App\Actions\Wallets\VerifyWalletFundingAction;
 use App\Enums\Wallets\WalletType;
@@ -16,6 +18,7 @@ use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Wallet', 'Wallet balance and overview')]
 #[Authenticated]
+#[Idempotent]
 class WalletFundController
 {
     #[BodyParam('amount', 'number', description: 'Amount to fund in the smallest currency unit (min: 100)', required: true, example: 5000)]

@@ -134,6 +134,8 @@ new #[Title('KYC Verification')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="kyc" />
+
     <div>
         <flux:heading size="xl">{{ __('KYC Verification') }}</flux:heading>
         <flux:subheading>{{ __('Verify your identity to unlock all platform features.') }}</flux:subheading>

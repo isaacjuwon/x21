@@ -9,7 +9,7 @@
         </x-carousel>
 
     Or via the banner-slot Livewire component which handles the query:
-        <livewire:banners.banner-slot location="wallet" />
+        <livewire:banners.index location="wallet" />
 --}}
 @props([
     'items' => [],         // iterable of Banner models

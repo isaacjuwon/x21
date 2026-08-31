@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Loans;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Enums\Loans\LoanStatus;
 use App\Http\Requests\Api\V1\Loans\StoreLoanRequest;
 use App\Http\Resources\Api\V1\Loans\LoanResource;

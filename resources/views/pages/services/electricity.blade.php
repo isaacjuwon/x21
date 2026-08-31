@@ -94,6 +94,8 @@ new #[Title('Electricity Bill Payment')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="services" />
+
     <flux:heading size="xl">Electricity Bill Payment</flux:heading>
     <flux:subheading>Pay your electricity bills quickly and securely.</flux:subheading>
 

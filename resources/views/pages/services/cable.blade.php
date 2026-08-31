@@ -113,6 +113,8 @@ new #[Title('Cable TV Subscription')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="services" />
+
     <flux:heading size="xl">Cable TV Subscription</flux:heading>
     <flux:subheading>Renew your cable TV subscription easily.</flux:subheading>
 

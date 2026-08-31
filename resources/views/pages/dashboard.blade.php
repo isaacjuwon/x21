@@ -124,6 +124,8 @@ new #[Title('Dashboard'), Lazy] class extends Component {
 }; ?>
 
 <div class="flex h-full w-full flex-1 flex-col gap-8">
+    <livewire:banners.index location="dashboard" />
+
     <!-- Header with Quick Actions -->
     <div class="space-y-4">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

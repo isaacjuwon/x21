@@ -118,8 +118,8 @@ new #[Title('Fund Wallet')] class extends Component {
 
         <flux:card class="space-y-6">
             <form wire:submit="fund" class="space-y-6">
-                {{-- Idempotency key — prevents duplicate funding initializations --}}
-                {!! \WendellAdriel\Idempotency\Idempotency::field($formToken ?: null) !!}
+                {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
+                @idempotency($formToken ?: null)
                 <input type="hidden" name="_idempotency_key" wire:model="formToken" />
 
                 <flux:field>

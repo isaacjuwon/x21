@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
+use WendellAdriel\Idempotency\Attributes\Idempotent;
+
 use App\Actions\Shares\DeclareDividendAction;
 use App\Http\Requests\Api\V1\Shares\StoreDividendRequest;
 use App\Models\ShareOrder;
@@ -14,6 +16,7 @@ use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
+#[Idempotent]
 class DividendController
 {
     use AuthorizesRequests;

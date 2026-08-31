@@ -129,6 +129,8 @@ new #[Title('Data Purchase')] class extends Component {
 }; ?>
 
 <div class="max-w-2xl mx-auto space-y-6">
+    <livewire:banners.index location="services" />
+
     <flux:heading size="xl">Data Bundle Purchase</flux:heading>
     <flux:subheading>Stay connected with cheap data bundles.</flux:subheading>
 
