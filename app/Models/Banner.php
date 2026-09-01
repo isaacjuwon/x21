@@ -25,6 +25,7 @@ class Banner extends Model implements HasMedia
         'ends_at',
         'sort_order',
         'is_active',
+        'is_dismissible',
     ];
 
     protected function casts(): array
@@ -35,7 +36,21 @@ class Banner extends Model implements HasMedia
             'ends_at' => 'datetime',
             'sort_order' => 'integer',
             'is_active' => 'boolean',
+            'is_dismissible' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Banner $banner) {
+            $loc = $banner->location instanceof BannerLocation ? $banner->location->value : (string) $banner->location;
+            cache()->forget("banners:{$loc}");
+        });
+
+        static::deleted(function (Banner $banner) {
+            $loc = $banner->location instanceof BannerLocation ? $banner->location->value : (string) $banner->location;
+            cache()->forget("banners:{$loc}");
+        });
     }
 
     public function registerMediaCollections(): void

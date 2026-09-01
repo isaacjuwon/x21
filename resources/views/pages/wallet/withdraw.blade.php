@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Wallets\WithdrawWalletAction;
+use App\Attributes\IdempotencyToken;
 use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Wallets\WalletType;
 use App\Exceptions\Wallets\InsufficientFundsException;
@@ -15,6 +16,7 @@ use Livewire\Component;
 new #[Title('Withdraw Funds')] class extends Component {
     use GuardsAgainstDuplicateSubmission;
 
+    #[IdempotencyToken]
     public string $formToken = '';
     public ?float $amount = null;
     public string $account_number = '';
@@ -168,9 +170,8 @@ new #[Title('Withdraw Funds')] class extends Component {
     <flux:card class="space-y-6">
         <form wire:submit="withdraw" class="space-y-5">
 
-            {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
-            @idempotency($formToken ?: null)
-            <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+            {{-- Idempotency key — seeded on mount by #[IdempotencyToken] --}}
+            @idempotency($formToken)
 
             {{-- Amount --}}
             <flux:field>

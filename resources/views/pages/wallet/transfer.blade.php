@@ -1,5 +1,6 @@
 <?php
 
+use App\Attributes\IdempotencyToken;
 use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Models\User;
 use App\Enums\Wallets\WalletType;
@@ -13,6 +14,7 @@ use Livewire\Component;
 new #[Title('Transfer Funds')] class extends Component {
     use GuardsAgainstDuplicateSubmission;
 
+    #[IdempotencyToken]
     public string $formToken = '';
     public ?string $recipient_phone = '';
 
@@ -120,9 +122,8 @@ new #[Title('Transfer Funds')] class extends Component {
         </div>
 
         <form wire:submit="transfer" class="space-y-6">
-            {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
-            @idempotency($formToken ?: null)
-            <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+            {{-- Idempotency key — seeded on mount by #[IdempotencyToken] --}}
+            @idempotency($formToken)
 
             <flux:input 
                 wire:model="recipient_phone" 

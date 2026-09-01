@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Loans\CheckLoanEligibilityAction;
+use App\Attributes\IdempotencyToken;
 use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Loans\InterestMethod;
 use App\Enums\Loans\LoanStatus;
@@ -15,6 +16,7 @@ use Livewire\Component;
 new #[Title('Apply for a Loan')] class extends Component {
     use GuardsAgainstDuplicateSubmission;
 
+    #[IdempotencyToken]
     public string $formToken = '';
     public ?float $amount = null;
     public ?int $term_months = null;
@@ -349,9 +351,8 @@ new #[Title('Apply for a Loan')] class extends Component {
                 <flux:separator />
 
                 <form wire:submit="apply" class="space-y-6">
-                    {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
-                    @idempotency($formToken ?: null)
-                    <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+                    {{-- Idempotency key — seeded on mount by #[IdempotencyToken] --}}
+                    @idempotency($formToken)
 
                     <flux:input
                         wire:model.live.debounce.500ms="amount"

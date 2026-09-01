@@ -1,5 +1,6 @@
 <?php
 
+use App\Attributes\IdempotencyToken;
 use App\Concerns\GuardsAgainstDuplicateSubmission;
 use App\Enums\Shares\ShareOrderStatus;
 use App\Enums\Shares\ShareOrderType;
@@ -15,6 +16,7 @@ new class extends Component
 {
     use GuardsAgainstDuplicateSubmission;
 
+    #[IdempotencyToken]
     public string $formToken = '';
     public ?int $quantity = null;
 
@@ -83,9 +85,8 @@ new class extends Component
             <flux:subheading>{{ __('Purchase more shares at the current market price.') }}</flux:subheading>
         </div>
 
-        {{-- Idempotency key — wire:model keeps $formToken in sync when Livewire re-renders --}}
-        @idempotency($formToken ?: null)
-        <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+        {{-- Idempotency key — seeded on mount by #[IdempotencyToken] --}}
+        @idempotency($formToken)
 
         <flux:input 
             wire:model.live="quantity" 

@@ -3,7 +3,6 @@
 use App\Models\Banner;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -17,7 +16,7 @@ use Livewire\Component;
  * Usage on any user page:
  *   <livewire:banners.index location="wallet" />
  */
-new #[Lazy] class extends Component {
+new class extends Component {
     /** Page location key passed by the parent page. */
     #[Locked]
     public string $location = '';
@@ -39,17 +38,12 @@ new #[Lazy] class extends Component {
                 ->get()
         );
     }
-
-    public function placeholder(): string
-    {
-        return <<<'HTML'
-        <div class="w-full h-40 sm:h-52 rounded-xl bg-zinc-100 dark:bg-zinc-800 animate-pulse mb-4"></div>
-        HTML;
-    }
 }; ?>
 
-@php $banners = $this->banners(); @endphp
+<div>
+    @php $banners = $this->banners(); @endphp
 
-@if ($banners->isNotEmpty())
-    <x-carousel :items="$banners" class="mb-4" />
-@endif
+    @if ($banners->isNotEmpty())
+        <x-carousel :items="$banners" class="mb-4" />
+    @endif
+</div>

@@ -122,13 +122,19 @@ class BannerResource extends Resource
                         ->helperText('Lower numbers appear first.'),
                 ]),
 
-            Grid::make(1)
+            Grid::make(2)
                 ->columnSpanFull()
                 ->schema([
                     Toggle::make('is_active')
                         ->label('Active')
                         ->inline(false)
                         ->default(false),
+
+                    Toggle::make('is_dismissible')
+                        ->label('Dismissible by User')
+                        ->helperText('Allow users to dismiss or remove this banner.')
+                        ->inline(false)
+                        ->default(true),
                 ]),
         ]);
     }
@@ -155,6 +161,11 @@ class BannerResource extends Resource
 
                 IconColumn::make('is_active')
                     ->label('Active')
+                    ->boolean()
+                    ->sortable(),
+
+                IconColumn::make('is_dismissible')
+                    ->label('Dismissible')
                     ->boolean()
                     ->sortable(),
 

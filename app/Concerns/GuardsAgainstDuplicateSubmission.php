@@ -17,15 +17,18 @@ use WendellAdriel\Idempotency\Idempotency;
  *
  *   use GuardsAgainstDuplicateSubmission;
  *
+ *   #[IdempotencyToken]
  *   public string $formToken = '';
  *
- * In the Blade form, use the package @idempotency directive bound to the
- * component property so Livewire syncs the value back on submit:
+ * The #[IdempotencyToken] attribute seeds $formToken automatically on mount
+ * and hydrate — no manual initialisation needed in the component.
+ *
+ * In the Blade form, bind the @idempotency directive to the already-seeded
+ * property so the hidden field value matches Livewire's component state:
  *
  *   <form wire:submit="submit">
  *
- *       @idempotency($formToken ?: null)
- *       <input type="hidden" name="_idempotency_key" wire:model="formToken" />
+ *       @idempotency($formToken)
  *       ...
  *   </form>
  *
@@ -53,10 +56,6 @@ trait GuardsAgainstDuplicateSubmission
 {
     /**
      * Try to acquire the in-flight atomic lock.
-     *
-     * Lazily initialises $formToken via Idempotency::key() if the property is
-     * still empty (e.g. the form rendered without the @idempotency directive
-     * filling it in yet).
      *
      * Returns false when a duplicate submission is already in progress.
      *
