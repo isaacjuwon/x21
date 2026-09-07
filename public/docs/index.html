@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://ship.test";
+        var tryItOutBaseUrl = "https://classicwallet.org";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -332,7 +332,7 @@
     <div class="content">
         <h1 id="introduction">Introduction</h1>
 <aside>
-    <strong>Base URL</strong>: <code>http://ship.test</code>
+    <strong>Base URL</strong>: <code>https://classicwallet.org</code>
 </aside>
 <pre><code>This documentation aims to provide all the information you need to work with our API.
 
@@ -362,7 +362,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/auth/register" \
+    "https://classicwallet.org/api/v1/auth/register" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -376,7 +376,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/register"
+    "https://classicwallet.org/api/v1/auth/register"
 );
 
 const headers = {
@@ -412,7 +412,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;lafayette.considine@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-07T13:49:46+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-07T14:05:17+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -574,7 +574,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/auth/login" \
+    "https://classicwallet.org/api/v1/auth/login" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -587,7 +587,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/login"
+    "https://classicwallet.org/api/v1/auth/login"
 );
 
 const headers = {
@@ -622,7 +622,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;cormier.nick@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-07T13:49:46+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-07T14:05:17+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -773,7 +773,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/auth/me" \
+    --get "https://classicwallet.org/api/v1/auth/me" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -781,7 +781,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/me"
+    "https://classicwallet.org/api/v1/auth/me"
 );
 
 const headers = {
@@ -811,7 +811,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Morgan Hirthe&quot;,
             &quot;email&quot;: &quot;dare.emelie@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-07T13:49:46+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-07T14:05:17+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -927,7 +927,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/auth/logout" \
+    "https://classicwallet.org/api/v1/auth/logout" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -935,7 +935,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/logout"
+    "https://classicwallet.org/api/v1/auth/logout"
 );
 
 const headers = {
@@ -1068,7 +1068,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/auth/tokens" \
+    --get "https://classicwallet.org/api/v1/auth/tokens" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1076,7 +1076,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/tokens"
+    "https://classicwallet.org/api/v1/auth/tokens"
 );
 
 const headers = {
@@ -1238,7 +1238,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://ship.test/api/v1/auth/tokens" \
+    "https://classicwallet.org/api/v1/auth/tokens" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1246,7 +1246,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/tokens"
+    "https://classicwallet.org/api/v1/auth/tokens"
 );
 
 const headers = {
@@ -1388,7 +1388,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://ship.test/api/v1/auth/tokens/42" \
+    "https://classicwallet.org/api/v1/auth/tokens/42" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1400,7 +1400,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/tokens/42"
+    "https://classicwallet.org/api/v1/auth/tokens/42"
 );
 
 const headers = {
@@ -1581,7 +1581,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/auth/forgot-password" \
+    "https://classicwallet.org/api/v1/auth/forgot-password" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -1592,7 +1592,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/forgot-password"
+    "https://classicwallet.org/api/v1/auth/forgot-password"
 );
 
 const headers = {
@@ -1722,7 +1722,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/auth/reset-password" \
+    "https://classicwallet.org/api/v1/auth/reset-password" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -1736,7 +1736,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/auth/reset-password"
+    "https://classicwallet.org/api/v1/auth/reset-password"
 );
 
 const headers = {
@@ -1923,14 +1923,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/webhooks/architecto" \
+    "https://classicwallet.org/api/v1/webhooks/architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/webhooks/architecto"
+    "https://classicwallet.org/api/v1/webhooks/architecto"
 );
 
 const headers = {
@@ -2047,7 +2047,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/support/chat" \
+    "https://classicwallet.org/api/v1/support/chat" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -2058,7 +2058,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/support/chat"
+    "https://classicwallet.org/api/v1/support/chat"
 );
 
 const headers = {
@@ -2184,7 +2184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/kyc" \
+    --get "https://classicwallet.org/api/v1/kyc" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2192,7 +2192,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/kyc"
+    "https://classicwallet.org/api/v1/kyc"
 );
 
 const headers = {
@@ -2310,12 +2310,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/kyc/automatic" \
+    "https://classicwallet.org/api/v1/kyc/automatic" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"nin\",
+    \"type\": \"bvn\",
     \"number\": \"82256977571\"
 }"
 </code></pre></div>
@@ -2323,7 +2323,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/kyc/automatic"
+    "https://classicwallet.org/api/v1/kyc/automatic"
 );
 
 const headers = {
@@ -2333,7 +2333,7 @@ const headers = {
 };
 
 let body = {
-    "type": "nin",
+    "type": "bvn",
     "number": "82256977571"
 };
 
@@ -2438,10 +2438,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-automatic"
-               value="nin"
+               value="bvn"
                data-component="body">
     <br>
-<p>Example: <code>nin</code></p>
+<p>Example: <code>bvn</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2473,18 +2473,18 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/kyc/manual" \
+    "https://classicwallet.org/api/v1/kyc/manual" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "type=bvn"\
+    --form "type=nin"\
     --form "number=82256977571"\
-    --form "document=@C:\Users\DELL\AppData\Local\Temp\phpA467.tmp" </code></pre></div>
+    --form "document=@C:\Users\DELL\AppData\Local\Temp\phpD8D1.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/kyc/manual"
+    "https://classicwallet.org/api/v1/kyc/manual"
 );
 
 const headers = {
@@ -2494,7 +2494,7 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('type', 'bvn');
+body.append('type', 'nin');
 body.append('number', '82256977571');
 body.append('document', document.querySelector('input[name="document"]').files[0]);
 
@@ -2599,10 +2599,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-manual"
-               value="bvn"
+               value="nin"
                data-component="body">
     <br>
-<p>Example: <code>bvn</code></p>
+<p>Example: <code>nin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2628,7 +2628,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpA467.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpD8D1.tmp</code></p>
         </div>
         </form>
 
@@ -2650,7 +2650,7 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/eligibility" \
+    "https://classicwallet.org/api/v1/loans/eligibility" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -2662,7 +2662,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/eligibility"
+    "https://classicwallet.org/api/v1/loans/eligibility"
 );
 
 const headers = {
@@ -2821,7 +2821,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/loans" \
+    --get "https://classicwallet.org/api/v1/loans" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2829,7 +2829,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans"
+    "https://classicwallet.org/api/v1/loans"
 );
 
 const headers = {
@@ -3022,7 +3022,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans" \
+    "https://classicwallet.org/api/v1/loans" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3037,7 +3037,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans"
+    "https://classicwallet.org/api/v1/loans"
 );
 
 const headers = {
@@ -3243,7 +3243,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/loans/1" \
+    --get "https://classicwallet.org/api/v1/loans/1" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3251,7 +3251,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1"
+    "https://classicwallet.org/api/v1/loans/1"
 );
 
 const headers = {
@@ -3414,7 +3414,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/loans/1/schedule" \
+    --get "https://classicwallet.org/api/v1/loans/1/schedule" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3422,7 +3422,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/schedule"
+    "https://classicwallet.org/api/v1/loans/1/schedule"
 );
 
 const headers = {
@@ -3589,7 +3589,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/1/repayments" \
+    "https://classicwallet.org/api/v1/loans/1/repayments" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3601,7 +3601,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/repayments"
+    "https://classicwallet.org/api/v1/loans/1/repayments"
 );
 
 const headers = {
@@ -3773,7 +3773,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/1/approve" \
+    "https://classicwallet.org/api/v1/loans/1/approve" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3785,7 +3785,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/approve"
+    "https://classicwallet.org/api/v1/loans/1/approve"
 );
 
 const headers = {
@@ -3974,7 +3974,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/1/disburse" \
+    "https://classicwallet.org/api/v1/loans/1/disburse" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3986,7 +3986,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/disburse"
+    "https://classicwallet.org/api/v1/loans/1/disburse"
 );
 
 const headers = {
@@ -4175,7 +4175,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/1/reject" \
+    "https://classicwallet.org/api/v1/loans/1/reject" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4188,7 +4188,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/reject"
+    "https://classicwallet.org/api/v1/loans/1/reject"
 );
 
 const headers = {
@@ -4390,7 +4390,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/loans/1/payoff-quote" \
+    --get "https://classicwallet.org/api/v1/loans/1/payoff-quote" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4398,7 +4398,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/payoff-quote"
+    "https://classicwallet.org/api/v1/loans/1/payoff-quote"
 );
 
 const headers = {
@@ -4543,7 +4543,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/loans/1/payoff" \
+    "https://classicwallet.org/api/v1/loans/1/payoff" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4551,7 +4551,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/loans/1/payoff"
+    "https://classicwallet.org/api/v1/loans/1/payoff"
 );
 
 const headers = {
@@ -4695,7 +4695,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/services/airtime" \
+    "https://classicwallet.org/api/v1/services/airtime" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4709,7 +4709,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/services/airtime"
+    "https://classicwallet.org/api/v1/services/airtime"
 );
 
 const headers = {
@@ -4905,7 +4905,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/services/data" \
+    "https://classicwallet.org/api/v1/services/data" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4919,7 +4919,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/services/data"
+    "https://classicwallet.org/api/v1/services/data"
 );
 
 const headers = {
@@ -5106,7 +5106,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/services/electricity" \
+    "https://classicwallet.org/api/v1/services/electricity" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5121,7 +5121,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/services/electricity"
+    "https://classicwallet.org/api/v1/services/electricity"
 );
 
 const headers = {
@@ -5330,7 +5330,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/services/cable-tv" \
+    "https://classicwallet.org/api/v1/services/cable-tv" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5344,7 +5344,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/services/cable-tv"
+    "https://classicwallet.org/api/v1/services/cable-tv"
 );
 
 const headers = {
@@ -5535,7 +5535,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/shares/listing" \
+    --get "https://classicwallet.org/api/v1/shares/listing" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5543,7 +5543,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/listing"
+    "https://classicwallet.org/api/v1/shares/listing"
 );
 
 const headers = {
@@ -5672,7 +5672,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://ship.test/api/v1/shares/listing/price" \
+    "https://classicwallet.org/api/v1/shares/listing/price" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5684,7 +5684,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/listing/price"
+    "https://classicwallet.org/api/v1/shares/listing/price"
 );
 
 const headers = {
@@ -5839,7 +5839,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/shares/orders" \
+    --get "https://classicwallet.org/api/v1/shares/orders" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5847,7 +5847,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders"
+    "https://classicwallet.org/api/v1/shares/orders"
 );
 
 const headers = {
@@ -6032,7 +6032,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/shares/orders/1" \
+    --get "https://classicwallet.org/api/v1/shares/orders/1" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6040,7 +6040,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders/1"
+    "https://classicwallet.org/api/v1/shares/orders/1"
 );
 
 const headers = {
@@ -6199,7 +6199,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/shares/orders/buy" \
+    "https://classicwallet.org/api/v1/shares/orders/buy" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -6211,7 +6211,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders/buy"
+    "https://classicwallet.org/api/v1/shares/orders/buy"
 );
 
 const headers = {
@@ -6383,7 +6383,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/shares/orders/sell" \
+    "https://classicwallet.org/api/v1/shares/orders/sell" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -6395,7 +6395,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders/sell"
+    "https://classicwallet.org/api/v1/shares/orders/sell"
 );
 
 const headers = {
@@ -6568,7 +6568,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/shares/orders/1/approve" \
+    "https://classicwallet.org/api/v1/shares/orders/1/approve" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6576,7 +6576,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders/1/approve"
+    "https://classicwallet.org/api/v1/shares/orders/1/approve"
 );
 
 const headers = {
@@ -6744,7 +6744,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/shares/orders/1/reject" \
+    "https://classicwallet.org/api/v1/shares/orders/1/reject" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -6756,7 +6756,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/orders/1/reject"
+    "https://classicwallet.org/api/v1/shares/orders/1/reject"
 );
 
 const headers = {
@@ -6922,7 +6922,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/shares/price-history" \
+    --get "https://classicwallet.org/api/v1/shares/price-history" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6930,7 +6930,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/price-history"
+    "https://classicwallet.org/api/v1/shares/price-history"
 );
 
 const headers = {
@@ -6959,13 +6959,13 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;old_price&quot;: 10.98,
             &quot;new_price&quot;: 487.1,
-            &quot;created_at&quot;: &quot;2026-07-09T13:49:47.192363Z&quot;
+            &quot;created_at&quot;: &quot;2026-07-09T14:05:18.087414Z&quot;
         },
         {
             &quot;id&quot;: null,
             &quot;old_price&quot;: 334.4,
             &quot;new_price&quot;: 218.45,
-            &quot;created_at&quot;: &quot;2026-07-29T13:49:47.193321Z&quot;
+            &quot;created_at&quot;: &quot;2026-07-29T14:05:18.088426Z&quot;
         }
     ],
     &quot;links&quot;: {
@@ -7105,7 +7105,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/shares/dividends" \
+    "https://classicwallet.org/api/v1/shares/dividends" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -7117,7 +7117,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/dividends"
+    "https://classicwallet.org/api/v1/shares/dividends"
 );
 
 const headers = {
@@ -7270,7 +7270,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/shares/dividends/payouts" \
+    --get "https://classicwallet.org/api/v1/shares/dividends/payouts" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7278,7 +7278,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/shares/dividends/payouts"
+    "https://classicwallet.org/api/v1/shares/dividends/payouts"
 );
 
 const headers = {
@@ -7309,7 +7309,7 @@ fetch(url, {
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
                 &quot;total_amount&quot;: 6654.11,
-                &quot;declared_at&quot;: &quot;2026-09-07T13:49:47.000000Z&quot;
+                &quot;declared_at&quot;: &quot;2026-09-07T14:05:18.000000Z&quot;
             }
         },
         {
@@ -7318,7 +7318,7 @@ fetch(url, {
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
                 &quot;total_amount&quot;: 9064.05,
-                &quot;declared_at&quot;: &quot;2026-09-07T13:49:47.000000Z&quot;
+                &quot;declared_at&quot;: &quot;2026-09-07T14:05:18.000000Z&quot;
             }
         }
     ],
@@ -7463,7 +7463,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/faqs" \
+    --get "https://classicwallet.org/api/v1/faqs" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7471,7 +7471,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/faqs"
+    "https://classicwallet.org/api/v1/faqs"
 );
 
 const headers = {
@@ -7617,7 +7617,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/tickets" \
+    --get "https://classicwallet.org/api/v1/tickets" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -7625,7 +7625,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/tickets"
+    "https://classicwallet.org/api/v1/tickets"
 );
 
 const headers = {
@@ -7810,7 +7810,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/tickets" \
+    "https://classicwallet.org/api/v1/tickets" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -7824,7 +7824,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/tickets"
+    "https://classicwallet.org/api/v1/tickets"
 );
 
 const headers = {
@@ -8006,7 +8006,7 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/tickets/1" \
+    --get "https://classicwallet.org/api/v1/tickets/1" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8014,7 +8014,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/tickets/1"
+    "https://classicwallet.org/api/v1/tickets/1"
 );
 
 const headers = {
@@ -8164,7 +8164,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/tickets/1/replies" \
+    "https://classicwallet.org/api/v1/tickets/1/replies" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -8176,7 +8176,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/tickets/1/replies"
+    "https://classicwallet.org/api/v1/tickets/1/replies"
 );
 
 const headers = {
@@ -8328,7 +8328,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/user" \
+    --get "https://classicwallet.org/api/v1/user" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8336,7 +8336,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/user"
+    "https://classicwallet.org/api/v1/user"
 );
 
 const headers = {
@@ -8470,18 +8470,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://ship.test/api/v1/user" \
+    "https://classicwallet.org/api/v1/user" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
     --form "name=b"\
     --form "phone_number=n"\
-    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\phpA1B6.tmp" </code></pre></div>
+    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\phpD610.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/user"
+    "https://classicwallet.org/api/v1/user"
 );
 
 const headers = {
@@ -8639,7 +8639,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpA1B6.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpD610.tmp</code></p>
         </div>
         </form>
 
@@ -8661,7 +8661,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/wallet" \
+    --get "https://classicwallet.org/api/v1/wallet" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -8669,7 +8669,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet"
+    "https://classicwallet.org/api/v1/wallet"
 );
 
 const headers = {
@@ -8803,7 +8803,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/wallet/fund" \
+    "https://classicwallet.org/api/v1/wallet/fund" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -8815,7 +8815,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/fund"
+    "https://classicwallet.org/api/v1/wallet/fund"
 );
 
 const headers = {
@@ -8971,7 +8971,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/wallet/fund/verify" \
+    "https://classicwallet.org/api/v1/wallet/fund/verify" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -8983,7 +8983,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/fund/verify"
+    "https://classicwallet.org/api/v1/wallet/fund/verify"
 );
 
 const headers = {
@@ -9144,7 +9144,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/wallet/transfer" \
+    "https://classicwallet.org/api/v1/wallet/transfer" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -9158,7 +9158,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/transfer"
+    "https://classicwallet.org/api/v1/wallet/transfer"
 );
 
 const headers = {
@@ -9354,7 +9354,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://ship.test/api/v1/wallet/withdraw" \
+    "https://classicwallet.org/api/v1/wallet/withdraw" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -9369,7 +9369,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/withdraw"
+    "https://classicwallet.org/api/v1/wallet/withdraw"
 );
 
 const headers = {
@@ -9569,7 +9569,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/wallet/banks" \
+    --get "https://classicwallet.org/api/v1/wallet/banks" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9577,7 +9577,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/banks"
+    "https://classicwallet.org/api/v1/wallet/banks"
 );
 
 const headers = {
@@ -9715,7 +9715,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/wallet/verify-account?account_number=0123456789&amp;bank_code=058" \
+    --get "https://classicwallet.org/api/v1/wallet/verify-account?account_number=0123456789&amp;bank_code=058" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -9728,7 +9728,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/verify-account"
+    "https://classicwallet.org/api/v1/wallet/verify-account"
 );
 
 const params = {
@@ -9929,7 +9929,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/wallet/transactions" \
+    --get "https://classicwallet.org/api/v1/wallet/transactions" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -9937,7 +9937,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/transactions"
+    "https://classicwallet.org/api/v1/wallet/transactions"
 );
 
 const headers = {
@@ -10085,7 +10085,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://ship.test/api/v1/wallet/transactions/1" \
+    --get "https://classicwallet.org/api/v1/wallet/transactions/1" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -10093,7 +10093,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://ship.test/api/v1/wallet/transactions/1"
+    "https://classicwallet.org/api/v1/wallet/transactions/1"
 );
 
 const headers = {
