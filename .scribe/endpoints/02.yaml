@@ -1,0 +1,121 @@
+name: User
+description: 'Authenticated user profile'
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/user
+    metadata:
+      custom: []
+      groupName: User
+      groupDescription: 'Authenticated user profile'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":null,"name":"Morgan Hirthe","email":"imclaughlin@example.org","phone_number":null,"avatar_url":null,"created_at":null}}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PATCH
+    uri: api/v1/user
+    metadata:
+      custom: []
+      groupName: User
+      groupDescription: 'Authenticated user profile'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Must be at least 10 characters. Must not be greater than 15 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      avatar:
+        custom: []
+        name: avatar
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      phone_number: 'n'
+    fileParameters:
+      avatar: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":null,"name":"Ramiro Okuneva","email":"gulgowski.asia@example.com","phone_number":null,"avatar_url":null,"created_at":null}}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
