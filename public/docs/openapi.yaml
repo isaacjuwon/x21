@@ -67,7 +67,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: lafayette.considine@example.com
-                      email_verified_at: '2026-09-07T13:30:49+00:00'
+                      email_verified_at: '2026-09-07T13:39:43+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -95,7 +95,7 @@ paths:
                             example: lafayette.considine@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-07T13:30:49+00:00'
+                            example: '2026-09-07T13:39:43+00:00'
                           created_at:
                             type: string
                             example: null
@@ -191,7 +191,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: cormier.nick@example.com
-                      email_verified_at: '2026-09-07T13:30:49+00:00'
+                      email_verified_at: '2026-09-07T13:39:43+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -219,7 +219,7 @@ paths:
                             example: cormier.nick@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-07T13:30:49+00:00'
+                            example: '2026-09-07T13:39:43+00:00'
                           created_at:
                             type: string
                             example: null
@@ -420,7 +420,7 @@ paths:
                     attributes:
                       name: 'Morgan Hirthe'
                       email: dare.emelie@example.com
-                      email_verified_at: '2026-09-07T13:30:49+00:00'
+                      email_verified_at: '2026-09-07T13:39:43+00:00'
                       created_at: null
                       updated_at: null
                 properties:
@@ -444,7 +444,7 @@ paths:
                             example: dare.emelie@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-07T13:30:49+00:00'
+                            example: '2026-09-07T13:39:43+00:00'
                           created_at:
                             type: string
                             example: null
@@ -3076,12 +3076,12 @@ paths:
                       id: null
                       old_price: 10.98
                       new_price: 487.1
-                      created_at: '2026-07-09T13:30:50.859385Z'
+                      created_at: '2026-07-09T13:39:44.032365Z'
                     -
                       id: null
                       old_price: 334.4
                       new_price: 218.45
-                      created_at: '2026-07-29T13:30:50.860361Z'
+                      created_at: '2026-07-29T13:39:44.033474Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3119,12 +3119,12 @@ paths:
                         id: null
                         old_price: 10.98
                         new_price: 487.1
-                        created_at: '2026-07-09T13:30:50.859385Z'
+                        created_at: '2026-07-09T13:39:44.032365Z'
                       -
                         id: null
                         old_price: 334.4
                         new_price: 218.45
-                        created_at: '2026-07-29T13:30:50.860361Z'
+                        created_at: '2026-07-29T13:39:44.033474Z'
                     items:
                       type: object
                       properties:
@@ -3140,7 +3140,7 @@ paths:
                           example: 487.1
                         created_at:
                           type: string
-                          example: '2026-07-09T13:30:50.859385Z'
+                          example: '2026-07-09T13:39:44.032365Z'
                   links:
                     type: object
                     properties:
@@ -3286,14 +3286,14 @@ paths:
                       created_at: null
                       dividend:
                         total_amount: 6654.11
-                        declared_at: '2026-09-07T13:30:50.000000Z'
+                        declared_at: '2026-09-07T13:39:44.000000Z'
                     -
                       id: null
                       amount: 866.41
                       created_at: null
                       dividend:
                         total_amount: 9064.05
-                        declared_at: '2026-09-07T13:30:50.000000Z'
+                        declared_at: '2026-09-07T13:39:44.000000Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3333,14 +3333,14 @@ paths:
                         created_at: null
                         dividend:
                           total_amount: 6654.11
-                          declared_at: '2026-09-07T13:30:50.000000Z'
+                          declared_at: '2026-09-07T13:39:44.000000Z'
                       -
                         id: null
                         amount: 866.41
                         created_at: null
                         dividend:
                           total_amount: 9064.05
-                          declared_at: '2026-09-07T13:30:50.000000Z'
+                          declared_at: '2026-09-07T13:39:44.000000Z'
                     items:
                       type: object
                       properties:
@@ -3363,7 +3363,7 @@ paths:
                               example: 6654.11
                             declared_at:
                               type: string
-                              example: '2026-09-07T13:30:50.000000Z'
+                              example: '2026-09-07T13:39:44.000000Z'
                   links:
                     type: object
                     properties:
@@ -3782,7 +3782,7 @@ paths:
                 priority:
                   type: string
                   description: ''
-                  example: low
+                  example: high
                   enum:
                     - low
                     - medium

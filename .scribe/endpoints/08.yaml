@@ -93,7 +93,7 @@ endpoints:
         name: priority
         description: ''
         required: false
-        example: low
+        example: high
         type: string
         enumValues:
           - low
@@ -106,7 +106,7 @@ endpoints:
     cleanBodyParameters:
       subject: b
       message: ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsn
-      priority: low
+      priority: high
     fileParameters: []
     responses:
       -
