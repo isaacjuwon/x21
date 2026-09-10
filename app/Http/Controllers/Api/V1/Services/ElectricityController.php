@@ -17,11 +17,9 @@ use Knuckles\Scribe\Attributes\Authenticated;
 use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
-use WendellAdriel\Idempotency\Attributes\Idempotent;
 
 #[Group('Services', 'VTU and bill payment services')]
 #[Authenticated]
-#[Idempotent]
 class ElectricityController
 {
     #[BodyParam('brand_id', 'integer', description: 'Electricity provider brand ID', required: true, example: 2)]

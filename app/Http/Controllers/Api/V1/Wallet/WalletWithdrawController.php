@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Wallet;
 
-use WendellAdriel\Idempotency\Attributes\Idempotent;
-
 use App\Actions\Wallets\WithdrawWalletAction;
 use App\Http\Resources\Api\V1\Wallet\TransactionResource;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +13,6 @@ use Knuckles\Scribe\Attributes\Response;
 
 #[Group('Wallet', 'Wallet balance and overview')]
 #[Authenticated]
-#[Idempotent]
 class WalletWithdrawController
 {
     #[BodyParam('amount', 'number', description: 'Amount to withdraw', required: true, example: 5000)]

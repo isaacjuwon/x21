@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Loans;
 
-use WendellAdriel\Idempotency\Attributes\Idempotent;
-
 use App\Actions\Loans\RepayLoanAction;
 use App\Http\Requests\Api\V1\Loans\StoreRepaymentRequest;
 use App\Http\Resources\Api\V1\Loans\LoanRepaymentResource;
@@ -19,7 +17,6 @@ use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 
 #[Group('Loans', 'Loan application and management')]
 #[Authenticated]
-#[Idempotent]
 class LoanRepaymentController
 {
     use AuthorizesRequests;

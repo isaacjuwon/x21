@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "5d405e5f-c872-46e9-8f79-c5031c505430",
+        "_postman_id": "33fc047b-5385-47df-b88a-4e4cd0fe9339",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -56,7 +56,7 @@
                                 {
                                     "header": [],
                                     "code": 201,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"lafayette.considine@example.com\",\"email_verified_at\":\"2026-09-10T17:24:19+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"lafayette.considine@example.com\",\"email_verified_at\":\"2026-09-10T18:26:00+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
                                     "name": "Registration succeeded."
                                 },
                                 {
@@ -100,7 +100,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"cormier.nick@example.com\",\"email_verified_at\":\"2026-09-10T17:24:19+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"cormier.nick@example.com\",\"email_verified_at\":\"2026-09-10T18:26:01+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
                                     "name": "Login succeeded."
                                 },
                                 {
@@ -138,7 +138,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Morgan Hirthe\",\"email\":\"dare.emelie@example.com\",\"email_verified_at\":\"2026-09-10T17:24:19+00:00\",\"created_at\":null,\"updated_at\":null}}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Morgan Hirthe\",\"email\":\"dare.emelie@example.com\",\"email_verified_at\":\"2026-09-10T18:26:01+00:00\",\"created_at\":null,\"updated_at\":null}}}",
                                     "name": "Authenticated user profile."
                                 },
                                 {
@@ -552,7 +552,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"type\":\"bvn\",\"number\":\"82256977571\"}"
+                            "raw": "{\"type\":\"nin\",\"number\":\"82256977571\"}"
                         },
                         "description": "Returns immediately with the verification result."
                     },
@@ -583,7 +583,7 @@
                             "formdata": [
                                 {
                                     "key": "type",
-                                    "value": "nin",
+                                    "value": "bvn",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1633,7 +1633,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"old_price\":10.98,\"new_price\":487.1,\"created_at\":\"2026-07-12T17:24:21.524861Z\"},{\"id\":null,\"old_price\":334.4,\"new_price\":218.45,\"created_at\":\"2026-08-01T17:24:21.526292Z\"}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "body": "{\"data\":[{\"id\":null,\"old_price\":10.98,\"new_price\":487.1,\"created_at\":\"2026-07-12T18:26:03.439049Z\"},{\"id\":null,\"old_price\":334.4,\"new_price\":218.45,\"created_at\":\"2026-08-01T18:26:03.440151Z\"}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
                             "name": ""
                         }
                     ]
@@ -1706,7 +1706,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"amount\":2.99,\"created_at\":null,\"dividend\":{\"total_amount\":6654.11,\"declared_at\":\"2026-09-10T17:24:21.000000Z\"}},{\"id\":null,\"amount\":866.41,\"created_at\":null,\"dividend\":{\"total_amount\":9064.05,\"declared_at\":\"2026-09-10T17:24:21.000000Z\"}}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "body": "{\"data\":[{\"id\":null,\"amount\":2.99,\"created_at\":null,\"dividend\":{\"total_amount\":6654.11,\"declared_at\":\"2026-09-10T18:26:03.000000Z\"}},{\"id\":null,\"amount\":866.41,\"created_at\":null,\"dividend\":{\"total_amount\":9064.05,\"declared_at\":\"2026-09-10T18:26:03.000000Z\"}}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
                             "name": ""
                         }
                     ]

@@ -14,11 +14,9 @@ use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromApiResource;
-use WendellAdriel\Idempotency\Attributes\Idempotent;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
-#[Idempotent]
 final class BuyOrderController
 {
     public function __construct(

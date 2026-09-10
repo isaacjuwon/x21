@@ -16,11 +16,9 @@ use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromApiResource;
-use WendellAdriel\Idempotency\Attributes\Idempotent;
 
 #[Group('Loans', 'Loan application and management')]
 #[Authenticated]
-#[Idempotent]
 final class StoreController
 {
     public function __construct(
