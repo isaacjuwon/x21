@@ -299,7 +299,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-09-28T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":45,"due_date":"2026-11-20T00:00:00.000000Z","instalment_amount":1579.06,"principal_component":280.37,"interest_component":1298.69,"outstanding_balance":11744.34,"status":"Pending","remaining_amount":1579.06,"paid_at":null}]}'
+        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-10-01T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":45,"due_date":"2026-11-24T00:00:00.000000Z","instalment_amount":1579.06,"principal_component":280.37,"interest_component":1298.69,"outstanding_balance":11744.34,"status":"Pending","remaining_amount":1579.06,"paid_at":null}]}'
         headers: []
         description: ''
     responseFields: []
