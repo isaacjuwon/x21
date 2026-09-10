@@ -38,7 +38,6 @@ use App\Http\Controllers\Api\V1\Shares\ShareHoldingController;
 use App\Http\Controllers\Api\V1\Shares\ShareOrderApprovalController;
 use App\Http\Controllers\Api\V1\Shares\ShareOrderRejectionController;
 use App\Http\Controllers\Api\V1\Shares\SharePriceHistoryController;
-use App\Http\Controllers\Api\V1\Shares\ShowListingController;
 use App\Http\Controllers\Api\V1\Shares\ShowOrderController;
 use App\Http\Controllers\Api\V1\Shares\UpdateListingController;
 use App\Http\Controllers\Api\V1\Support\AiSupportController;
@@ -157,7 +156,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     // --- Shares ---
     Route::prefix('/shares')->name('shares.')->group(function (): void {
-        Route::get('/listing', ShowListingController::class)->name('listing.show');
         Route::put('/listing/price', UpdateListingController::class)->name('listing.update');
 
         Route::get('/orders', IndexOrdersController::class)->name('orders.index');

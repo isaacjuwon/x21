@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Shares;
 
-use WendellAdriel\Idempotency\Attributes\Idempotent;
-
 use App\Actions\Shares\PlaceBuyOrderAction;
 use App\Http\Requests\Api\V1\Shares\StoreBuyOrderRequest;
 use App\Http\Resources\Api\V1\Shares\ShareOrderResource;
@@ -16,9 +14,11 @@ use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromApiResource;
+use WendellAdriel\Idempotency\Attributes\Idempotent;
 
 #[Group('Shares', 'Share orders and holdings')]
 #[Authenticated]
+#[Idempotent]
 final class BuyOrderController
 {
     public function __construct(

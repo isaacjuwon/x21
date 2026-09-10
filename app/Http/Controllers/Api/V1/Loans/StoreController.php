@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1\Loans;
 
-use WendellAdriel\Idempotency\Attributes\Idempotent;
-
 use App\Enums\Loans\LoanStatus;
 use App\Http\Requests\Api\V1\Loans\StoreLoanRequest;
 use App\Http\Resources\Api\V1\Loans\LoanResource;
@@ -18,9 +16,11 @@ use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromApiResource;
+use WendellAdriel\Idempotency\Attributes\Idempotent;
 
 #[Group('Loans', 'Loan application and management')]
 #[Authenticated]
+#[Idempotent]
 final class StoreController
 {
     public function __construct(
