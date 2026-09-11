@@ -23,6 +23,9 @@ tags:
     name: Services
     description: 'VTU and bill payment services'
   -
+    name: Settings
+    description: 'Application configuration'
+  -
     name: Shares
     description: 'Share orders and holdings'
   -
@@ -67,7 +70,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: lafayette.considine@example.com
-                      email_verified_at: '2026-09-10T18:26:00+00:00'
+                      email_verified_at: '2026-09-11T11:20:21+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -95,7 +98,7 @@ paths:
                             example: lafayette.considine@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-10T18:26:00+00:00'
+                            example: '2026-09-11T11:20:21+00:00'
                           created_at:
                             type: string
                             example: null
@@ -191,7 +194,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: cormier.nick@example.com
-                      email_verified_at: '2026-09-10T18:26:01+00:00'
+                      email_verified_at: '2026-09-11T11:20:21+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -219,7 +222,7 @@ paths:
                             example: cormier.nick@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-10T18:26:01+00:00'
+                            example: '2026-09-11T11:20:21+00:00'
                           created_at:
                             type: string
                             example: null
@@ -420,7 +423,7 @@ paths:
                     attributes:
                       name: 'Morgan Hirthe'
                       email: dare.emelie@example.com
-                      email_verified_at: '2026-09-10T18:26:01+00:00'
+                      email_verified_at: '2026-09-11T11:20:21+00:00'
                       created_at: null
                       updated_at: null
                 properties:
@@ -444,7 +447,7 @@ paths:
                             example: dare.emelie@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-10T18:26:01+00:00'
+                            example: '2026-09-11T11:20:21+00:00'
                           created_at:
                             type: string
                             example: null
@@ -787,7 +790,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: nin
+                  example: bvn
                   enum:
                     - nin
                     - bvn
@@ -817,7 +820,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: bvn
+                  example: nin
                   enum:
                     - nin
                     - bvn
@@ -1361,7 +1364,7 @@ paths:
                       id: null
                       loan_id: 2
                       instalment_number: 30
-                      due_date: '2026-10-01T00:00:00.000000Z'
+                      due_date: '2026-10-02T00:00:00.000000Z'
                       instalment_amount: 103.78
                       principal_component: 101.39
                       interest_component: 2.39
@@ -1389,7 +1392,7 @@ paths:
                         id: null
                         loan_id: 2
                         instalment_number: 30
-                        due_date: '2026-10-01T00:00:00.000000Z'
+                        due_date: '2026-10-02T00:00:00.000000Z'
                         instalment_amount: 103.78
                         principal_component: 101.39
                         interest_component: 2.39
@@ -1424,7 +1427,7 @@ paths:
                           example: 30
                         due_date:
                           type: string
-                          example: '2026-10-01T00:00:00.000000Z'
+                          example: '2026-10-02T00:00:00.000000Z'
                         instalment_amount:
                           type: number
                           example: 103.78
@@ -1987,6 +1990,175 @@ paths:
         required: true
         schema:
           type: integer
+  /api/v1/services/plans:
+    get:
+      summary: ''
+      operationId: getApiV1ServicesPlans
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'All service plans grouped by type'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    airtime:
+                      -
+                        id: 1
+                        name: MTN
+                        slug: mtn
+                        api_code: mtn
+                        logo: 'https://example.com/mtn.png'
+                        status: true
+                        plans: []
+                    data:
+                      -
+                        id: 1
+                        name: MTN
+                        slug: mtn
+                        api_code: mtn
+                        logo: 'https://example.com/mtn.png'
+                        status: true
+                        plans:
+                          -
+                            id: 3
+                            name: 'MTN 1GB'
+                            api_code: mtn-1gb
+                            type: SME
+                            price: '500.00'
+                            duration: '30 days'
+                            status: true
+                    cable: []
+                    electricity: []
+                    education: []
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      airtime:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            name: MTN
+                            slug: mtn
+                            api_code: mtn
+                            logo: 'https://example.com/mtn.png'
+                            status: true
+                            plans: []
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: MTN
+                            slug:
+                              type: string
+                              example: mtn
+                            api_code:
+                              type: string
+                              example: mtn
+                            logo:
+                              type: string
+                              example: 'https://example.com/mtn.png'
+                            status:
+                              type: boolean
+                              example: true
+                            plans:
+                              type: array
+                              example: []
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            name: MTN
+                            slug: mtn
+                            api_code: mtn
+                            logo: 'https://example.com/mtn.png'
+                            status: true
+                            plans:
+                              -
+                                id: 3
+                                name: 'MTN 1GB'
+                                api_code: mtn-1gb
+                                type: SME
+                                price: '500.00'
+                                duration: '30 days'
+                                status: true
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: MTN
+                            slug:
+                              type: string
+                              example: mtn
+                            api_code:
+                              type: string
+                              example: mtn
+                            logo:
+                              type: string
+                              example: 'https://example.com/mtn.png'
+                            status:
+                              type: boolean
+                              example: true
+                            plans:
+                              type: array
+                              example:
+                                -
+                                  id: 3
+                                  name: 'MTN 1GB'
+                                  api_code: mtn-1gb
+                                  type: SME
+                                  price: '500.00'
+                                  duration: '30 days'
+                                  status: true
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 3
+                                  name:
+                                    type: string
+                                    example: 'MTN 1GB'
+                                  api_code:
+                                    type: string
+                                    example: mtn-1gb
+                                  type:
+                                    type: string
+                                    example: SME
+                                  price:
+                                    type: string
+                                    example: '500.00'
+                                  duration:
+                                    type: string
+                                    example: '30 days'
+                                  status:
+                                    type: boolean
+                                    example: true
+                      cable:
+                        type: array
+                        example: []
+                      electricity:
+                        type: array
+                        example: []
+                      education:
+                        type: array
+                        example: []
+      tags:
+        - Services
   /api/v1/services/airtime:
     post:
       summary: ''
@@ -2356,6 +2528,300 @@ paths:
                 - brand_id
                 - plan_id
                 - smart_card_number
+  /api/v1/services/education:
+    post:
+      summary: ''
+      operationId: postApiV1ServicesEducation
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: 'Education pin purchase initiated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1
+                    reference: EDU-XXXXXXXXXX
+                    amount: '1500.00'
+                    status: completed
+                    type: education
+                    response_message: 'Transaction successful'
+                    created_at: '2026-01-01T00:00:00.000000Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      reference:
+                        type: string
+                        example: EDU-XXXXXXXXXX
+                      amount:
+                        type: string
+                        example: '1500.00'
+                      status:
+                        type: string
+                        example: completed
+                      type:
+                        type: string
+                        example: education
+                      response_message:
+                        type: string
+                        example: 'Transaction successful'
+                      created_at:
+                        type: string
+                        example: '2026-01-01T00:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Insufficient wallet balance.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Insufficient wallet balance.'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Education provider brand ID'
+                  example: 4
+                plan_id:
+                  type: integer
+                  description: 'Education plan ID (exam type)'
+                  example: 10
+                quantity:
+                  type: integer
+                  description: 'Number of pins/tokens to purchase (min: 1)'
+                  example: 1
+              required:
+                - brand_id
+                - plan_id
+                - quantity
+  /api/v1/settings:
+    get:
+      summary: ''
+      operationId: getApiV1Settings
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Application settings'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    general:
+                      site_name: 'My App'
+                      site_logo: 'https://example.com/logo.png'
+                      site_dark_logo: null
+                      site_favicon: null
+                      site_description: 'A great app.'
+                      contact_email: hello@example.com
+                      support_email: support@example.com
+                      currency: NGN
+                      timezone: Africa/Lagos
+                      maintenance_mode: false
+                      registration_enabled: true
+                    wallet:
+                      min_withdrawal: 500
+                      max_withdrawal: 500000
+                      withdrawal_fee: 50
+                    shares:
+                      price_per_share: 100
+                      min_shares_purchase: 1
+                      max_shares_per_user: 10000
+                      holding_period_days: 180
+                    loans:
+                      min_amount: 5000
+                      max_amount: 500000
+                      default_interest_rate: 5
+                      interest_method: FlatRate
+                      auto_approve: false
+                      enforce_kyc_requirement: true
+                      enforce_shares_requirement: true
+                      enforce_min_account_age: true
+                      min_account_age_days: 90
+                    layout:
+                      primary_color: '#3B82F6'
+                      font_family: Inter
+                      about: null
+                      address: null
+                      facebook: null
+                      twitter: null
+                      instagram: null
+                      email: null
+                      homepage_title: Welcome
+                      homepage_description: 'The best app.'
+                      homepage_features_title: Features
+                      homepage_features_description: 'What we offer.'
+                      homepage_features_items: []
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      general:
+                        type: object
+                        properties:
+                          site_name:
+                            type: string
+                            example: 'My App'
+                          site_logo:
+                            type: string
+                            example: 'https://example.com/logo.png'
+                          site_dark_logo:
+                            type: string
+                            example: null
+                            nullable: true
+                          site_favicon:
+                            type: string
+                            example: null
+                            nullable: true
+                          site_description:
+                            type: string
+                            example: 'A great app.'
+                          contact_email:
+                            type: string
+                            example: hello@example.com
+                          support_email:
+                            type: string
+                            example: support@example.com
+                          currency:
+                            type: string
+                            example: NGN
+                          timezone:
+                            type: string
+                            example: Africa/Lagos
+                          maintenance_mode:
+                            type: boolean
+                            example: false
+                          registration_enabled:
+                            type: boolean
+                            example: true
+                      wallet:
+                        type: object
+                        properties:
+                          min_withdrawal:
+                            type: integer
+                            example: 500
+                          max_withdrawal:
+                            type: integer
+                            example: 500000
+                          withdrawal_fee:
+                            type: integer
+                            example: 50
+                      shares:
+                        type: object
+                        properties:
+                          price_per_share:
+                            type: integer
+                            example: 100
+                          min_shares_purchase:
+                            type: integer
+                            example: 1
+                          max_shares_per_user:
+                            type: integer
+                            example: 10000
+                          holding_period_days:
+                            type: integer
+                            example: 180
+                      loans:
+                        type: object
+                        properties:
+                          min_amount:
+                            type: integer
+                            example: 5000
+                          max_amount:
+                            type: integer
+                            example: 500000
+                          default_interest_rate:
+                            type: integer
+                            example: 5
+                          interest_method:
+                            type: string
+                            example: FlatRate
+                          auto_approve:
+                            type: boolean
+                            example: false
+                          enforce_kyc_requirement:
+                            type: boolean
+                            example: true
+                          enforce_shares_requirement:
+                            type: boolean
+                            example: true
+                          enforce_min_account_age:
+                            type: boolean
+                            example: true
+                          min_account_age_days:
+                            type: integer
+                            example: 90
+                      layout:
+                        type: object
+                        properties:
+                          primary_color:
+                            type: string
+                            example: '#3B82F6'
+                          font_family:
+                            type: string
+                            example: Inter
+                          about:
+                            type: string
+                            example: null
+                            nullable: true
+                          address:
+                            type: string
+                            example: null
+                            nullable: true
+                          facebook:
+                            type: string
+                            example: null
+                            nullable: true
+                          twitter:
+                            type: string
+                            example: null
+                            nullable: true
+                          instagram:
+                            type: string
+                            example: null
+                            nullable: true
+                          email:
+                            type: string
+                            example: null
+                            nullable: true
+                          homepage_title:
+                            type: string
+                            example: Welcome
+                          homepage_description:
+                            type: string
+                            example: 'The best app.'
+                          homepage_features_title:
+                            type: string
+                            example: Features
+                          homepage_features_description:
+                            type: string
+                            example: 'What we offer.'
+                          homepage_features_items:
+                            type: array
+                            example: []
+      tags:
+        - Settings
+      security: []
   /api/v1/shares/listing/price:
     put:
       summary: ''
@@ -3051,12 +3517,12 @@ paths:
                       id: null
                       old_price: 10.98
                       new_price: 487.1
-                      created_at: '2026-07-12T18:26:03.439049Z'
+                      created_at: '2026-07-13T11:20:22.179468Z'
                     -
                       id: null
                       old_price: 334.4
                       new_price: 218.45
-                      created_at: '2026-08-01T18:26:03.440151Z'
+                      created_at: '2026-08-02T11:20:22.180397Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3094,12 +3560,12 @@ paths:
                         id: null
                         old_price: 10.98
                         new_price: 487.1
-                        created_at: '2026-07-12T18:26:03.439049Z'
+                        created_at: '2026-07-13T11:20:22.179468Z'
                       -
                         id: null
                         old_price: 334.4
                         new_price: 218.45
-                        created_at: '2026-08-01T18:26:03.440151Z'
+                        created_at: '2026-08-02T11:20:22.180397Z'
                     items:
                       type: object
                       properties:
@@ -3115,7 +3581,7 @@ paths:
                           example: 487.1
                         created_at:
                           type: string
-                          example: '2026-07-12T18:26:03.439049Z'
+                          example: '2026-07-13T11:20:22.179468Z'
                   links:
                     type: object
                     properties:
@@ -3257,18 +3723,18 @@ paths:
                   data:
                     -
                       id: null
-                      amount: 2.99
+                      amount: 286.86
                       created_at: null
                       dividend:
-                        total_amount: 6654.11
-                        declared_at: '2026-09-10T18:26:03.000000Z'
+                        total_amount: 8752.25
+                        declared_at: '2026-09-11T11:20:22.000000Z'
                     -
                       id: null
-                      amount: 866.41
+                      amount: 227.99
                       created_at: null
                       dividend:
-                        total_amount: 9064.05
-                        declared_at: '2026-09-10T18:26:03.000000Z'
+                        total_amount: 3330.82
+                        declared_at: '2026-09-11T11:20:22.000000Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3304,18 +3770,18 @@ paths:
                     example:
                       -
                         id: null
-                        amount: 2.99
+                        amount: 286.86
                         created_at: null
                         dividend:
-                          total_amount: 6654.11
-                          declared_at: '2026-09-10T18:26:03.000000Z'
+                          total_amount: 8752.25
+                          declared_at: '2026-09-11T11:20:22.000000Z'
                       -
                         id: null
-                        amount: 866.41
+                        amount: 227.99
                         created_at: null
                         dividend:
-                          total_amount: 9064.05
-                          declared_at: '2026-09-10T18:26:03.000000Z'
+                          total_amount: 3330.82
+                          declared_at: '2026-09-11T11:20:22.000000Z'
                     items:
                       type: object
                       properties:
@@ -3325,7 +3791,7 @@ paths:
                           nullable: true
                         amount:
                           type: number
-                          example: 2.99
+                          example: 286.86
                         created_at:
                           type: string
                           example: null
@@ -3335,10 +3801,10 @@ paths:
                           properties:
                             total_amount:
                               type: number
-                              example: 6654.11
+                              example: 8752.25
                             declared_at:
                               type: string
-                              example: '2026-09-10T18:26:03.000000Z'
+                              example: '2026-09-11T11:20:22.000000Z'
                   links:
                     type: object
                     properties:
@@ -3508,8 +3974,8 @@ paths:
                       updated_at: null
                     -
                       id: null
-                      subject: 'Deleniti nemo odit quia officia.'
-                      message: 'Neque blanditiis odio veritatis excepturi doloribus delectus. Qui repudiandae laboriosam est alias.'
+                      subject: 'Veniam corporis dolorem mollitia.'
+                      message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
                       status: open
                       status_label: Open
                       priority: medium
@@ -3561,8 +4027,8 @@ paths:
                         updated_at: null
                       -
                         id: null
-                        subject: 'Deleniti nemo odit quia officia.'
-                        message: 'Neque blanditiis odio veritatis excepturi doloribus delectus. Qui repudiandae laboriosam est alias.'
+                        subject: 'Veniam corporis dolorem mollitia.'
+                        message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
                         status: open
                         status_label: Open
                         priority: medium
@@ -3757,7 +4223,7 @@ paths:
                 priority:
                   type: string
                   description: ''
-                  example: urgent
+                  example: low
                   enum:
                     - low
                     - medium

@@ -25,10 +25,13 @@ use App\Http\Controllers\Api\V1\Loans\LoanRepaymentController;
 use App\Http\Controllers\Api\V1\Loans\LoanScheduleController;
 use App\Http\Controllers\Api\V1\Loans\ShowController as LoansShowController;
 use App\Http\Controllers\Api\V1\Loans\StoreController as LoansStoreController;
+use App\Http\Controllers\Api\V1\Settings\AppSettingsController;
 use App\Http\Controllers\Api\V1\Services\AirtimeController;
 use App\Http\Controllers\Api\V1\Services\CableTvController;
 use App\Http\Controllers\Api\V1\Services\DataController;
+use App\Http\Controllers\Api\V1\Services\EducationController;
 use App\Http\Controllers\Api\V1\Services\ElectricityController;
+use App\Http\Controllers\Api\V1\Services\IndexPlansController;
 use App\Http\Controllers\Api\V1\Shares\BuyOrderController;
 use App\Http\Controllers\Api\V1\Shares\DividendController;
 use App\Http\Controllers\Api\V1\Shares\DividendPayoutController;
@@ -72,6 +75,9 @@ Route::post('/webhooks/{provider}', [WebhookController::class, 'handle'])
         Idempotent::using(scope: IdempotencyScope::Global, required: false, ttl: 604800),
     ])
     ->name('webhooks');
+
+// --- Public ---
+Route::get('/settings', AppSettingsController::class)->name('settings');
 
 // --- Auth ---
 Route::prefix('/auth')->name('auth.')->group(function (): void {
@@ -185,10 +191,12 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     // --- Services (VTU) ---
     Route::prefix('/services')->name('services.')->group(function (): void {
+        Route::get('/plans', IndexPlansController::class)->name('plans.index');
         Route::post('/airtime', AirtimeController::class)->middleware('idempotent')->name('airtime');
         Route::post('/data', DataController::class)->middleware('idempotent')->name('data');
         Route::post('/electricity', ElectricityController::class)->middleware('idempotent')->name('electricity');
         Route::post('/cable-tv', CableTvController::class)->middleware('idempotent')->name('cable-tv');
+        Route::post('/education', EducationController::class)->middleware('idempotent')->name('education');
     });
 
     // --- KYC ---
