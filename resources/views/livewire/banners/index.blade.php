@@ -2,7 +2,6 @@
 
 use App\Models\Banner;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -17,7 +16,7 @@ use Livewire\Component;
  * Usage:
  *   <livewire:banners.index location="wallet" />
  */
-new #[Lazy] class extends Component {
+new class extends Component {
     #[Locked]
     public string $location = '';
 
@@ -51,10 +50,6 @@ new #[Lazy] class extends Component {
             ->all();
     }
 
-    public function placeholder(): string
-    {
-        return '<div></div>';
-    }
 }; ?>
 
 @php $banners = $this->banners; $total = count($banners); @endphp
