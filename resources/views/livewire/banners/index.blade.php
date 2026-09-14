@@ -76,15 +76,15 @@ new class extends Component {
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
                     style="display: none;"
-                    class="pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-zinc-950/10 dark:bg-zinc-800 dark:ring-white/10"
+                    class="pointer-events-auto relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-zinc-950/10 dark:bg-zinc-800 dark:ring-white/10"
                 >
-                    <div class="flex items-start gap-3 p-4">
+                    <div class="flex items-start gap-3 p-6">
                         <div class="min-w-0 flex-1">
                             @if ($banner['image_url'])
                                 <img
                                     src="{{ $banner['image_url'] }}"
                                     alt=""
-                                    class="mb-3 h-28 w-full rounded-lg object-cover"
+                                    class="mb-3 h-48 w-full rounded-lg object-cover"
                                     loading="lazy"
                                 />
                             @endif
