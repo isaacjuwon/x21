@@ -108,14 +108,13 @@ new class extends Component {
 
                         @if ($banner['dismissible'])
                             <flux:button
-                                variant="ghost"
+                                icon="x-mark"
+                                variant="danger"
                                 size="sm"
-                                class="shrink-0 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
+                                class="shrink-0"
                                 @click="next()"
                                 aria-label="{{ __('Dismiss') }}"
-                            >
-                                <flux:icon name="x-mark" class="size-4" />
-                            </flux:button>
+                            />
                         @endif
                     </div>
                 </div>
