@@ -17,7 +17,6 @@ class BrandForm
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logo')
                     ->image()
-                    ->avatar()
 		    ->deletable(fn () => auth()->user()->hasAnyRole(['super_admin', 'admin']))
                     ->columnSpanFull(),
                 TextInput::make('name')
