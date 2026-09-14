@@ -84,7 +84,7 @@ new class extends Component {
                                 <img
                                     src="{{ $banner['image_url'] }}"
                                     alt=""
-                                    class="mb-3 h-48 w-full rounded-lg object-cover"
+                                    class="mb-3 w-full rounded-lg"
                                     loading="lazy"
                                 />
                             @endif
