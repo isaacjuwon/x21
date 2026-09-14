@@ -89,9 +89,9 @@ new #[Lazy] class extends Component {
                 },
             }"
             x-init="start()"
-            x-teleport="body"
-            class="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:justify-end sm:px-6"
         >
+        <template x-teleport="body">
+            <div class="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:justify-end sm:px-6">
             @foreach ($banners as $index => $banner)
                 <div
                     x-show="current === {{ $index }}"
@@ -154,6 +154,8 @@ new #[Lazy] class extends Component {
                     </div>
                 </div>
             @endforeach
+            </div>
+        </template>
         </div>
     @endif
 </div>
