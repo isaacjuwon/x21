@@ -65,16 +65,16 @@ new class extends Component {
             }"
         >
         <template x-teleport="body">
-            <div class="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:justify-end sm:px-6">
+            <div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
             @foreach ($banners as $index => $banner)
                 <div
                     x-show="current === {{ $index }}"
                     x-transition:enter="transition ease-out duration-300"
-                    x-transition:enter-start="opacity-0 translate-y-2"
-                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="transition ease-in duration-200"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
                     style="display: none;"
                     class="pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-zinc-950/10 dark:bg-zinc-800 dark:ring-white/10"
                 >
@@ -108,13 +108,14 @@ new class extends Component {
 
                         @if ($banner['dismissible'])
                             <flux:button
-                                icon="x-mark"
                                 variant="ghost"
                                 size="sm"
                                 class="shrink-0 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
                                 @click="next()"
                                 aria-label="{{ __('Dismiss') }}"
-                            />
+                            >
+                                <flux:icon name="x-mark" class="size-4" />
+                            </flux:button>
                         @endif
                     </div>
                 </div>
