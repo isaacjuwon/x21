@@ -32,8 +32,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Spatie\LaravelSettings\Exceptions\MissingSettings;
 use stdClass;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Illuminate\Support\Facades\Storage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -58,11 +56,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         $this->shareSettings();
 
-Media::all()->each(function (Media $media) {
-    if (! Storage::disk($media->disk)->exists($media->getPathRelativeToRoot())) {
-        $media->delete();
-    }
-});
+
     }
 
     /**
