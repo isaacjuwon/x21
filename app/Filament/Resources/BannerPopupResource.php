@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BannerPopupResource\Pages;
 use App\Models\BannerPopup;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -240,8 +242,8 @@ class BannerPopupResource extends Resource
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
