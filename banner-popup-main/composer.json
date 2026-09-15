@@ -1,0 +1,55 @@
+{
+  "name": "inudev/banner-popup",
+  "description": "Configurable popup banner module for Laravel with Filament v3 admin panel support.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "inudev",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^11.0|^12.0",
+    "filament/filament": "^3.0",
+    "spatie/laravel-medialibrary": "^11.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^9.0",
+    "pestphp/pest": "^2.0",
+    "pestphp/pest-plugin-laravel": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Inudev\\BannerPopup\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Inudev\\BannerPopup\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Inudev\\BannerPopup\\BannerPopupServiceProvider"
+      ],
+      "aliases": {
+        "BannerPopup": "Inudev\\BannerPopup\\Facades\\BannerPopup"
+      }
+    }
+  },
+  "scripts": {
+    "test":      "./vendor/bin/pest --colors=always",
+    "test:cover": "./vendor/bin/pest --colors=always --coverage"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -3,7 +3,6 @@
 use App\Enums\Loans\LoanStatus;
 use App\Models\ShareHolding;
 use App\Models\User;
-use App\Settings\ShareSettings;
 use Illuminate\Auth\Middleware\Authenticate;
 
 test('successful loan application returns 201 with active status', function () {

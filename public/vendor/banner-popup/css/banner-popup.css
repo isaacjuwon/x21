@@ -1,0 +1,123 @@
+/* inudev/banner-popup — Popup styles
+ *
+ * Publish with: php artisan vendor:publish --tag="banner-popup-assets"
+ * Customize by overriding these variables in your own CSS.
+ */
+
+:root {
+    --bp-z-index:        9999;
+    --bp-overlay-bg:     rgba(0, 0, 0, 0.6);
+    --bp-box-radius:     8px;
+    --bp-box-max-width:  640px;
+    --bp-box-shadow:     0 8px 40px rgba(0, 0, 0, 0.35);
+    --bp-close-size:     36px;
+    --bp-close-bg:       rgba(0, 0, 0, 0.55);
+    --bp-close-color:    #ffffff;
+    --bp-close-radius:   50%;
+    --bp-transition:     0.28s ease;
+}
+
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+
+.bp-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--bp-z-index);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--bp-overlay-bg);
+    opacity: 0;
+    transition: opacity var(--bp-transition);
+    /* Hidden until .bp-visible is added by JS */
+}
+
+.bp-overlay.bp-visible {
+    opacity: 1;
+}
+
+/* ── Box ─────────────────────────────────────────────────────────────────── */
+
+.bp-box {
+    position: relative;
+    max-width: var(--bp-box-max-width);
+    width: 100%;
+    border-radius: var(--bp-box-radius);
+    overflow: hidden;
+    box-shadow: var(--bp-box-shadow);
+    transform: scale(0.92) translateY(12px);
+    transition: transform var(--bp-transition);
+}
+
+.bp-overlay.bp-visible .bp-box {
+    transform: scale(1) translateY(0);
+}
+
+/* ── Image ──────────────────────────────────────────────────────────────── */
+
+.bp-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--bp-box-radius);
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+
+.bp-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: var(--bp-close-size);
+    height: var(--bp-close-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bp-close-bg);
+    color: var(--bp-close-color);
+    border: none;
+    border-radius: var(--bp-close-radius);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+    padding: 0;
+}
+
+.bp-close:hover,
+.bp-close:focus-visible {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+    .bp-overlay,
+    .bp-box {
+        transition: none;
+    }
+}
+
+/* ── Mobile adjustments ──────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+    .bp-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .bp-box {
+        max-width: 100%;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        transform: scale(1) translateY(100%);
+    }
+
+    .bp-overlay.bp-visible .bp-box {
+        transform: scale(1) translateY(0);
+    }
+}

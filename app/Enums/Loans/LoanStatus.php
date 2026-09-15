@@ -75,6 +75,3 @@ enum LoanStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 }
-
-
-  

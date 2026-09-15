@@ -89,7 +89,7 @@ class GenerateLoanScheduleAction
         for ($n = 1; $n <= $term; $n++) {
             $interestComponent = round($outstandingBalance * $rate, 2);
             $instalmentAmount = $principalComponent + $interestComponent;
-            
+
             $nextOutstandingBalance = round($principal - ($principalComponent * $n), 2);
 
             $entries[] = [

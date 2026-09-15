@@ -2,17 +2,14 @@
     Carousel component — built on Flux UI + Alpine.js (bundled with Livewire 4).
 
     Usage:
-        <x-carousel :items="$banners">
-            <x-slot:slide :banner="$banner">
+        <x-carousel :items="$items">
+            <x-slot:slide :item="$item">
                 ...
             </x-slot:slide>
         </x-carousel>
-
-    Or via the banner-slot Livewire component which handles the query:
-        <livewire:banners.index location="wallet" />
 --}}
 @props([
-    'items' => [],         // iterable of Banner models
+    'items' => [],         // iterable of items with id, is_dismissible, media, content, link_url, link_text
     'autoPlay' => true,    // whether to auto-advance
     'interval' => 5000,    // ms between auto-advances
 ])

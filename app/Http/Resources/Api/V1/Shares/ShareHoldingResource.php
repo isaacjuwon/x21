@@ -13,7 +13,7 @@ class ShareHoldingResource extends JsonResource
         $user = $this->resource;
         $totalQuantity = $user->total_shares;
         $oldestAcquiredAt = $user->shareHoldings()->orderBy('acquired_at', 'asc')->value('acquired_at');
-        
+
         $eligibleQuantity = $user->shareHoldings()
             ->where('acquired_at', '<=', now()->subDays(config('shares.holding_period_days')))
             ->sum('quantity');

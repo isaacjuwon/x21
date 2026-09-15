@@ -16,6 +16,8 @@
                 </div>
             </div>
         </div>
+        <x-banner-popup />
+
         @fluxScripts
     </body>
 </html>

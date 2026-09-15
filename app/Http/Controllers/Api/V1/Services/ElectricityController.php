@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseElectricityAction;
+use App\Actions\Vtu\ValidateMeterAction;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
+use App\Http\Payloads\V1\Services\ValidateMeterPayload;
 use App\Http\Requests\Api\V1\Services\PurchaseElectricityRequest;
+use App\Http\Requests\Api\V1\Services\ValidateMeterRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
 use App\Models\Brand;
 use App\Models\ElectricityPlan;
@@ -72,5 +75,29 @@ class ElectricityController
         $action->handle($transaction);
 
         return (new TopupTransactionResource($transaction->fresh()))->response()->setStatusCode(201);
+    }
+
+    #[BodyParam('brand_id', 'integer', description: 'Electricity provider brand ID', required: true, example: 2)]
+    #[BodyParam('meter_number', 'string', description: 'Meter number (min: 8 chars)', required: true, example: '12345678901')]
+    #[BodyParam('meter_type', 'string', description: 'Meter type: Prepaid or Postpaid', required: true, example: 'Prepaid')]
+    #[Response([
+        'data' => ['code' => 119, 'description' => ['Customer_Name' => 'John Doe', 'Customer_Number' => '12345678901', 'Address' => '123 Main St'], 'is_valid' => true],
+    ], status: 200, description: 'Meter validated successfully')]
+    #[Response([
+        'data' => ['code' => 118, 'description' => ['message' => 'Invalid meter number'], 'is_valid' => false],
+    ], status: 200, description: 'Meter validation failed')]
+    public function validateMeter(ValidateMeterRequest $request, ValidateMeterAction $action): JsonResponse
+    {
+        $user = $request->user();
+        $payload = ValidateMeterPayload::fromRequest($request->validated());
+        $response = $action->handle($payload, $user?->id);
+
+        return response()->json([
+            'data' => [
+                'code' => $response->code,
+                'description' => $response->description,
+                'is_valid' => $response->isValid(),
+            ],
+        ], 200);
     }
 }

@@ -32,23 +32,23 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, HasWallets, Notifiable, TwoFactorAuthenticatable;
 
-  /*  public function canAccessPanel(Panel $panel): bool
-    {
-        if ($panel->getId() === 'admin') {
-            return $this->hasRole('super_admin') || $this->hasPermissionTo('view_admin_panel');
-        }
+    /*  public function canAccessPanel(Panel $panel): bool
+      {
+          if ($panel->getId() === 'admin') {
+              return $this->hasRole('super_admin') || $this->hasPermissionTo('view_admin_panel');
+          }
 
-        return true;
-    }
+          return true;
+      }
 */
 
     public function canAccessPanel(Panel $panel): bool
     {
-   	 if ($panel->getId() === 'admin') {
-      	  return $this->hasAnyRole(['super_admin', 'admin', 'manager']);
-   	 }
+        if ($panel->getId() === 'admin') {
+            return $this->hasAnyRole(['super_admin', 'admin', 'manager']);
+        }
 
-   	 return true;
+        return true;
     }
 
     public function getFilamentAvatarUrl(): ?string

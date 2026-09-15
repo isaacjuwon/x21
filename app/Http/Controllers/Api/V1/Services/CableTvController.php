@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseCableAction;
+use App\Actions\Vtu\ValidateSmartcardAction;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
+use App\Http\Payloads\V1\Services\ValidateSmartcardPayload;
 use App\Http\Requests\Api\V1\Services\PurchaseCableTvRequest;
+use App\Http\Requests\Api\V1\Services\ValidateSmartcardRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
 use App\Models\CablePlan;
 use App\Models\TopupTransaction;
@@ -63,5 +66,28 @@ class CableTvController
         $action->handle($transaction);
 
         return (new TopupTransactionResource($transaction->fresh()))->response()->setStatusCode(201);
+    }
+
+    #[BodyParam('brand_id', 'integer', description: 'Cable TV provider brand ID', required: true, example: 3)]
+    #[BodyParam('smart_card_number', 'string', description: 'Smart card / IUC number (min: 10 chars)', required: true, example: '1234567890')]
+    #[Response([
+        'data' => ['code' => 119, 'description' => ['Customer_Name' => 'John Doe', 'Customer_Number' => '1234567890', 'Address' => '123 Main St']],
+    ], status: 200, description: 'Smartcard validated successfully')]
+    #[Response([
+        'data' => ['code' => 118, 'description' => ['message' => 'Invalid smartcard number']],
+    ], status: 200, description: 'Smartcard validation failed')]
+    public function validateSmartcard(ValidateSmartcardRequest $request, ValidateSmartcardAction $action): JsonResponse
+    {
+        $user = $request->user();
+        $payload = ValidateSmartcardPayload::fromRequest($request->validated());
+        $response = $action->handle($payload, $user?->id);
+
+        return response()->json([
+            'data' => [
+                'code' => $response->code,
+                'description' => $response->description,
+                'is_valid' => $response->isValid(),
+            ],
+        ], 200);
     }
 }

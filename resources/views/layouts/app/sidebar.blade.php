@@ -154,6 +154,8 @@
 
         <flux:toast />
 
+        <x-banner-popup />
+
         @fluxScripts
     </body>
 </html>

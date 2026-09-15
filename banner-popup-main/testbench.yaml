@@ -1,0 +1,9 @@
+providers:
+  - Inudev\BannerPopup\BannerPopupServiceProvider
+  - Spatie\MediaLibrary\MediaLibraryServiceProvider
+
+env:
+  APP_KEY: "base64:4rHKEgpBDB9FhMCDjkWiGDHoUCrB1aCPMFfMbzek0dw="
+  DB_CONNECTION: sqlite
+  DB_DATABASE: ":memory:"
+  MEDIA_DISK: testing

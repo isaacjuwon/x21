@@ -9,6 +9,9 @@ use App\Integrations\Epins\Entities\PurchaseData;
 use App\Integrations\Epins\Entities\PurchaseElectricity;
 use App\Integrations\Epins\Entities\PurchaseExam;
 use App\Integrations\Epins\Entities\ServiceResponse;
+use App\Integrations\Epins\Entities\ValidateMeter;
+use App\Integrations\Epins\Entities\ValidateSmartcard;
+use App\Integrations\Epins\Entities\ValidationResponse;
 
 class EpinsProvider implements VtuProvider
 {
@@ -39,5 +42,15 @@ class EpinsProvider implements VtuProvider
     public function purchaseExam(PurchaseExam $entity): ServiceResponse
     {
         return $this->connector->education()->purchase($entity);
+    }
+
+    public function validateSmartcard(ValidateSmartcard $entity): ValidationResponse
+    {
+        return $this->connector->cable()->validate($entity);
+    }
+
+    public function validateMeter(ValidateMeter $entity): ValidationResponse
+    {
+        return $this->connector->electricity()->validateMeter($entity);
     }
 }

@@ -6,7 +6,6 @@ use App\Enums\Shares\ShareOrderStatus;
 use App\Enums\Shares\ShareOrderType;
 use App\Enums\Wallets\WalletType;
 use App\Events\Shares\ShareOrderPlaced;
-use App\Exceptions\Shares\InsufficientAvailableSharesException;
 use App\Exceptions\Shares\MaxSharesPerUserExceededException;
 use App\Exceptions\Shares\MinSharesPurchaseNotMetException;
 use App\Models\ShareOrder;

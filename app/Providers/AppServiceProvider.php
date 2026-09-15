@@ -13,6 +13,7 @@ use App\Listeners\Services\SendServicePurchasedNotificationListener;
 use App\Listeners\Wallets\DispatchWalletReversalListener;
 use App\Listeners\Wallets\SendWalletWithdrawnNotificationListener;
 use App\Managers\ApiManager;
+use App\Managers\BannerPopupManager;
 use App\Models\Faq;
 use App\Notifications\Channels\KudiSmsChannel;
 use App\Settings\GeneralSettings;
@@ -22,6 +23,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\ChannelManager;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -41,6 +43,13 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ApiManager::class, fn ($app) => new ApiManager($app));
+
+        $this->app->singleton('banner-popup', fn () => new BannerPopupManager);
+
+        $this->mergeConfigFrom(
+            base_path('config/banner-popup.php'),
+            'banner-popup'
+        );
     }
 
     /**
@@ -55,8 +64,21 @@ class AppServiceProvider extends ServiceProvider
         $this->configureCurrency();
         $this->configureRateLimiting();
         $this->shareSettings();
+        $this->registerBannerPopup();
+    }
 
+    protected function registerBannerPopup(): void
+    {
+        $this->loadViewsFrom(base_path('banner-popup-main/resources/views'), 'banner-popup');
+        $this->loadTranslationsFrom(base_path('banner-popup-main/resources/lang'), 'banner-popup');
+        $this->loadRoutesFrom(base_path('banner-popup-main/src/Http/routes.php'));
 
+        $this->callAfterResolving('blade.compiler', function () {
+            Blade::component(
+                'banner-popup::components.banner-popup',
+                'banner-popup'
+            );
+        });
     }
 
     /**

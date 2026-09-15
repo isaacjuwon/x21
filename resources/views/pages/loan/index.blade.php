@@ -76,8 +76,6 @@ new #[Title('My Loans'), Lazy] class extends Component {
 }; ?>
 
 <div class="space-y-6">
-    <livewire:banners.index location="loans" />
-
     <div class="flex items-center justify-between">
         <flux:heading size="xl">{{ __('My Loans') }}</flux:heading>
 
