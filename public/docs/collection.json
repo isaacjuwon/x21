@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "094ce6b6-a13b-4c5d-afca-ff97356c5264",
+        "_postman_id": "d7f99cda-f255-43f3-ac2d-3a67a2a4736b",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -56,7 +56,7 @@
                                 {
                                     "header": [],
                                     "code": 201,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"lafayette.considine@example.com\",\"email_verified_at\":\"2026-09-11T11:20:21+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"lafayette.considine@example.com\",\"email_verified_at\":\"2026-09-15T15:27:33+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
                                     "name": "Registration succeeded."
                                 },
                                 {
@@ -100,7 +100,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"cormier.nick@example.com\",\"email_verified_at\":\"2026-09-11T11:20:21+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Justina Gaylord\",\"email\":\"cormier.nick@example.com\",\"email_verified_at\":\"2026-09-15T15:27:33+00:00\",\"created_at\":null,\"updated_at\":null}},\"meta\":{\"token\":\"1|example-token\",\"token_type\":\"Bearer\",\"expires_at\":null}}",
                                     "name": "Login succeeded."
                                 },
                                 {
@@ -138,7 +138,7 @@
                                 {
                                     "header": [],
                                     "code": 200,
-                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Morgan Hirthe\",\"email\":\"dare.emelie@example.com\",\"email_verified_at\":\"2026-09-11T11:20:21+00:00\",\"created_at\":null,\"updated_at\":null}}}",
+                                    "body": "{\"data\":{\"id\":\"\",\"type\":\"users\",\"attributes\":{\"name\":\"Morgan Hirthe\",\"email\":\"dare.emelie@example.com\",\"email_verified_at\":\"2026-09-15T15:27:34+00:00\",\"created_at\":null,\"updated_at\":null}}}",
                                     "name": "Authenticated user profile."
                                 },
                                 {
@@ -552,7 +552,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"type\":\"bvn\",\"number\":\"82256977571\"}"
+                            "raw": "{\"type\":\"nin\",\"number\":\"82256977571\"}"
                         },
                         "description": "Returns immediately with the verification result."
                     },
@@ -583,7 +583,7 @@
                             "formdata": [
                                 {
                                     "key": "type",
-                                    "value": "nin",
+                                    "value": "bvn",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -805,7 +805,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"loan_id\":2,\"instalment_number\":30,\"due_date\":\"2026-10-02T00:00:00.000000Z\",\"instalment_amount\":103.78,\"principal_component\":101.39,\"interest_component\":2.39,\"outstanding_balance\":21270.2,\"status\":\"Pending\",\"remaining_amount\":103.78,\"paid_at\":null},{\"id\":null,\"loan_id\":3,\"instalment_number\":45,\"due_date\":\"2026-11-24T00:00:00.000000Z\",\"instalment_amount\":1579.06,\"principal_component\":280.37,\"interest_component\":1298.69,\"outstanding_balance\":11744.34,\"status\":\"Pending\",\"remaining_amount\":1579.06,\"paid_at\":null}]}",
+                            "body": "{\"data\":[{\"id\":null,\"loan_id\":2,\"instalment_number\":30,\"due_date\":\"2026-10-06T00:00:00.000000Z\",\"instalment_amount\":103.78,\"principal_component\":101.39,\"interest_component\":2.39,\"outstanding_balance\":21270.2,\"status\":\"Pending\",\"remaining_amount\":103.78,\"paid_at\":null},{\"id\":null,\"loan_id\":3,\"instalment_number\":45,\"due_date\":\"2026-11-28T00:00:00.000000Z\",\"instalment_amount\":1579.06,\"principal_component\":280.37,\"interest_component\":1298.69,\"outstanding_balance\":11744.34,\"status\":\"Pending\",\"remaining_amount\":1579.06,\"paid_at\":null}]}",
                             "name": ""
                         }
                     ]
@@ -1278,6 +1278,47 @@
                     ]
                 },
                 {
+                    "name": "POST api\/v1\/services\/electricity\/validate-meter",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/services\/electricity\/validate-meter",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/services\/electricity\/validate-meter"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":2,\"meter_number\":\"12345678901\",\"meter_type\":\"Prepaid\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"code\":119,\"description\":{\"Customer_Name\":\"John Doe\",\"Customer_Number\":\"12345678901\",\"Address\":\"123 Main St\"},\"is_valid\":true}}",
+                            "name": "Meter validated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"code\":118,\"description\":{\"message\":\"Invalid meter number\"},\"is_valid\":false}}",
+                            "name": "Meter validation failed"
+                        }
+                    ]
+                },
+                {
                     "name": "POST api\/v1\/services\/cable-tv",
                     "request": {
                         "url": {
@@ -1315,6 +1356,47 @@
                             "code": 422,
                             "body": "{\"message\":\"Insufficient wallet balance.\"}",
                             "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/v1\/services\/cable-tv\/validate-smartcard",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/services\/cable-tv\/validate-smartcard",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/services\/cable-tv\/validate-smartcard"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"brand_id\":3,\"smart_card_number\":\"1234567890\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"code\":119,\"description\":{\"Customer_Name\":\"John Doe\",\"Customer_Number\":\"1234567890\",\"Address\":\"123 Main St\"}}}",
+                            "name": "Smartcard validated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"data\":{\"code\":118,\"description\":{\"message\":\"Invalid smartcard number\"}}}",
+                            "name": "Smartcard validation failed"
                         }
                     ]
                 },
@@ -1747,7 +1829,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"old_price\":10.98,\"new_price\":487.1,\"created_at\":\"2026-07-13T11:20:22.179468Z\"},{\"id\":null,\"old_price\":334.4,\"new_price\":218.45,\"created_at\":\"2026-08-02T11:20:22.180397Z\"}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "body": "{\"data\":[{\"id\":null,\"old_price\":10.98,\"new_price\":487.1,\"created_at\":\"2026-07-17T15:27:37.266809Z\"},{\"id\":null,\"old_price\":179.85,\"new_price\":267.96,\"created_at\":\"2026-06-23T15:27:37.272040Z\"}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
                             "name": ""
                         }
                     ]
@@ -1820,7 +1902,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"amount\":286.86,\"created_at\":null,\"dividend\":{\"total_amount\":8752.25,\"declared_at\":\"2026-09-11T11:20:22.000000Z\"}},{\"id\":null,\"amount\":227.99,\"created_at\":null,\"dividend\":{\"total_amount\":3330.82,\"declared_at\":\"2026-09-11T11:20:22.000000Z\"}}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "body": "{\"data\":[{\"id\":null,\"amount\":2.99,\"created_at\":null,\"dividend\":{\"total_amount\":6654.11,\"declared_at\":\"2026-09-15T15:27:37.000000Z\"}},{\"id\":null,\"amount\":866.41,\"created_at\":null,\"dividend\":{\"total_amount\":9064.05,\"declared_at\":\"2026-09-15T15:27:37.000000Z\"}}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
                             "name": ""
                         }
                     ]
@@ -1896,7 +1978,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\"data\":[{\"id\":null,\"subject\":\"Adipisci quidem nostrum qui commodi incidunt iure.\",\"message\":\"Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null},{\"id\":null,\"subject\":\"Veniam corporis dolorem mollitia.\",\"message\":\"Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
+                            "body": "{\"data\":[{\"id\":null,\"subject\":\"Adipisci quidem nostrum qui commodi incidunt iure.\",\"message\":\"Et modi ipsum nostrum omnis autem et consequatur. Dolores enim non facere tempora. Voluptatem laboriosam praesentium quis adipisci.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null},{\"id\":null,\"subject\":\"Inventore ut molestiae corrupti iste.\",\"message\":\"Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.\",\"status\":\"open\",\"status_label\":\"Open\",\"priority\":\"medium\",\"priority_label\":\"Medium\",\"created_at\":null,\"updated_at\":null}],\"links\":{\"first\":\"\\\/?page=1\",\"last\":\"\\\/?page=1\",\"prev\":null,\"next\":null},\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"\\\/?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"path\":\"\\\/\",\"per_page\":15,\"to\":2,\"total\":2}}",
                             "name": ""
                         }
                     ]

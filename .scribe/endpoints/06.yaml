@@ -456,7 +456,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"old_price":10.98,"new_price":487.1,"created_at":"2026-07-13T11:20:22.179468Z"},{"id":null,"old_price":334.4,"new_price":218.45,"created_at":"2026-08-02T11:20:22.180397Z"}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
+        content: '{"data":[{"id":null,"old_price":10.98,"new_price":487.1,"created_at":"2026-07-17T15:27:37.266809Z"},{"id":null,"old_price":179.85,"new_price":267.96,"created_at":"2026-06-23T15:27:37.272040Z"}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
         headers: []
         description: ''
     responseFields: []
@@ -556,7 +556,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"amount":286.86,"created_at":null,"dividend":{"total_amount":8752.25,"declared_at":"2026-09-11T11:20:22.000000Z"}},{"id":null,"amount":227.99,"created_at":null,"dividend":{"total_amount":3330.82,"declared_at":"2026-09-11T11:20:22.000000Z"}}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
+        content: '{"data":[{"id":null,"amount":2.99,"created_at":null,"dividend":{"total_amount":6654.11,"declared_at":"2026-09-15T15:27:37.000000Z"}},{"id":null,"amount":866.41,"created_at":null,"dividend":{"total_amount":9064.05,"declared_at":"2026-09-15T15:27:37.000000Z"}}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
         headers: []
         description: ''
     responseFields: []

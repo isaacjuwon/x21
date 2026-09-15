@@ -70,7 +70,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: lafayette.considine@example.com
-                      email_verified_at: '2026-09-11T11:20:21+00:00'
+                      email_verified_at: '2026-09-15T15:27:33+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -98,7 +98,7 @@ paths:
                             example: lafayette.considine@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-11T11:20:21+00:00'
+                            example: '2026-09-15T15:27:33+00:00'
                           created_at:
                             type: string
                             example: null
@@ -194,7 +194,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: cormier.nick@example.com
-                      email_verified_at: '2026-09-11T11:20:21+00:00'
+                      email_verified_at: '2026-09-15T15:27:33+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -222,7 +222,7 @@ paths:
                             example: cormier.nick@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-11T11:20:21+00:00'
+                            example: '2026-09-15T15:27:33+00:00'
                           created_at:
                             type: string
                             example: null
@@ -423,7 +423,7 @@ paths:
                     attributes:
                       name: 'Morgan Hirthe'
                       email: dare.emelie@example.com
-                      email_verified_at: '2026-09-11T11:20:21+00:00'
+                      email_verified_at: '2026-09-15T15:27:34+00:00'
                       created_at: null
                       updated_at: null
                 properties:
@@ -447,7 +447,7 @@ paths:
                             example: dare.emelie@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-11T11:20:21+00:00'
+                            example: '2026-09-15T15:27:34+00:00'
                           created_at:
                             type: string
                             example: null
@@ -790,7 +790,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: bvn
+                  example: nin
                   enum:
                     - nin
                     - bvn
@@ -820,7 +820,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: nin
+                  example: bvn
                   enum:
                     - nin
                     - bvn
@@ -1364,7 +1364,7 @@ paths:
                       id: null
                       loan_id: 2
                       instalment_number: 30
-                      due_date: '2026-10-02T00:00:00.000000Z'
+                      due_date: '2026-10-06T00:00:00.000000Z'
                       instalment_amount: 103.78
                       principal_component: 101.39
                       interest_component: 2.39
@@ -1376,7 +1376,7 @@ paths:
                       id: null
                       loan_id: 3
                       instalment_number: 45
-                      due_date: '2026-11-24T00:00:00.000000Z'
+                      due_date: '2026-11-28T00:00:00.000000Z'
                       instalment_amount: 1579.06
                       principal_component: 280.37
                       interest_component: 1298.69
@@ -1392,7 +1392,7 @@ paths:
                         id: null
                         loan_id: 2
                         instalment_number: 30
-                        due_date: '2026-10-02T00:00:00.000000Z'
+                        due_date: '2026-10-06T00:00:00.000000Z'
                         instalment_amount: 103.78
                         principal_component: 101.39
                         interest_component: 2.39
@@ -1404,7 +1404,7 @@ paths:
                         id: null
                         loan_id: 3
                         instalment_number: 45
-                        due_date: '2026-11-24T00:00:00.000000Z'
+                        due_date: '2026-11-28T00:00:00.000000Z'
                         instalment_amount: 1579.06
                         principal_component: 280.37
                         interest_component: 1298.69
@@ -1427,7 +1427,7 @@ paths:
                           example: 30
                         due_date:
                           type: string
-                          example: '2026-10-02T00:00:00.000000Z'
+                          example: '2026-10-06T00:00:00.000000Z'
                         instalment_amount:
                           type: number
                           example: 103.78
@@ -2443,6 +2443,102 @@ paths:
                 - meter_number
                 - meter_type
                 - amount
+  /api/v1/services/electricity/validate-meter:
+    post:
+      summary: ''
+      operationId: postApiV1ServicesElectricityValidateMeter
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Meter validated successfully'
+                    type: object
+                    example:
+                      data:
+                        code: 119
+                        description:
+                          Customer_Name: 'John Doe'
+                          Customer_Number: '12345678901'
+                          Address: '123 Main St'
+                        is_valid: true
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                            example: 119
+                          description:
+                            type: object
+                            properties:
+                              Customer_Name:
+                                type: string
+                                example: 'John Doe'
+                              Customer_Number:
+                                type: string
+                                example: '12345678901'
+                              Address:
+                                type: string
+                                example: '123 Main St'
+                          is_valid:
+                            type: boolean
+                            example: true
+                  -
+                    description: 'Meter validation failed'
+                    type: object
+                    example:
+                      data:
+                        code: 118
+                        description:
+                          message: 'Invalid meter number'
+                        is_valid: false
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                            example: 118
+                          description:
+                            type: object
+                            properties:
+                              message:
+                                type: string
+                                example: 'Invalid meter number'
+                          is_valid:
+                            type: boolean
+                            example: false
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Electricity provider brand ID'
+                  example: 2
+                meter_number:
+                  type: string
+                  description: 'Meter number (min: 8 chars)'
+                  example: '12345678901'
+                meter_type:
+                  type: string
+                  description: 'Meter type: Prepaid or Postpaid'
+                  example: Prepaid
+              required:
+                - brand_id
+                - meter_number
+                - meter_type
   /api/v1/services/cable-tv:
     post:
       summary: ''
@@ -2527,6 +2623,89 @@ paths:
               required:
                 - brand_id
                 - plan_id
+                - smart_card_number
+  /api/v1/services/cable-tv/validate-smartcard:
+    post:
+      summary: ''
+      operationId: postApiV1ServicesCableTvValidateSmartcard
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Smartcard validated successfully'
+                    type: object
+                    example:
+                      data:
+                        code: 119
+                        description:
+                          Customer_Name: 'John Doe'
+                          Customer_Number: '1234567890'
+                          Address: '123 Main St'
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                            example: 119
+                          description:
+                            type: object
+                            properties:
+                              Customer_Name:
+                                type: string
+                                example: 'John Doe'
+                              Customer_Number:
+                                type: string
+                                example: '1234567890'
+                              Address:
+                                type: string
+                                example: '123 Main St'
+                  -
+                    description: 'Smartcard validation failed'
+                    type: object
+                    example:
+                      data:
+                        code: 118
+                        description:
+                          message: 'Invalid smartcard number'
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                            example: 118
+                          description:
+                            type: object
+                            properties:
+                              message:
+                                type: string
+                                example: 'Invalid smartcard number'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand_id:
+                  type: integer
+                  description: 'Cable TV provider brand ID'
+                  example: 3
+                smart_card_number:
+                  type: string
+                  description: 'Smart card / IUC number (min: 10 chars)'
+                  example: '1234567890'
+              required:
+                - brand_id
                 - smart_card_number
   /api/v1/services/education:
     post:
@@ -3517,12 +3696,12 @@ paths:
                       id: null
                       old_price: 10.98
                       new_price: 487.1
-                      created_at: '2026-07-13T11:20:22.179468Z'
+                      created_at: '2026-07-17T15:27:37.266809Z'
                     -
                       id: null
-                      old_price: 334.4
-                      new_price: 218.45
-                      created_at: '2026-08-02T11:20:22.180397Z'
+                      old_price: 179.85
+                      new_price: 267.96
+                      created_at: '2026-06-23T15:27:37.272040Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3560,12 +3739,12 @@ paths:
                         id: null
                         old_price: 10.98
                         new_price: 487.1
-                        created_at: '2026-07-13T11:20:22.179468Z'
+                        created_at: '2026-07-17T15:27:37.266809Z'
                       -
                         id: null
-                        old_price: 334.4
-                        new_price: 218.45
-                        created_at: '2026-08-02T11:20:22.180397Z'
+                        old_price: 179.85
+                        new_price: 267.96
+                        created_at: '2026-06-23T15:27:37.272040Z'
                     items:
                       type: object
                       properties:
@@ -3581,7 +3760,7 @@ paths:
                           example: 487.1
                         created_at:
                           type: string
-                          example: '2026-07-13T11:20:22.179468Z'
+                          example: '2026-07-17T15:27:37.266809Z'
                   links:
                     type: object
                     properties:
@@ -3723,18 +3902,18 @@ paths:
                   data:
                     -
                       id: null
-                      amount: 286.86
+                      amount: 2.99
                       created_at: null
                       dividend:
-                        total_amount: 8752.25
-                        declared_at: '2026-09-11T11:20:22.000000Z'
+                        total_amount: 6654.11
+                        declared_at: '2026-09-15T15:27:37.000000Z'
                     -
                       id: null
-                      amount: 227.99
+                      amount: 866.41
                       created_at: null
                       dividend:
-                        total_amount: 3330.82
-                        declared_at: '2026-09-11T11:20:22.000000Z'
+                        total_amount: 9064.05
+                        declared_at: '2026-09-15T15:27:37.000000Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3770,18 +3949,18 @@ paths:
                     example:
                       -
                         id: null
-                        amount: 286.86
+                        amount: 2.99
                         created_at: null
                         dividend:
-                          total_amount: 8752.25
-                          declared_at: '2026-09-11T11:20:22.000000Z'
+                          total_amount: 6654.11
+                          declared_at: '2026-09-15T15:27:37.000000Z'
                       -
                         id: null
-                        amount: 227.99
+                        amount: 866.41
                         created_at: null
                         dividend:
-                          total_amount: 3330.82
-                          declared_at: '2026-09-11T11:20:22.000000Z'
+                          total_amount: 9064.05
+                          declared_at: '2026-09-15T15:27:37.000000Z'
                     items:
                       type: object
                       properties:
@@ -3791,7 +3970,7 @@ paths:
                           nullable: true
                         amount:
                           type: number
-                          example: 286.86
+                          example: 2.99
                         created_at:
                           type: string
                           example: null
@@ -3801,10 +3980,10 @@ paths:
                           properties:
                             total_amount:
                               type: number
-                              example: 8752.25
+                              example: 6654.11
                             declared_at:
                               type: string
-                              example: '2026-09-11T11:20:22.000000Z'
+                              example: '2026-09-15T15:27:37.000000Z'
                   links:
                     type: object
                     properties:
@@ -3974,8 +4153,8 @@ paths:
                       updated_at: null
                     -
                       id: null
-                      subject: 'Veniam corporis dolorem mollitia.'
-                      message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
+                      subject: 'Inventore ut molestiae corrupti iste.'
+                      message: 'Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.'
                       status: open
                       status_label: Open
                       priority: medium
@@ -4027,8 +4206,8 @@ paths:
                         updated_at: null
                       -
                         id: null
-                        subject: 'Veniam corporis dolorem mollitia.'
-                        message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
+                        subject: 'Inventore ut molestiae corrupti iste.'
+                        message: 'Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.'
                         status: open
                         status_label: Open
                         priority: medium

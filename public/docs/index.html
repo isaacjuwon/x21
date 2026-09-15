@@ -196,8 +196,14 @@
                                                                                 <li class="tocify-item level-2" data-unique="services-POSTapi-v1-services-electricity">
                                 <a href="#services-POSTapi-v1-services-electricity">POST api/v1/services/electricity</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="services-POSTapi-v1-services-electricity-validate-meter">
+                                <a href="#services-POSTapi-v1-services-electricity-validate-meter">POST api/v1/services/electricity/validate-meter</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="services-POSTapi-v1-services-cable-tv">
                                 <a href="#services-POSTapi-v1-services-cable-tv">POST api/v1/services/cable-tv</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="services-POSTapi-v1-services-cable-tv-validate-smartcard">
+                                <a href="#services-POSTapi-v1-services-cable-tv-validate-smartcard">POST api/v1/services/cable-tv/validate-smartcard</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="services-POSTapi-v1-services-education">
                                 <a href="#services-POSTapi-v1-services-education">POST api/v1/services/education</a>
@@ -336,7 +342,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: September 11, 2026</li>
+        <li>Last updated: September 15, 2026</li>
     </ul>
 </div>
 
@@ -425,7 +431,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;lafayette.considine@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-11T11:20:21+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:33+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -635,7 +641,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;cormier.nick@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-11T11:20:21+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:33+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -824,7 +830,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Morgan Hirthe&quot;,
             &quot;email&quot;: &quot;dare.emelie@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-11T11:20:21+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:34+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -2328,7 +2334,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"bvn\",
+    \"type\": \"nin\",
     \"number\": \"82256977571\"
 }"
 </code></pre></div>
@@ -2346,7 +2352,7 @@ const headers = {
 };
 
 let body = {
-    "type": "bvn",
+    "type": "nin",
     "number": "82256977571"
 };
 
@@ -2451,10 +2457,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-automatic"
-               value="bvn"
+               value="nin"
                data-component="body">
     <br>
-<p>Example: <code>bvn</code></p>
+<p>Example: <code>nin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2490,9 +2496,9 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "type=nin"\
+    --form "type=bvn"\
     --form "number=82256977571"\
-    --form "document=@C:\Users\DELL\AppData\Local\Temp\phpA88E.tmp" </code></pre></div>
+    --form "document=@C:\Users\DELL\AppData\Local\Temp\phpF066.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2507,7 +2513,7 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('type', 'nin');
+body.append('type', 'bvn');
 body.append('number', '82256977571');
 body.append('document', document.querySelector('input[name="document"]').files[0]);
 
@@ -2612,10 +2618,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-manual"
-               value="nin"
+               value="bvn"
                data-component="body">
     <br>
-<p>Example: <code>nin</code></p>
+<p>Example: <code>bvn</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2641,7 +2647,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpA88E.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpF066.tmp</code></p>
         </div>
         </form>
 
@@ -3464,7 +3470,7 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;loan_id&quot;: 2,
             &quot;instalment_number&quot;: 30,
-            &quot;due_date&quot;: &quot;2026-10-02T00:00:00.000000Z&quot;,
+            &quot;due_date&quot;: &quot;2026-10-06T00:00:00.000000Z&quot;,
             &quot;instalment_amount&quot;: 103.78,
             &quot;principal_component&quot;: 101.39,
             &quot;interest_component&quot;: 2.39,
@@ -3477,7 +3483,7 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;loan_id&quot;: 3,
             &quot;instalment_number&quot;: 45,
-            &quot;due_date&quot;: &quot;2026-11-24T00:00:00.000000Z&quot;,
+            &quot;due_date&quot;: &quot;2026-11-28T00:00:00.000000Z&quot;,
             &quot;instalment_amount&quot;: 1579.06,
             &quot;principal_component&quot;: 280.37,
             &quot;interest_component&quot;: 1298.69,
@@ -5500,6 +5506,213 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="services-POSTapi-v1-services-electricity-validate-meter">POST api/v1/services/electricity/validate-meter</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-v1-services-electricity-validate-meter">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://classicwallet.org/api/v1/services/electricity/validate-meter" \
+    --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"brand_id\": 2,
+    \"meter_number\": \"12345678901\",
+    \"meter_type\": \"Prepaid\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://classicwallet.org/api/v1/services/electricity/validate-meter"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "brand_id": 2,
+    "meter_number": "12345678901",
+    "meter_type": "Prepaid"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-services-electricity-validate-meter">
+            <blockquote>
+            <p>Example response (200, Meter validated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;code&quot;: 119,
+        &quot;description&quot;: {
+            &quot;Customer_Name&quot;: &quot;John Doe&quot;,
+            &quot;Customer_Number&quot;: &quot;12345678901&quot;,
+            &quot;Address&quot;: &quot;123 Main St&quot;
+        },
+        &quot;is_valid&quot;: true
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Meter validation failed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;code&quot;: 118,
+        &quot;description&quot;: {
+            &quot;message&quot;: &quot;Invalid meter number&quot;
+        },
+        &quot;is_valid&quot;: false
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-services-electricity-validate-meter" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-services-electricity-validate-meter"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-services-electricity-validate-meter"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-services-electricity-validate-meter" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-services-electricity-validate-meter">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-services-electricity-validate-meter" data-method="POST"
+      data-path="api/v1/services/electricity/validate-meter"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-services-electricity-validate-meter', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-services-electricity-validate-meter"
+                    onclick="tryItOut('POSTapi-v1-services-electricity-validate-meter');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-services-electricity-validate-meter"
+                    onclick="cancelTryOut('POSTapi-v1-services-electricity-validate-meter');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-services-electricity-validate-meter"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/services/electricity/validate-meter</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="Bearer {YOUR_BEARER_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_BEARER_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>brand_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="brand_id"                data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="2"
+               data-component="body">
+    <br>
+<p>Electricity provider brand ID Example: <code>2</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>meter_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="meter_number"                data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="12345678901"
+               data-component="body">
+    <br>
+<p>Meter number (min: 8 chars) Example: <code>12345678901</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>meter_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="meter_type"                data-endpoint="POSTapi-v1-services-electricity-validate-meter"
+               value="Prepaid"
+               data-component="body">
+    <br>
+<p>Meter type: Prepaid or Postpaid Example: <code>Prepaid</code></p>
+        </div>
+        </form>
+
                     <h2 id="services-POSTapi-v1-services-cable-tv">POST api/v1/services/cable-tv</h2>
 
 <p>
@@ -5694,6 +5907,197 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="smart_card_number"                data-endpoint="POSTapi-v1-services-cable-tv"
+               value="1234567890"
+               data-component="body">
+    <br>
+<p>Smart card / IUC number (min: 10 chars) Example: <code>1234567890</code></p>
+        </div>
+        </form>
+
+                    <h2 id="services-POSTapi-v1-services-cable-tv-validate-smartcard">POST api/v1/services/cable-tv/validate-smartcard</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-v1-services-cable-tv-validate-smartcard">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://classicwallet.org/api/v1/services/cable-tv/validate-smartcard" \
+    --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"brand_id\": 3,
+    \"smart_card_number\": \"1234567890\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://classicwallet.org/api/v1/services/cable-tv/validate-smartcard"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "brand_id": 3,
+    "smart_card_number": "1234567890"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-services-cable-tv-validate-smartcard">
+            <blockquote>
+            <p>Example response (200, Smartcard validated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;code&quot;: 119,
+        &quot;description&quot;: {
+            &quot;Customer_Name&quot;: &quot;John Doe&quot;,
+            &quot;Customer_Number&quot;: &quot;1234567890&quot;,
+            &quot;Address&quot;: &quot;123 Main St&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Smartcard validation failed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;code&quot;: 118,
+        &quot;description&quot;: {
+            &quot;message&quot;: &quot;Invalid smartcard number&quot;
+        }
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-services-cable-tv-validate-smartcard" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-services-cable-tv-validate-smartcard"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-services-cable-tv-validate-smartcard"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-services-cable-tv-validate-smartcard" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-services-cable-tv-validate-smartcard">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-services-cable-tv-validate-smartcard" data-method="POST"
+      data-path="api/v1/services/cable-tv/validate-smartcard"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-services-cable-tv-validate-smartcard', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-services-cable-tv-validate-smartcard"
+                    onclick="tryItOut('POSTapi-v1-services-cable-tv-validate-smartcard');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-services-cable-tv-validate-smartcard"
+                    onclick="cancelTryOut('POSTapi-v1-services-cable-tv-validate-smartcard');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-services-cable-tv-validate-smartcard"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/services/cable-tv/validate-smartcard</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-v1-services-cable-tv-validate-smartcard"
+               value="Bearer {YOUR_BEARER_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_BEARER_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-services-cable-tv-validate-smartcard"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-services-cable-tv-validate-smartcard"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>brand_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="brand_id"                data-endpoint="POSTapi-v1-services-cable-tv-validate-smartcard"
+               value="3"
+               data-component="body">
+    <br>
+<p>Cable TV provider brand ID Example: <code>3</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>smart_card_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="smart_card_number"                data-endpoint="POSTapi-v1-services-cable-tv-validate-smartcard"
                value="1234567890"
                data-component="body">
     <br>
@@ -7382,13 +7786,13 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;old_price&quot;: 10.98,
             &quot;new_price&quot;: 487.1,
-            &quot;created_at&quot;: &quot;2026-07-13T11:20:22.179468Z&quot;
+            &quot;created_at&quot;: &quot;2026-07-17T15:27:37.266809Z&quot;
         },
         {
             &quot;id&quot;: null,
-            &quot;old_price&quot;: 334.4,
-            &quot;new_price&quot;: 218.45,
-            &quot;created_at&quot;: &quot;2026-08-02T11:20:22.180397Z&quot;
+            &quot;old_price&quot;: 179.85,
+            &quot;new_price&quot;: 267.96,
+            &quot;created_at&quot;: &quot;2026-06-23T15:27:37.272040Z&quot;
         }
     ],
     &quot;links&quot;: {
@@ -7728,20 +8132,20 @@ fetch(url, {
     &quot;data&quot;: [
         {
             &quot;id&quot;: null,
-            &quot;amount&quot;: 286.86,
+            &quot;amount&quot;: 2.99,
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
-                &quot;total_amount&quot;: 8752.25,
-                &quot;declared_at&quot;: &quot;2026-09-11T11:20:22.000000Z&quot;
+                &quot;total_amount&quot;: 6654.11,
+                &quot;declared_at&quot;: &quot;2026-09-15T15:27:37.000000Z&quot;
             }
         },
         {
             &quot;id&quot;: null,
-            &quot;amount&quot;: 227.99,
+            &quot;amount&quot;: 866.41,
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
-                &quot;total_amount&quot;: 3330.82,
-                &quot;declared_at&quot;: &quot;2026-09-11T11:20:22.000000Z&quot;
+                &quot;total_amount&quot;: 9064.05,
+                &quot;declared_at&quot;: &quot;2026-09-15T15:27:37.000000Z&quot;
             }
         }
     ],
@@ -8086,8 +8490,8 @@ fetch(url, {
         },
         {
             &quot;id&quot;: null,
-            &quot;subject&quot;: &quot;Veniam corporis dolorem mollitia.&quot;,
-            &quot;message&quot;: &quot;Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.&quot;,
+            &quot;subject&quot;: &quot;Inventore ut molestiae corrupti iste.&quot;,
+            &quot;message&quot;: &quot;Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.&quot;,
             &quot;status&quot;: &quot;open&quot;,
             &quot;status_label&quot;: &quot;Open&quot;,
             &quot;priority&quot;: &quot;medium&quot;,
@@ -8899,7 +9303,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "name=b"\
     --form "phone_number=n"\
-    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\phpA59F.tmp" </code></pre></div>
+    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\phpE171.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9062,7 +9466,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpA59F.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpE171.tmp</code></p>
         </div>
         </form>
 

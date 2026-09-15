@@ -67,7 +67,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: bvn
+        example: nin
         type: string
         enumValues:
           - nin
@@ -87,7 +87,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      type: bvn
+      type: nin
       number: '82256977571'
     fileParameters: []
     responses: []
@@ -128,7 +128,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: nin
+        example: bvn
         type: string
         enumValues:
           - nin
@@ -159,7 +159,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      type: nin
+      type: bvn
       number: '82256977571'
     fileParameters:
       document: null
