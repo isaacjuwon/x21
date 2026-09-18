@@ -59,6 +59,7 @@ use App\Http\Controllers\Api\V1\Wallet\WalletController;
 use App\Http\Controllers\Api\V1\Wallet\WalletFundController;
 use App\Http\Controllers\Api\V1\Wallet\WalletTransferController;
 use App\Http\Controllers\Api\V1\Wallet\WalletWithdrawController;
+use App\Http\Controllers\Api\V1\Wallet\WithdrawalChargesController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Middleware\MapWebhookIdempotencyKey;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +128,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
             ->name('withdraw');
         Route::get('/banks', BankListController::class)->name('banks');
         Route::get('/verify-account', VerifyAccountController::class)->name('verify-account');
+        Route::get('/withdrawal-charges', WithdrawalChargesController::class)->name('withdrawal-charges');
         Route::get('/transactions', IndexTransactionsController::class)->name('transactions.index');
         Route::get('/transactions/{transaction}', ShowTransactionController::class)->name('transactions.show');
     });

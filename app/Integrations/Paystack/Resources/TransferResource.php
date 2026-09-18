@@ -23,7 +23,7 @@ final readonly class TransferResource
             $response = $this->connector->send(
                 method: Method::Post,
                 uri: '/transfer',
-                options: $entity->toRequestBody(),
+                options: ['json' => $entity->toRequestBody()],
             );
         } catch (Throwable $exception) {
             throw new PaystackException(

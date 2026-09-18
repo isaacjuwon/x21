@@ -129,7 +129,7 @@
                 </li>
                                     <ul id="tocify-subheader-kyc" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="kyc-GETapi-v1-kyc">
-                                <a href="#kyc-GETapi-v1-kyc">Get the authenticated user's KYC status for all types.</a>
+                                <a href="#kyc-GETapi-v1-kyc">GET api/v1/kyc</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="kyc-POSTapi-v1-kyc-automatic">
                                 <a href="#kyc-POSTapi-v1-kyc-automatic">Submit automatic KYC verification via Dojah.</a>
@@ -325,6 +325,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="wallet-GETapi-v1-wallet-verify-account">
                                 <a href="#wallet-GETapi-v1-wallet-verify-account">GET api/v1/wallet/verify-account</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="wallet-GETapi-v1-wallet-withdrawal-charges">
+                                <a href="#wallet-GETapi-v1-wallet-withdrawal-charges">GET api/v1/wallet/withdrawal-charges</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="wallet-GETapi-v1-wallet-transactions">
                                 <a href="#wallet-GETapi-v1-wallet-transactions">GET api/v1/wallet/transactions</a>
                             </li>
@@ -342,7 +345,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: September 15, 2026</li>
+        <li>Last updated: September 18, 2026</li>
     </ul>
 </div>
 
@@ -431,7 +434,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;lafayette.considine@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:33+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-18T15:27:45+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -641,7 +644,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Justina Gaylord&quot;,
             &quot;email&quot;: &quot;cormier.nick@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:33+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-18T15:27:46+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -830,7 +833,7 @@ fetch(url, {
         &quot;attributes&quot;: {
             &quot;name&quot;: &quot;Morgan Hirthe&quot;,
             &quot;email&quot;: &quot;dare.emelie@example.com&quot;,
-            &quot;email_verified_at&quot;: &quot;2026-09-15T15:27:34+00:00&quot;,
+            &quot;email_verified_at&quot;: &quot;2026-09-18T15:27:46+00:00&quot;,
             &quot;created_at&quot;: null,
             &quot;updated_at&quot;: null
         }
@@ -2189,7 +2192,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     <p>Identity verification</p>
 
-                                <h2 id="kyc-GETapi-v1-kyc">Get the authenticated user&#039;s KYC status for all types.</h2>
+                                <h2 id="kyc-GETapi-v1-kyc">GET api/v1/kyc</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -2229,6 +2232,45 @@ fetch(url, {
 </span>
 
 <span id="example-responses-GETapi-v1-kyc">
+            <blockquote>
+            <p>Example response (200, KYC records with overall verification status):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;type&quot;: &quot;nin&quot;,
+            &quot;type_label&quot;: &quot;NIN&quot;,
+            &quot;number&quot;: &quot;12345678901&quot;,
+            &quot;method&quot;: &quot;automatic&quot;,
+            &quot;method_label&quot;: &quot;Automatic&quot;,
+            &quot;status&quot;: &quot;verified&quot;,
+            &quot;status_label&quot;: &quot;Verified&quot;,
+            &quot;rejection_reason&quot;: null,
+            &quot;verified_at&quot;: &quot;2026-01-01T00:00:00.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2026-01-01T00:00:00.000000Z&quot;
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;type&quot;: &quot;bvn&quot;,
+            &quot;type_label&quot;: &quot;BVN&quot;,
+            &quot;number&quot;: &quot;12345678901&quot;,
+            &quot;method&quot;: &quot;manual&quot;,
+            &quot;method_label&quot;: &quot;Manual&quot;,
+            &quot;status&quot;: &quot;pending&quot;,
+            &quot;status_label&quot;: &quot;Pending&quot;,
+            &quot;rejection_reason&quot;: null,
+            &quot;verified_at&quot;: null,
+            &quot;created_at&quot;: &quot;2026-01-01T00:00:00.000000Z&quot;
+        }
+    ],
+    &quot;meta&quot;: {
+        &quot;is_fully_verified&quot;: false
+    }
+}</code>
+ </pre>
     </span>
 <span id="execution-results-GETapi-v1-kyc" hidden>
     <blockquote>Received response<span
@@ -2334,7 +2376,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"nin\",
+    \"type\": \"bvn\",
     \"number\": \"82256977571\"
 }"
 </code></pre></div>
@@ -2352,7 +2394,7 @@ const headers = {
 };
 
 let body = {
-    "type": "nin",
+    "type": "bvn",
     "number": "82256977571"
 };
 
@@ -2457,10 +2499,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-automatic"
-               value="nin"
+               value="bvn"
                data-component="body">
     <br>
-<p>Example: <code>nin</code></p>
+<p>Example: <code>bvn</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2496,9 +2538,9 @@ Must be one of:
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "type=bvn"\
+    --form "type=nin"\
     --form "number=82256977571"\
-    --form "document=@C:\Users\DELL\AppData\Local\Temp\phpF066.tmp" </code></pre></div>
+    --form "document=@C:\Users\DELL\AppData\Local\Temp\php77A1.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -2513,7 +2555,7 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('type', 'bvn');
+body.append('type', 'nin');
 body.append('number', '82256977571');
 body.append('document', document.querySelector('input[name="document"]').files[0]);
 
@@ -2618,10 +2660,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-v1-kyc-manual"
-               value="bvn"
+               value="nin"
                data-component="body">
     <br>
-<p>Example: <code>bvn</code></p>
+<p>Example: <code>nin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>nin</code></li> <li><code>bvn</code></li></ul>
         </div>
@@ -2647,7 +2689,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpF066.tmp</code></p>
+<p>Must be a file. Must not be greater than 5120 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\php77A1.tmp</code></p>
         </div>
         </form>
 
@@ -2840,10 +2882,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://classicwallet.org/api/v1/loans" \
+    --get "https://classicwallet.org/api/v1/loans?status=disbursed&amp;sort_by=created_at&amp;sort_direction=desc" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"status\": \"architecto\",
+    \"sort_by\": \"principal_amount\",
+    \"sort_direction\": \"asc\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -2851,16 +2899,30 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "https://classicwallet.org/api/v1/loans"
 );
 
+const params = {
+    "status": "disbursed",
+    "sort_by": "created_at",
+    "sort_direction": "desc",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
 const headers = {
     "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
+let body = {
+    "status": "architecto",
+    "sort_by": "principal_amount",
+    "sort_direction": "asc"
+};
 
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -2875,33 +2937,37 @@ fetch(url, {
     &quot;data&quot;: [
         {
             &quot;id&quot;: null,
-            &quot;user_id&quot;: 5,
-            &quot;principal_amount&quot;: 1097.52,
-            &quot;outstanding_balance&quot;: 1097.52,
-            &quot;interest_rate&quot;: 0.2934,
-            &quot;repayment_term_months&quot;: 18,
+            &quot;principal_amount&quot;: 49771.04,
+            &quot;outstanding_balance&quot;: 49771.04,
+            &quot;interest_rate&quot;: 0.1111,
+            &quot;repayment_term_months&quot;: 38,
             &quot;interest_method&quot;: &quot;FlatRate&quot;,
             &quot;status&quot;: &quot;active&quot;,
             &quot;disbursed_at&quot;: null,
             &quot;eligibility_passed&quot;: null,
             &quot;notes&quot;: null,
             &quot;rejection_reason&quot;: null,
-            &quot;created_at&quot;: null
+            &quot;created_at&quot;: null,
+            &quot;total_payable&quot;: null,
+            &quot;total_paid&quot;: null,
+            &quot;next_repayment&quot;: null
         },
         {
             &quot;id&quot;: null,
-            &quot;user_id&quot;: 6,
-            &quot;principal_amount&quot;: 2349.31,
-            &quot;outstanding_balance&quot;: 2349.31,
-            &quot;interest_rate&quot;: 0.0611,
-            &quot;repayment_term_months&quot;: 55,
+            &quot;principal_amount&quot;: 28093.5,
+            &quot;outstanding_balance&quot;: 28093.5,
+            &quot;interest_rate&quot;: 0.1493,
+            &quot;repayment_term_months&quot;: 54,
             &quot;interest_method&quot;: &quot;FlatRate&quot;,
             &quot;status&quot;: &quot;active&quot;,
             &quot;disbursed_at&quot;: null,
             &quot;eligibility_passed&quot;: null,
             &quot;notes&quot;: null,
             &quot;rejection_reason&quot;: null,
-            &quot;created_at&quot;: null
+            &quot;created_at&quot;: null,
+            &quot;total_payable&quot;: null,
+            &quot;total_paid&quot;: null,
+            &quot;next_repayment&quot;: null
         }
     ],
     &quot;links&quot;: {
@@ -3025,7 +3091,85 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-loans"
+               value="disbursed"
+               data-component="query">
+    <br>
+<p>Filter by status: active, approved, disbursed, repaid, rejected, defaulted Example: <code>disbursed</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-loans"
+               value="created_at"
+               data-component="query">
+    <br>
+<p>Sort column: created_at or principal_amount Example: <code>created_at</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-loans"
+               value="desc"
+               data-component="query">
+    <br>
+<p>Sort direction: asc or desc Example: <code>desc</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-loans"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-loans"
+               value="principal_amount"
+               data-component="body">
+    <br>
+<p>Example: <code>principal_amount</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>principal_amount</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-loans"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+        </div>
+        </form>
 
                     <h2 id="loans-POSTapi-v1-loans">POST api/v1/loans</h2>
 
@@ -3089,7 +3233,6 @@ fetch(url, {
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: null,
-        &quot;user_id&quot;: 5,
         &quot;principal_amount&quot;: 12966.66,
         &quot;outstanding_balance&quot;: 12966.66,
         &quot;interest_rate&quot;: 0.2089,
@@ -3100,7 +3243,10 @@ fetch(url, {
         &quot;eligibility_passed&quot;: null,
         &quot;notes&quot;: null,
         &quot;rejection_reason&quot;: null,
-        &quot;created_at&quot;: null
+        &quot;created_at&quot;: null,
+        &quot;total_payable&quot;: null,
+        &quot;total_paid&quot;: null,
+        &quot;next_repayment&quot;: null
     }
 }</code>
  </pre>
@@ -3296,7 +3442,6 @@ fetch(url, {
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: null,
-        &quot;user_id&quot;: 5,
         &quot;principal_amount&quot;: 1097.52,
         &quot;outstanding_balance&quot;: 1097.52,
         &quot;interest_rate&quot;: 0.2934,
@@ -3307,7 +3452,10 @@ fetch(url, {
         &quot;eligibility_passed&quot;: null,
         &quot;notes&quot;: null,
         &quot;rejection_reason&quot;: null,
-        &quot;created_at&quot;: null
+        &quot;created_at&quot;: null,
+        &quot;total_payable&quot;: null,
+        &quot;total_paid&quot;: null,
+        &quot;next_repayment&quot;: null
     }
 }</code>
  </pre>
@@ -3470,7 +3618,7 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;loan_id&quot;: 2,
             &quot;instalment_number&quot;: 30,
-            &quot;due_date&quot;: &quot;2026-10-06T00:00:00.000000Z&quot;,
+            &quot;due_date&quot;: &quot;2026-10-09T00:00:00.000000Z&quot;,
             &quot;instalment_amount&quot;: 103.78,
             &quot;principal_component&quot;: 101.39,
             &quot;interest_component&quot;: 2.39,
@@ -3482,14 +3630,14 @@ fetch(url, {
         {
             &quot;id&quot;: null,
             &quot;loan_id&quot;: 3,
-            &quot;instalment_number&quot;: 45,
-            &quot;due_date&quot;: &quot;2026-11-28T00:00:00.000000Z&quot;,
-            &quot;instalment_amount&quot;: 1579.06,
-            &quot;principal_component&quot;: 280.37,
-            &quot;interest_component&quot;: 1298.69,
-            &quot;outstanding_balance&quot;: 11744.34,
+            &quot;instalment_number&quot;: 16,
+            &quot;due_date&quot;: &quot;2030-06-25T00:00:00.000000Z&quot;,
+            &quot;instalment_amount&quot;: 1036.3,
+            &quot;principal_component&quot;: 769.04,
+            &quot;interest_component&quot;: 267.26,
+            &quot;outstanding_balance&quot;: 38922.61,
             &quot;status&quot;: &quot;Pending&quot;,
-            &quot;remaining_amount&quot;: 1579.06,
+            &quot;remaining_amount&quot;: 1036.3,
             &quot;paid_at&quot;: null
         }
     ]
@@ -3834,7 +3982,6 @@ fetch(url, {
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: null,
-        &quot;user_id&quot;: 5,
         &quot;principal_amount&quot;: 49771.04,
         &quot;outstanding_balance&quot;: 49771.04,
         &quot;interest_rate&quot;: 0.1111,
@@ -3845,7 +3992,10 @@ fetch(url, {
         &quot;eligibility_passed&quot;: null,
         &quot;notes&quot;: null,
         &quot;rejection_reason&quot;: null,
-        &quot;created_at&quot;: null
+        &quot;created_at&quot;: null,
+        &quot;total_payable&quot;: null,
+        &quot;total_paid&quot;: null,
+        &quot;next_repayment&quot;: null
     }
 }</code>
  </pre>
@@ -4035,7 +4185,6 @@ fetch(url, {
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: null,
-        &quot;user_id&quot;: 5,
         &quot;principal_amount&quot;: 49771.04,
         &quot;outstanding_balance&quot;: 49771.04,
         &quot;interest_rate&quot;: 0.1111,
@@ -4046,7 +4195,10 @@ fetch(url, {
         &quot;eligibility_passed&quot;: null,
         &quot;notes&quot;: null,
         &quot;rejection_reason&quot;: null,
-        &quot;created_at&quot;: null
+        &quot;created_at&quot;: null,
+        &quot;total_payable&quot;: null,
+        &quot;total_paid&quot;: null,
+        &quot;next_repayment&quot;: null
     }
 }</code>
  </pre>
@@ -4238,7 +4390,6 @@ fetch(url, {
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
         &quot;id&quot;: null,
-        &quot;user_id&quot;: 5,
         &quot;principal_amount&quot;: 49771.04,
         &quot;outstanding_balance&quot;: 49771.04,
         &quot;interest_rate&quot;: 0.1111,
@@ -4249,7 +4400,10 @@ fetch(url, {
         &quot;eligibility_passed&quot;: null,
         &quot;notes&quot;: null,
         &quot;rejection_reason&quot;: null,
-        &quot;created_at&quot;: null
+        &quot;created_at&quot;: null,
+        &quot;total_payable&quot;: null,
+        &quot;total_paid&quot;: null,
+        &quot;next_repayment&quot;: null
     }
 }</code>
  </pre>
@@ -6666,10 +6820,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://classicwallet.org/api/v1/shares/orders" \
+    --get "https://classicwallet.org/api/v1/shares/orders?type=buy&amp;status=approved&amp;sort_by=created_at&amp;sort_direction=desc" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"type\": \"sell\",
+    \"status\": \"architecto\",
+    \"sort_by\": \"total_amount\",
+    \"sort_direction\": \"asc\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -6677,16 +6838,32 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "https://classicwallet.org/api/v1/shares/orders"
 );
 
+const params = {
+    "type": "buy",
+    "status": "approved",
+    "sort_by": "created_at",
+    "sort_direction": "desc",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
 const headers = {
     "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
+let body = {
+    "type": "sell",
+    "status": "architecto",
+    "sort_by": "total_amount",
+    "sort_direction": "asc"
+};
 
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -6703,9 +6880,9 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;user_id&quot;: 5,
             &quot;type&quot;: &quot;buy&quot;,
-            &quot;quantity&quot;: 81,
-            &quot;price_per_share&quot;: 487.1,
-            &quot;total_amount&quot;: 39455.1,
+            &quot;quantity&quot;: 72,
+            &quot;price_per_share&quot;: 129.67,
+            &quot;total_amount&quot;: 9336.24,
             &quot;status&quot;: &quot;pending&quot;,
             &quot;rejection_reason&quot;: null,
             &quot;created_at&quot;: null
@@ -6714,9 +6891,9 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;user_id&quot;: 6,
             &quot;type&quot;: &quot;buy&quot;,
-            &quot;quantity&quot;: 28,
-            &quot;price_per_share&quot;: 23.49,
-            &quot;total_amount&quot;: 657.72,
+            &quot;quantity&quot;: 59,
+            &quot;price_per_share&quot;: 294.91,
+            &quot;total_amount&quot;: 17399.69,
             &quot;status&quot;: &quot;pending&quot;,
             &quot;rejection_reason&quot;: null,
             &quot;created_at&quot;: null
@@ -6753,7 +6930,7 @@ fetch(url, {
             }
         ],
         &quot;path&quot;: &quot;/&quot;,
-        &quot;per_page&quot;: 15,
+        &quot;per_page&quot;: 10,
         &quot;to&quot;: 2,
         &quot;total&quot;: 2
     }
@@ -6843,7 +7020,111 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="type"                data-endpoint="GETapi-v1-shares-orders"
+               value="buy"
+               data-component="query">
+    <br>
+<p>Filter by order type: buy or sell Example: <code>buy</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-shares-orders"
+               value="approved"
+               data-component="query">
+    <br>
+<p>Filter by status: pending, approved, rejected, completed, cancelled Example: <code>approved</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-shares-orders"
+               value="created_at"
+               data-component="query">
+    <br>
+<p>Sort column: created_at or total_amount Example: <code>created_at</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-shares-orders"
+               value="desc"
+               data-component="query">
+    <br>
+<p>Sort direction: asc or desc Example: <code>desc</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="type"                data-endpoint="GETapi-v1-shares-orders"
+               value="sell"
+               data-component="body">
+    <br>
+<p>Example: <code>sell</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>buy</code></li> <li><code>sell</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-shares-orders"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-shares-orders"
+               value="total_amount"
+               data-component="body">
+    <br>
+<p>Example: <code>total_amount</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>total_amount</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-shares-orders"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+        </div>
+        </form>
 
                     <h2 id="shares-GETapi-v1-shares-orders--id-">GET api/v1/shares/orders/{id}</h2>
 
@@ -7786,13 +8067,13 @@ fetch(url, {
             &quot;id&quot;: null,
             &quot;old_price&quot;: 10.98,
             &quot;new_price&quot;: 487.1,
-            &quot;created_at&quot;: &quot;2026-07-17T15:27:37.266809Z&quot;
+            &quot;created_at&quot;: &quot;2026-07-20T15:27:48.291867Z&quot;
         },
         {
             &quot;id&quot;: null,
-            &quot;old_price&quot;: 179.85,
-            &quot;new_price&quot;: 267.96,
-            &quot;created_at&quot;: &quot;2026-06-23T15:27:37.272040Z&quot;
+            &quot;old_price&quot;: 334.4,
+            &quot;new_price&quot;: 218.45,
+            &quot;created_at&quot;: &quot;2026-08-09T15:27:48.293294Z&quot;
         }
     ],
     &quot;links&quot;: {
@@ -8136,16 +8417,16 @@ fetch(url, {
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
                 &quot;total_amount&quot;: 6654.11,
-                &quot;declared_at&quot;: &quot;2026-09-15T15:27:37.000000Z&quot;
+                &quot;declared_at&quot;: &quot;2026-09-18T15:27:48.000000Z&quot;
             }
         },
         {
             &quot;id&quot;: null,
-            &quot;amount&quot;: 866.41,
+            &quot;amount&quot;: 778.67,
             &quot;created_at&quot;: null,
             &quot;dividend&quot;: {
-                &quot;total_amount&quot;: 9064.05,
-                &quot;declared_at&quot;: &quot;2026-09-15T15:27:37.000000Z&quot;
+                &quot;total_amount&quot;: 7402.72,
+                &quot;declared_at&quot;: &quot;2026-09-18T15:27:48.000000Z&quot;
             }
         }
     ],
@@ -8490,8 +8771,8 @@ fetch(url, {
         },
         {
             &quot;id&quot;: null,
-            &quot;subject&quot;: &quot;Inventore ut molestiae corrupti iste.&quot;,
-            &quot;message&quot;: &quot;Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.&quot;,
+            &quot;subject&quot;: &quot;Veniam corporis dolorem mollitia.&quot;,
+            &quot;message&quot;: &quot;Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.&quot;,
             &quot;status&quot;: &quot;open&quot;,
             &quot;status_label&quot;: &quot;Open&quot;,
             &quot;priority&quot;: &quot;medium&quot;,
@@ -8644,7 +8925,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"subject\": \"b\",
     \"message\": \"ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsn\",
-    \"priority\": \"low\"
+    \"priority\": \"medium\"
 }"
 </code></pre></div>
 
@@ -8663,7 +8944,7 @@ const headers = {
 let body = {
     "subject": "b",
     "message": "ngzmiyvdljnikhwaykcmyuwpwlvqwrsitcpscqldzsn",
-    "priority": "low"
+    "priority": "medium"
 };
 
 fetch(url, {
@@ -8810,10 +9091,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="priority"                data-endpoint="POSTapi-v1-tickets"
-               value="low"
+               value="medium"
                data-component="body">
     <br>
-<p>Example: <code>low</code></p>
+<p>Example: <code>medium</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>low</code></li> <li><code>medium</code></li> <li><code>high</code></li> <li><code>urgent</code></li></ul>
         </div>
@@ -9303,7 +9584,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "name=b"\
     --form "phone_number=n"\
-    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\phpE171.tmp" </code></pre></div>
+    --form "avatar=@C:\Users\DELL\AppData\Local\Temp\php703D.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9466,7 +9747,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\phpE171.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\DELL\AppData\Local\Temp\php703D.tmp</code></p>
         </div>
         </form>
 
@@ -10742,6 +11023,194 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
+                    <h2 id="wallet-GETapi-v1-wallet-withdrawal-charges">GET api/v1/wallet/withdrawal-charges</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-wallet-withdrawal-charges">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://classicwallet.org/api/v1/wallet/withdrawal-charges?amount=5000" \
+    --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"amount\": 27
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://classicwallet.org/api/v1/wallet/withdrawal-charges"
+);
+
+const params = {
+    "amount": "5000",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "amount": 27
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-wallet-withdrawal-charges">
+            <blockquote>
+            <p>Example response (200, Breakdown of withdrawal charges):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;amount&quot;: 5000,
+        &quot;fee&quot;: 50,
+        &quot;total&quot;: 5050
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The amount field is required.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-wallet-withdrawal-charges" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-wallet-withdrawal-charges"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-wallet-withdrawal-charges"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-wallet-withdrawal-charges" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-wallet-withdrawal-charges">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-wallet-withdrawal-charges" data-method="GET"
+      data-path="api/v1/wallet/withdrawal-charges"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-wallet-withdrawal-charges', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-wallet-withdrawal-charges"
+                    onclick="tryItOut('GETapi-v1-wallet-withdrawal-charges');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-wallet-withdrawal-charges"
+                    onclick="cancelTryOut('GETapi-v1-wallet-withdrawal-charges');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-wallet-withdrawal-charges"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/wallet/withdrawal-charges</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-v1-wallet-withdrawal-charges"
+               value="Bearer {YOUR_BEARER_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_BEARER_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-wallet-withdrawal-charges"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-wallet-withdrawal-charges"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>amount</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="amount"                data-endpoint="GETapi-v1-wallet-withdrawal-charges"
+               value="5000"
+               data-component="query">
+    <br>
+<p>Withdrawal amount to calculate charges for Example: <code>5000</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>amount</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="amount"                data-endpoint="GETapi-v1-wallet-withdrawal-charges"
+               value="27"
+               data-component="body">
+    <br>
+<p>Must be at least 0.01. Example: <code>27</code></p>
+        </div>
+        </form>
+
                     <h2 id="wallet-GETapi-v1-wallet-transactions">GET api/v1/wallet/transactions</h2>
 
 <p>
@@ -10756,10 +11225,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://classicwallet.org/api/v1/wallet/transactions" \
+    --get "https://classicwallet.org/api/v1/wallet/transactions?type=deposit&amp;status=completed&amp;search=WFT-ABC&amp;sort_by=created_at&amp;sort_direction=desc&amp;per_page=15" \
     --header "Authorization: Bearer {YOUR_BEARER_TOKEN}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"type\": \"architecto\",
+    \"status\": \"architecto\",
+    \"search\": \"n\",
+    \"sort_by\": \"amount\",
+    \"sort_direction\": \"asc\",
+    \"per_page\": 7
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -10767,16 +11245,36 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "https://classicwallet.org/api/v1/wallet/transactions"
 );
 
+const params = {
+    "type": "deposit",
+    "status": "completed",
+    "search": "WFT-ABC",
+    "sort_by": "created_at",
+    "sort_direction": "desc",
+    "per_page": "15",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
 const headers = {
     "Authorization": "Bearer {YOUR_BEARER_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
+let body = {
+    "type": "architecto",
+    "status": "architecto",
+    "search": "n",
+    "sort_by": "amount",
+    "sort_direction": "asc",
+    "per_page": 7
+};
 
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 </span>
@@ -10794,8 +11292,10 @@ fetch(url, {
             &quot;amount&quot;: &quot;5000.00&quot;,
             &quot;type&quot;: &quot;deposit&quot;,
             &quot;status&quot;: &quot;completed&quot;,
-            &quot;reference&quot;: &quot;DEP-XXXXXXXXXX&quot;,
+            &quot;reference&quot;: &quot;WFT-XXXXXXXXXX&quot;,
             &quot;notes&quot;: null,
+            &quot;failure_reason&quot;: null,
+            &quot;performed_by&quot;: null,
             &quot;created_at&quot;: &quot;2026-01-01T00:00:00.000000Z&quot;
         }
     ],
@@ -10896,7 +11396,157 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="type"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="deposit"
+               data-component="query">
+    <br>
+<p>Filter by transaction type (deposit, withdrawal, transfer, hold, release) Example: <code>deposit</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="completed"
+               data-component="query">
+    <br>
+<p>Filter by status (pending, completed, failed, reversed) Example: <code>completed</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="WFT-ABC"
+               data-component="query">
+    <br>
+<p>Search by reference Example: <code>WFT-ABC</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="created_at"
+               data-component="query">
+    <br>
+<p>Sort column: created_at or amount Example: <code>created_at</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="desc"
+               data-component="query">
+    <br>
+<p>Sort direction: asc or desc Example: <code>desc</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="15"
+               data-component="query">
+    <br>
+<p>Results per page (max 100) Example: <code>15</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="type"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>n</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="amount"
+               data-component="body">
+    <br>
+<p>Example: <code>amount</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>created_at</code></li> <li><code>amount</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-wallet-transactions"
+               value="7"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>7</code></p>
+        </div>
+        </form>
 
                     <h2 id="wallet-GETapi-v1-wallet-transactions--id-">GET api/v1/wallet/transactions/{id}</h2>
 

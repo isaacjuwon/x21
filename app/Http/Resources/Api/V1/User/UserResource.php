@@ -20,7 +20,9 @@ class UserResource extends JsonResource
             'loan_level' => $this->whenLoaded('loanLevel', fn () => [
                 'id' => $this->loanLevel->id,
                 'name' => $this->loanLevel->name,
+                'min_amount' => $this->loanLevel->min_amount,
                 'max_amount' => $this->loanLevel->max_amount,
+                'max_term_months' => $this->loanLevel->max_term_months,
                 'interest_rate' => $this->loanLevel->interest_rate,
             ]),
             'share_holding' => $this->whenLoaded('shareHoldings', fn () => $this->shareHoldings->isNotEmpty() ? [

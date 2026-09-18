@@ -486,6 +486,77 @@ endpoints:
     custom: []
     httpMethods:
       - GET
+    uri: api/v1/wallet/withdrawal-charges
+    metadata:
+      custom: []
+      groupName: Wallet
+      groupDescription: 'Wallet balance and overview'
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      amount:
+        custom: []
+        name: amount
+        description: 'Withdrawal amount to calculate charges for'
+        required: true
+        example: 5000
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      amount: 5000
+    bodyParameters:
+      amount:
+        custom: []
+        name: amount
+        description: 'Must be at least 0.01.'
+        required: true
+        example: 27
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      amount: 27
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"amount":5000,"fee":50,"total":5050}}'
+        headers: []
+        description: 'Breakdown of withdrawal charges'
+      -
+        custom: []
+        status: 422
+        content: '{"message":"The amount field is required."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
     uri: api/v1/wallet/transactions
     metadata:
       custom: []
@@ -503,16 +574,164 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+    queryParameters:
+      type:
+        custom: []
+        name: type
+        description: 'Filter by transaction type (deposit, withdrawal, transfer, hold, release)'
+        required: false
+        example: deposit
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'Filter by status (pending, completed, failed, reversed)'
+        required: false
+        example: completed
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Search by reference'
+        required: false
+        example: WFT-ABC
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: 'Sort column: created_at or amount'
+        required: false
+        example: created_at
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      sort_direction:
+        custom: []
+        name: sort_direction
+        description: 'Sort direction: asc or desc'
+        required: false
+        example: desc
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (max 100)'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      type: deposit
+      status: completed
+      search: WFT-ABC
+      sort_by: created_at
+      sort_direction: desc
+      per_page: 15
+    bodyParameters:
+      type:
+        custom: []
+        name: type
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: ''
+        required: false
+        example: amount
+        type: string
+        enumValues:
+          - created_at
+          - amount
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_direction:
+        custom: []
+        name: sort_direction
+        description: ''
+        required: false
+        example: asc
+        type: string
+        enumValues:
+          - asc
+          - desc
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      type: architecto
+      status: architecto
+      search: 'n'
+      sort_by: amount
+      sort_direction: asc
+      per_page: 7
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"DEP-XXXXXXXXXX","notes":null,"created_at":"2026-01-01T00:00:00.000000Z"}],"links":{"first":"...","last":"...","prev":null,"next":null},"meta":{"current_page":1,"per_page":15,"total":1}}'
+        content: '{"data":[{"id":1,"amount":"5000.00","type":"deposit","status":"completed","reference":"WFT-XXXXXXXXXX","notes":null,"failure_reason":null,"performed_by":null,"created_at":"2026-01-01T00:00:00.000000Z"}],"links":{"first":"...","last":"...","prev":null,"next":null},"meta":{"current_page":1,"per_page":15,"total":1}}'
         headers: []
         description: 'Paginated transactions'
     responseFields: []

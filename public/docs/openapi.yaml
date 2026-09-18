@@ -70,7 +70,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: lafayette.considine@example.com
-                      email_verified_at: '2026-09-15T15:27:33+00:00'
+                      email_verified_at: '2026-09-18T15:27:45+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -98,7 +98,7 @@ paths:
                             example: lafayette.considine@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-15T15:27:33+00:00'
+                            example: '2026-09-18T15:27:45+00:00'
                           created_at:
                             type: string
                             example: null
@@ -194,7 +194,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: cormier.nick@example.com
-                      email_verified_at: '2026-09-15T15:27:33+00:00'
+                      email_verified_at: '2026-09-18T15:27:46+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -222,7 +222,7 @@ paths:
                             example: cormier.nick@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-15T15:27:33+00:00'
+                            example: '2026-09-18T15:27:46+00:00'
                           created_at:
                             type: string
                             example: null
@@ -423,7 +423,7 @@ paths:
                     attributes:
                       name: 'Morgan Hirthe'
                       email: dare.emelie@example.com
-                      email_verified_at: '2026-09-15T15:27:34+00:00'
+                      email_verified_at: '2026-09-18T15:27:46+00:00'
                       created_at: null
                       updated_at: null
                 properties:
@@ -447,7 +447,7 @@ paths:
                             example: dare.emelie@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-15T15:27:34+00:00'
+                            example: '2026-09-18T15:27:46+00:00'
                           created_at:
                             type: string
                             example: null
@@ -764,11 +764,116 @@ paths:
       security: []
   /api/v1/kyc:
     get:
-      summary: "Get the authenticated user's KYC status for all types."
-      operationId: getTheAuthenticatedUsersKYCStatusForAllTypes
+      summary: ''
+      operationId: getApiV1Kyc
       description: ''
       parameters: []
-      responses: {  }
+      responses:
+        200:
+          description: 'KYC records with overall verification status'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 1
+                      type: nin
+                      type_label: NIN
+                      number: '12345678901'
+                      method: automatic
+                      method_label: Automatic
+                      status: verified
+                      status_label: Verified
+                      rejection_reason: null
+                      verified_at: '2026-01-01T00:00:00.000000Z'
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                    -
+                      id: 2
+                      type: bvn
+                      type_label: BVN
+                      number: '12345678901'
+                      method: manual
+                      method_label: Manual
+                      status: pending
+                      status_label: Pending
+                      rejection_reason: null
+                      verified_at: null
+                      created_at: '2026-01-01T00:00:00.000000Z'
+                  meta:
+                    is_fully_verified: false
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        type: nin
+                        type_label: NIN
+                        number: '12345678901'
+                        method: automatic
+                        method_label: Automatic
+                        status: verified
+                        status_label: Verified
+                        rejection_reason: null
+                        verified_at: '2026-01-01T00:00:00.000000Z'
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                      -
+                        id: 2
+                        type: bvn
+                        type_label: BVN
+                        number: '12345678901'
+                        method: manual
+                        method_label: Manual
+                        status: pending
+                        status_label: Pending
+                        rejection_reason: null
+                        verified_at: null
+                        created_at: '2026-01-01T00:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        type:
+                          type: string
+                          example: nin
+                        type_label:
+                          type: string
+                          example: NIN
+                        number:
+                          type: string
+                          example: '12345678901'
+                        method:
+                          type: string
+                          example: automatic
+                        method_label:
+                          type: string
+                          example: Automatic
+                        status:
+                          type: string
+                          example: verified
+                        status_label:
+                          type: string
+                          example: Verified
+                        rejection_reason:
+                          type: string
+                          example: null
+                          nullable: true
+                        verified_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                        created_at:
+                          type: string
+                          example: '2026-01-01T00:00:00.000000Z'
+                  meta:
+                    type: object
+                    properties:
+                      is_fully_verified:
+                        type: boolean
+                        example: false
       tags:
         - KYC
   /api/v1/kyc/automatic:
@@ -790,7 +895,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: nin
+                  example: bvn
                   enum:
                     - nin
                     - bvn
@@ -820,7 +925,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: bvn
+                  example: nin
                   enum:
                     - nin
                     - bvn
@@ -904,7 +1009,37 @@ paths:
       summary: ''
       operationId: getApiV1Loans
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Filter by status: active, approved, disbursed, repaid, rejected, defaulted'
+          example: disbursed
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status: active, approved, disbursed, repaid, rejected, defaulted'
+            example: disbursed
+        -
+          in: query
+          name: sort_by
+          description: 'Sort column: created_at or principal_amount'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Sort column: created_at or principal_amount'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction: asc or desc'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction: asc or desc'
+            example: desc
       responses:
         200:
           description: ''
@@ -916,11 +1051,10 @@ paths:
                   data:
                     -
                       id: null
-                      user_id: 5
-                      principal_amount: 1097.52
-                      outstanding_balance: 1097.52
-                      interest_rate: 0.2934
-                      repayment_term_months: 18
+                      principal_amount: 49771.04
+                      outstanding_balance: 49771.04
+                      interest_rate: 0.1111
+                      repayment_term_months: 38
                       interest_method: FlatRate
                       status: active
                       disbursed_at: null
@@ -928,13 +1062,15 @@ paths:
                       notes: null
                       rejection_reason: null
                       created_at: null
+                      total_payable: null
+                      total_paid: null
+                      next_repayment: null
                     -
                       id: null
-                      user_id: 6
-                      principal_amount: 2349.31
-                      outstanding_balance: 2349.31
-                      interest_rate: 0.0611
-                      repayment_term_months: 55
+                      principal_amount: 28093.5
+                      outstanding_balance: 28093.5
+                      interest_rate: 0.1493
+                      repayment_term_months: 54
                       interest_method: FlatRate
                       status: active
                       disbursed_at: null
@@ -942,6 +1078,9 @@ paths:
                       notes: null
                       rejection_reason: null
                       created_at: null
+                      total_payable: null
+                      total_paid: null
+                      next_repayment: null
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -977,11 +1116,10 @@ paths:
                     example:
                       -
                         id: null
-                        user_id: 5
-                        principal_amount: 1097.52
-                        outstanding_balance: 1097.52
-                        interest_rate: 0.2934
-                        repayment_term_months: 18
+                        principal_amount: 49771.04
+                        outstanding_balance: 49771.04
+                        interest_rate: 0.1111
+                        repayment_term_months: 38
                         interest_method: FlatRate
                         status: active
                         disbursed_at: null
@@ -989,13 +1127,15 @@ paths:
                         notes: null
                         rejection_reason: null
                         created_at: null
+                        total_payable: null
+                        total_paid: null
+                        next_repayment: null
                       -
                         id: null
-                        user_id: 6
-                        principal_amount: 2349.31
-                        outstanding_balance: 2349.31
-                        interest_rate: 0.0611
-                        repayment_term_months: 55
+                        principal_amount: 28093.5
+                        outstanding_balance: 28093.5
+                        interest_rate: 0.1493
+                        repayment_term_months: 54
                         interest_method: FlatRate
                         status: active
                         disbursed_at: null
@@ -1003,6 +1143,9 @@ paths:
                         notes: null
                         rejection_reason: null
                         created_at: null
+                        total_payable: null
+                        total_paid: null
+                        next_repayment: null
                     items:
                       type: object
                       properties:
@@ -1010,21 +1153,18 @@ paths:
                           type: string
                           example: null
                           nullable: true
-                        user_id:
-                          type: integer
-                          example: 5
                         principal_amount:
                           type: number
-                          example: 1097.52
+                          example: 49771.04
                         outstanding_balance:
                           type: number
-                          example: 1097.52
+                          example: 49771.04
                         interest_rate:
                           type: number
-                          example: 0.2934
+                          example: 0.1111
                         repayment_term_months:
                           type: integer
-                          example: 18
+                          example: 38
                         interest_method:
                           type: string
                           example: FlatRate
@@ -1048,6 +1188,18 @@ paths:
                           example: null
                           nullable: true
                         created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        total_payable:
+                          type: string
+                          example: null
+                          nullable: true
+                        total_paid:
+                          type: string
+                          example: null
+                          nullable: true
+                        next_repayment:
                           type: string
                           example: null
                           nullable: true
@@ -1129,6 +1281,34 @@ paths:
                         example: 2
       tags:
         - Loans
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                sort_by:
+                  type: string
+                  description: ''
+                  example: principal_amount
+                  enum:
+                    - created_at
+                    - principal_amount
+                  nullable: true
+                sort_direction:
+                  type: string
+                  description: ''
+                  example: asc
+                  enum:
+                    - asc
+                    - desc
+                  nullable: true
     post:
       summary: ''
       operationId: postApiV1Loans
@@ -1144,7 +1324,6 @@ paths:
                 example:
                   data:
                     id: null
-                    user_id: 5
                     principal_amount: 12966.66
                     outstanding_balance: 12966.66
                     interest_rate: 0.2089
@@ -1156,6 +1335,9 @@ paths:
                     notes: null
                     rejection_reason: null
                     created_at: null
+                    total_payable: null
+                    total_paid: null
+                    next_repayment: null
                 properties:
                   data:
                     type: object
@@ -1164,9 +1346,6 @@ paths:
                         type: string
                         example: null
                         nullable: true
-                      user_id:
-                        type: integer
-                        example: 5
                       principal_amount:
                         type: number
                         example: 12966.66
@@ -1202,6 +1381,18 @@ paths:
                         example: null
                         nullable: true
                       created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_payable:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_paid:
+                        type: string
+                        example: null
+                        nullable: true
+                      next_repayment:
                         type: string
                         example: null
                         nullable: true
@@ -1261,7 +1452,6 @@ paths:
                 example:
                   data:
                     id: null
-                    user_id: 5
                     principal_amount: 1097.52
                     outstanding_balance: 1097.52
                     interest_rate: 0.2934
@@ -1273,6 +1463,9 @@ paths:
                     notes: null
                     rejection_reason: null
                     created_at: null
+                    total_payable: null
+                    total_paid: null
+                    next_repayment: null
                 properties:
                   data:
                     type: object
@@ -1281,9 +1474,6 @@ paths:
                         type: string
                         example: null
                         nullable: true
-                      user_id:
-                        type: integer
-                        example: 5
                       principal_amount:
                         type: number
                         example: 1097.52
@@ -1319,6 +1509,18 @@ paths:
                         example: null
                         nullable: true
                       created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_payable:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_paid:
+                        type: string
+                        example: null
+                        nullable: true
+                      next_repayment:
                         type: string
                         example: null
                         nullable: true
@@ -1364,7 +1566,7 @@ paths:
                       id: null
                       loan_id: 2
                       instalment_number: 30
-                      due_date: '2026-10-06T00:00:00.000000Z'
+                      due_date: '2026-10-09T00:00:00.000000Z'
                       instalment_amount: 103.78
                       principal_component: 101.39
                       interest_component: 2.39
@@ -1375,14 +1577,14 @@ paths:
                     -
                       id: null
                       loan_id: 3
-                      instalment_number: 45
-                      due_date: '2026-11-28T00:00:00.000000Z'
-                      instalment_amount: 1579.06
-                      principal_component: 280.37
-                      interest_component: 1298.69
-                      outstanding_balance: 11744.34
+                      instalment_number: 16
+                      due_date: '2030-06-25T00:00:00.000000Z'
+                      instalment_amount: 1036.3
+                      principal_component: 769.04
+                      interest_component: 267.26
+                      outstanding_balance: 38922.61
                       status: Pending
-                      remaining_amount: 1579.06
+                      remaining_amount: 1036.3
                       paid_at: null
                 properties:
                   data:
@@ -1392,7 +1594,7 @@ paths:
                         id: null
                         loan_id: 2
                         instalment_number: 30
-                        due_date: '2026-10-06T00:00:00.000000Z'
+                        due_date: '2026-10-09T00:00:00.000000Z'
                         instalment_amount: 103.78
                         principal_component: 101.39
                         interest_component: 2.39
@@ -1403,14 +1605,14 @@ paths:
                       -
                         id: null
                         loan_id: 3
-                        instalment_number: 45
-                        due_date: '2026-11-28T00:00:00.000000Z'
-                        instalment_amount: 1579.06
-                        principal_component: 280.37
-                        interest_component: 1298.69
-                        outstanding_balance: 11744.34
+                        instalment_number: 16
+                        due_date: '2030-06-25T00:00:00.000000Z'
+                        instalment_amount: 1036.3
+                        principal_component: 769.04
+                        interest_component: 267.26
+                        outstanding_balance: 38922.61
                         status: Pending
-                        remaining_amount: 1579.06
+                        remaining_amount: 1036.3
                         paid_at: null
                     items:
                       type: object
@@ -1427,7 +1629,7 @@ paths:
                           example: 30
                         due_date:
                           type: string
-                          example: '2026-10-06T00:00:00.000000Z'
+                          example: '2026-10-09T00:00:00.000000Z'
                         instalment_amount:
                           type: number
                           example: 103.78
@@ -1555,7 +1757,6 @@ paths:
                 example:
                   data:
                     id: null
-                    user_id: 5
                     principal_amount: 49771.04
                     outstanding_balance: 49771.04
                     interest_rate: 0.1111
@@ -1567,6 +1768,9 @@ paths:
                     notes: null
                     rejection_reason: null
                     created_at: null
+                    total_payable: null
+                    total_paid: null
+                    next_repayment: null
                 properties:
                   data:
                     type: object
@@ -1575,9 +1779,6 @@ paths:
                         type: string
                         example: null
                         nullable: true
-                      user_id:
-                        type: integer
-                        example: 5
                       principal_amount:
                         type: number
                         example: 49771.04
@@ -1613,6 +1814,18 @@ paths:
                         example: null
                         nullable: true
                       created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_payable:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_paid:
+                        type: string
+                        example: null
+                        nullable: true
+                      next_repayment:
                         type: string
                         example: null
                         nullable: true
@@ -1678,7 +1891,6 @@ paths:
                 example:
                   data:
                     id: null
-                    user_id: 5
                     principal_amount: 49771.04
                     outstanding_balance: 49771.04
                     interest_rate: 0.1111
@@ -1690,6 +1902,9 @@ paths:
                     notes: null
                     rejection_reason: null
                     created_at: null
+                    total_payable: null
+                    total_paid: null
+                    next_repayment: null
                 properties:
                   data:
                     type: object
@@ -1698,9 +1913,6 @@ paths:
                         type: string
                         example: null
                         nullable: true
-                      user_id:
-                        type: integer
-                        example: 5
                       principal_amount:
                         type: number
                         example: 49771.04
@@ -1736,6 +1948,18 @@ paths:
                         example: null
                         nullable: true
                       created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_payable:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_paid:
+                        type: string
+                        example: null
+                        nullable: true
+                      next_repayment:
                         type: string
                         example: null
                         nullable: true
@@ -1801,7 +2025,6 @@ paths:
                 example:
                   data:
                     id: null
-                    user_id: 5
                     principal_amount: 49771.04
                     outstanding_balance: 49771.04
                     interest_rate: 0.1111
@@ -1813,6 +2036,9 @@ paths:
                     notes: null
                     rejection_reason: null
                     created_at: null
+                    total_payable: null
+                    total_paid: null
+                    next_repayment: null
                 properties:
                   data:
                     type: object
@@ -1821,9 +2047,6 @@ paths:
                         type: string
                         example: null
                         nullable: true
-                      user_id:
-                        type: integer
-                        example: 5
                       principal_amount:
                         type: number
                         example: 49771.04
@@ -1859,6 +2082,18 @@ paths:
                         example: null
                         nullable: true
                       created_at:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_payable:
+                        type: string
+                        example: null
+                        nullable: true
+                      total_paid:
+                        type: string
+                        example: null
+                        nullable: true
+                      next_repayment:
                         type: string
                         example: null
                         nullable: true
@@ -3056,7 +3291,47 @@ paths:
       summary: ''
       operationId: getApiV1SharesOrders
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: type
+          description: 'Filter by order type: buy or sell'
+          example: buy
+          required: false
+          schema:
+            type: string
+            description: 'Filter by order type: buy or sell'
+            example: buy
+        -
+          in: query
+          name: status
+          description: 'Filter by status: pending, approved, rejected, completed, cancelled'
+          example: approved
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status: pending, approved, rejected, completed, cancelled'
+            example: approved
+        -
+          in: query
+          name: sort_by
+          description: 'Sort column: created_at or total_amount'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Sort column: created_at or total_amount'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction: asc or desc'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction: asc or desc'
+            example: desc
       responses:
         200:
           description: ''
@@ -3070,9 +3345,9 @@ paths:
                       id: null
                       user_id: 5
                       type: buy
-                      quantity: 81
-                      price_per_share: 487.1
-                      total_amount: 39455.1
+                      quantity: 72
+                      price_per_share: 129.67
+                      total_amount: 9336.24
                       status: pending
                       rejection_reason: null
                       created_at: null
@@ -3080,9 +3355,9 @@ paths:
                       id: null
                       user_id: 6
                       type: buy
-                      quantity: 28
-                      price_per_share: 23.49
-                      total_amount: 657.72
+                      quantity: 59
+                      price_per_share: 294.91
+                      total_amount: 17399.69
                       status: pending
                       rejection_reason: null
                       created_at: null
@@ -3112,7 +3387,7 @@ paths:
                         page: null
                         active: false
                     path: /
-                    per_page: 15
+                    per_page: 10
                     to: 2
                     total: 2
                 properties:
@@ -3123,9 +3398,9 @@ paths:
                         id: null
                         user_id: 5
                         type: buy
-                        quantity: 81
-                        price_per_share: 487.1
-                        total_amount: 39455.1
+                        quantity: 72
+                        price_per_share: 129.67
+                        total_amount: 9336.24
                         status: pending
                         rejection_reason: null
                         created_at: null
@@ -3133,9 +3408,9 @@ paths:
                         id: null
                         user_id: 6
                         type: buy
-                        quantity: 28
-                        price_per_share: 23.49
-                        total_amount: 657.72
+                        quantity: 59
+                        price_per_share: 294.91
+                        total_amount: 17399.69
                         status: pending
                         rejection_reason: null
                         created_at: null
@@ -3154,13 +3429,13 @@ paths:
                           example: buy
                         quantity:
                           type: integer
-                          example: 81
+                          example: 72
                         price_per_share:
                           type: number
-                          example: 487.1
+                          example: 129.67
                         total_amount:
                           type: number
-                          example: 39455.1
+                          example: 9336.24
                         status:
                           type: string
                           example: pending
@@ -3241,7 +3516,7 @@ paths:
                         example: /
                       per_page:
                         type: integer
-                        example: 15
+                        example: 10
                       to:
                         type: integer
                         example: 2
@@ -3250,6 +3525,42 @@ paths:
                         example: 2
       tags:
         - Shares
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: sell
+                  enum:
+                    - buy
+                    - sell
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                sort_by:
+                  type: string
+                  description: ''
+                  example: total_amount
+                  enum:
+                    - created_at
+                    - total_amount
+                  nullable: true
+                sort_direction:
+                  type: string
+                  description: ''
+                  example: asc
+                  enum:
+                    - asc
+                    - desc
+                  nullable: true
   '/api/v1/shares/orders/{id}':
     get:
       summary: ''
@@ -3696,12 +4007,12 @@ paths:
                       id: null
                       old_price: 10.98
                       new_price: 487.1
-                      created_at: '2026-07-17T15:27:37.266809Z'
+                      created_at: '2026-07-20T15:27:48.291867Z'
                     -
                       id: null
-                      old_price: 179.85
-                      new_price: 267.96
-                      created_at: '2026-06-23T15:27:37.272040Z'
+                      old_price: 334.4
+                      new_price: 218.45
+                      created_at: '2026-08-09T15:27:48.293294Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3739,12 +4050,12 @@ paths:
                         id: null
                         old_price: 10.98
                         new_price: 487.1
-                        created_at: '2026-07-17T15:27:37.266809Z'
+                        created_at: '2026-07-20T15:27:48.291867Z'
                       -
                         id: null
-                        old_price: 179.85
-                        new_price: 267.96
-                        created_at: '2026-06-23T15:27:37.272040Z'
+                        old_price: 334.4
+                        new_price: 218.45
+                        created_at: '2026-08-09T15:27:48.293294Z'
                     items:
                       type: object
                       properties:
@@ -3760,7 +4071,7 @@ paths:
                           example: 487.1
                         created_at:
                           type: string
-                          example: '2026-07-17T15:27:37.266809Z'
+                          example: '2026-07-20T15:27:48.291867Z'
                   links:
                     type: object
                     properties:
@@ -3906,14 +4217,14 @@ paths:
                       created_at: null
                       dividend:
                         total_amount: 6654.11
-                        declared_at: '2026-09-15T15:27:37.000000Z'
+                        declared_at: '2026-09-18T15:27:48.000000Z'
                     -
                       id: null
-                      amount: 866.41
+                      amount: 778.67
                       created_at: null
                       dividend:
-                        total_amount: 9064.05
-                        declared_at: '2026-09-15T15:27:37.000000Z'
+                        total_amount: 7402.72
+                        declared_at: '2026-09-18T15:27:48.000000Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -3953,14 +4264,14 @@ paths:
                         created_at: null
                         dividend:
                           total_amount: 6654.11
-                          declared_at: '2026-09-15T15:27:37.000000Z'
+                          declared_at: '2026-09-18T15:27:48.000000Z'
                       -
                         id: null
-                        amount: 866.41
+                        amount: 778.67
                         created_at: null
                         dividend:
-                          total_amount: 9064.05
-                          declared_at: '2026-09-15T15:27:37.000000Z'
+                          total_amount: 7402.72
+                          declared_at: '2026-09-18T15:27:48.000000Z'
                     items:
                       type: object
                       properties:
@@ -3983,7 +4294,7 @@ paths:
                               example: 6654.11
                             declared_at:
                               type: string
-                              example: '2026-09-15T15:27:37.000000Z'
+                              example: '2026-09-18T15:27:48.000000Z'
                   links:
                     type: object
                     properties:
@@ -4153,8 +4464,8 @@ paths:
                       updated_at: null
                     -
                       id: null
-                      subject: 'Inventore ut molestiae corrupti iste.'
-                      message: 'Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.'
+                      subject: 'Veniam corporis dolorem mollitia.'
+                      message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
                       status: open
                       status_label: Open
                       priority: medium
@@ -4206,8 +4517,8 @@ paths:
                         updated_at: null
                       -
                         id: null
-                        subject: 'Inventore ut molestiae corrupti iste.'
-                        message: 'Commodi eum occaecati accusantium est commodi voluptatem. Et repellat atque ut voluptatum. Omnis architecto id accusantium sapiente esse sint laboriosam laborum.'
+                        subject: 'Veniam corporis dolorem mollitia.'
+                        message: 'Odit quia officia est dignissimos neque blanditiis odio. Excepturi doloribus delectus fugit qui repudiandae laboriosam. Alias tenetur ratione nemo voluptate accusamus ut et.'
                         status: open
                         status_label: Open
                         priority: medium
@@ -4402,7 +4713,7 @@ paths:
                 priority:
                   type: string
                   description: ''
-                  example: low
+                  example: medium
                   enum:
                     - low
                     - medium
@@ -5115,12 +5426,140 @@ paths:
               required:
                 - account_number
                 - bank_code
+  /api/v1/wallet/withdrawal-charges:
+    get:
+      summary: ''
+      operationId: getApiV1WalletWithdrawalCharges
+      description: ''
+      parameters:
+        -
+          in: query
+          name: amount
+          description: 'Withdrawal amount to calculate charges for'
+          example: 5000
+          required: true
+          schema:
+            type: number
+            description: 'Withdrawal amount to calculate charges for'
+            example: 5000
+      responses:
+        200:
+          description: 'Breakdown of withdrawal charges'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    amount: 5000
+                    fee: 50
+                    total: 5050
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      amount:
+                        type: integer
+                        example: 5000
+                      fee:
+                        type: integer
+                        example: 50
+                      total:
+                        type: integer
+                        example: 5050
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The amount field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The amount field is required.'
+      tags:
+        - Wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Must be at least 0.01.'
+                  example: 27
+              required:
+                - amount
   /api/v1/wallet/transactions:
     get:
       summary: ''
       operationId: getApiV1WalletTransactions
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: type
+          description: 'Filter by transaction type (deposit, withdrawal, transfer, hold, release)'
+          example: deposit
+          required: false
+          schema:
+            type: string
+            description: 'Filter by transaction type (deposit, withdrawal, transfer, hold, release)'
+            example: deposit
+        -
+          in: query
+          name: status
+          description: 'Filter by status (pending, completed, failed, reversed)'
+          example: completed
+          required: false
+          schema:
+            type: string
+            description: 'Filter by status (pending, completed, failed, reversed)'
+            example: completed
+        -
+          in: query
+          name: search
+          description: 'Search by reference'
+          example: WFT-ABC
+          required: false
+          schema:
+            type: string
+            description: 'Search by reference'
+            example: WFT-ABC
+        -
+          in: query
+          name: sort_by
+          description: 'Sort column: created_at or amount'
+          example: created_at
+          required: false
+          schema:
+            type: string
+            description: 'Sort column: created_at or amount'
+            example: created_at
+        -
+          in: query
+          name: sort_direction
+          description: 'Sort direction: asc or desc'
+          example: desc
+          required: false
+          schema:
+            type: string
+            description: 'Sort direction: asc or desc'
+            example: desc
+        -
+          in: query
+          name: per_page
+          description: 'Results per page (max 100)'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page (max 100)'
+            example: 15
       responses:
         200:
           description: 'Paginated transactions'
@@ -5135,8 +5574,10 @@ paths:
                       amount: '5000.00'
                       type: deposit
                       status: completed
-                      reference: DEP-XXXXXXXXXX
+                      reference: WFT-XXXXXXXXXX
                       notes: null
+                      failure_reason: null
+                      performed_by: null
                       created_at: '2026-01-01T00:00:00.000000Z'
                   links:
                     first: ...
@@ -5156,8 +5597,10 @@ paths:
                         amount: '5000.00'
                         type: deposit
                         status: completed
-                        reference: DEP-XXXXXXXXXX
+                        reference: WFT-XXXXXXXXXX
                         notes: null
+                        failure_reason: null
+                        performed_by: null
                         created_at: '2026-01-01T00:00:00.000000Z'
                     items:
                       type: object
@@ -5176,8 +5619,16 @@ paths:
                           example: completed
                         reference:
                           type: string
-                          example: DEP-XXXXXXXXXX
+                          example: WFT-XXXXXXXXXX
                         notes:
+                          type: string
+                          example: null
+                          nullable: true
+                        failure_reason:
+                          type: string
+                          example: null
+                          nullable: true
+                        performed_by:
                           type: string
                           example: null
                           nullable: true
@@ -5215,6 +5666,49 @@ paths:
                         example: 1
       tags:
         - Wallet
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                search:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                sort_by:
+                  type: string
+                  description: ''
+                  example: amount
+                  enum:
+                    - created_at
+                    - amount
+                  nullable: true
+                sort_direction:
+                  type: string
+                  description: ''
+                  example: asc
+                  enum:
+                    - asc
+                    - desc
+                  nullable: true
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 7
+                  nullable: true
   '/api/v1/wallet/transactions/{id}':
     get:
       summary: ''

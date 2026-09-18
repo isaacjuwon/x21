@@ -81,16 +81,92 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+    queryParameters:
+      status:
+        custom: []
+        name: status
+        description: 'Filter by status: active, approved, disbursed, repaid, rejected, defaulted'
+        required: false
+        example: disbursed
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: 'Sort column: created_at or principal_amount'
+        required: false
+        example: created_at
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      sort_direction:
+        custom: []
+        name: sort_direction
+        description: 'Sort direction: asc or desc'
+        required: false
+        example: desc
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      status: disbursed
+      sort_by: created_at
+      sort_direction: desc
+    bodyParameters:
+      status:
+        custom: []
+        name: status
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: ''
+        required: false
+        example: principal_amount
+        type: string
+        enumValues:
+          - created_at
+          - principal_amount
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_direction:
+        custom: []
+        name: sort_direction
+        description: ''
+        required: false
+        example: asc
+        type: string
+        enumValues:
+          - asc
+          - desc
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      status: architecto
+      sort_by: principal_amount
+      sort_direction: asc
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"user_id":5,"principal_amount":1097.52,"outstanding_balance":1097.52,"interest_rate":0.2934,"repayment_term_months":18,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null},{"id":null,"user_id":6,"principal_amount":2349.31,"outstanding_balance":2349.31,"interest_rate":0.0611,"repayment_term_months":55,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
+        content: '{"data":[{"id":null,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null},{"id":null,"principal_amount":28093.5,"outstanding_balance":28093.5,"interest_rate":0.1493,"repayment_term_months":54,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}],"links":{"first":"\/?page=1","last":"\/?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"\/?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"\/","per_page":15,"to":2,"total":2}}'
         headers: []
         description: ''
     responseFields: []
@@ -179,7 +255,7 @@ endpoints:
       -
         custom: []
         status: 201
-        content: '{"data":{"id":null,"user_id":5,"principal_amount":12966.66,"outstanding_balance":12966.66,"interest_rate":0.2089,"repayment_term_months":51,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}}'
+        content: '{"data":{"id":null,"principal_amount":12966.66,"outstanding_balance":12966.66,"interest_rate":0.2089,"repayment_term_months":51,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}}'
         headers: []
         description: ''
       -
@@ -238,7 +314,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":null,"user_id":5,"principal_amount":1097.52,"outstanding_balance":1097.52,"interest_rate":0.2934,"repayment_term_months":18,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}}'
+        content: '{"data":{"id":null,"principal_amount":1097.52,"outstanding_balance":1097.52,"interest_rate":0.2934,"repayment_term_months":18,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}}'
         headers: []
         description: ''
       -
@@ -297,7 +373,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-10-06T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":45,"due_date":"2026-11-28T00:00:00.000000Z","instalment_amount":1579.06,"principal_component":280.37,"interest_component":1298.69,"outstanding_balance":11744.34,"status":"Pending","remaining_amount":1579.06,"paid_at":null}]}'
+        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-10-09T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":16,"due_date":"2030-06-25T00:00:00.000000Z","instalment_amount":1036.3,"principal_component":769.04,"interest_component":267.26,"outstanding_balance":38922.61,"status":"Pending","remaining_amount":1036.3,"paid_at":null}]}'
         headers: []
         description: ''
     responseFields: []
@@ -433,7 +509,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":null,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}}'
+        content: '{"data":{"id":null,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}}'
         headers: []
         description: ''
       -
@@ -510,7 +586,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":null,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}}'
+        content: '{"data":{"id":null,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}}'
         headers: []
         description: ''
       -
@@ -599,7 +675,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":{"id":null,"user_id":5,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null}}'
+        content: '{"data":{"id":null,"principal_amount":49771.04,"outstanding_balance":49771.04,"interest_rate":0.1111,"repayment_term_months":38,"interest_method":"FlatRate","status":"active","disbursed_at":null,"eligibility_passed":null,"notes":null,"rejection_reason":null,"created_at":null,"total_payable":null,"total_paid":null,"next_repayment":null}}'
         headers: []
         description: ''
       -

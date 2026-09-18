@@ -22,6 +22,6 @@ final class ShowController
     {
         abort_unless($loan->user_id === $request->user()->id, 404);
 
-        return new LoanResource($loan);
+        return new LoanResource($loan->load('scheduleEntries'));
     }
 }
