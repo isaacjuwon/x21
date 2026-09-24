@@ -21,11 +21,11 @@ final readonly class RecipientResponse
         return new self(
             recipientCode: $data['recipient_code'],
             name: $data['name'],
-            accountNumber: $data['details']['account_number'],
-            bankCode: $data['details']['bank_code'],
-            id: $data['id'],
+            accountNumber: (string) $data['details']['account_number'],
+            bankCode: (string) $data['details']['bank_code'],
+            id: (int) $data['id'],
             type: $data['type'],
-            active: $data['active'],
+            active: (bool) $data['active'],
         );
     }
 }

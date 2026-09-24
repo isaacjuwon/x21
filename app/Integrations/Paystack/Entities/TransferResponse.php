@@ -21,7 +21,7 @@ final readonly class TransferResponse
             reference: $data['reference'],
             status: $data['status'],
             amount: $data['amount'],
-            recipient: $data['recipient'],
+            recipient: (string) $data['recipient'],
             transferCode: $data['transfer_code'] ?? null,
             reason: $data['reason'] ?? null,
         );
