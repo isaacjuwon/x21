@@ -15,7 +15,7 @@ class WalletTransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'recipient_email' => ['required', 'email', 'exists:users,email'],
+            'phone_number' => ['required', 'numeric', 'exists:users,phone_number'],
             'amount' => ['required', 'numeric', 'min:1'],
             'notes' => ['nullable', 'string', 'max:255'],
         ];

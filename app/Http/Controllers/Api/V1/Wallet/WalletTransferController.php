@@ -16,7 +16,7 @@ use Knuckles\Scribe\Attributes\Response;
 #[Authenticated]
 class WalletTransferController
 {
-    #[BodyParam('recipient_email', 'string', description: 'Email address of the recipient', required: true, example: 'recipient@example.com')]
+    #[BodyParam('phone_number', 'string', description: 'Phone number of the recipient', required: true, example: 070123456789)]
     #[BodyParam('amount', 'number', description: 'Amount to transfer (min: 1)', required: true, example: 1000)]
     #[BodyParam('notes', 'string', description: 'Optional transfer note', required: false, example: 'Payment for services')]
     #[Response([
@@ -34,7 +34,7 @@ class WalletTransferController
     #[Response(['message' => 'Recipient not found.'], status: 404)]
     public function __invoke(WalletTransferRequest $request): JsonResponse
     {
-        $recipient = User::where('email', $request->recipient_email)->firstOrFail();
+        $recipient = User::where('phone_number', $request->phone_number)->firstOrFail();
 
         $transactions = $request->user()->transfer(
             amount: (float) $request->amount,
