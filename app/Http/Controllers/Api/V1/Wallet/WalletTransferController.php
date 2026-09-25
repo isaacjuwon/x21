@@ -16,7 +16,7 @@ use Knuckles\Scribe\Attributes\Response;
 #[Authenticated]
 class WalletTransferController
 {
-    #[BodyParam('phone_number', 'string', description: 'Phone number of the recipient', required: true, example: 070123456789)]
+    #[BodyParam('phone_number', description: 'Phone number of the recipient', required: true, example: '')]
     #[BodyParam('amount', 'number', description: 'Amount to transfer (min: 1)', required: true, example: 1000)]
     #[BodyParam('notes', 'string', description: 'Optional transfer note', required: false, example: 'Payment for services')]
     #[Response([

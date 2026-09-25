@@ -70,7 +70,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: lafayette.considine@example.com
-                      email_verified_at: '2026-09-18T15:27:45+00:00'
+                      email_verified_at: '2026-09-25T15:26:54+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -98,7 +98,7 @@ paths:
                             example: lafayette.considine@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-18T15:27:45+00:00'
+                            example: '2026-09-25T15:26:54+00:00'
                           created_at:
                             type: string
                             example: null
@@ -194,7 +194,7 @@ paths:
                     attributes:
                       name: 'Justina Gaylord'
                       email: cormier.nick@example.com
-                      email_verified_at: '2026-09-18T15:27:46+00:00'
+                      email_verified_at: '2026-09-25T15:26:55+00:00'
                       created_at: null
                       updated_at: null
                   meta:
@@ -222,7 +222,7 @@ paths:
                             example: cormier.nick@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-18T15:27:46+00:00'
+                            example: '2026-09-25T15:26:55+00:00'
                           created_at:
                             type: string
                             example: null
@@ -423,7 +423,7 @@ paths:
                     attributes:
                       name: 'Morgan Hirthe'
                       email: dare.emelie@example.com
-                      email_verified_at: '2026-09-18T15:27:46+00:00'
+                      email_verified_at: '2026-09-25T15:26:55+00:00'
                       created_at: null
                       updated_at: null
                 properties:
@@ -447,7 +447,7 @@ paths:
                             example: dare.emelie@example.com
                           email_verified_at:
                             type: string
-                            example: '2026-09-18T15:27:46+00:00'
+                            example: '2026-09-25T15:26:55+00:00'
                           created_at:
                             type: string
                             example: null
@@ -1296,7 +1296,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: principal_amount
+                  example: created_at
                   enum:
                     - created_at
                     - principal_amount
@@ -1304,7 +1304,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc
@@ -1566,7 +1566,7 @@ paths:
                       id: null
                       loan_id: 2
                       instalment_number: 30
-                      due_date: '2026-10-09T00:00:00.000000Z'
+                      due_date: '2026-10-16T00:00:00.000000Z'
                       instalment_amount: 103.78
                       principal_component: 101.39
                       interest_component: 2.39
@@ -1578,7 +1578,7 @@ paths:
                       id: null
                       loan_id: 3
                       instalment_number: 16
-                      due_date: '2030-06-25T00:00:00.000000Z'
+                      due_date: '2030-07-02T00:00:00.000000Z'
                       instalment_amount: 1036.3
                       principal_component: 769.04
                       interest_component: 267.26
@@ -1594,7 +1594,7 @@ paths:
                         id: null
                         loan_id: 2
                         instalment_number: 30
-                        due_date: '2026-10-09T00:00:00.000000Z'
+                        due_date: '2026-10-16T00:00:00.000000Z'
                         instalment_amount: 103.78
                         principal_component: 101.39
                         interest_component: 2.39
@@ -1606,7 +1606,7 @@ paths:
                         id: null
                         loan_id: 3
                         instalment_number: 16
-                        due_date: '2030-06-25T00:00:00.000000Z'
+                        due_date: '2030-07-02T00:00:00.000000Z'
                         instalment_amount: 1036.3
                         principal_component: 769.04
                         interest_component: 267.26
@@ -1629,7 +1629,7 @@ paths:
                           example: 30
                         due_date:
                           type: string
-                          example: '2026-10-09T00:00:00.000000Z'
+                          example: '2026-10-16T00:00:00.000000Z'
                         instalment_amount:
                           type: number
                           example: 103.78
@@ -3535,7 +3535,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: sell
+                  example: buy
                   enum:
                     - buy
                     - sell
@@ -3556,7 +3556,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc
@@ -4007,12 +4007,12 @@ paths:
                       id: null
                       old_price: 10.98
                       new_price: 487.1
-                      created_at: '2026-07-20T15:27:48.291867Z'
+                      created_at: '2026-07-27T15:26:57.684476Z'
                     -
                       id: null
                       old_price: 334.4
                       new_price: 218.45
-                      created_at: '2026-08-09T15:27:48.293294Z'
+                      created_at: '2026-08-16T15:26:57.693420Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -4050,12 +4050,12 @@ paths:
                         id: null
                         old_price: 10.98
                         new_price: 487.1
-                        created_at: '2026-07-20T15:27:48.291867Z'
+                        created_at: '2026-07-27T15:26:57.684476Z'
                       -
                         id: null
                         old_price: 334.4
                         new_price: 218.45
-                        created_at: '2026-08-09T15:27:48.293294Z'
+                        created_at: '2026-08-16T15:26:57.693420Z'
                     items:
                       type: object
                       properties:
@@ -4071,7 +4071,7 @@ paths:
                           example: 487.1
                         created_at:
                           type: string
-                          example: '2026-07-20T15:27:48.291867Z'
+                          example: '2026-07-27T15:26:57.684476Z'
                   links:
                     type: object
                     properties:
@@ -4217,14 +4217,14 @@ paths:
                       created_at: null
                       dividend:
                         total_amount: 6654.11
-                        declared_at: '2026-09-18T15:27:48.000000Z'
+                        declared_at: '2026-09-25T15:26:57.000000Z'
                     -
                       id: null
                       amount: 778.67
                       created_at: null
                       dividend:
                         total_amount: 7402.72
-                        declared_at: '2026-09-18T15:27:48.000000Z'
+                        declared_at: '2026-09-25T15:26:57.000000Z'
                   links:
                     first: '/?page=1'
                     last: '/?page=1'
@@ -4264,14 +4264,14 @@ paths:
                         created_at: null
                         dividend:
                           total_amount: 6654.11
-                          declared_at: '2026-09-18T15:27:48.000000Z'
+                          declared_at: '2026-09-25T15:26:57.000000Z'
                       -
                         id: null
                         amount: 778.67
                         created_at: null
                         dividend:
                           total_amount: 7402.72
-                          declared_at: '2026-09-18T15:27:48.000000Z'
+                          declared_at: '2026-09-25T15:26:57.000000Z'
                     items:
                       type: object
                       properties:
@@ -4294,7 +4294,7 @@ paths:
                               example: 6654.11
                             declared_at:
                               type: string
-                              example: '2026-09-18T15:27:48.000000Z'
+                              example: '2026-09-25T15:26:57.000000Z'
                   links:
                     type: object
                     properties:
@@ -4713,7 +4713,7 @@ paths:
                 priority:
                   type: string
                   description: ''
-                  example: medium
+                  example: high
                   enum:
                     - low
                     - medium
@@ -5114,101 +5114,6 @@ paths:
                   example: WFT-XXXXXXXXXX
               required:
                 - reference
-  /api/v1/wallet/transfer:
-    post:
-      summary: ''
-      operationId: postApiV1WalletTransfer
-      description: ''
-      parameters: []
-      responses:
-        201:
-          description: 'Transfer initiated'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    id: 1
-                    amount: '1000.00'
-                    type: withdrawal
-                    status: completed
-                    reference: WTH-XXXXXXXXXX
-                    notes: 'Transfer to recipient@example.com'
-                    created_at: '2026-01-01T00:00:00.000000Z'
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      amount:
-                        type: string
-                        example: '1000.00'
-                      type:
-                        type: string
-                        example: withdrawal
-                      status:
-                        type: string
-                        example: completed
-                      reference:
-                        type: string
-                        example: WTH-XXXXXXXXXX
-                      notes:
-                        type: string
-                        example: 'Transfer to recipient@example.com'
-                      created_at:
-                        type: string
-                        example: '2026-01-01T00:00:00.000000Z'
-        404:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Recipient not found.'
-                properties:
-                  message:
-                    type: string
-                    example: 'Recipient not found.'
-        422:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Insufficient funds.'
-                properties:
-                  message:
-                    type: string
-                    example: 'Insufficient funds.'
-      tags:
-        - Wallet
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                recipient_email:
-                  type: string
-                  description: 'Email address of the recipient'
-                  example: recipient@example.com
-                amount:
-                  type: number
-                  description: 'Amount to transfer (min: 1)'
-                  example: 1000
-                notes:
-                  type: string
-                  description: 'Optional transfer note'
-                  example: 'Payment for services'
-              required:
-                - recipient_email
-                - amount
   /api/v1/wallet/withdraw:
     post:
       summary: ''
@@ -5691,7 +5596,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: amount
+                  example: created_at
                   enum:
                     - created_at
                     - amount
@@ -5699,7 +5604,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   enum:
                     - asc
                     - desc

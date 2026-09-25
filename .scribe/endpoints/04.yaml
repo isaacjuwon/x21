@@ -164,95 +164,6 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/wallet/transfer
-    metadata:
-      custom: []
-      groupName: Wallet
-      groupDescription: 'Wallet balance and overview'
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_BEARER_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      recipient_email:
-        custom: []
-        name: recipient_email
-        description: 'Email address of the recipient'
-        required: true
-        example: recipient@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      amount:
-        custom: []
-        name: amount
-        description: 'Amount to transfer (min: 1)'
-        required: true
-        example: 1000
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      notes:
-        custom: []
-        name: notes
-        description: 'Optional transfer note'
-        required: false
-        example: 'Payment for services'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      recipient_email: recipient@example.com
-      amount: 1000
-      notes: 'Payment for services'
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 201
-        content: '{"data":{"id":1,"amount":"1000.00","type":"withdrawal","status":"completed","reference":"WTH-XXXXXXXXXX","notes":"Transfer to recipient@example.com","created_at":"2026-01-01T00:00:00.000000Z"}}'
-        headers: []
-        description: 'Transfer initiated'
-      -
-        custom: []
-        status: 404
-        content: '{"message":"Recipient not found."}'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message":"Insufficient funds."}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
     uri: api/v1/wallet/withdraw
     metadata:
       custom: []
@@ -685,7 +596,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: amount
+        example: created_at
         type: string
         enumValues:
           - created_at
@@ -698,7 +609,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -721,8 +632,8 @@ endpoints:
       type: architecto
       status: architecto
       search: 'n'
-      sort_by: amount
-      sort_direction: asc
+      sort_by: created_at
+      sort_direction: desc
       per_page: 7
     fileParameters: []
     responses:

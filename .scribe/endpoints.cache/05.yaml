@@ -138,7 +138,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: principal_amount
+        example: created_at
         type: string
         enumValues:
           - created_at
@@ -151,7 +151,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -161,8 +161,8 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       status: architecto
-      sort_by: principal_amount
-      sort_direction: asc
+      sort_by: created_at
+      sort_direction: desc
     fileParameters: []
     responses:
       -
@@ -375,7 +375,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-10-09T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":16,"due_date":"2030-06-25T00:00:00.000000Z","instalment_amount":1036.3,"principal_component":769.04,"interest_component":267.26,"outstanding_balance":38922.61,"status":"Pending","remaining_amount":1036.3,"paid_at":null}]}'
+        content: '{"data":[{"id":null,"loan_id":2,"instalment_number":30,"due_date":"2026-10-16T00:00:00.000000Z","instalment_amount":103.78,"principal_component":101.39,"interest_component":2.39,"outstanding_balance":21270.2,"status":"Pending","remaining_amount":103.78,"paid_at":null},{"id":null,"loan_id":3,"instalment_number":16,"due_date":"2030-07-02T00:00:00.000000Z","instalment_amount":1036.3,"principal_component":769.04,"interest_component":267.26,"outstanding_balance":38922.61,"status":"Pending","remaining_amount":1036.3,"paid_at":null}]}'
         headers: []
         description: ''
     responseFields: []
