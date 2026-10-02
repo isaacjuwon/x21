@@ -23,7 +23,7 @@ final readonly class CableResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/merchant-verify/',
                 options: $entity->toRequestBody(),
             );
@@ -41,7 +41,7 @@ final readonly class CableResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/biller/',
                 options: $entity->toRequestBody(),
             );

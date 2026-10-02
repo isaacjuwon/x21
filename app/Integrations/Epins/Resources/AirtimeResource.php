@@ -21,7 +21,7 @@ final readonly class AirtimeResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/airtime/',
                 options: $entity->toRequestBody(),
             );

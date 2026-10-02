@@ -32,6 +32,14 @@ class IntegrationSettings extends Settings
 
     public ?string $kudisms_sender_id;
 
+    public ?string $vtpass_url;
+
+    public ?string $vtpass_api_key;
+
+    public ?string $vtpass_secret_key;
+
+    public ?string $vtpass_public_key;
+
     public static function group(): string
     {
         return 'integrations';

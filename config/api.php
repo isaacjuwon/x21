@@ -16,7 +16,7 @@ return [
 
     'defaults' => [
         'payment' => env('API_PAYMENT_PROVIDER', 'paystack'),
-        'vtu' => env('API_VTU_PROVIDER', 'epins'),
+        'vtu' => env('API_VTU_PROVIDER', 'failover'),
         'account' => env('API_ACCOUNT_PROVIDER', 'paystack'),
         'verification' => env('API_VERIFICATION_PROVIDER', 'dojah'),
         'sms' => env('API_SMS_PROVIDER', 'kudisms'),
@@ -41,6 +41,18 @@ return [
         ],
         'epins' => [
             'driver' => 'epins',
+        ],
+        'vtpass' => [
+            'driver' => 'vtpass',
+        ],
+        'failover' => [
+            'driver' => 'failover',
+            'providers' => [
+                'epins',
+                'vtpass',
+            ],
+            'retry_after' => (int) env('API_VTU_FAILOVER_RETRY_AFTER', 60),
+            'failover_on_unsuccessful' => (bool) env('API_VTU_FAILOVER_ON_UNSUCCESSFUL', true),
         ],
         'monnify' => [
             'driver' => 'monnify',

@@ -21,7 +21,7 @@ final readonly class DataResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/data/',
                 options: $entity->toRequestBody(),
             );

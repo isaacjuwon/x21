@@ -11,13 +11,18 @@ use App\Integrations\Dojah\DojahConnector;
 use App\Integrations\Dojah\DojahProvider;
 use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\Epins\EpinsProvider;
+use App\Integrations\Failover\FailoverVtuProvider;
 use App\Integrations\KudiSms\KudiSmsConnector;
 use App\Integrations\KudiSms\KudiSmsProvider;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Integrations\Paystack\PaystackProvider;
+use App\Integrations\Vtpass\VtpassConnector;
+use App\Integrations\Vtpass\VtpassProvider;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\MultipleInstanceManager;
 use LogicException;
+use Psr\Log\LoggerInterface;
 
 class ApiManager extends MultipleInstanceManager
 {
@@ -177,6 +182,37 @@ class ApiManager extends MultipleInstanceManager
     {
         return new EpinsProvider(
             $this->app->make(EpinsConnector::class)
+        );
+    }
+
+    /**
+     * Create a VTPass powered instance.
+     */
+    public function createVtpassDriver(array $config): VtpassProvider
+    {
+        return new VtpassProvider(
+            $this->app->make(VtpassConnector::class)
+        );
+    }
+
+    /**
+     * Create a Failover VTU provider instance.
+     */
+    public function createFailoverDriver(array $config): FailoverVtuProvider
+    {
+        $providers = [];
+        $providerNames = $config['providers'] ?? ['epins', 'vtpass'];
+
+        foreach ($providerNames as $name) {
+            $providers[$name] = $this->vtuProvider($name);
+        }
+
+        return new FailoverVtuProvider(
+            providers: $providers,
+            retryAfter: (int) ($config['retry_after'] ?? 60),
+            logger: $this->app->make(LoggerInterface::class),
+            cache: $this->app->bound(CacheRepository::class) ? $this->app->make(CacheRepository::class) : null,
+            failoverOnUnsuccessful: (bool) ($config['failover_on_unsuccessful'] ?? true),
         );
     }
 

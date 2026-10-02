@@ -23,7 +23,7 @@ final readonly class ElectricityResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/merchant-verify/',
                 options: $entity->toRequestBody(),
             );
