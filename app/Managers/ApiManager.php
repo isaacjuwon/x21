@@ -201,7 +201,7 @@ class ApiManager extends MultipleInstanceManager
     public function createFailoverDriver(array $config): FailoverVtuProvider
     {
         $providers = [];
-        $providerNames = $config['providers'] ?? ['epins'];
+        $providerNames = $config['providers'] ?? ['epins','vtpass'];
 
         foreach ($providerNames as $name) {
             $providers[$name] = $this->vtuProvider($name);

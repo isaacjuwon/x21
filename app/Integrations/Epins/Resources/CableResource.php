@@ -23,7 +23,7 @@ final readonly class CableResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Get,
+                method: Method::POST,
                 uri: '/merchant-verify/',
                 options: $entity->toRequestBody(),
             );
