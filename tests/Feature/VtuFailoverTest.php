@@ -10,10 +10,12 @@ use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Integrations\Epins\Entities\ValidateMeter;
 use App\Integrations\Epins\Entities\ValidateSmartcard;
 use App\Integrations\Epins\Entities\ValidationResponse;
-use App\Integrations\Epins\Exceptions\EpinsException;
 use App\Integrations\Failover\FailoverVtuProvider;
 use App\Integrations\Vtpass\VtpassProvider;
+use App\Integrations\Vtugate\Exceptions\VtugateException;
+use App\Integrations\Vtugate\VtugateProvider;
 use App\Managers\ApiManager;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 
 test('api manager resolves vtpass provider implementing VtuProvider', function () {
@@ -77,7 +79,7 @@ test('failover provider falls back to secondary when primary throws exception', 
     $primary->shouldReceive('purchaseAirtime')
         ->once()
         ->with($entity)
-        ->andThrow(new EpinsException('Connection timeout to Epins'));
+        ->andThrow(new VtugateException('Connection timeout to Vtugate'));
 
     $secondaryResponse = new ServiceResponse(code: 101, description: ['ref' => 'REF-VTPASS-123']);
 
@@ -87,7 +89,7 @@ test('failover provider falls back to secondary when primary throws exception', 
         ->andReturn($secondaryResponse);
 
     $failover = new FailoverVtuProvider(
-        providers: ['epins' => $primary, 'vtpass' => $secondary],
+        providers: ['vtugate' => $primary, 'vtpass' => $secondary],
         retryAfter: 60,
     );
 
@@ -95,7 +97,7 @@ test('failover provider falls back to secondary when primary throws exception', 
 
     expect($response->isSuccessful())->toBeTrue()
         ->and($response->description['ref'])->toBe('REF-VTPASS-123')
-        ->and($failover->isProviderDead('epins'))->toBeTrue()
+        ->and($failover->isProviderDead('vtugate'))->toBeTrue()
         ->and($failover->isProviderDead('vtpass'))->toBeFalse();
 });
 
@@ -106,7 +108,7 @@ test('failover provider falls back to secondary when primary returns unsuccessfu
     $entity = new PurchaseData(
         network: 'mtn',
         mobileNumber: '08012345678',
-        dataCode: '1000',
+        apiCode: '1000',
         reference: 'REF-DATA-1',
     );
 
@@ -126,7 +128,7 @@ test('failover provider falls back to secondary when primary returns unsuccessfu
         ->andReturn($secondaryResponse);
 
     $failover = new FailoverVtuProvider(
-        providers: ['epins' => $primary, 'vtpass' => $secondary],
+        providers: ['vtugate' => $primary, 'vtpass' => $secondary],
         retryAfter: 60,
         failoverOnUnsuccessful: true,
     );
@@ -134,7 +136,7 @@ test('failover provider falls back to secondary when primary returns unsuccessfu
     $response = $failover->purchaseData($entity);
 
     expect($response->isSuccessful())->toBeTrue()
-        ->and($failover->isProviderDead('epins'))->toBeTrue();
+        ->and($failover->isProviderDead('vtugate'))->toBeTrue();
 });
 
 test('dead provider is bypassed on subsequent calls within retry period', function () {
@@ -158,11 +160,11 @@ test('dead provider is bypassed on subsequent calls within retry period', functi
         ->andReturn($secondaryResponse);
 
     $failover = new FailoverVtuProvider(
-        providers: ['epins' => $primary, 'vtpass' => $secondary],
+        providers: ['vtugate' => $primary, 'vtpass' => $secondary],
         retryAfter: 60,
     );
 
-    $failover->markProviderAsDead('epins');
+    $failover->markProviderAsDead('vtugate');
 
     $response = $failover->purchaseAirtime($entity);
 
@@ -187,7 +189,7 @@ test('all providers failing returns last unsuccessful response or throws excepti
         ->andThrow(new RuntimeException('VTPass also down'));
 
     $failover = new FailoverVtuProvider(
-        providers: ['epins' => $primary, 'vtpass' => $secondary],
+        providers: ['vtugate' => $primary, 'vtpass' => $secondary],
         retryAfter: 60,
     );
 
@@ -225,6 +227,33 @@ test('vtpass provider airtime purchase sends correct request and returns Service
         ->and($response->isSuccessful())->toBeTrue()
         ->and($response->description['ref'])->toBe('REQ-VT-12345')
         ->and($response->description['response_description'])->toBe('TRANSACTION SUCCESSFUL');
+});
+
+test('vtugate provider resolves through api manager', function () {
+    $manager = app(ApiManager::class);
+    $provider = $manager->vtuProvider('vtugate');
+    expect($provider)->toBeInstanceOf(VtuProvider::class)
+        ->and($provider)->toBeInstanceOf(VtugateProvider::class);
+});
+
+test('vtugate provider airtime purchase sends form-urlencoded and returns ServiceResponse', function () {
+    Http::fake([
+        'https://api.vtugate.com/api/v1/airtime' => Http::response([
+            'status' => true,
+            'message' => 'Airtime sent successfully',
+            'ref' => 'VTG-12345',
+            'data' => ['id' => 999],
+        ], 200),
+    ]);
+    $provider = app(ApiManager::class)->vtuProvider('vtugate');
+    $entity = new PurchaseAirtime(network: 'mtn', amount: 500, mobileNumber: '08012345678', reference: 'REF-AIR-VTG');
+    $response = $provider->purchaseAirtime($entity);
+    expect($response)->toBeInstanceOf(ServiceResponse::class)
+        ->and($response->isSuccessful())->toBeTrue()
+        ->and($response->description['response_description'])->toBe('Airtime sent successfully');
+    Http::assertSent(function (Request $req) {
+        return $req->isForm();
+    });
 });
 
 test('vtpass provider meter validation sends correct request and returns ValidationResponse', function () {
@@ -275,6 +304,7 @@ test('vtpass provider electricity purchase includes token in response', function
         service: 'ikeja-electric',
         meterNumber: '12345678901',
         meterType: 'prepaid',
+        apiCode: 'prepaid',
         amount: 2000,
         reference: 'REQ-ELEC-123',
     );
@@ -304,12 +334,12 @@ test('failover automatically resets dead providers if all providers are currentl
         ->andReturn(new ServiceResponse(code: 101, description: ['ref' => 'REF-RETRY-ALL']));
 
     $failover = new FailoverVtuProvider(
-        providers: ['epins' => $primary, 'vtpass' => $secondary],
+        providers: ['vtugate' => $primary, 'vtpass' => $secondary],
         retryAfter: 60,
     );
 
     // Mark both as dead
-    $failover->markProviderAsDead('epins');
+    $failover->markProviderAsDead('vtugate');
     $failover->markProviderAsDead('vtpass');
 
     $response = $failover->purchaseAirtime($entity);
@@ -317,11 +347,11 @@ test('failover automatically resets dead providers if all providers are currentl
     expect($response->isSuccessful())->toBeTrue();
 });
 
-test('vtpass provider uses vtpassCode variation when provided', function () {
+test('vtpass provider passes apiCode as variation_code', function () {
     Http::fake([
-        'https://vtpass.com/api/pay' => function (\Illuminate\Http\Client\Request $request) {
+        'https://vtpass.com/api/pay' => function (Request $request) {
             $data = $request->data();
-            expect($data['variation_code'])->toBe('mtn-1gb-1000');
+            expect($data['variation_code'])->toBe('DATA-PLAN-001');
 
             return Http::response([
                 'code' => '000',
@@ -337,9 +367,8 @@ test('vtpass provider uses vtpassCode variation when provided', function () {
     $entity = new PurchaseData(
         network: 'mtn',
         mobileNumber: '08012345678',
-        dataCode: 'EPINS_CODE_123',
+        apiCode: 'DATA-PLAN-001',
         reference: 'REQ-DATA-PREF',
-        vtpassCode: 'mtn-1gb-1000',
     );
 
     $response = $provider->purchaseData($entity);
@@ -347,4 +376,3 @@ test('vtpass provider uses vtpassCode variation when provided', function () {
     expect($response)->toBeInstanceOf(ServiceResponse::class)
         ->and($response->isSuccessful())->toBeTrue();
 });
-

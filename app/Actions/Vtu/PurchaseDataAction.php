@@ -9,6 +9,7 @@ use App\Integrations\Epins\Entities\PurchaseData as PurchaseDataEntity;
 use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
+use App\Models\DataPlan;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
@@ -20,12 +21,25 @@ final class PurchaseDataAction
 
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
+        /** @var DataPlan $plan */
+        $plan = $transaction->plan;
+        $code = $plan->api_code;
+
+        if ($code === null || $code === '') {
+            throw new \RuntimeException(
+                "DataPlan #{$plan->id} has no resolvable API code for failover chain "
+                .json_encode(config('api.providers.failover.providers')).'. '
+                .'Add provider API codes for this plan in admin.'
+            );
+        }
+
         $entity = new PurchaseDataEntity(
             network: (string) ($transaction->meta['network'] ?? $transaction->brand->api_code),
             mobileNumber: (string) $transaction->recipient,
-            dataCode: (string) $transaction->plan->api_code,
+            apiCode: (string) $code,
             reference: $transaction->reference,
-            vtpassCode: $transaction->plan->vtpass_code ?? null,
+            planId: $plan->id,
+            planType: $plan::class,
         );
 
         try {

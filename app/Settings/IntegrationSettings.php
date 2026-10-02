@@ -18,9 +18,9 @@ class IntegrationSettings extends Settings
 
     public ?string $dojah_api_key;
 
-    public ?string $epins_url;
+    public ?string $vtugate_url;
 
-    public ?string $epins_api_key;
+    public ?string $vtugate_api_key;
 
     public ?string $openai_api_key;
 

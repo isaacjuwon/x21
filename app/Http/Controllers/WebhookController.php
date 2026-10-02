@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Webhooks\ProcessEpinsWebhookAction;
 use App\Actions\Webhooks\ProcessPaystackWebhookAction;
 use App\Webhooks\Verifiers\PaystackWebhookVerifier;
 use App\Webhooks\Webhook;
@@ -17,11 +16,6 @@ class WebhookController extends Controller
             'paystack' => Webhook::receive('paystack', $request)
                 ->verify(PaystackWebhookVerifier::class)
                 ->process(ProcessPaystackWebhookAction::class)
-                ->onQueue('webhooks')
-                ->handle(),
-
-            'epins' => Webhook::receive('epins', $request)
-                ->process(ProcessEpinsWebhookAction::class)
                 ->onQueue('webhooks')
                 ->handle(),
 

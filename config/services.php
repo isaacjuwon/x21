@@ -42,4 +42,9 @@ return [
         'public_key' => env('VTPASS_PUBLIC_KEY'),
     ],
 
+    'vtugate' => [
+        'url' => env('VTUGATE_URL', 'https://api.vtugate.com'),
+        'api_key' => env('VTUGATE_API_KEY'),
+    ],
+
 ];

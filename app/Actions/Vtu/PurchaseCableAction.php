@@ -9,6 +9,7 @@ use App\Integrations\Epins\Entities\PurchaseCable as PurchaseCableEntity;
 use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
+use App\Models\CablePlan;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
@@ -20,13 +21,17 @@ final class PurchaseCableAction
 
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
+        /** @var CablePlan $plan */
+        $plan = $transaction->plan;
+
         $entity = new PurchaseCableEntity(
             service: (string) $transaction->brand->api_code,
             smartcardNumber: (string) $transaction->recipient,
-            variationCode: (string) $transaction->plan->api_code,
+            apiCode: (string) $plan->api_code,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
-            vtpassCode: $transaction->plan->vtpass_code ?? null,
+            planId: $plan->id,
+            planType: $plan::class,
         );
 
         try {

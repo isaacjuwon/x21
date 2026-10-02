@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasProviderCodes;
 use Illuminate\Database\Eloquent\Model;
 
 class ElectricityPlan extends Model
 {
+    use HasProviderCodes;
+
+    protected $with = ['providerCodes'];
+
     protected $fillable = [
         'name',
         'brand_id',

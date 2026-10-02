@@ -39,8 +39,8 @@ return [
         'dojah' => [
             'driver' => 'dojah',
         ],
-        'epins' => [
-            'driver' => 'epins',
+        'vtugate' => [
+            'driver' => 'vtugate',
         ],
         'vtpass' => [
             'driver' => 'vtpass',
@@ -48,8 +48,8 @@ return [
         'failover' => [
             'driver' => 'failover',
             'providers' => [
-                'epins',
-		'vtpass',
+                'vtugate',
+                'vtpass',
             ],
             'retry_after' => (int) env('API_VTU_FAILOVER_RETRY_AFTER', 60),
             'failover_on_unsuccessful' => (bool) env('API_VTU_FAILOVER_ON_UNSUCCESSFUL', true),

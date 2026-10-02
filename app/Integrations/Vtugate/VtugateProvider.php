@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Integrations\Epins;
+declare(strict_types=1);
+
+namespace App\Integrations\Vtugate;
 
 use App\Integrations\Contracts\Providers\VtuProvider;
 use App\Integrations\Epins\Entities\PurchaseAirtime;
@@ -13,10 +15,10 @@ use App\Integrations\Epins\Entities\ValidateMeter;
 use App\Integrations\Epins\Entities\ValidateSmartcard;
 use App\Integrations\Epins\Entities\ValidationResponse;
 
-class EpinsProvider implements VtuProvider
+class VtugateProvider implements VtuProvider
 {
     public function __construct(
-        protected EpinsConnector $connector
+        protected VtugateConnector $connector,
     ) {}
 
     public function purchaseAirtime(PurchaseAirtime $entity): ServiceResponse
@@ -52,5 +54,10 @@ class EpinsProvider implements VtuProvider
     public function validateMeter(ValidateMeter $entity): ValidationResponse
     {
         return $this->connector->electricity()->validateMeter($entity);
+    }
+
+    public function getConnector(): VtugateConnector
+    {
+        return $this->connector;
     }
 }

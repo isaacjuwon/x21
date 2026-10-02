@@ -2,10 +2,11 @@
 
 namespace App\Filament\Clusters\Plans\Resources\DataPlans\Schemas;
 
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Number;
@@ -43,28 +44,43 @@ class DataPlanForm
                                 ->hint('Validity period shown to the user'),
                         ]),
 
-                        Grid::make(3)->schema([
+                        Grid::make(2)->schema([
                             TextInput::make('price')
                                 ->numeric()
                                 ->prefix(Number::defaultCurrency())
                                 ->required()
                                 ->minValue(0.01),
 
-                            TextInput::make('api_code')
-                                ->label('Default API Code (Epins)')
-                                ->required()
-                                ->placeholder('e.g. MTN_SME_1GB'),
-
-                            TextInput::make('vtpass_code')
-                                ->label('VTPass Variation Code')
-                                ->nullable()
-                                ->placeholder('e.g. mtn-1gb-1000')
-                                ->helperText('Falls back to API code if empty'),
+                            Toggle::make('status')
+                                ->label('Active')
+                                ->default(true),
                         ]),
 
-                        Toggle::make('status')
-                            ->label('Active')
-                            ->default(true),
+                        Repeater::make('providerCodes')
+                            ->label('Provider API Codes')
+                            ->relationship()
+                            ->schema([
+                                Select::make('provider')
+                                    ->options(
+                                        collect(config('api.providers.failover.providers', ['vtugate']))
+                                            ->mapWithKeys(fn (string $provider): array => [$provider => ucfirst($provider)])
+                                            ->all()
+                                    )
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->label('Provider'),
+                                TextInput::make('code')
+                                    ->required()
+                                    ->placeholder('e.g. VTG_MTN_1GB  or  mtn-1gb-1000'),
+                            ])
+                            ->columns(2)
+                            ->minItems(1)
+                            ->addActionLabel('Add API code')
+                            ->itemLabel(
+                                fn (array $state): ?string => isset($state['provider'])
+                                    ? strtoupper($state['provider'])
+                                    : null
+                            ),
                     ]),
             ]);
     }

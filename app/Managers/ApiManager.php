@@ -9,8 +9,6 @@ use App\Integrations\Contracts\Providers\VerificationProvider;
 use App\Integrations\Contracts\Providers\VtuProvider;
 use App\Integrations\Dojah\DojahConnector;
 use App\Integrations\Dojah\DojahProvider;
-use App\Integrations\Epins\EpinsConnector;
-use App\Integrations\Epins\EpinsProvider;
 use App\Integrations\Failover\FailoverVtuProvider;
 use App\Integrations\KudiSms\KudiSmsConnector;
 use App\Integrations\KudiSms\KudiSmsProvider;
@@ -18,6 +16,8 @@ use App\Integrations\Paystack\PaystackConnector;
 use App\Integrations\Paystack\PaystackProvider;
 use App\Integrations\Vtpass\VtpassConnector;
 use App\Integrations\Vtpass\VtpassProvider;
+use App\Integrations\Vtugate\VtugateConnector;
+use App\Integrations\Vtugate\VtugateProvider;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\MultipleInstanceManager;
@@ -176,12 +176,12 @@ class ApiManager extends MultipleInstanceManager
     }
 
     /**
-     * Create an Epins powered instance.
+     * Create a Vtugate powered instance.
      */
-    public function createEpinsDriver(array $config): EpinsProvider
+    public function createVtugateDriver(array $config): VtugateProvider
     {
-        return new EpinsProvider(
-            $this->app->make(EpinsConnector::class)
+        return new VtugateProvider(
+            $this->app->make(VtugateConnector::class)
         );
     }
 
@@ -201,7 +201,7 @@ class ApiManager extends MultipleInstanceManager
     public function createFailoverDriver(array $config): FailoverVtuProvider
     {
         $providers = [];
-        $providerNames = $config['providers'] ?? ['epins'];
+        $providerNames = $config['providers'] ?? ['vtugate'];
 
         foreach ($providerNames as $name) {
             $providers[$name] = $this->vtuProvider($name);

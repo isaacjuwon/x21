@@ -12,15 +12,19 @@ final class PurchaseElectricity
 
     public string $meterType;
 
+    public string $apiCode;
+
     public int $amount;
 
     public function __construct(
         string $service,
         string $meterNumber,
         string $meterType,
+        string $apiCode,
         int $amount,
         public readonly ?string $reference = null,
-        public readonly ?string $vtpassCode = null,
+        public readonly ?int $planId = null,
+        public readonly ?string $planType = null,
     ) {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Electricity amount must be greater than zero.');
@@ -29,6 +33,7 @@ final class PurchaseElectricity
         $this->service = strtolower(trim($service));
         $this->meterNumber = trim($meterNumber);
         $this->meterType = trim($meterType);
+        $this->apiCode = trim($apiCode);
         $this->amount = $amount;
     }
 
@@ -37,7 +42,7 @@ final class PurchaseElectricity
         return [
             'service' => $this->service,
             'accountno' => $this->meterNumber,
-            'vcode' => $this->meterType,
+            'vcode' => $this->apiCode,
             'amount' => $this->amount,
             'ref' => $this->reference,
         ];

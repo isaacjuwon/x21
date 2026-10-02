@@ -42,14 +42,19 @@ class DataPlansTable
                     ->label('Price')
                     ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
-                TextColumn::make('api_code')
-                    ->label('API Code (Epins)')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('vtpass_code')
-                    ->label('VTPass Code')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('api_codes_summary')
+                    ->label('API Codes')
+                    ->state(function (DataPlan $record): string {
+                        $pairs = $record->providerCodes
+                            ->map(fn ($c) => "{$c->provider}: {$c->code}")
+                            ->join('  ·  ');
+
+                        return $pairs ?: '—';
+                    })
+                    ->searchable(
+                        query: fn ($query, string $search) => $query
+                            ->whereHas('providerCodes', fn ($q) => $q->where('code', 'like', "%{$search}%"))
+                    ),
                 IconColumn::make('status')
                     ->boolean()
                     ->sortable(),

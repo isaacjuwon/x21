@@ -27,9 +27,9 @@ class BrandForm
                 Textarea::make('description')
                     ->columnSpanFull(),
                 TextInput::make('api_code')
-                    ->label('Default API Code (Epins)')
+                    ->label('Default API Code (Vtugate)')
                     ->required()
-                    ->helperText('Identifier for default/Epins provider (e.g. MTN, DSTV, ikeja-electric)'),
+                    ->helperText('Identifier for default/Vtugate provider (e.g. MTN, DSTV, ikeja-electric)'),
                 TextInput::make('vtpass_code')
                     ->label('VTPass Service ID')
                     ->nullable()

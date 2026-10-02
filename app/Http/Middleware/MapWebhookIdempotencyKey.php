@@ -28,7 +28,6 @@ final class MapWebhookIdempotencyKey
                 $payload['event'] ?? 'unknown',
                 $payload['data']['reference'] ?? $payload['data']['id'] ?? '',
             ),
-            'epins' => (string) ($payload['reference'] ?? $payload['id'] ?? ''),
             default => null,
         };
 

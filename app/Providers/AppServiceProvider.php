@@ -6,10 +6,10 @@ use App\Events\Services\ServicePurchased;
 use App\Events\Wallets\TransactionFailed;
 use App\Events\Wallets\WalletWithdrawn;
 use App\Integrations\Dojah\DojahConnector;
-use App\Integrations\Epins\EpinsConnector;
 use App\Integrations\KudiSms\KudiSmsConnector;
 use App\Integrations\Paystack\PaystackConnector;
 use App\Integrations\Vtpass\VtpassConnector;
+use App\Integrations\Vtugate\VtugateConnector;
 use App\Listeners\Services\SendServicePurchasedNotificationListener;
 use App\Listeners\Wallets\DispatchWalletReversalListener;
 use App\Listeners\Wallets\SendWalletWithdrawnNotificationListener;
@@ -88,7 +88,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerConnectors(): void
     {
         PaystackConnector::register($this->app);
-        EpinsConnector::register($this->app);
+        VtugateConnector::register($this->app);
         VtpassConnector::register($this->app);
         DojahConnector::register($this->app);
         KudiSmsConnector::register($this->app);

@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\TopupTransaction;
-
 return [
 
     /*
@@ -19,9 +17,5 @@ return [
     |--------------------------------------------------------------------------
     | Per-provider settings. Add new providers here as needed.
     */
-
-    'epins' => [
-        'transaction_model' => TopupTransaction::class,
-    ],
 
 ];

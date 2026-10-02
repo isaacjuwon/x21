@@ -10,21 +10,22 @@ final class PurchaseCable
 
     public string $smartcardNumber;
 
-    public string $variationCode;
+    public string $apiCode;
 
     public int $amount;
 
     public function __construct(
         string $service,
         string $smartcardNumber,
-        string $variationCode,
+        string $apiCode,
         int $amount,
         public readonly ?string $reference = null,
-        public readonly ?string $vtpassCode = null,
+        public readonly ?int $planId = null,
+        public readonly ?string $planType = null,
     ) {
         $this->service = strtolower(trim($service));
         $this->smartcardNumber = trim($smartcardNumber);
-        $this->variationCode = trim($variationCode);
+        $this->apiCode = trim($apiCode);
         $this->amount = $amount;
     }
 
@@ -33,7 +34,7 @@ final class PurchaseCable
         return [
             'service' => $this->service,
             'accountno' => $this->smartcardNumber,
-            'vcode' => $this->variationCode,
+            'vcode' => $this->apiCode,
             'amount' => $this->amount,
             'ref' => $this->reference,
         ];

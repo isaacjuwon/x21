@@ -9,6 +9,7 @@ use App\Integrations\Epins\Entities\PurchaseExam as PurchaseExamEntity;
 use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
+use App\Models\EducationPlan;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
@@ -20,15 +21,18 @@ final class PurchaseEducationAction
 
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
+        /** @var EducationPlan $plan */
+        $plan = $transaction->plan;
         $quantity = (int) ($transaction->meta['quantity'] ?? 1);
 
         $entity = new PurchaseExamEntity(
             service: (string) $transaction->brand->api_code,
-            variationCode: (string) $transaction->plan->api_code,
+            apiCode: (string) $plan->api_code,
             amount: (int) $transaction->amount,
             numberOfPins: $quantity,
             reference: $transaction->reference,
-            vtpassCode: $transaction->plan->vtpass_code ?? null,
+            planId: $plan->id,
+            planType: $plan::class,
         );
 
         try {

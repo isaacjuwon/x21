@@ -10,14 +10,15 @@ final class PurchaseData
 
     public string $mobileNumber;
 
-    public string $dataCode;
+    public string $apiCode;
 
     public function __construct(
         string $network,
         string $mobileNumber,
-        string $dataCode,
+        string $apiCode,
         public readonly ?string $reference = null,
-        public readonly ?string $vtpassCode = null,
+        public readonly ?int $planId = null,
+        public readonly ?string $planType = null,
     ) {
         if (blank($network)) {
             throw new \InvalidArgumentException('Network code cannot be blank.');
@@ -25,7 +26,7 @@ final class PurchaseData
 
         $this->network = strtolower(trim($network));
         $this->mobileNumber = preg_replace('/\D/', '', $mobileNumber);
-        $this->dataCode = trim($dataCode);
+        $this->apiCode = trim($apiCode);
     }
 
     public function toRequestBody(): array
@@ -33,7 +34,7 @@ final class PurchaseData
         return [
             'networkId' => $this->network,
             'MobileNumber' => $this->mobileNumber,
-            'DataPlan' => $this->dataCode,
+            'DataPlan' => $this->apiCode,
             'ref' => $this->reference,
         ];
     }

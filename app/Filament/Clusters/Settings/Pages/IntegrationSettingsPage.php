@@ -55,12 +55,15 @@ class IntegrationSettingsPage extends SettingsPage
                         ]),
                     ]),
 
-                Section::make('Epins Configuration')
+                Section::make('Vtugate Configuration')
+                    ->description('Credentials for Vtugate VTU and bill payment services.')
                     ->schema([
-                        TextInput::make('epins_url')
+                        TextInput::make('vtugate_url')
+                            ->label('Base URL')
                             ->url()
-                            ->default('https://api.epins.com.ng/v1'),
-                        TextInput::make('epins_api_key')
+                            ->default('https://api.vtugate.com'),
+                        TextInput::make('vtugate_api_key')
+                            ->label('API Key')
                             ->password()
                             ->revealable(),
                     ]),

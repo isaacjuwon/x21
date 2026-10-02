@@ -16,6 +16,7 @@ use App\Integrations\Epins\Entities\ValidateSmartcard;
 use App\Integrations\Epins\Entities\ValidationResponse;
 use Closure;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Database\Eloquent\Model;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RuntimeException;
@@ -29,6 +30,15 @@ class FailoverVtuProvider implements VtuProvider
      * @var array<string, float>
      */
     protected array $deadProviders = [];
+
+    /**
+     * Per-execution cache of loaded plans, keyed by "planType|planId".
+     * Reset at the start of each executeWithFailover call to prevent stale
+     * data when this provider instance is reused across requests (e.g. queue workers).
+     *
+     * @var array<string, ?Model>
+     */
+    protected array $planCache = [];
 
     /**
      * @param  array<string, VtuProvider>  $providers
@@ -59,32 +69,36 @@ class FailoverVtuProvider implements VtuProvider
     public function purchaseData(PurchaseData $entity): ServiceResponse
     {
         return $this->executeWithFailover(
-            fn (VtuProvider $provider) => $provider->purchaseData($entity),
-            'purchaseData'
+            fn (VtuProvider $provider, string $name) => $provider->purchaseData($this->withProviderCode($entity, $name)),
+            'purchaseData',
+            $entity,
         );
     }
 
     public function purchaseCable(PurchaseCable $entity): ServiceResponse
     {
         return $this->executeWithFailover(
-            fn (VtuProvider $provider) => $provider->purchaseCable($entity),
-            'purchaseCable'
+            fn (VtuProvider $provider, string $name) => $provider->purchaseCable($this->withProviderCode($entity, $name)),
+            'purchaseCable',
+            $entity,
         );
     }
 
     public function purchaseElectricity(PurchaseElectricity $entity): ServiceResponse
     {
         return $this->executeWithFailover(
-            fn (VtuProvider $provider) => $provider->purchaseElectricity($entity),
-            'purchaseElectricity'
+            fn (VtuProvider $provider, string $name) => $provider->purchaseElectricity($this->withProviderCode($entity, $name)),
+            'purchaseElectricity',
+            $entity,
         );
     }
 
     public function purchaseExam(PurchaseExam $entity): ServiceResponse
     {
         return $this->executeWithFailover(
-            fn (VtuProvider $provider) => $provider->purchaseExam($entity),
-            'purchaseExam'
+            fn (VtuProvider $provider, string $name) => $provider->purchaseExam($this->withProviderCode($entity, $name)),
+            'purchaseExam',
+            $entity,
         );
     }
 
@@ -114,57 +128,154 @@ class FailoverVtuProvider implements VtuProvider
      *
      * @throws Throwable
      */
-    protected function executeWithFailover(Closure $callback, string $operation)
+    protected function executeWithFailover(Closure $callback, string $operation, mixed $entity = null)
     {
         $lastException = null;
         $lastResponse = null;
 
-        $availableProviders = $this->getAvailableProviders();
+        $this->planCache = [];
 
-        if (empty($availableProviders)) {
-            $this->resetDeadProviders();
-            $availableProviders = $this->providers;
-        }
+        try {
+            $availableProviders = $this->getAvailableProviders();
 
-        foreach ($availableProviders as $name => $provider) {
-            try {
-                $response = $callback($provider, (string) $name);
+            if (empty($availableProviders)) {
+                $this->resetDeadProviders();
+                $availableProviders = $this->providers;
+            }
 
-                if ($this->isSuccessfulResult($response)) {
+            foreach ($availableProviders as $name => $provider) {
+                try {
+                    $response = $callback($provider, (string) $name);
+
+                    if ($this->isSuccessfulResult($response)) {
+                        return $response;
+                    }
+
+                    if ($this->failoverOnUnsuccessful && $this->isUnsuccessfulResult($response)) {
+                        $this->logger->warning("VTU Provider [{$name}] returned unsuccessful response during [{$operation}], attempting failover.", [
+                            'provider' => $name,
+                            'operation' => $operation,
+                            'response' => (array) $response,
+                        ]);
+
+                        $lastResponse = $response;
+                        $this->markProviderAsDead((string) $name);
+
+                        continue;
+                    }
+
                     return $response;
-                }
-
-                if ($this->failoverOnUnsuccessful && $this->isUnsuccessfulResult($response)) {
-                    $this->logger->warning("VTU Provider [{$name}] returned unsuccessful response during [{$operation}], attempting failover.", [
+                } catch (Throwable $e) {
+                    $this->logger->error("VTU Provider [{$name}] failed during [{$operation}]: {$e->getMessage()}", [
                         'provider' => $name,
                         'operation' => $operation,
-                        'response' => (array) $response,
+                        'exception' => $e,
                     ]);
 
-                    $lastResponse = $response;
                     $this->markProviderAsDead((string) $name);
-
-                    continue;
+                    $lastException = $e;
                 }
-
-                return $response;
-            } catch (Throwable $e) {
-                $this->logger->error("VTU Provider [{$name}] failed during [{$operation}]: {$e->getMessage()}", [
-                    'provider' => $name,
-                    'operation' => $operation,
-                    'exception' => $e,
-                ]);
-
-                $this->markProviderAsDead((string) $name);
-                $lastException = $e;
             }
+
+            if ($lastResponse !== null) {
+                return $lastResponse;
+            }
+
+            throw $lastException ?? new RuntimeException("All VTU providers failed during [{$operation}].");
+        } finally {
+            $this->planCache = [];
+        }
+    }
+
+    /**
+     * Rebuild the plan-bound entity with a provider-specific apiCode.
+     *
+     * If the entity does not carry a plan reference, or the plan has no
+     * dedicated code for the given provider, the entity is returned as-is
+     * (its pre-resolved neutral apiCode is used).
+     *
+     * @template TEntity of object
+     *
+     * @param  TEntity  $entity
+     * @return TEntity
+     */
+    protected function withProviderCode(object $entity, string $providerName): object
+    {
+        $plan = $this->loadPlanForEntity($entity);
+
+        if ($plan === null || ! method_exists($plan, 'resolveApiCode')) {
+            return $entity;
         }
 
-        if ($lastResponse !== null) {
-            return $lastResponse;
+        /** @var string|null $resolved */
+        $resolved = $plan->resolveApiCode($providerName);
+
+        if ($resolved === null || $resolved === '') {
+            return $entity;
         }
 
-        throw $lastException ?? new RuntimeException("All VTU providers failed during [{$operation}].");
+        return match (true) {
+            $entity instanceof PurchaseData => new PurchaseData(
+                network: $entity->network,
+                mobileNumber: $entity->mobileNumber,
+                apiCode: $resolved,
+                reference: $entity->reference,
+                planId: $entity->planId,
+                planType: $entity->planType,
+            ),
+            $entity instanceof PurchaseCable => new PurchaseCable(
+                service: $entity->service,
+                smartcardNumber: $entity->smartcardNumber,
+                apiCode: $resolved,
+                amount: $entity->amount,
+                reference: $entity->reference,
+                planId: $entity->planId,
+                planType: $entity->planType,
+            ),
+            $entity instanceof PurchaseElectricity => new PurchaseElectricity(
+                service: $entity->service,
+                meterNumber: $entity->meterNumber,
+                meterType: $entity->meterType,
+                apiCode: $resolved,
+                amount: $entity->amount,
+                reference: $entity->reference,
+                planId: $entity->planId,
+                planType: $entity->planType,
+            ),
+            $entity instanceof PurchaseExam => new PurchaseExam(
+                service: $entity->service,
+                apiCode: $resolved,
+                amount: $entity->amount,
+                numberOfPins: $entity->numberOfPins,
+                reference: $entity->reference,
+                planId: $entity->planId,
+                planType: $entity->planType,
+            ),
+            default => $entity,
+        };
+    }
+
+    protected function loadPlanForEntity(object $entity): ?Model
+    {
+        $planId = $entity->planId ?? null;
+        $planType = $entity->planType ?? null;
+
+        if ($planId === null || $planType === null || ! is_string($planType) || ! is_a($planType, Model::class, true)) {
+            return null;
+        }
+
+        $cacheKey = "{$planType}|{$planId}";
+
+        if (array_key_exists($cacheKey, $this->planCache)) {
+            return $this->planCache[$cacheKey];
+        }
+
+        /** @var Model|null $plan */
+        $plan = $planType::find($planId);
+
+        $this->planCache[$cacheKey] = $plan;
+
+        return $plan;
     }
 
     protected function isSuccessfulResult(mixed $response): bool

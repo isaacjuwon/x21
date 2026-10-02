@@ -9,6 +9,7 @@ use App\Integrations\Epins\Entities\PurchaseElectricity as PurchaseElectricityEn
 use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
+use App\Models\ElectricityPlan;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
@@ -20,13 +21,18 @@ final class PurchaseElectricityAction
 
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
+        /** @var ElectricityPlan $plan */
+        $plan = $transaction->plan;
+
         $entity = new PurchaseElectricityEntity(
             service: (string) $transaction->brand->api_code,
             meterNumber: (string) $transaction->recipient,
             meterType: (string) ($transaction->meta['meter_type'] ?? 'prepaid'),
+            apiCode: (string) $plan->api_code,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
-            vtpassCode: $transaction->plan->vtpass_code ?? null,
+            planId: $plan->id,
+            planType: $plan::class,
         );
 
         try {
