@@ -19,6 +19,7 @@ final readonly class AirtimeResource
 
     public function purchase(PurchaseAirtime $entity): ServiceResponse
     {
+        return dd($entity->toRequestBody());
         try {
             $response = $this->connector->send(
                 method: Method::Post,
@@ -26,7 +27,7 @@ final readonly class AirtimeResource
                 options: $entity->toRequestBody(),
             );
 
-            return dd($response);
+          
         } catch (Throwable $exception) {
             throw new EpinsException(
                 message: 'Failed to purchase airtime: '.$exception->getMessage(),
