@@ -27,7 +27,7 @@ final class PurchaseAirtimeAction
             reference: $transaction->reference,
         );
 
-        return dd($response);
+        return dd($entity);
          
 
         try {
