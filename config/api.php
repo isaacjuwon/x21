@@ -48,9 +48,7 @@ return [
         'failover' => [
             'driver' => 'failover',
             'providers' => [
-                'epins',
-		'vtpass',
-            ],
+                'epins',            ],
             'retry_after' => (int) env('API_VTU_FAILOVER_RETRY_AFTER', 60),
             'failover_on_unsuccessful' => (bool) env('API_VTU_FAILOVER_ON_UNSUCCESSFUL', true),
         ],
