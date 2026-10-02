@@ -27,9 +27,7 @@ final class PurchaseAirtimeAction
             reference: $transaction->reference,
         );
 
-        return dd($entity);
-         
-
+       
         try {
             $response = $this->apiManager->vtuProvider()->purchaseAirtime($entity);
 
