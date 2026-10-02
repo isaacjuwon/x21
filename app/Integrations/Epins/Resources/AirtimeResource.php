@@ -19,8 +19,7 @@ final readonly class AirtimeResource
 
     public function purchase(PurchaseAirtime $entity): ServiceResponse
     {
-        return dd($entity->toRequestBody());
-        try {
+         try {
             $response = $this->connector->send(
                 method: Method::Post,
                 uri: '/airtime/',
