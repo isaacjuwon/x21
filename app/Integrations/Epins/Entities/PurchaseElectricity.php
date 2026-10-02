@@ -20,6 +20,7 @@ final class PurchaseElectricity
         string $meterType,
         int $amount,
         public readonly ?string $reference = null,
+        public readonly ?string $vtpassCode = null,
     ) {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Electricity amount must be greater than zero.');

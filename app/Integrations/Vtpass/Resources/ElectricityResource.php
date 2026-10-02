@@ -57,7 +57,7 @@ final readonly class ElectricityResource
                     'request_id' => $entity->reference ?? $this->connector->generateRequestId(),
                     'serviceID' => $entity->service,
                     'billersCode' => $entity->meterNumber,
-                    'variation_code' => strtolower($entity->meterType),
+                    'variation_code' => $entity->vtpassCode ?: strtolower($entity->meterType),
                     'amount' => $entity->amount,
                     'phone' => $entity->meterNumber,
                 ],

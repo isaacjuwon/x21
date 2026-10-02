@@ -11,6 +11,7 @@ class ElectricityPlan extends Model
         'brand_id',
         'type',
         'api_code',
+        'vtpass_code',
         'status',
     ];
 

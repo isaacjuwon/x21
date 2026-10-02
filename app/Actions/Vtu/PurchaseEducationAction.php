@@ -28,6 +28,7 @@ final class PurchaseEducationAction
             amount: (int) $transaction->amount,
             numberOfPins: $quantity,
             reference: $transaction->reference,
+            vtpassCode: $transaction->plan->vtpass_code ?? null,
         );
 
         try {

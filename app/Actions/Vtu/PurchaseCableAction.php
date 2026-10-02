@@ -26,6 +26,7 @@ final class PurchaseCableAction
             variationCode: (string) $transaction->plan->api_code,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
+            vtpassCode: $transaction->plan->vtpass_code ?? null,
         );
 
         try {

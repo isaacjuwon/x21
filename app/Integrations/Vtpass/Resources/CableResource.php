@@ -56,7 +56,7 @@ final readonly class CableResource
                     'request_id' => $entity->reference ?? $this->connector->generateRequestId(),
                     'serviceID' => $entity->service,
                     'billersCode' => $entity->smartcardNumber,
-                    'variation_code' => $entity->variationCode,
+                    'variation_code' => $entity->vtpassCode ?: $entity->variationCode,
                     'amount' => $entity->amount,
                     'phone' => $entity->smartcardNumber,
                 ],

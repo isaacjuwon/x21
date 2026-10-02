@@ -23,7 +23,14 @@ class EducationPlanForm
                 TextInput::make('type')
                     ->nullable(),
                 TextInput::make('api_code')
-                    ->required(),
+                    ->label('Default API Code (Epins)')
+                    ->required()
+                    ->placeholder('e.g. WAEC_CHECKER'),
+                TextInput::make('vtpass_code')
+                    ->label('VTPass Variation Code')
+                    ->nullable()
+                    ->placeholder('e.g. waecdirect')
+                    ->helperText('Falls back to API code if empty'),
                 TextInput::make('price')
                     ->numeric()
                     ->prefix(Number::defaultCurrency())

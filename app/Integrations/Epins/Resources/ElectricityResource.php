@@ -41,7 +41,7 @@ final readonly class ElectricityResource
     {
         try {
             $response = $this->connector->send(
-                method: Method::Post,
+                method: Method::Get,
                 uri: '/biller/',
                 options: $entity->toRequestBody(),
             );

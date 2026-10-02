@@ -43,7 +43,7 @@ class DataPlanForm
                                 ->hint('Validity period shown to the user'),
                         ]),
 
-                        Grid::make(2)->schema([
+                        Grid::make(3)->schema([
                             TextInput::make('price')
                                 ->numeric()
                                 ->prefix(Number::defaultCurrency())
@@ -51,8 +51,15 @@ class DataPlanForm
                                 ->minValue(0.01),
 
                             TextInput::make('api_code')
+                                ->label('Default API Code (Epins)')
                                 ->required()
-                                ->placeholder('Provider API plan code'),
+                                ->placeholder('e.g. MTN_SME_1GB'),
+
+                            TextInput::make('vtpass_code')
+                                ->label('VTPass Variation Code')
+                                ->nullable()
+                                ->placeholder('e.g. mtn-1gb-1000')
+                                ->helperText('Falls back to API code if empty'),
                         ]),
 
                         Toggle::make('status')

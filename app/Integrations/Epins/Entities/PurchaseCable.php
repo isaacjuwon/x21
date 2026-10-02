@@ -20,6 +20,7 @@ final class PurchaseCable
         string $variationCode,
         int $amount,
         public readonly ?string $reference = null,
+        public readonly ?string $vtpassCode = null,
     ) {
         $this->service = strtolower(trim($service));
         $this->smartcardNumber = trim($smartcardNumber);

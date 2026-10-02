@@ -26,7 +26,7 @@ final readonly class EducationResource
                 options: [
                     'request_id' => $entity->reference ?? $this->connector->generateRequestId(),
                     'serviceID' => $entity->service,
-                    'variation_code' => $entity->variationCode,
+                    'variation_code' => $entity->vtpassCode ?: $entity->variationCode,
                     'amount' => $entity->amount,
                     'quantity' => $entity->numberOfPins,
                 ],

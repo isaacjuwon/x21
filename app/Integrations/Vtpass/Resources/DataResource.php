@@ -36,7 +36,7 @@ final readonly class DataResource
                     'request_id' => $entity->reference ?? $this->connector->generateRequestId(),
                     'serviceID' => $serviceId,
                     'billersCode' => $entity->mobileNumber,
-                    'variation_code' => $entity->dataCode,
+                    'variation_code' => $entity->vtpassCode ?: $entity->dataCode,
                     'phone' => $entity->mobileNumber,
                 ],
             );

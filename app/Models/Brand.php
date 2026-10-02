@@ -15,6 +15,7 @@ class Brand extends Model implements HasMedia
         'slug',
         'description',
         'api_code',
+        'vtpass_code',
         'status',
     ];
 

@@ -11,6 +11,7 @@ class DataPlan extends Model
         'brand_id',
         'type',
         'api_code',
+        'vtpass_code',
         'price',
         'duration',
         'status',

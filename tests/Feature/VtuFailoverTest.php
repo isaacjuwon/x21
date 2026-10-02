@@ -316,3 +316,35 @@ test('failover automatically resets dead providers if all providers are currentl
 
     expect($response->isSuccessful())->toBeTrue();
 });
+
+test('vtpass provider uses vtpassCode variation when provided', function () {
+    Http::fake([
+        'https://vtpass.com/api/pay' => function (\Illuminate\Http\Client\Request $request) {
+            $data = $request->data();
+            expect($data['variation_code'])->toBe('mtn-1gb-1000');
+
+            return Http::response([
+                'code' => '000',
+                'response_description' => 'TRANSACTION SUCCESSFUL',
+                'requestId' => 'REQ-DATA-PREF',
+                'content' => ['transactions' => ['status' => 'delivered']],
+            ], 200);
+        },
+    ]);
+
+    $provider = app(ApiManager::class)->vtuProvider('vtpass');
+
+    $entity = new PurchaseData(
+        network: 'mtn',
+        mobileNumber: '08012345678',
+        dataCode: 'EPINS_CODE_123',
+        reference: 'REQ-DATA-PREF',
+        vtpassCode: 'mtn-1gb-1000',
+    );
+
+    $response = $provider->purchaseData($entity);
+
+    expect($response)->toBeInstanceOf(ServiceResponse::class)
+        ->and($response->isSuccessful())->toBeTrue();
+});
+

@@ -23,7 +23,14 @@ class CablePlanForm
                 TextInput::make('type')
                     ->nullable(),
                 TextInput::make('api_code')
-                    ->required(),
+                    ->label('Default API Code (Epins)')
+                    ->required()
+                    ->placeholder('e.g. DSTV_STARTER'),
+                TextInput::make('vtpass_code')
+                    ->label('VTPass Variation Code')
+                    ->nullable()
+                    ->placeholder('e.g. dstv-padi')
+                    ->helperText('Falls back to API code if empty'),
                 TextInput::make('price')
                     ->numeric()
                     ->prefix(Number::defaultCurrency()),

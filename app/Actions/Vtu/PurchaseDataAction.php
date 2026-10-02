@@ -25,6 +25,7 @@ final class PurchaseDataAction
             mobileNumber: (string) $transaction->recipient,
             dataCode: (string) $transaction->plan->api_code,
             reference: $transaction->reference,
+            vtpassCode: $transaction->plan->vtpass_code ?? null,
         );
 
         try {

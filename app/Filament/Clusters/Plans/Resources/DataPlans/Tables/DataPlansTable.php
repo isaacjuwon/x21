@@ -43,7 +43,11 @@ class DataPlansTable
                     ->money(fn () => Number::defaultCurrency())
                     ->sortable(),
                 TextColumn::make('api_code')
-                    ->label('API Code')
+                    ->label('API Code (Epins)')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('vtpass_code')
+                    ->label('VTPass Code')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('status')

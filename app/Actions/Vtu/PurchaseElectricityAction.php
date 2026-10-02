@@ -26,6 +26,7 @@ final class PurchaseElectricityAction
             meterType: (string) ($transaction->meta['meter_type'] ?? 'prepaid'),
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
+            vtpassCode: $transaction->plan->vtpass_code ?? null,
         );
 
         try {

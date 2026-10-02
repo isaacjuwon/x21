@@ -17,6 +17,7 @@ final class PurchaseData
         string $mobileNumber,
         string $dataCode,
         public readonly ?string $reference = null,
+        public readonly ?string $vtpassCode = null,
     ) {
         if (blank($network)) {
             throw new \InvalidArgumentException('Network code cannot be blank.');

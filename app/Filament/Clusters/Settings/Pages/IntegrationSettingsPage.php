@@ -65,6 +65,29 @@ class IntegrationSettingsPage extends SettingsPage
                             ->revealable(),
                     ]),
 
+                Section::make('VTPass Configuration')
+                    ->description('Credentials for VTPass VTU and bill payment services.')
+                    ->schema([
+                        TextInput::make('vtpass_url')
+                            ->label('Base URL')
+                            ->url()
+                            ->default('https://vtpass.com/api'),
+                        Grid::make(3)->schema([
+                            TextInput::make('vtpass_api_key')
+                                ->label('API Key')
+                                ->password()
+                                ->revealable(),
+                            TextInput::make('vtpass_secret_key')
+                                ->label('Secret Key')
+                                ->password()
+                                ->revealable(),
+                            TextInput::make('vtpass_public_key')
+                                ->label('Public Key')
+                                ->password()
+                                ->revealable(),
+                        ]),
+                    ]),
+
                 Section::make('OpenAI Configuration')
                     ->description('Used for the AI support assistant.')
                     ->schema([

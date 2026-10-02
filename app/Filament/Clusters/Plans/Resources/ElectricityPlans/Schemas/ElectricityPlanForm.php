@@ -22,7 +22,14 @@ class ElectricityPlanForm
                 TextInput::make('type')
                     ->required(),
                 TextInput::make('api_code')
-                    ->required(),
+                    ->label('Default API Code (Epins)')
+                    ->required()
+                    ->placeholder('e.g. PREPAID'),
+                TextInput::make('vtpass_code')
+                    ->label('VTPass Variation Code')
+                    ->nullable()
+                    ->placeholder('e.g. prepaid or postpaid')
+                    ->helperText('Falls back to API code if empty'),
                 Toggle::make('status')
                     ->default(true)
                     ->required(),

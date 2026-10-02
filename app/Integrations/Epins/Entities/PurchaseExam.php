@@ -20,6 +20,7 @@ final class PurchaseExam
         int $amount,
         int $numberOfPins = 1,
         public readonly ?string $reference = null,
+        public readonly ?string $vtpassCode = null,
     ) {
         if ($numberOfPins < 1) {
             throw new \InvalidArgumentException('Number of pins must be at least 1.');
