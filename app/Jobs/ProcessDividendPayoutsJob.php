@@ -39,10 +39,30 @@ class ProcessDividendPayoutsJob implements ShouldQueue
             return;
         }
 
+        // Find users who already received a payout from a *different* dividend
+        // declared within the same holding-period window as this one.
+        // If holding_period_days = 1, the window is the last 1 day.
+        // If it is 30, the window is the last 30 days.
+        // A user should only receive once per holding-period window.
+        $windowStart = $this->dividend->declared_at->copy()->subDays($settings->holding_period_days);
+
+        $alreadyPaidUserIds = DividendPayout::query()
+            ->whereNot('dividend_id', $this->dividend->id)
+            ->whereHas('dividend', fn ($q) => $q
+                ->whereBetween('declared_at', [$windowStart, $this->dividend->declared_at])
+            )
+            ->pluck('user_id')
+            ->unique()
+            ->all();
+
         $dividendPerShare = $this->dividend->share_price * ($this->dividend->percentage / 100);
         $totalDistributedAmount = 0;
 
         foreach ($groupedHoldings as $userId => $lots) {
+            if (in_array($userId, $alreadyPaidUserIds, true)) {
+                continue;
+            }
+
             $totalQuantity = $lots->sum('quantity');
             $user = $lots->first()->user;
 
