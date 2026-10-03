@@ -56,13 +56,15 @@ final class PurchaseDataAction
             );
 
             $transaction->update([
-                'status' => $response->isSuccessful() ? 'completed' : 'failed',
                 'api_reference' => $response->description['ref'] ?? null,
                 'response_message' => $response->description['response_description'] ?? 'Transaction processed',
             ]);
 
             if ($response->isSuccessful()) {
+                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
+            } else {
+                $transaction->fail('Data purchase unsuccessful: '.($response->description['response_description'] ?? 'Provider declined'));
             }
 
             return $response;
@@ -73,7 +75,7 @@ final class PurchaseDataAction
                 'reference' => $transaction->reference,
             ]);
 
-            $transaction->update(['status' => 'failed']);
+            $transaction->fail('Data purchase exception: '.$e->getMessage());
 
             throw $e;
         }

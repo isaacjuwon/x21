@@ -48,13 +48,15 @@ final class PurchaseCableAction
             );
 
             $transaction->update([
-                'status' => $response->isSuccessful() ? 'completed' : 'failed',
                 'api_reference' => $response->description['ref'] ?? null,
                 'response_message' => $response->description['response_description'] ?? 'Transaction processed',
             ]);
 
             if ($response->isSuccessful()) {
+                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
+            } else {
+                $transaction->fail('Cable purchase unsuccessful: '.($response->description['response_description'] ?? 'Provider declined'));
             }
 
             return $response;
@@ -65,7 +67,7 @@ final class PurchaseCableAction
                 'reference' => $transaction->reference,
             ]);
 
-            $transaction->update(['status' => 'failed']);
+            $transaction->fail('Cable purchase exception: '.$e->getMessage());
 
             throw $e;
         }

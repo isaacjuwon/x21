@@ -27,7 +27,6 @@ final class PurchaseAirtimeAction
             reference: $transaction->reference,
         );
 
-       
         try {
             $response = $this->apiManager->vtuProvider()->purchaseAirtime($entity);
 
@@ -42,13 +41,15 @@ final class PurchaseAirtimeAction
             );
 
             $transaction->update([
-                'status' => $response->isSuccessful() ? 'completed' : 'failed',
                 'api_reference' => $response->description['ref'] ?? null,
                 'response_message' => $response->description['response_description'] ?? 'Transaction processed',
             ]);
 
             if ($response->isSuccessful()) {
+                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
+            } else {
+                $transaction->fail('Airtime purchase unsuccessful: '.($response->description['response_description'] ?? 'Provider declined'));
             }
 
             return $response;
@@ -59,7 +60,7 @@ final class PurchaseAirtimeAction
                 'reference' => $transaction->reference,
             ]);
 
-            $transaction->update(['status' => 'failed']);
+            $transaction->fail('Airtime purchase exception: '.$e->getMessage());
 
             throw $e;
         }

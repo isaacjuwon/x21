@@ -49,13 +49,15 @@ final class PurchaseElectricityAction
             );
 
             $transaction->update([
-                'status' => $response->isSuccessful() ? 'completed' : 'failed',
                 'api_reference' => $response->description['ref'] ?? null,
                 'response_message' => $response->description['response_description'] ?? 'Transaction processed',
             ]);
 
             if ($response->isSuccessful()) {
+                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
+            } else {
+                $transaction->fail('Electricity payment unsuccessful: '.($response->description['response_description'] ?? 'Provider declined'));
             }
 
             return $response;
@@ -66,7 +68,7 @@ final class PurchaseElectricityAction
                 'reference' => $transaction->reference,
             ]);
 
-            $transaction->update(['status' => 'failed']);
+            $transaction->fail('Electricity payment exception: '.$e->getMessage());
 
             throw $e;
         }

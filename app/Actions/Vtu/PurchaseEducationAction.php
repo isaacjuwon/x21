@@ -49,12 +49,14 @@ final class PurchaseEducationAction
             );
 
             $transaction->update([
-                'status' => $response->isSuccessful() ? 'completed' : 'failed',
                 'response_message' => $response->isSuccessful() ? ($response->description['Content'] ?? 'Success') : 'Failed',
             ]);
 
             if ($response->isSuccessful()) {
+                $transaction->update(['status' => 'completed']);
                 event(new ServicePurchased($transaction));
+            } else {
+                $transaction->fail('Education pin purchase unsuccessful: '.($response->description['response_description'] ?? 'Provider declined'));
             }
 
             return $response;
@@ -65,7 +67,7 @@ final class PurchaseEducationAction
                 'reference' => $transaction->reference,
             ]);
 
-            $transaction->update(['status' => 'failed']);
+            $transaction->fail('Education pin purchase exception: '.$e->getMessage());
 
             throw $e;
         }
