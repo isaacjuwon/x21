@@ -10,6 +10,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Number;
+use Illuminate\Validation\Rules\Unique;
 
 class EducationPlanForm
 {
@@ -67,7 +68,23 @@ class EducationPlanForm
                                             ->all()
                                     )
                                     ->required()
-                                    ->unique(ignoreRecord: true)
+                                    ->unique(
+                                        table: 'plan_provider_codes',
+                                        column: 'provider',
+                                        ignoreRecord: true,
+                                        modifyRuleUsing: function (Unique $rule, Select $component) {
+                                            $repeater = $component->getParentComponent();
+                                            $plan = $repeater->getRelationship()?->getParent();
+
+                                            if ($plan?->exists) {
+                                                $rule
+                                                    ->where('planable_type', $plan->getMorphClass())
+                                                    ->where('planable_id', $plan->getKey());
+                                            }
+
+                                            return $rule;
+                                        },
+                                    )
                                     ->label('Provider'),
                                 TextInput::make('code')
                                     ->required()
