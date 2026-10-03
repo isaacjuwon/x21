@@ -9,8 +9,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Validation\Rules\Unique;
-
 class AirtimePlanForm
 {
     public static function configure(Schema $schema): Schema
@@ -54,23 +52,7 @@ class AirtimePlanForm
                                             ->all()
                                     )
                                     ->required()
-                                    ->unique(
-                                        table: 'plan_provider_codes',
-                                        column: 'provider',
-                                        ignoreRecord: true,
-                                        modifyRuleUsing: function (Unique $rule, Select $component) {
-                                            $repeater = $component->getParentComponent();
-                                            $plan = $repeater->getRelationship()?->getParent();
-
-                                            if ($plan?->exists) {
-                                                $rule
-                                                    ->where('planable_type', $plan->getMorphClass())
-                                                    ->where('planable_id', $plan->getKey());
-                                            }
-
-                                            return $rule;
-                                        },
-                                    )
+                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                                     ->label('Provider'),
                                 TextInput::make('code')
                                     ->required()
