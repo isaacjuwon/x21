@@ -23,11 +23,20 @@ final class PurchaseCableAction
     {
         /** @var CablePlan $plan */
         $plan = $transaction->plan;
+        $code = $plan->api_code;
+
+        if ($code === null || $code === '') {
+            throw new \RuntimeException(
+                "CablePlan #{$plan->id} has no resolvable API code for failover chain "
+                .json_encode(config('api.providers.failover.providers')).'. '
+                .'Add provider API codes for this plan in admin.'
+            );
+        }
 
         $entity = new PurchaseCableEntity(
             service: (string) $transaction->brand->api_code,
             smartcardNumber: (string) $transaction->recipient,
-            apiCode: (string) $plan->api_code,
+            apiCode: $code,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
             planId: $plan->id,

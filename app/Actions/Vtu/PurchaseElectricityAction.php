@@ -23,12 +23,21 @@ final class PurchaseElectricityAction
     {
         /** @var ElectricityPlan $plan */
         $plan = $transaction->plan;
+        $code = $plan->api_code;
+
+        if ($code === null || $code === '') {
+            throw new \RuntimeException(
+                "ElectricityPlan #{$plan->id} has no resolvable API code for failover chain "
+                .json_encode(config('api.providers.failover.providers')).'. '
+                .'Add provider API codes for this plan in admin.'
+            );
+        }
 
         $entity = new PurchaseElectricityEntity(
             service: (string) $transaction->brand->api_code,
             meterNumber: (string) $transaction->recipient,
             meterType: (string) ($transaction->meta['meter_type'] ?? 'prepaid'),
-            apiCode: (string) $plan->api_code,
+            apiCode: $code,
             amount: (int) $transaction->amount,
             reference: $transaction->reference,
             planId: $plan->id,

@@ -34,7 +34,7 @@ class CableTvController
     public function __invoke(PurchaseCableTvRequest $request, PurchaseCableAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = CablePlan::findOrFail($request->plan_id);
+        $plan = CablePlan::with('providerCodes')->findOrFail($request->plan_id);
 
         if ($user->getWallet(WalletType::General)->available_balance < $plan->price) {
             return response()->json(['message' => 'Insufficient wallet balance.'], 422);

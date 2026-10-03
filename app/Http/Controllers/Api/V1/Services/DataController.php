@@ -31,7 +31,7 @@ class DataController
     public function __invoke(PurchaseDataRequest $request, PurchaseDataAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = DataPlan::findOrFail($request->plan_id);
+        $plan = DataPlan::with('providerCodes')->findOrFail($request->plan_id);
 
         if ($user->getWallet(WalletType::General)->available_balance < $plan->price) {
             return response()->json(['message' => 'Insufficient wallet balance.'], 422);

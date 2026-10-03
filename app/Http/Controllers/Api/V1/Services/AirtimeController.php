@@ -34,7 +34,7 @@ class AirtimeController
     {
         $user = $request->user();
         $brand = Brand::findOrFail($request->brand_id);
-        $plan = $brand->airtimePlans()->where('status', true)->first();
+        $plan = $brand->airtimePlans()->with('providerCodes')->where('status', true)->first();
 
         if (! $plan) {
             return response()->json(['message' => 'No active airtime plan found for this brand.'], 422);

@@ -31,7 +31,7 @@ class EducationController
     public function __invoke(PurchaseEducationRequest $request, PurchaseEducationAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = EducationPlan::findOrFail($request->plan_id);
+        $plan = EducationPlan::with('providerCodes')->findOrFail($request->plan_id);
         $totalAmount = $plan->price * $request->quantity;
 
         if ($user->getWallet(WalletType::General)->available_balance < $totalAmount) {

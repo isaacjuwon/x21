@@ -9,6 +9,7 @@ use App\Integrations\Epins\Entities\PurchaseAirtime as PurchaseAirtimeEntity;
 use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
+use App\Models\AirtimePlan;
 use App\Models\TopupTransaction;
 use Illuminate\Support\Facades\Log;
 
@@ -20,11 +21,16 @@ final class PurchaseAirtimeAction
 
     public function handle(TopupTransaction $transaction): ServiceResponse
     {
+        /** @var AirtimePlan $plan */
+        $plan = $transaction->plan;
+
         $entity = new PurchaseAirtimeEntity(
-            network: (string) ($transaction->meta['network'] ?? $transaction->brand->slug),
+            network: (string) ($transaction->meta['network'] ?? $transaction->brand->api_code),
             amount: (int) $transaction->amount,
             mobileNumber: (string) $transaction->recipient,
             reference: $transaction->reference,
+            planId: $plan->id,
+            planType: $plan::class,
         );
 
         try {

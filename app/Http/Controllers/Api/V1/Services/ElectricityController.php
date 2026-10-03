@@ -38,7 +38,7 @@ class ElectricityController
     {
         $user = $request->user();
         $brand = Brand::findOrFail($request->brand_id);
-        $plan = $brand->electricityPlans()->where('status', true)->first();
+        $plan = $brand->electricityPlans()->with('providerCodes')->where('status', true)->first();
 
         if (! $plan) {
             return response()->json(['message' => 'No active electricity plan found for this provider.'], 422);

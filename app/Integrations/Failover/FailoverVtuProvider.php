@@ -61,8 +61,9 @@ class FailoverVtuProvider implements VtuProvider
     public function purchaseAirtime(PurchaseAirtime $entity): ServiceResponse
     {
         return $this->executeWithFailover(
-            fn (VtuProvider $provider) => $provider->purchaseAirtime($entity),
-            'purchaseAirtime'
+            fn (VtuProvider $provider, string $name) => $provider->purchaseAirtime($this->withProviderCode($entity, $name)),
+            'purchaseAirtime',
+            $entity,
         );
     }
 
@@ -215,6 +216,15 @@ class FailoverVtuProvider implements VtuProvider
         }
 
         return match (true) {
+            $entity instanceof PurchaseAirtime => new PurchaseAirtime(
+                network: $resolved,
+                amount: $entity->amount,
+                mobileNumber: $entity->mobileNumber,
+                portedNumber: $entity->portedNumber,
+                reference: $entity->reference,
+                planId: $entity->planId,
+                planType: $entity->planType,
+            ),
             $entity instanceof PurchaseData => new PurchaseData(
                 network: $entity->network,
                 mobileNumber: $entity->mobileNumber,

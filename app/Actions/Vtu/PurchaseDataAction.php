@@ -23,20 +23,11 @@ final class PurchaseDataAction
     {
         /** @var DataPlan $plan */
         $plan = $transaction->plan;
-        $code = $plan->api_code;
-
-        if ($code === null || $code === '') {
-            throw new \RuntimeException(
-                "DataPlan #{$plan->id} has no resolvable API code for failover chain "
-                .json_encode(config('api.providers.failover.providers')).'. '
-                .'Add provider API codes for this plan in admin.'
-            );
-        }
 
         $entity = new PurchaseDataEntity(
             network: (string) ($transaction->meta['network'] ?? $transaction->brand->api_code),
             mobileNumber: (string) $transaction->recipient,
-            apiCode: (string) $code,
+            apiCode: (string) $plan->api_code,
             reference: $transaction->reference,
             planId: $plan->id,
             planType: $plan::class,

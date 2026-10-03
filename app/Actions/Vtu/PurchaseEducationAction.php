@@ -24,10 +24,19 @@ final class PurchaseEducationAction
         /** @var EducationPlan $plan */
         $plan = $transaction->plan;
         $quantity = (int) ($transaction->meta['quantity'] ?? 1);
+        $code = $plan->api_code;
+
+        if ($code === null || $code === '') {
+            throw new \RuntimeException(
+                "EducationPlan #{$plan->id} has no resolvable API code for failover chain "
+                .json_encode(config('api.providers.failover.providers')).'. '
+                .'Add provider API codes for this plan in admin.'
+            );
+        }
 
         $entity = new PurchaseExamEntity(
             service: (string) $transaction->brand->api_code,
-            apiCode: (string) $plan->api_code,
+            apiCode: $code,
             amount: (int) $transaction->amount,
             numberOfPins: $quantity,
             reference: $transaction->reference,

@@ -18,6 +18,8 @@ final class PurchaseAirtime
         string $mobileNumber,
         public readonly string $portedNumber = 'false',
         public readonly ?string $reference = null,
+        public readonly ?int $planId = null,
+        public readonly ?string $planType = null,
     ) {
         if (blank($network)) {
             throw new \InvalidArgumentException('Network code cannot be blank.');
