@@ -6,8 +6,14 @@ namespace App\Filament\Resources\Plans\Pages;
 
 use App\Filament\Resources\Plans\PlanResource;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Support\Enums\Width;
 
 class CreatePlan extends CreateRecord
 {
     protected static string $resource = PlanResource::class;
+
+    public function getMaxContentWidth(): Width | string | null
+    {
+        return Width::Full;
+    }
 }

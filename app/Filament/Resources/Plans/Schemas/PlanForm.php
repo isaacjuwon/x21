@@ -21,74 +21,83 @@ class PlanForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('Plan Details')
+                    ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)->schema([
-                            Select::make('service_type')
-                                ->label('Service Type')
-                                ->options(
-                                    collect(ServiceType::cases())
-                                        ->mapWithKeys(fn (ServiceType $type): array => [$type->value => $type->getLabel()])
-                                        ->all()
-                                )
-                                ->required()
-                                ->searchable(),
+                        Grid::make(3)
+                            ->columnSpanFull()
+                            ->schema([
+                                Select::make('service_type')
+                                    ->label('Service Type')
+                                    ->options(
+                                        collect(ServiceType::cases())
+                                            ->mapWithKeys(fn (ServiceType $type): array => [$type->value => $type->getLabel()])
+                                            ->all()
+                                    )
+                                    ->required()
+                                    ->searchable(),
 
-                            TextInput::make('name')
-                                ->required()
-                                ->maxLength(255)
-                                ->placeholder('e.g. MTN 1GB Monthly or DSTV Compact'),
+                                TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('e.g. MTN 1GB Monthly or DSTV Compact'),
 
-                            Select::make('brand_id')
-                                ->label('Brand / Network')
-                                ->relationship('brand', 'name')
-                                ->required()
-                                ->searchable()
-                                ->preload(),
-                        ]),
+                                Select::make('brand_id')
+                                    ->label('Brand / Network')
+                                    ->relationship('brand', 'name')
+                                    ->required()
+                                    ->searchable()
+                                    ->preload(),
+                            ]),
 
-                        Grid::make(3)->schema([
-                            TextInput::make('type')
-                                ->nullable()
-                                ->placeholder('e.g. SME, CORPORATE, GIFTING, VTU')
-                                ->hint('Used to group plans by category on purchase page'),
+                        Grid::make(3)
+                            ->columnSpanFull()
+                            ->schema([
+                                TextInput::make('type')
+                                    ->nullable()
+                                    ->placeholder('e.g. SME, CORPORATE, GIFTING, VTU')
+                                    ->hint('Used to group plans by category on purchase page'),
 
-                            TextInput::make('duration')
-                                ->nullable()
-                                ->placeholder('e.g. 30 Days, 1 Month')
-                                ->hint('Validity period shown to user'),
+                                TextInput::make('duration')
+                                    ->nullable()
+                                    ->placeholder('e.g. 30 Days, 1 Month')
+                                    ->hint('Validity period shown to user'),
 
-                            TextInput::make('api_code')
-                                ->label('Internal / Fallback API Code')
-                                ->nullable()
-                                ->placeholder('e.g. MTN_1GB_CODE')
-                                ->hint('Default fallback code if provider code is not set'),
-                        ]),
+                                TextInput::make('api_code')
+                                    ->label('Internal / Fallback API Code')
+                                    ->nullable()
+                                    ->placeholder('e.g. MTN_1GB_CODE')
+                                    ->hint('Default fallback code if provider code is not set'),
+                            ]),
 
-                        Grid::make(3)->schema([
-                            TextInput::make('price')
-                                ->label('Selling Price')
-                                ->numeric()
-                                ->prefix(Number::defaultCurrency())
-                                ->required()
-                                ->minValue(0),
+                        Grid::make(3)
+                            ->columnSpanFull()
+                            ->schema([
+                                TextInput::make('price')
+                                    ->label('Selling Price')
+                                    ->numeric()
+                                    ->prefix(Number::defaultCurrency())
+                                    ->required()
+                                    ->minValue(0),
 
-                            TextInput::make('cost_price')
-                                ->label('Cost Price')
-                                ->numeric()
-                                ->prefix(Number::defaultCurrency())
-                                ->nullable()
-                                ->hint('Wholesale cost from provider'),
+                                TextInput::make('cost_price')
+                                    ->label('Cost Price')
+                                    ->numeric()
+                                    ->prefix(Number::defaultCurrency())
+                                    ->nullable()
+                                    ->hint('Wholesale cost from provider'),
 
-                            Toggle::make('status')
-                                ->label('Active')
-                                ->default(true),
-                        ]),
+                                Toggle::make('status')
+                                    ->label('Active')
+                                    ->default(true),
+                            ]),
 
                         Repeater::make('providerCodes')
                             ->label('Provider API Codes')
                             ->relationship()
+                            ->columnSpanFull()
                             ->schema([
                                 Select::make('provider')
                                     ->options(function (): array {
