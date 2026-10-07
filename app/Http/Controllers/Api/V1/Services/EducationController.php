@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseEducationAction;
+use App\Enums\Plans\ServiceType;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseEducationRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
-use App\Models\EducationPlan;
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class EducationController
     public function __invoke(PurchaseEducationRequest $request, PurchaseEducationAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = EducationPlan::with('providerCodes')->findOrFail($request->plan_id);
+        $plan = Plan::with('providerCodes')->forService(ServiceType::Education)->findOrFail($request->plan_id);
         $totalAmount = $plan->price * $request->quantity;
 
         if ($user->getWallet(WalletType::General)->available_balance < $totalAmount) {
@@ -43,7 +44,7 @@ class EducationController
                 'user_id' => $user->id,
                 'brand_id' => $plan->brand_id,
                 'plan_id' => $plan->id,
-                'plan_type' => EducationPlan::class,
+                'plan_type' => Plan::class,
                 'type' => TopupType::Education,
                 'amount' => $totalAmount,
                 'recipient' => (string) $user->id,

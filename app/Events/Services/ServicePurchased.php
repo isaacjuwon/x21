@@ -2,6 +2,7 @@
 
 namespace App\Events\Services;
 
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -13,12 +14,17 @@ class ServicePurchased
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public ?Plan $plan;
+
     /**
      * Create a new event instance.
      */
     public function __construct(
         public TopupTransaction $transaction,
-    ) {}
+        ?Plan $plan = null,
+    ) {
+        $this->plan = $plan ?? $transaction->plan;
+    }
 
     /**
      * Get the channels the event should broadcast on.

@@ -7,6 +7,7 @@ use App\Enums\Topups\TopupType;
 use Database\Factories\TopupTransactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class TopupTransaction extends Model
@@ -36,19 +37,19 @@ class TopupTransaction extends Model
         'meta' => 'json',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function plan()
+    public function plan(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Plan::class);
     }
 
     /**

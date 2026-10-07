@@ -3,12 +3,12 @@
 use App\Actions\Vtu\PurchaseDataAction;
 use App\Enums\Topups\TopupTransactionStatus;
 use App\Enums\Topups\TopupType;
+use App\Http\Entities\PurchaseData as PurchaseDataEntity;
+use App\Http\Entities\ServiceResponse;
 use App\Integrations\Contracts\Providers\VtuProvider;
-use App\Integrations\Epins\Entities\PurchaseData as PurchaseDataEntity;
-use App\Integrations\Epins\Entities\ServiceResponse;
 use App\Managers\ApiManager;
 use App\Models\Brand;
-use App\Models\DataPlan;
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
@@ -21,11 +21,11 @@ beforeEach(function () {
     Event::fake();
 });
 
-function makeDataTransaction(DataPlan $plan, Brand $brand): TopupTransaction
+function makeDataTransaction(Plan $plan, Brand $brand): TopupTransaction
 {
     return TopupTransaction::factory()->for(User::factory())->create([
         'plan_id' => $plan->id,
-        'plan_type' => DataPlan::class,
+        'plan_type' => Plan::class,
         'brand_id' => $brand->id,
         'type' => TopupType::Data,
         'status' => TopupTransactionStatus::Pending,
@@ -55,7 +55,7 @@ function bindMockProvider(callable $capture): void
 
 test('PurchaseDataAction resolves vtugate code only when relationship has vtugate row', function () {
     $brand = Brand::factory()->create(['api_code' => 'mtn']);
-    $plan = DataPlan::factory()->for($brand)->create();
+    $plan = Plan::factory()->data()->for($brand)->create();
     $plan->providerCodes()->create([
         'provider' => 'vtugate',
         'code' => 'VTG_MTN_1GB',
@@ -80,7 +80,7 @@ test('PurchaseDataAction resolves vtugate code only when relationship has vtugat
 
 test('PurchaseDataAction throws RuntimeException when plan has zero provider rows — no legacy fallback reuse', function () {
     $brand = Brand::factory()->create(['api_code' => 'glo']);
-    $plan = DataPlan::factory()->for($brand)->create([
+    $plan = Plan::factory()->data()->for($brand)->create([
         'api_code' => 'OLD_LEGACY_DEAD_CODE_SHOULD_NOT_BE_USED',
     ]);
     $transaction = makeDataTransaction($plan, $brand);
@@ -94,7 +94,7 @@ test('PurchaseDataAction throws RuntimeException when plan has zero provider row
 
 test('PurchaseDataAction falls back to vtpass code via resolveApiCode when vtugate row missing but vtpass row present', function () {
     $brand = Brand::factory()->create(['api_code' => 'airtel']);
-    $plan = DataPlan::factory()->for($brand)->create();
+    $plan = Plan::factory()->data()->for($brand)->create();
     $plan->providerCodes()->create([
         'provider' => 'vtpass',
         'code' => 'airtel-5gb-2500',

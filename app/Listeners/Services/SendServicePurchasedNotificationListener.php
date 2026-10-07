@@ -15,6 +15,6 @@ class SendServicePurchasedNotificationListener
             return;
         }
 
-        $user->notify(new ServicePurchasedNotification($event->transaction));
+        $user->notify(new ServicePurchasedNotification($event->transaction, $event->plan));
     }
 }

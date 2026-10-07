@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Brand;
-use App\Models\EducationPlan;
+use App\Models\Plan;
+use App\Enums\Plans\ServiceType;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
 use App\Actions\Vtu\PurchaseEducationAction;
@@ -21,14 +22,14 @@ new #[Title('Education Pins')] class extends Component {
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
-        'plan_id' => 'required|exists:education_plans,id',
+        'plan_id' => 'required|exists:plans,id',
         'quantity' => 'required|integer|min:1|max:5',
     ];
 
     #[Computed]
     public function brands()
     {
-        return Brand::whereHas('educationPlans', fn($q) => $q->where('status', true))
+        return Brand::whereHas('plans', fn($q) => $q->forService(ServiceType::Education)->where('status', true))
             ->where('status', true)
             ->get();
     }
@@ -38,7 +39,8 @@ new #[Title('Education Pins')] class extends Component {
     {
         if (!$this->brand_id) return collect();
 
-        return EducationPlan::where('brand_id', $this->brand_id)
+        return Plan::forService(ServiceType::Education)
+            ->where('brand_id', $this->brand_id)
             ->where('status', true)
             ->get();
     }
@@ -47,7 +49,7 @@ new #[Title('Education Pins')] class extends Component {
     public function selectedPlan()
     {
         if (!$this->plan_id) return null;
-        return EducationPlan::find($this->plan_id);
+        return Plan::forService(ServiceType::Education)->find($this->plan_id);
     }
 
     #[Computed]
@@ -82,7 +84,7 @@ new #[Title('Education Pins')] class extends Component {
                     'user_id' => $user->id,
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
-                    'plan_type' => EducationPlan::class,
+                    'plan_type' => Plan::class,
                     'type' => \App\Enums\Topups\TopupType::Education,
                     'amount' => $total,
                     'meta' => ['quantity' => $this->quantity],

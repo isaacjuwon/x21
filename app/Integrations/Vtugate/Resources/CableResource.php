@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Integrations\Vtugate\Resources;
 
 use App\Enums\Http\Method;
-use App\Integrations\Epins\Entities\PurchaseCable;
-use App\Integrations\Epins\Entities\ServiceResponse;
-use App\Integrations\Epins\Entities\ValidateSmartcard;
-use App\Integrations\Epins\Entities\ValidationResponse;
+use App\Http\Entities\PurchaseCable;
+use App\Http\Entities\ServiceResponse;
+use App\Http\Entities\ValidateSmartcard;
+use App\Http\Entities\ValidationResponse;
 use App\Integrations\Vtugate\Exceptions\VtugateException;
 use App\Integrations\Vtugate\VtugateConnector;
 use Throwable;

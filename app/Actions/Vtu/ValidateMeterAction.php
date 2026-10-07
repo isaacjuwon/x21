@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Vtu;
 
+use App\Http\Entities\ValidateMeter as ValidateMeterEntity;
+use App\Http\Entities\ValidationResponse;
 use App\Http\Payloads\V1\Services\ValidateMeterPayload;
-use App\Integrations\Epins\Entities\ValidateMeter as ValidateMeterEntity;
-use App\Integrations\Epins\Entities\ValidationResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\Brand;

@@ -11,10 +11,12 @@ use App\Integrations\Vtugate\Resources\CableResource;
 use App\Integrations\Vtugate\Resources\DataResource;
 use App\Integrations\Vtugate\Resources\EducationResource;
 use App\Integrations\Vtugate\Resources\ElectricityResource;
+use App\Integrations\Vtugate\Resources\PlansResource;
 use App\Integrations\Vtugate\Resources\WalletResource;
 use App\Settings\IntegrationSettings;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Throwable;
@@ -23,6 +25,8 @@ final readonly class VtugateConnector
 {
     public function __construct(
         private PendingRequest $request,
+        private ?string $baseUrl = null,
+        private ?string $apiKey = null,
     ) {}
 
     public function airtime(): AirtimeResource
@@ -55,9 +59,68 @@ final readonly class VtugateConnector
         return new WalletResource(connector: $this);
     }
 
+    public function plans(): PlansResource
+    {
+        return new PlansResource(connector: $this);
+    }
+
     public function generateRequestId(): string
     {
         return date('YmdHi').substr(hash('sha256', (string) microtime(true)), 0, 10);
+    }
+
+    public function getBaseUrl(): string
+    {
+        if (! empty($this->baseUrl)) {
+            return $this->baseUrl;
+        }
+
+        try {
+            $settings = app(IntegrationSettings::class);
+            if (! empty($settings->vtugate_url)) {
+                return $settings->vtugate_url;
+            }
+        } catch (Throwable) {
+        }
+
+        return config('services.vtugate.url', 'https://api.vtugate.com');
+    }
+
+    public function getApiKey(): string
+    {
+        if (! empty($this->apiKey)) {
+            return $this->apiKey;
+        }
+
+        try {
+            $settings = app(IntegrationSettings::class);
+            if (! empty($settings->vtugate_api_key)) {
+                return $settings->vtugate_api_key;
+            }
+        } catch (Throwable) {
+        }
+
+        return (string) config('services.vtugate.api_key', '');
+    }
+
+    /**
+     * Create a pre-configured PendingRequest inside an Http::pool.
+     */
+    public function pooledRequest(Pool $pool, ?string $as = null): PendingRequest
+    {
+        $request = $as !== null ? $pool->as($as) : $pool;
+
+        $req = $request->baseUrl($this->getBaseUrl())
+            ->timeout(60)
+            ->asForm()
+            ->acceptJson();
+
+        $token = $this->getApiKey();
+        if ($token !== '') {
+            $req->withToken($token);
+        }
+
+        return $req;
     }
 
     public function send(Method $method, string $uri, array $options = []): Response
@@ -104,6 +167,8 @@ final readonly class VtugateConnector
                         ->withToken($apiKey)
                         ->asForm()
                         ->acceptJson(),
+                    baseUrl: $url,
+                    apiKey: $apiKey,
                 );
             },
         );

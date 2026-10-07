@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Brand;
-use App\Models\AirtimePlan;
+use App\Models\Plan;
+use App\Enums\Plans\ServiceType;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
 use App\Actions\Vtu\PurchaseAirtimeAction;
@@ -28,7 +29,7 @@ new #[Title('Airtime Purchase')] class extends Component {
     #[Computed]
     public function brands()
     {
-        return Brand::whereHas('airtimePlans', fn($q) => $q->where('status', true))
+        return Brand::whereHas('plans', fn($q) => $q->forService(ServiceType::Airtime)->where('status', true))
             ->where('status', true)
             ->get();
     }
@@ -40,7 +41,7 @@ new #[Title('Airtime Purchase')] class extends Component {
 
         $user = Auth::user();
         $brand = Brand::find($this->brand_id);
-        $plan = $brand->airtimePlans()->where('status', true)->first();
+        $plan = $brand->plans()->forService(ServiceType::Airtime)->where('status', true)->first();
 
         if (!$plan) {
             $this->addError('brand_id', 'No active airtime plan found for this brand.');
@@ -58,7 +59,7 @@ new #[Title('Airtime Purchase')] class extends Component {
                     'user_id' => $user->id,
                     'brand_id' => $brand->id,
                     'plan_id' => $plan->id,
-                    'plan_type' => AirtimePlan::class,
+                    'plan_type' => Plan::class,
                     'type' => \App\Enums\Topups\TopupType::Airtime,
                     'amount' => $this->amount,
                     'recipient' => $this->phone_number,

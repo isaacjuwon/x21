@@ -7,6 +7,9 @@ Your {{ $transaction->type->getLabel() }} purchase was completed successfully.
 
 <x-mail::panel>
 **Service:** {{ $transaction->type->getLabel() }}
+@if(isset($plan) && $plan?->name)
+**Plan:** {{ $plan->name }}
+@endif
 **Recipient:** {{ $transaction->recipient }}
 **Amount:** {{ Number::currency($transaction->amount) }}
 **Reference:** {{ $transaction->reference }}

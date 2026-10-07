@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Integrations\Vtpass\Resources;
 
 use App\Enums\Http\Method;
-use App\Integrations\Epins\Entities\PurchaseElectricity;
-use App\Integrations\Epins\Entities\ServiceResponse;
-use App\Integrations\Epins\Entities\ValidateMeter;
-use App\Integrations\Epins\Entities\ValidationResponse;
+use App\Http\Entities\PurchaseElectricity;
+use App\Http\Entities\ServiceResponse;
+use App\Http\Entities\ValidateMeter;
+use App\Http\Entities\ValidationResponse;
 use App\Integrations\Vtpass\Exceptions\VtpassException;
 use App\Integrations\Vtpass\VtpassConnector;
 use Throwable;

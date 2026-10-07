@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\DataPlan;
+use App\Enums\Plans\ServiceType;
+use App\Models\Plan;
 use Illuminate\Database\Seeder;
 
 class MigrateLegacyDataPlanVtpassCodesSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (DataPlan::cursor() as $plan) {
+        foreach (Plan::forService(ServiceType::Data)->cursor() as $plan) {
             $vtpassCode = $plan->getRawOriginal('vtpass_code');
 
             if (! empty($vtpassCode)) {

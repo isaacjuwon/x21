@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Brand;
-use App\Models\DataPlan;
+use App\Models\Plan;
+use App\Enums\Plans\ServiceType;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
 use App\Actions\Vtu\PurchaseDataAction;
@@ -22,14 +23,14 @@ new #[Title('Data Purchase')] class extends Component {
 
     protected $rules = [
         'brand_id' => 'required|exists:brands,id',
-        'plan_id' => 'required|exists:data_plans,id',
+        'plan_id' => 'required|exists:plans,id',
         'phone_number' => 'required|string|min:10',
     ];
 
     #[Computed]
     public function brands()
     {
-        return Brand::whereHas('dataPlans', fn($q) => $q->where('status', true))
+        return Brand::whereHas('plans', fn($q) => $q->forService(ServiceType::Data)->where('status', true))
             ->where('status', true)
             ->get();
     }
@@ -39,7 +40,8 @@ new #[Title('Data Purchase')] class extends Component {
     {
         if (!$this->brand_id) return collect();
 
-        return DataPlan::where('brand_id', $this->brand_id)
+        return Plan::forService(ServiceType::Data)
+            ->where('brand_id', $this->brand_id)
             ->where('status', true)
             ->whereNotNull('type')
             ->distinct()
@@ -52,7 +54,8 @@ new #[Title('Data Purchase')] class extends Component {
     {
         if (!$this->brand_id || !$this->type_filter) return collect();
 
-        return DataPlan::where('brand_id', $this->brand_id)
+        return Plan::forService(ServiceType::Data)
+            ->where('brand_id', $this->brand_id)
             ->where('type', $this->type_filter)
             ->where('status', true)
             ->orderBy('price')
@@ -63,7 +66,7 @@ new #[Title('Data Purchase')] class extends Component {
     public function selectedPlan()
     {
         if (!$this->plan_id) return null;
-        return DataPlan::find($this->plan_id);
+        return Plan::forService(ServiceType::Data)->find($this->plan_id);
     }
 
     public function updatedBrandId()
@@ -95,7 +98,7 @@ new #[Title('Data Purchase')] class extends Component {
                     'user_id' => $user->id,
                     'brand_id' => $plan->brand_id,
                     'plan_id' => $plan->id,
-                    'plan_type' => DataPlan::class,
+                    'plan_type' => Plan::class,
                     'type' => \App\Enums\Topups\TopupType::Data,
                     'amount' => $plan->price,
                     'recipient' => $this->phone_number,

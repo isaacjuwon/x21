@@ -15,7 +15,7 @@ class PurchaseDataRequest extends FormRequest
     {
         return [
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
-            'plan_id' => ['required', 'integer', 'exists:data_plans,id'],
+            'plan_id' => ['required', 'integer', 'exists:plans,id'],
             'phone_number' => ['required', 'string', 'min:10', 'max:15'],
         ];
     }

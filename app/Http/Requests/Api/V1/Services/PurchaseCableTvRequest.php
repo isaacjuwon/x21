@@ -15,7 +15,7 @@ class PurchaseCableTvRequest extends FormRequest
     {
         return [
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
-            'plan_id' => ['required', 'integer', 'exists:cable_plans,id'],
+            'plan_id' => ['required', 'integer', 'exists:plans,id'],
             'smart_card_number' => ['required', 'string', 'min:10'],
         ];
     }

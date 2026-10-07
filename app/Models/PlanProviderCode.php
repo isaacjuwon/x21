@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class PlanProviderCode extends Model
 {
     protected $fillable = [
+        'planable_type',
+        'planable_id',
         'provider',
         'code',
     ];

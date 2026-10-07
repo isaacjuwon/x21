@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\BrandFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -35,28 +36,8 @@ class Brand extends Model implements HasMedia
             ->singleFile();
     }
 
-    public function airtimePlans()
+    public function plans(): HasMany
     {
-        return $this->hasMany(AirtimePlan::class);
-    }
-
-    public function dataPlans()
-    {
-        return $this->hasMany(DataPlan::class);
-    }
-
-    public function cablePlans()
-    {
-        return $this->hasMany(CablePlan::class);
-    }
-
-    public function educationPlans()
-    {
-        return $this->hasMany(EducationPlan::class);
-    }
-
-    public function electricityPlans()
-    {
-        return $this->hasMany(ElectricityPlan::class);
+        return $this->hasMany(Plan::class);
     }
 }

@@ -18,6 +18,7 @@ use App\Integrations\Vtpass\VtpassConnector;
 use App\Integrations\Vtpass\VtpassProvider;
 use App\Integrations\Vtugate\VtugateConnector;
 use App\Integrations\Vtugate\VtugateProvider;
+use App\Settings\IntegrationSettings;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\MultipleInstanceManager;
@@ -201,7 +202,15 @@ class ApiManager extends MultipleInstanceManager
     public function createFailoverDriver(array $config): FailoverVtuProvider
     {
         $providers = [];
-        $providerNames = $config['providers'] ?? ['vtugate'];
+
+        try {
+            $settings = $this->app->make(IntegrationSettings::class);
+            $providerNames = ! empty($settings->vtu_failover_providers)
+                ? $settings->vtu_failover_providers
+                : ($config['providers'] ?? ['vtugate']);
+        } catch (\Throwable) {
+            $providerNames = $config['providers'] ?? ['vtugate'];
+        }
 
         foreach ($providerNames as $name) {
             $providers[$name] = $this->vtuProvider($name);

@@ -5,6 +5,7 @@ namespace App\Filament\Clusters\Settings\Pages;
 use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Settings\IntegrationSettings;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Grid;
@@ -25,6 +26,22 @@ class IntegrationSettingsPage extends SettingsPage
     {
         return $schema
             ->components([
+                Section::make('VTU Failover Configuration')
+                    ->description('Configure active VTU providers and their failover execution priority.')
+                    ->schema([
+                        Select::make('vtu_failover_providers')
+                            ->label('Active Providers & Priority Order')
+                            ->helperText('Select providers and drag to arrange in order of priority (first = primary, subsequent = failover fallbacks).')
+                            ->multiple()
+                            ->reorderable()
+                            ->options([
+                                'vtugate' => 'VTUgate',
+                                'vtpass' => 'VTPass',
+                            ])
+                            ->default(['vtugate', 'vtpass'])
+                            ->required(),
+                    ]),
+
                 Section::make('Paystack Configuration')
                     ->schema([
                         TextInput::make('paystack_url')

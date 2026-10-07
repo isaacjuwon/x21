@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseAirtimeAction;
+use App\Enums\Plans\ServiceType;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseAirtimeRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
-use App\Models\AirtimePlan;
 use App\Models\Brand;
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class AirtimeController
     {
         $user = $request->user();
         $brand = Brand::findOrFail($request->brand_id);
-        $plan = $brand->airtimePlans()->with('providerCodes')->where('status', true)->first();
+        $plan = $brand->plans()->forService(ServiceType::Airtime)->with('providerCodes')->where('status', true)->first();
 
         if (! $plan) {
             return response()->json(['message' => 'No active airtime plan found for this brand.'], 422);
@@ -49,7 +50,7 @@ class AirtimeController
                 'user_id' => $user->id,
                 'brand_id' => $brand->id,
                 'plan_id' => $plan->id,
-                'plan_type' => AirtimePlan::class,
+                'plan_type' => Plan::class,
                 'type' => TopupType::Airtime,
                 'amount' => $request->amount,
                 'recipient' => $request->phone_number,

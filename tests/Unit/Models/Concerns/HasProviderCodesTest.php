@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Brand;
-use App\Models\DataPlan;
+use App\Models\Plan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,11 +12,11 @@ function seedChainConfig(array $providers): void
     config()->set('api.providers.failover.providers', $providers);
 }
 
-function makePlanWithCodes(array $providerCodeMap, array $legacyColumns = []): DataPlan
+function makePlanWithCodes(array $providerCodeMap, array $legacyColumns = []): Plan
 {
     $brand = Brand::factory()->create(['api_code' => 'mtn']);
 
-    $plan = DataPlan::factory()->for($brand)->create($legacyColumns);
+    $plan = Plan::factory()->data()->for($brand)->create($legacyColumns);
 
     foreach ($providerCodeMap as $provider => $code) {
         $plan->providerCodes()->create([
@@ -63,7 +63,6 @@ test('resolveApiCode returns preferred provider first even when later providers 
 test('resolveApiCode returns null when no relationship rows exist — no accidental legacy api_code fallback', function () {
     $plan = makePlanWithCodes([], [
         'api_code' => 'OLD_LEGACY_CODE_DEAD_DATA',
-        'vtpass_code' => 'OLD_VTPASS_LEGACY_COL',
     ]);
 
     expect($plan->resolveApiCode('vtugate'))->toBeNull()
@@ -96,7 +95,7 @@ test('providerCodes relation registers correctly as morphMany planable', functio
 
     expect($plan->providerCodes)->toHaveCount(2);
     foreach ($plan->providerCodes as $row) {
-        expect($row->planable_type)->toBe(DataPlan::class)
+        expect($row->planable_type)->toBe(Plan::class)
             ->and($row->planable_id)->toBe($plan->id);
     }
 });

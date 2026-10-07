@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Brand;
-use App\Models\ElectricityPlan;
+use App\Models\Plan;
+use App\Enums\Plans\ServiceType;
 use App\Models\TopupTransaction;
 use App\Enums\Wallets\WalletType;
 use App\Actions\Vtu\PurchaseElectricityAction;
@@ -30,7 +31,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
     #[Computed]
     public function brands()
     {
-        return Brand::whereHas('electricityPlans', fn($q) => $q->where('status', true))
+        return Brand::whereHas('plans', fn($q) => $q->forService(ServiceType::Electricity)->where('status', true))
             ->where('status', true)
             ->get();
     }
@@ -42,7 +43,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
 
         $user = Auth::user();
         $brand = Brand::find($this->brand_id);
-        $plan = $brand->electricityPlans()->where('status', true)->first();
+        $plan = $brand->plans()->forService(ServiceType::Electricity)->where('status', true)->first();
 
         if (!$plan) {
             $this->addError('brand_id', 'No active electricity plan found for this brand.');
@@ -60,7 +61,7 @@ new #[Title('Electricity Bill Payment')] class extends Component {
                     'user_id' => $user->id,
                     'brand_id' => $brand->id,
                     'plan_id' => $plan->id,
-                    'plan_type' => ElectricityPlan::class,
+                    'plan_type' => Plan::class,
                     'type' => \App\Enums\Topups\TopupType::Electricity,
                     'amount' => $this->amount,
                     'recipient' => $this->meter_number,

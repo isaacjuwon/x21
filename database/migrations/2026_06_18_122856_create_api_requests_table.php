@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('api_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->nullable();
+            $table->string('method')->nullable();
+            $table->string('url')->nullable();
+            $table->json('payload')->nullable();
+            $table->json('response')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('reference')->nullable()->index();
             $table->timestamps();
         });
     }

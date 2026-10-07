@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Integrations\Vtugate\Resources;
 
 use App\Enums\Http\Method;
-use App\Integrations\Epins\Entities\PurchaseAirtime;
-use App\Integrations\Epins\Entities\ServiceResponse;
+use App\Http\Entities\PurchaseAirtime;
+use App\Http\Entities\ServiceResponse;
 use App\Integrations\Vtugate\Exceptions\VtugateException;
 use App\Integrations\Vtugate\VtugateConnector;
 use Throwable;

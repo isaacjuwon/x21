@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Vtu;
 
+use App\Http\Entities\ValidateSmartcard as ValidateSmartcardEntity;
+use App\Http\Entities\ValidationResponse;
 use App\Http\Payloads\V1\Services\ValidateSmartcardPayload;
-use App\Integrations\Epins\Entities\ValidateSmartcard as ValidateSmartcardEntity;
-use App\Integrations\Epins\Entities\ValidationResponse;
 use App\Jobs\RecordApiRequestJob;
 use App\Managers\ApiManager;
 use App\Models\Brand;

@@ -2,6 +2,7 @@
 
 namespace App\Notifications\Services;
 
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use App\Settings\SmsSettings;
 use Illuminate\Bus\Queueable;
@@ -14,14 +15,25 @@ class ServicePurchasedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public TopupTransaction $transaction) {}
+    public ?Plan $plan;
+
+    public function __construct(
+        public TopupTransaction $transaction,
+        ?Plan $plan = null,
+    ) {
+        $this->plan = $plan ?? $transaction->plan;
+    }
 
     public function via(object $notifiable): array
     {
         $channels = ['database', 'mail'];
 
-        if (app(SmsSettings::class)->sms_service_purchased) {
-            $channels[] = 'kudisms';
+        try {
+            if (app(SmsSettings::class)->sms_service_purchased) {
+                $channels[] = 'kudisms';
+            }
+        } catch (\Throwable) {
+            // Settings unavailable or not initialized
         }
 
         return $channels;
@@ -34,6 +46,7 @@ class ServicePurchasedNotification extends Notification implements ShouldQueue
             ->markdown('mail.services.service-purchased', [
                 'notifiable' => $notifiable,
                 'transaction' => $this->transaction,
+                'plan' => $this->plan ?? $this->transaction->plan,
             ]);
     }
 
@@ -42,8 +55,9 @@ class ServicePurchasedNotification extends Notification implements ShouldQueue
         $type = $this->transaction->type->getLabel();
         $amount = Number::currency($this->transaction->amount);
         $recipient = $this->transaction->recipient;
+        $planDetails = $this->plan?->name ? " ({$this->plan->name})" : '';
 
-        return "Hi {$notifiable->name}, your {$type} purchase of {$amount} for {$recipient} was successful. Ref: {$this->transaction->reference}.";
+        return "Hi {$notifiable->name}, your {$type}{$planDetails} purchase of {$amount} for {$recipient} was successful. Ref: {$this->transaction->reference}.";
     }
 
     public function toArray(object $notifiable): array
@@ -54,6 +68,8 @@ class ServicePurchasedNotification extends Notification implements ShouldQueue
             'amount' => $this->transaction->amount,
             'recipient' => $this->transaction->recipient,
             'reference' => $this->transaction->reference,
+            'plan_id' => $this->plan?->id,
+            'plan_name' => $this->plan?->name,
         ];
     }
 }

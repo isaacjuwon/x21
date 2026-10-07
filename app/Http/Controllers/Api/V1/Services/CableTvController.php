@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseCableAction;
 use App\Actions\Vtu\ValidateSmartcardAction;
+use App\Enums\Plans\ServiceType;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Payloads\V1\Services\ValidateSmartcardPayload;
 use App\Http\Requests\Api\V1\Services\PurchaseCableTvRequest;
 use App\Http\Requests\Api\V1\Services\ValidateSmartcardRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
-use App\Models\CablePlan;
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class CableTvController
     public function __invoke(PurchaseCableTvRequest $request, PurchaseCableAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = CablePlan::with('providerCodes')->findOrFail($request->plan_id);
+        $plan = Plan::with('providerCodes')->forService(ServiceType::Cable)->findOrFail($request->plan_id);
 
         if ($user->getWallet(WalletType::General)->available_balance < $plan->price) {
             return response()->json(['message' => 'Insufficient wallet balance.'], 422);
@@ -45,7 +46,7 @@ class CableTvController
                 'user_id' => $user->id,
                 'brand_id' => $plan->brand_id,
                 'plan_id' => $plan->id,
-                'plan_type' => CablePlan::class,
+                'plan_type' => Plan::class,
                 'type' => TopupType::Cable,
                 'amount' => $plan->price,
                 'recipient' => $request->smart_card_number,

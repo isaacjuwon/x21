@@ -3,6 +3,7 @@
 namespace App\Models\Concerns;
 
 use App\Models\PlanProviderCode;
+use App\Settings\IntegrationSettings;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasProviderCodes
@@ -22,7 +23,16 @@ trait HasProviderCodes
      */
     protected function failoverProviderChain(): array
     {
-        return config('api.providers.failover.providers', ['vtugate']);
+        try {
+            $settings = app(IntegrationSettings::class);
+            if (! empty($settings->vtu_failover_providers)) {
+                return (array) $settings->vtu_failover_providers;
+            }
+        } catch (\Throwable) {
+            // Fall back to config if settings table/class unavailable
+        }
+
+        return (array) config('api.providers.failover.providers', ['vtugate']);
     }
 
     public function resolveApiCode(?string $preferredProvider = null): ?string

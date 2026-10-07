@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Integrations\Failover;
 
+use App\Http\Entities\PurchaseAirtime;
+use App\Http\Entities\PurchaseCable;
+use App\Http\Entities\PurchaseData;
+use App\Http\Entities\PurchaseElectricity;
+use App\Http\Entities\PurchaseExam;
+use App\Http\Entities\ServiceResponse;
+use App\Http\Entities\ValidateMeter;
+use App\Http\Entities\ValidateSmartcard;
+use App\Http\Entities\ValidationResponse;
 use App\Integrations\Contracts\Providers\VtuProvider;
-use App\Integrations\Epins\Entities\PurchaseAirtime;
-use App\Integrations\Epins\Entities\PurchaseCable;
-use App\Integrations\Epins\Entities\PurchaseData;
-use App\Integrations\Epins\Entities\PurchaseElectricity;
-use App\Integrations\Epins\Entities\PurchaseExam;
-use App\Integrations\Epins\Entities\ServiceResponse;
-use App\Integrations\Epins\Entities\ValidateMeter;
-use App\Integrations\Epins\Entities\ValidateSmartcard;
-use App\Integrations\Epins\Entities\ValidationResponse;
 use Closure;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Database\Eloquent\Model;

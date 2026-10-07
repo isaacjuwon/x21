@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Integrations\Vtpass\Resources;
 
 use App\Enums\Http\Method;
-use App\Integrations\Epins\Entities\PurchaseAirtime;
-use App\Integrations\Epins\Entities\ServiceResponse;
+use App\Http\Entities\PurchaseAirtime;
+use App\Http\Entities\ServiceResponse;
 use App\Integrations\Vtpass\Exceptions\VtpassException;
 use App\Integrations\Vtpass\VtpassConnector;
 use Throwable;

@@ -15,7 +15,7 @@ class PurchaseEducationRequest extends FormRequest
     {
         return [
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
-            'plan_id' => ['required', 'integer', 'exists:education_plans,id'],
+            'plan_id' => ['required', 'integer', 'exists:plans,id'],
             'quantity' => ['required', 'integer', 'min:1'],
         ];
     }

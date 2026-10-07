@@ -40,6 +40,9 @@ class IntegrationSettings extends Settings
 
     public ?string $vtpass_public_key;
 
+    /** @var list<string>|null */
+    public ?array $vtu_failover_providers;
+
     public static function group(): string
     {
         return 'integrations';

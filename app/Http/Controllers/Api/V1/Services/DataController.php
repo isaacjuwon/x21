@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Services;
 
 use App\Actions\Vtu\PurchaseDataAction;
+use App\Enums\Plans\ServiceType;
 use App\Enums\Topups\TopupType;
 use App\Enums\Wallets\WalletType;
 use App\Http\Requests\Api\V1\Services\PurchaseDataRequest;
 use App\Http\Resources\Api\V1\Services\TopupTransactionResource;
-use App\Models\DataPlan;
+use App\Models\Plan;
 use App\Models\TopupTransaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class DataController
     public function __invoke(PurchaseDataRequest $request, PurchaseDataAction $action): JsonResponse
     {
         $user = $request->user();
-        $plan = DataPlan::with('providerCodes')->findOrFail($request->plan_id);
+        $plan = Plan::with('providerCodes')->forService(ServiceType::Data)->findOrFail($request->plan_id);
 
         if ($user->getWallet(WalletType::General)->available_balance < $plan->price) {
             return response()->json(['message' => 'Insufficient wallet balance.'], 422);
@@ -42,7 +43,7 @@ class DataController
                 'user_id' => $user->id,
                 'brand_id' => $plan->brand_id,
                 'plan_id' => $plan->id,
-                'plan_type' => DataPlan::class,
+                'plan_type' => Plan::class,
                 'type' => TopupType::Data,
                 'amount' => $plan->price,
                 'recipient' => $request->phone_number,

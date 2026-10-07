@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Services;
 
+use App\Enums\Plans\ServiceType;
 use App\Http\Resources\Api\V1\Services\ServiceBrandResource;
 use App\Models\Brand;
 use Illuminate\Http\JsonResponse;
@@ -50,33 +51,31 @@ class IndexPlansController
         // Airtime: client sends brand_id + user-entered amount. No plan selection —
         // the backend auto-picks the active plan. Only brand info is needed.
         $airtimeBrands = Brand::where('status', true)
-            ->whereHas('airtimePlans', fn ($q) => $q->where('status', true))
+            ->whereHas('plans', fn ($q) => $q->forService(ServiceType::Airtime)->where('status', true))
             ->orderBy('name')
             ->get();
 
         // Electricity: same pattern as airtime — brand_id + user-entered amount.
         $electricityBrands = Brand::where('status', true)
-            ->whereHas('electricityPlans', fn ($q) => $q->where('status', true))
+            ->whereHas('plans', fn ($q) => $q->forService(ServiceType::Electricity)->where('status', true))
             ->orderBy('name')
             ->get();
 
         // Data, Cable, Education: client sends plan_id. Plans need price so the
         // client can display cost and submit the correct plan_id.
-        $brandsWithPlans = fn (string $relation) => Brand::where('status', true)
-            ->with([$relation => fn ($q) => $q->where('status', true)->orderBy('name')])
-            ->whereHas($relation, fn ($q) => $q->where('status', true))
+        $brandsWithPlans = fn (ServiceType $serviceType) => Brand::where('status', true)
+            ->with(['plans' => fn ($q) => $q->forService($serviceType)->where('status', true)->orderBy('name')])
+            ->whereHas('plans', fn ($q) => $q->forService($serviceType)->where('status', true))
             ->orderBy('name')
-            ->get()
-            ->each(fn ($brand) => $brand->setRelation('plans', $brand->$relation))
-            ->values();
+            ->get();
 
         return response()->json([
             'data' => [
                 'airtime' => ServiceBrandResource::collection($airtimeBrands),
-                'data' => ServiceBrandResource::collection($brandsWithPlans('dataPlans')),
-                'cable' => ServiceBrandResource::collection($brandsWithPlans('cablePlans')),
+                'data' => ServiceBrandResource::collection($brandsWithPlans(ServiceType::Data)),
+                'cable' => ServiceBrandResource::collection($brandsWithPlans(ServiceType::Cable)),
                 'electricity' => ServiceBrandResource::collection($electricityBrands),
-                'education' => ServiceBrandResource::collection($brandsWithPlans('educationPlans')),
+                'education' => ServiceBrandResource::collection($brandsWithPlans(ServiceType::Education)),
             ],
         ]);
     }
