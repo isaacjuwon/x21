@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Filament\Clusters\Plans\Resources\Plans\Pages;
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Plans\Pages;
 
 use App\Enums\Plans\ServiceType;
-use App\Filament\Clusters\Plans\Resources\Plans\PlanResource;
+use App\Filament\Resources\Plans\PlanResource;
 use App\Models\Plan;
 use App\Services\Vtu\PlanSyncService;
 use Filament\Actions\Action;

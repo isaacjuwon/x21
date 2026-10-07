@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Filament\Clusters\Plans\Resources\Plans;
+declare(strict_types=1);
 
-use App\Filament\Clusters\Plans\PlansCluster;
-use App\Filament\Clusters\Plans\Resources\Plans\Pages\CreatePlan;
-use App\Filament\Clusters\Plans\Resources\Plans\Pages\EditPlan;
-use App\Filament\Clusters\Plans\Resources\Plans\Pages\ListPlans;
-use App\Filament\Clusters\Plans\Resources\Plans\Schemas\PlanForm;
-use App\Filament\Clusters\Plans\Resources\Plans\Tables\PlansTable;
+namespace App\Filament\Resources\Plans;
+
+use App\Filament\Resources\Plans\Pages\CreatePlan;
+use App\Filament\Resources\Plans\Pages\EditPlan;
+use App\Filament\Resources\Plans\Pages\ListPlans;
+use App\Filament\Resources\Plans\Schemas\PlanForm;
+use App\Filament\Resources\Plans\Tables\PlansTable;
 use App\Models\Plan;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class PlanResource extends Resource
 {
     protected static ?string $model = Plan::class;
 
-    protected static ?string $cluster = PlansCluster::class;
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Services';
 
     protected static ?string $navigationLabel = 'Plans';
 

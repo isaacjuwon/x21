@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filament\Clusters\Plans\Resources\Plans\Pages;
+declare(strict_types=1);
 
-use App\Filament\Clusters\Plans\Resources\Plans\PlanResource;
+namespace App\Filament\Resources\Plans\Pages;
+
+use App\Filament\Resources\Plans\PlanResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Enums\Plans\ServiceType;
-use App\Filament\Clusters\Plans\Resources\Plans\Pages\CreatePlan;
-use App\Filament\Clusters\Plans\Resources\Plans\Pages\ListPlans;
+use App\Filament\Resources\Plans\Pages\CreatePlan;
+use App\Filament\Resources\Plans\Pages\ListPlans;
 use App\Models\Brand;
 use App\Models\Plan;
 use App\Models\User;

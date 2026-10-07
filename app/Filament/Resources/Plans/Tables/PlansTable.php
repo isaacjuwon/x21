@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Plans\Resources\Plans\Tables;
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Plans\Tables;
 
 use App\Enums\Plans\ServiceType;
 use App\Models\Plan;

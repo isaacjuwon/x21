@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Plans\Resources\Plans\Schemas;
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Plans\Schemas;
 
 use App\Enums\Plans\ServiceType;
 use App\Settings\IntegrationSettings;
