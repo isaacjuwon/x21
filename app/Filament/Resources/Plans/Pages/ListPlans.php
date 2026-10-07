@@ -82,14 +82,23 @@ class ListPlans extends ListRecords
 
     public function getTabs(): array
     {
+        $counts = Plan::query()
+            ->selectRaw('service_type, count(*) as count')
+            ->groupBy('service_type')
+            ->pluck('count', 'service_type');
+
+        $totalCount = (int) $counts->sum();
+
         $tabs = [
             'all' => Tab::make('All Plans')
-                ->badge(fn () => Plan::count()),
+                ->badge($totalCount),
         ];
 
         foreach (ServiceType::cases() as $serviceType) {
+            $count = (int) ($counts[$serviceType->value] ?? 0);
+
             $tabs[$serviceType->value] = Tab::make($serviceType->getLabel())
-                ->badge(fn () => Plan::where('service_type', $serviceType)->count())
+                ->badge($count)
                 ->badgeColor($serviceType->getColor())
                 ->icon($serviceType->getIcon())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type', $serviceType));

@@ -14,6 +14,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Number;
 
 class PlansTable
@@ -21,6 +22,10 @@ class PlansTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->deferLoading(! app()->runningUnitTests())
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['brand.media', 'providerCodes']))
+            ->defaultPaginationPageOption(25)
+            ->paginated([10, 25, 50, 100])
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -64,9 +69,10 @@ class PlansTable
                         return $pairs ?: ($record->api_code ?: '—');
                     })
                     ->searchable(
-                        query: fn ($query, string $search) => $query
-                            ->where('api_code', 'like', "%{$search}%")
-                            ->orWhereHas('providerCodes', fn ($q) => $q->where('code', 'like', "%{$search}%"))
+                        query: fn (Builder $query, string $search) => $query->where(function (Builder $q) use ($search) {
+                            $q->where('api_code', 'like', "%{$search}%")
+                                ->orWhereHas('providerCodes', fn (Builder $sub) => $sub->where('code', 'like', "%{$search}%"));
+                        })
                     ),
                 IconColumn::make('status')
                     ->boolean()
@@ -86,7 +92,9 @@ class PlansTable
                     ),
                 SelectFilter::make('brand_id')
                     ->label('Brand / Network')
-                    ->relationship('brand', 'name'),
+                    ->relationship('brand', 'name')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
